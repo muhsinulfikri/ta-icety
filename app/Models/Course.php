@@ -18,11 +18,11 @@ class Course extends Model
     public function get_home_course($id_category)
     {
         $data = DB::select("
-            SELECT 
+            SELECT
                 activity.*, course.DESKRIPSI_COURSE
-            FROM 
+            FROM
                 activity
-            LEFT JOIN course ON 
+            LEFT JOIN course ON
                 course.ID_ACTIVITY = activity.ID_ACTIVITY
             WHERE
                 ".implode(' AND ', $id_category)."
@@ -43,13 +43,13 @@ class Course extends Model
         $id_user = session()->get('ID_USER');
         if (!empty($id_user)) {
             $data = DB::select('
-            SELECT 
-            activity.*, 
+            SELECT
+            activity.*,
             course.DESKRIPSI_COURSE,
             (
                 SELECT COUNT(*)
                 FROM payment p
-                LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY 
+                LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
                 WHERE o.ID_USER = "' . $id_user . '"
                     AND o.ID_PRODUCT = activity.ID_ACTIVITY
                     AND p.DATE_PAY IS NOT NULL
@@ -67,25 +67,25 @@ class Course extends Model
                         AND `mapping_course`.ID_ACTIVITY = activity.ID_ACTIVITY
                 ) * 100)
             ) as PROGRESS
-        FROM 
+        FROM
             activity
-        LEFT JOIN 
+        LEFT JOIN
             course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
             ');
 
             return $data;
         } else {
             $data = DB::select('
-            SELECT 
-                activity.*, 
+            SELECT
+                activity.*,
                 course.DESKRIPSI_COURSE
-            FROM 
+            FROM
                 activity
-            LEFT JOIN 
+            LEFT JOIN
                 course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
-            WHERE 
+            WHERE
                 <your_condition>
-            LIMIT 
+            LIMIT
                 $start, $limit;
             ');
             return $data;
@@ -94,12 +94,12 @@ class Course extends Model
     public function get_course($id_activity)
     {
         $sql = DB::selectOne('
-        SELECT 
+        SELECT
         activity.*,
         course.ID_COURSE,
         course.REQUIREMENT,
         (
-            SELECT 
+            SELECT
                 a.TITLE_ACTIVITY
             FROM
                 course c
@@ -115,8 +115,6 @@ class Course extends Model
                 `order` o
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = o.ID_PRODUCT
-            WHERE
-                o.ID_USER = "' . session('user')[0]['ID_USER'] . '"
             AND
                 o.ID_PRODUCT = course.REQUIREMENT
             AND
@@ -133,21 +131,19 @@ class Course extends Model
             SELECT COUNT(p.ID_PAY)
             FROM payment p
             LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
-            WHERE 
-            o.ID_USER = "' . session('user')[0]['ID_USER'] . '"
-            AND 
+            AND
             o.ID_PRODUCT = `activity`.ID_ACTIVITY
-            AND 
+            AND
             p.DATE_PAY IS NOT NULL ) as DATA_CHECKING
-        FROM 
+        FROM
             activity
-        LEFT JOIN 
+        LEFT JOIN
             course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
-        LEFT JOIN 
+        LEFT JOIN
             kategori ON kategori.ID_KATEGORI = course.KATEGORI
-        LEFT JOIN 
+        LEFT JOIN
             user ON user.ID_USER = activity.ID_USER
-        WHERE 
+        WHERE
             course.ID_ACTIVITY = "' . $id_activity . '"
             AND activity.TYPE_ACTIVITY = 1;
         ');
@@ -156,7 +152,7 @@ class Course extends Model
     public function get_course_by_id($keyword, $type)
     {
         //     $query = DB::select("
-        // SELECT 
+        // SELECT
         //     act.*,
         //     (SELECT
         //         COUNT(*)
@@ -195,22 +191,22 @@ class Course extends Model
     {
         DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
         $data = DB::select('
-        SELECT 
-            item_course.*, 
-            detail_quiz.SOAL, 
-            detail_quiz.PIL_JWB, 
-            detail_quiz.KUNCI, 
+        SELECT
+            item_course.*,
+            detail_quiz.SOAL,
+            detail_quiz.PIL_JWB,
+            detail_quiz.KUNCI,
             detail_quiz.ORDER_LIST as SOAL_ORDER,
             mapping_course.STATUS
-        FROM 
+        FROM
             item_course
-        LEFT JOIN 
+        LEFT JOIN
             detail_quiz ON detail_quiz.ID_QUIZ = item_course.ID_ITEM
-        LEFT JOIN 
+        LEFT JOIN
             mapping_course ON mapping_course.ID_ITEM = item_course.ID_ITEM
-        WHERE 
+        WHERE
             ' . $condition . '
-        GROUP BY 
+        GROUP BY
             item_course.ID_ITEM
         ');
         return $data;
@@ -335,8 +331,8 @@ class Course extends Model
 			FROM
 				mapping_course
 			WHERE
-				ID_USER = '" . session('user')[0]->get('ID_USER') . "' 
-				AND 
+				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+				AND
 				ID_ACTIVITY = '" . $id_activity . "'
 		");
 
@@ -350,7 +346,7 @@ class Course extends Model
 			WHERE
 				c.ID_ACTIVITY = "' . $id_activity . '"
 		');
-        
+
         if ($dataNewMapping[0]->ID_ITEM != $dataOldMapping[0]->ID_ITEM) {
             $oldIDMapping = [];
             foreach ($dataNewMapping as $key => $newItem) {
@@ -500,14 +496,14 @@ class Course extends Model
     public function get_counttask($condition)
     {
         $data = DB::select("
-            SELECT 
+            SELECT
                 o.MAPPING_COUNT ,
                 o.COURSE_COMPLETED
-            FROM 
-                `order` o 
-            WHERE 
+            FROM
+                `order` o
+            WHERE
                 o.ID_PRODUCT = '$condition'
-                AND 
+                AND
                 o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
         ");
         return $data;
