@@ -15,14 +15,34 @@
                 function ShowDocument(e) {
                     $(e).hide();
                     const file = '<?= $detail_item_course->FILE ?>';
+                    const materiLink = '<?= $detail_item_course->LINK_MATERI ?>'
                     var pptxRegex = /^https?:\/\/[\w.-]+\/[\w\/.-]+\.pptx(\?.*)?$/;
-                    if (!file) {
+                    const fliphtmlRegex = /fliphtml5\.com/;
+                    const googleDriveRegex = /^https?:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+                    if (!file && !materiLink) {
                         $('#document-frame').html('<p>Dokumen Tidak ditemukan hubungi Instruktur</p>');
                     } else if (pptxRegex.test(file)) {
                         $('#document-frame').html(
                             `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
                         );
-                    } else {
+                    } else if (fliphtmlRegex.test(materiLink)) {
+                        console.log("FlipHTML5 detected:", materiLink);
+                        // Embed untuk FlipHTML
+                        $('#document-frame').html(
+                            `<div style="position:relative;padding-top:max(60%,324px);width:100%;height:0;">
+                                <iframe style="position:absolute;border:none;width:100%;height:100%;left:0;top:0;"
+                                src="${materiLink}"  seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" >
+                                </iframe>
+                            </div>`
+                        );
+                    } else if (googleDriveRegex.test(materiLink)) {
+                        // Embed Google Drive PDF link
+                        const fileId = materiLink.match(googleDriveRegex)[1];
+                        const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+                        $('#document-frame').html(
+                            `<iframe src="${embedUrl}" style="width:600px; height:500px;" frameborder="0"></iframe>`
+                        );
+                    }else {
                         $('#document-frame').html(
                             `<iframe src="${file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
                         );

@@ -5,7 +5,7 @@
                 <span class="col-md-11">Detail - Materi <?= $item['TITLE'] ?></span>
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}" required>
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
-`                <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?>">
+                <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?>">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
                 <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
@@ -16,13 +16,34 @@
     </div>
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="card-body">
+            <span class="text-danger">* Select pdf or link for materi</span>
             <div class="form-group row">
+                <label class="col-sm-2 col-form-label control-label">Select Option</label>
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="optionFile" name="materi_option[]" value="file" onclick="toggleInput('file')" >
+                        <label class="form-check-label" for="optionFile">Upload File</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="optionLink" name="materi_option[]" value="link" onclick="toggleInput('link')" >
+                        <label class="form-check-label" for="optionLink">Enter Link</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" id="fileInputGroup">
                 <label class="col-sm-2 col-form-label control-label">Chapter File</label>
                 <div class="col-md-5">
                     <div class="custom-file">
-                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="material_file<?=$no?>"
-                            class="custom-file-input file_materi">
+                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
+                            class="custom-file-input file_materi" value="{{ $item['FILE'] }}">
                     </div>
+                </div>
+            </div>
+            <div class="form-group row" id="linkInputGroup">
+                <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
+                <div class="col-md-5">
+                    <input id="materi_link" type="text" class="form-control" name="materi_link[]"
+                    value="{{ $item['LINK_MATERI'] }}">
                 </div>
             </div>
             <div class="form-group row">
@@ -35,7 +56,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Youtube Link</label>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="materi_link[]" value="<?= $item['LINK_YT'] ?>"
+                    <input type="text" class="form-control" name="materi_link_yt[]" value="<?= $item['LINK_YT'] ?>"
                         required>
                 </div>
             </div>
@@ -49,10 +70,10 @@
         </div>
     </div>
 </div>
-<script>    
+<script>
     $('input[name="materi_file[]"]').each(function() {
         var dropifyInstance = $(this).data('dropify');
-        
+
         if ($(this).attr('type') === 'hidden') {
             if (dropifyInstance) {
                 dropifyInstance.destroy();
@@ -62,7 +83,7 @@
                 dropifyInstance.destroy();
             }
         } else {
-            var dropifyElement = $("#material_file<?=$no?>").dropify();
+            var dropifyElement = $("#materi_file<?=$no?>").dropify();
             dropifyInstance = dropifyElement.data('dropify');
             dropifyInstance.resetPreview();
             dropifyInstance.clearElement();
@@ -71,6 +92,22 @@
             dropifyInstance.init();
         }
     });
+
+    function toggleInput(type) {
+        const fileInputGroup = document.getElementById('fileInputGroup');
+        const linkInputGroup = document.getElementById('linkInputGroup');
+
+        if (type === 'file') {
+            fileInputGroup.hidden = false;
+            linkInputGroup.hidden = true;
+        } else if (type === 'link') {
+            linkInputGroup.hidden = false;
+            fileInputGroup.hidden = true;
+        } else {
+            linkInputGroup.hidden = true;
+            fileInputGroup.hidden = true;
+        }
+    }
 
     $(document).ready(function() {
         var $editor = $('#mytextarea_{{ $no }}');

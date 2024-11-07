@@ -15,12 +15,32 @@
     </div>
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="card-body">
+            <span class="text-danger">* Select pdf or link for materi</span>
             <div class="form-group row">
+                <label class="col-sm-2 col-form-label control-label">Select Option</label>
+                <div class="col-md-5">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="optionFile" name="materi_option" onclick="toggleInput('file')">
+                        <label class="form-check-label" for="optionFile">Upload File</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="optionLink" name="materi_option" onclick="toggleInput('link')">
+                        <label class="form-check-label" for="optionLink">Enter Link</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row" id="fileInputGroup" hidden>
                 <label class="col-sm-2 col-form-label control-label">File Materi</label>
                 <div class="col-md-5">
                     <div class="custom-file">
-                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" class="custom-file-input file_materi" required>
+                        <input id="materi_file" type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" class="custom-file-input file_materi" >
                     </div>
+                </div>
+            </div>
+            <div class="form-group row" id="linkInputGroup" hidden>
+                <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
+                <div class="col-md-5">
+                    <input id="materi_link" type="text" class="form-control" name="materi_link[]" >
                 </div>
             </div>
             <div class="form-group row">
@@ -32,7 +52,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Link Youtube</label>
                 <div class="col-md-5">
-                    <input type="text" class="form-control" name="materi_link[]" required>
+                    <input type="text" class="form-control" name="materi_link_yt[]" required>
                     <span class="text-danger">* Upload link video in google drive and submit the link in this field.
                         Example link must contain d/your_id_video like this
                         https://drive.google.com/file/d/1fTx7Ij-ora0xIFAWU0Gz4Ej8kJZh1tgs/view?usp=sharing</span>
@@ -70,7 +90,31 @@
             }
         });
     });
-    
+
+    function toggleInput(type) {
+        const fileInputGroup = document.getElementById('fileInputGroup');
+        const linkInputGroup = document.getElementById('linkInputGroup');
+        const fileInputArea = $('#materi_file').dropify();
+        const linkInput = document.getElementById('materi_link');
+
+        if (type === 'file') {
+            fileInputGroup.hidden = false;
+            linkInputGroup.hidden = true;
+            fileInputArea[0].disabled = false;
+            linkInput.disabled = true;
+            //reset input
+            linkInput.value = '';
+            fileInputArea.data('dropify').clearElement();
+        } else if (type === 'link') {
+            linkInputGroup.hidden = false;
+            fileInputGroup.hidden = true;
+            fileInputArea[0].disabled = true;
+            linkInput.disabled = false;
+            //reset input
+            fileInput.data('dropify').clearElement();
+        }
+    }
+
     $(document).ready(function() {
         var $editor = $('#mytextarea_{{ $no }}');
         $editor.summernote({
@@ -103,7 +147,7 @@
             $editor.summernote('bold');
         });
     });
-    
+
     $(document).ready(function() {
         $('.file_materi').dropify({
             messages: {

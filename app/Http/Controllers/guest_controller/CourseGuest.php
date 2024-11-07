@@ -41,7 +41,7 @@ class CourseGuest extends Controller
 		$data['checkout'] = $this->checkoutModel->get_all_order($data_user);
 		$data['is_invited'] = DB::select("
 		SELECT
-			id_invited	
+			id_invited
 		FROM
 			tb_invited
 		WHERE
@@ -94,21 +94,21 @@ class CourseGuest extends Controller
 		$data['tot_proggress'] = (!empty($data['last_item'])) ? (((int) $data_all_mapping[0]->MAPPING_COUNT) / count($data['data_all_mapping'])) * 100 : 0;
 
 		$cek_nilai = DB::selectOne("
-			SELECT 
-				* 
-			FROM 
-				nilai_quiz 
-			WHERE 
+			SELECT
+				*
+			FROM
+				nilai_quiz
+			WHERE
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 				AND ID_QUIZ = ".$data['last_item'][0]->ID_ITEM."
 			");
 
 		$cek_quiz = DB::select("
-			SELECT 
-				* 
-			FROM 
-				item_course 
-			WHERE 
+			SELECT
+				*
+			FROM
+				item_course
+			WHERE
 				TYPE = 2
 				AND ID_COURSE = '".$data['course']->ID_COURSE."'
 			");
@@ -274,7 +274,7 @@ class CourseGuest extends Controller
 				dq.SOAL ,
 				dq.PIL_JWB ,
 				dq.ORDER_LIST ,
-				dq.KUNCI 
+				dq.KUNCI
 			FROM
 				item_course tc
 			LEFT JOIN detail_quiz dq ON
@@ -409,15 +409,15 @@ class CourseGuest extends Controller
 		} else {
 			DB::table('nilai_quiz')->insert($data_quiz);
 		}
-		
+
 		$dataActivity = DB::selectOne("
 			SELECT
 				c.ID_ACTIVITY
-			FROM 
+			FROM
 				item_course ic
 			LEFT JOIN course c ON
 				c.ID_COURSE = ic.ID_COURSE
-			WHERE 
+			WHERE
 				ic.ID_ITEM = $id_quiz
 		");
 
@@ -472,8 +472,8 @@ class CourseGuest extends Controller
 		}
 		if ($id_user != null) {
 			$data['course'] = DB::select('
-				SELECT 
-					activity.*, 
+				SELECT
+					activity.*,
 					course.DESKRIPSI_COURSE,
 					(
 						SELECT
@@ -497,7 +497,7 @@ class CourseGuest extends Controller
 								WHERE
 									o.ID_USER = "' . $id_user . '"
 									AND o.ID_PRODUCT = activity.ID_ACTIVITY
-							) / 
+							) /
 							(
 								SELECT
 									COUNT(*)
@@ -509,7 +509,7 @@ class CourseGuest extends Controller
 							) * 100
 						)
 					) AS PROGRESS
-				FROM 
+				FROM
 					activity
 				LEFT JOIN course ON
 					course.ID_ACTIVITY = activity.ID_ACTIVITY
@@ -517,16 +517,16 @@ class CourseGuest extends Controller
 				');
 		} else {
 			$data['course'] = DB::select('
-				SELECT 
-					activity.*, 
+				SELECT
+					activity.*,
 					course.DESKRIPSI_COURSE
-				FROM 
+				FROM
 					activity
-				LEFT JOIN 
+				LEFT JOIN
 					course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
 					' . $condition . '
 				');
-		}		
+		}
 
 		return
 			view('template_guest.course.ajax.course_by_category', $data);

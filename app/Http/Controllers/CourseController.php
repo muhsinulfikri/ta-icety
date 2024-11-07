@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use App\Models\FileUpload;
 use App\Models\Laporan;
+use App\Models\FileUpload;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class CourseController extends Controller
 {
     private $id_detailCourse = 0;
     public function __construct()
     {
-        // 
+        //
     }
     public function index()
     {
@@ -36,7 +37,7 @@ class CourseController extends Controller
             $data['course'] = DB::select("
                 SELECT
                     c.*
-                FROM    
+                FROM
                     course c
                 LEFT JOIN activity a ON
                     a.ID_ACTIVITY = c.ID_ACTIVITY
@@ -230,14 +231,14 @@ class CourseController extends Controller
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
                 a.SERTIF_CODE ,
-                k.ID_KATEGORI 
+                k.ID_KATEGORI
             FROM
                 activity a
             LEFT JOIN course c ON
                 c.ID_ACTIVITY = a.ID_ACTIVITY
             LEFT JOIN kategori k ON
                 k.ID_KATEGORI = c.KATEGORI
-            WHERE 
+            WHERE
                 a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
         ")[0];
 
@@ -290,7 +291,8 @@ class CourseController extends Controller
                     'TITLE'     => $item_data->TITLE,
                     'LINK_YT'   => $item_data->LINK_YT,
                     'DESKRIPSI' => $item_data->DESKRIPSI,
-                    'ORDER_LIST' => $item_data->ORDER_LIST
+                    'ORDER_LIST' => $item_data->ORDER_LIST,
+                    'LINK_MATERI' => $item_data->LINK_MATERI
                 ];
                 $allView .= view('template_main.admin_side.course.update_materi', $data)->render();
             } else {
@@ -435,12 +437,14 @@ class CourseController extends Controller
 
     public function item_materi($data, $req)
     {
+        set_time_limit(120);
         $orderList          = $req->input('order_list');
         $categoryList       = $req->input('type');
         $materiTitleList    = $req->input('materi_title');
         $descMateriList     = $req->input('desc_materi');
         $file               = $req->file('materi_file');
-        $linkYT             = $req->input('materi_link');
+        $linkMateri         = $req->input('materi_link');
+        $linkYT             = $req->input('materi_link_yt');
         $idQuiz             = [];
 
         if (!empty($orderList)) {
@@ -453,7 +457,8 @@ class CourseController extends Controller
                         'LINK_YT'       => $linkYT[$i],
                         'DESKRIPSI'     => $descMateriList[$i],
                         'ORDER_LIST'    => $orderList[$i],
-                        'TYPE'          => $categoryList[$i]
+                        'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
                     ];
                     DB::table('item_course')->insert($data_item);
                 } else {
@@ -464,7 +469,8 @@ class CourseController extends Controller
                         'LINK_YT'       => null,
                         'DESKRIPSI'     => null,
                         'ORDER_LIST'    => $orderList[$i],
-                        'TYPE'          => $categoryList[$i]
+                        'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => null
                     ];
                     $idQuiz[] = DB::table('item_course')->insertGetId($data_item);
                 }
@@ -633,10 +639,10 @@ class CourseController extends Controller
             SELECT
                 u.*
             FROM
-                user u 
-            LEFT JOIN `order` o ON   
+                user u
+            LEFT JOIN `order` o ON
                 o.ID_USER = u.ID_USER
-            WHERE 
+            WHERE
                 ID_PRODUCT = '" . $req->input('ID_ACTIVITY') . "'
         ");
 
@@ -678,9 +684,9 @@ class CourseController extends Controller
                             FROM
                                 `order` o
                             WHERE
-                                o.ID_USER  = u.ID_USER 
+                                o.ID_USER  = u.ID_USER
                                 AND o.ID_PRODUCT = a.ID_ACTIVITY
-                        ) / 
+                        ) /
                         (
                             SELECT
                                 COUNT(*)
@@ -693,12 +699,12 @@ class CourseController extends Controller
                     )
                 ) AS PROGRESS,
                 (
-                    CEIL 
+                    CEIL
                     (
                     (
                         SELECT
                             SUM(nq.NILAI)
-                        FROM 
+                        FROM
                             nilai_quiz nq
                         LEFT JOIN detail_quiz dq ON
                             dq.ID_QUIZ = nq.ID_QUIZ
@@ -718,16 +724,16 @@ class CourseController extends Controller
                             c.ID_COURSE = dq.ID_COURSE
                         WHERE
                             nq2.ID_USER = u.ID_USER
-                            AND c.ID_ACTIVITY = o.ID_PRODUCT 
+                            AND c.ID_ACTIVITY = o.ID_PRODUCT
                     )
                     )
                 ) AS Rata_Nilai
             FROM
                 user u
-            LEFT JOIN user_data ud ON   
+            LEFT JOIN user_data ud ON
                 ud.ID_USER = u.ID_USER
             LEFT JOIN `order` o ON
-                o.ID_USER = u.ID_USER 
+                o.ID_USER = u.ID_USER
             LEFT JOIN activity a  ON
                 o.ID_PRODUCT  = a.ID_ACTIVITY
             WHERE
@@ -745,7 +751,7 @@ class CourseController extends Controller
             $id_quiz_old = DB::select("
                 SELECT
                     ID_QUIZ
-                FROM 
+                FROM
                     nilai_quiz
                 WHERE
                     ID_QUIZ IN (" . $id_quiz_in . ")
@@ -790,10 +796,13 @@ class CourseController extends Controller
         $categoryList       = $req->input('type');
         $materiTitleList    = $req->input('materi_title');
         $descMateriList     = $req->input('desc_materi');
-        $linkYT             = $req->input('materi_link');
-        $file = $req->file('materi_file');
-        $file_default = $req->input('default_file');
+        $linkYT             = $req->input('materi_link_yt');
+        $file               = $req->file('materi_file');
+        $file_default       = $req->input('default_file');
+        $linkMateri         = $req->input('materi_link');
 
+
+        // dd($req->input('materi_option'));
 
         $idQuiz = [];
         if (!empty($orderList)) {
@@ -806,8 +815,28 @@ class CourseController extends Controller
                         'LINK_YT'       => $linkYT[$i],
                         'DESKRIPSI'     => $descMateriList[$i],
                         'ORDER_LIST'    => $orderList[$i],
-                        'TYPE'          => $categoryList[$i]
+                        'TYPE'          => $categoryList[$i],
                     ];
+
+                    // if (!empty($linkMateri[$i])) {
+                    //     $data_item['LINK_MATERI']   = $linkMateri[$i];
+                    // }
+
+                    if ($req->input('materi_option') == 'link'){
+                        $data_item['LINK_MATERI'] = $linkMateri[$i];
+                        $data_item['FILE'] = null;
+                    } elseif ($req->input('materi_option') == 'file'){
+                        if (!empty($file[$i])) { // File di update
+                            $data_item['FILE'] = $file[$i];
+                            $data_item['LINK_MATERI'] = null;
+                        } else if (!empty($file_default[$i])) { // tidak ada pembaruan file
+                            $data_item['FILE'] = $file_default[$i];
+                            $data_item['LINK_MATERI'] = null;
+                        } else {
+                            $data_item['FILE'] = null;
+                        }
+                    }
+
                     DB::table('item_course')->insert($data_item);
                 } else {
                     $data_item = [
@@ -819,6 +848,11 @@ class CourseController extends Controller
                         'ORDER_LIST'    => $orderList[$i],
                         'TYPE'          => $categoryList[$i]
                     ];
+
+                    if (!empty($linkMateri)) {
+                        $data_item['LINK_MATERI']   = $linkMateri[$i];
+                    }
+
                     $idQuiz[] = DB::table('item_course')->insertGetId($data_item);
                 }
             }
