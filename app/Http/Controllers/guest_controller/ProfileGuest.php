@@ -17,7 +17,7 @@ class ProfileGuest extends Controller
 
     public function __construct(User $genericModel)
     {
-        $this->genericModel = $genericModel;
+        // $this->genericModel = $genericModel;
     }
 
     public function profile()
@@ -30,7 +30,7 @@ class ProfileGuest extends Controller
                 u.*
             FROM
                 user u
-            WHERE 
+            WHERE
             u.ID_USER = '" . session('user')[0]['ID_USER'] . "'
         ");
         $data['document'] = DB::selectOne("
@@ -78,7 +78,7 @@ class ProfileGuest extends Controller
                 u.*
             FROM
                 user_data u
-            WHERE 
+            WHERE
             u.ID_USER = '" . session('user')[0]['ID_USER'] . "'
         ");
         $data['document'] = DB::selectOne("
@@ -88,7 +88,7 @@ class ProfileGuest extends Controller
             WHERE user_data.ID_USER = '". session('user')[0]['ID_USER'] ."';
 
         ");
-        
+
         return
             view('template.header', $data) .
             view('template_guest/profile/academic', $data) .
@@ -105,7 +105,7 @@ class ProfileGuest extends Controller
             WHERE user_data.ID_USER = '". session('user')[0]['ID_USER'] ."';
 
         ");
-        
+
         return
             view('template.header', $data) .
             view('template_guest/profile/document', $data) .
@@ -121,7 +121,7 @@ class ProfileGuest extends Controller
             WHERE user_data.ID_USER = '". session('user')[0]['ID_USER'] ."';
 
         ");
-        
+
         return
             view('template.header', $data) .
             view('template_guest/profile/overview', $data) .
@@ -144,7 +144,7 @@ class ProfileGuest extends Controller
             LEFT JOIN instructor_req ON instructor_req.ID_USER = user_data.ID_USER
             WHERE user_data.ID_USER = '". session('user')[0]['ID_USER'] ."';
         ");
-        
+
         return
             view('template.header', $data) .
             view('template_guest/profile/myevents', $data) .
@@ -173,6 +173,31 @@ class ProfileGuest extends Controller
         return
             view('template.header', $data) .
             view('template_guest/profile/mycourses', $data) .
+            view('template.footer', $data);
+    }
+
+    public function vouchers(){
+        $data['title'] = 'My Voucher';
+        $data['vouchers'] = DB::select("
+            SELECT
+                claimed_promo.ID_PROMO, PROMO_NAME, EXP_DATE, STATUS
+            FROM
+                claimed_promo
+            LEFT JOIN
+                promo
+            ON
+                claimed_promo.ID_PROMO = promo.ID_PROMO
+        ");
+        $data['document'] = DB::selectOne("
+            SELECT
+                STATUS
+            FROM
+                claimed_promo
+        ");
+        // dd($data);
+        return
+            view('template.header', $data).
+            view('template_guest/profile/myvoucher', $data).
             view('template.footer', $data);
     }
     public function update_profile(request $request)
@@ -229,13 +254,13 @@ class ProfileGuest extends Controller
         $data = [];
         if (!empty($request->file('file_cv'))) {
             $data['CV'] = FileUpload::S3_PDF($request->file('file_cv'), 'Instructor_CV', 'Curriculum-Vitae-' . strtotime(now()));
-        } 
+        }
         if (!empty($request->file('file_porto'))) {
             $data['PORTOFOLIO'] = FileUpload::S3_PDF($request->file('file_porto'), 'Instructor_PORTOFOLIO', 'Portfolio-' . strtotime(now()));
-        } 
+        }
         if (!empty($request->file('file_cert'))) { // Remove the [] from 'file_cert'
             $data['SERTIFIKAT'] = FileUpload::S3_PDF($request->file('file_cert'), 'Instructor_CERT', 'Certificates-' . strtotime(now()));
-        } 
+        }
         if (!empty($request->file('file_recom'))) {
             $data['SURAT_RECOM'] = FileUpload::S3_PDF($request->file('file_recom'), 'Instructor_RECOM', 'Recommendation-Letter-' . strtotime(now()));
         }
@@ -251,7 +276,7 @@ class ProfileGuest extends Controller
             'IS_DOWNLOADED' => 1
         ];
         DB::table('sertifikat_activity')->where('ID_ACTIVITY', $request->id_activity)->where('ID_USER', session('user')[0]['ID_USER'])->update($data);
-        return response()->json(['status' => 'success']);   
+        return response()->json(['status' => 'success']);
     }
 
     public function mysertificate()
@@ -259,19 +284,19 @@ class ProfileGuest extends Controller
         $data['title'] = "Sertifikat Ku";
 
         $data['sertif'] = DB::select("
-            SELECT 
+            SELECT
                 s.FILE_SERTIFIKAT,
                 a.TITLE_ACTIVITY,
                 a.TYPE_ACTIVITY
-            FROM 
+            FROM
                 sertifikat_activity s
-            LEFT JOIN activity a ON 
+            LEFT JOIN activity a ON
                 a.ID_ACTIVITY = s.ID_ACTIVITY
-            WHERE 
+            WHERE
                 s.ID_USER = '" . session('user')[0]['ID_USER'] . "'
-                AND s.IS_DOWNLOADED = 1   
+                AND s.IS_DOWNLOADED = 1
             ");
-            
+
             $data['document'] = DB::selectOne("
             SELECT user_data.*, instructor_req.STATUS
             FROM user_data

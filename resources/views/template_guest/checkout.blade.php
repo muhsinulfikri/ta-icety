@@ -214,7 +214,7 @@
             TotalPayment -= $(e).data("price")
         }
         console.log(TotalPayment);
-        
+
         PreviousPayment = TotalPayment
         $('#total_pay').html('Rp ' + TotalPayment)
     }
@@ -244,8 +244,8 @@
         <?php if (!empty($list_promo)) { ?>
         <?php foreach ($list_promo as $item) { ?>
         $('#search-result').append(
-            `<button class="d-flex flex-row align-items-center dropdown-item py-3" 
-                        data-promo-name="<?= $item->PROMO_NAME ?>" 
+            `<button class="d-flex flex-row align-items-center dropdown-item py-3"
+                        data-promo-name="<?= $item->PROMO_NAME ?>"
                         data-value="<?= $item->AMMOUNT ?>"
                         data-id-code="<?= $item->ID_PROMO ?>" onclick="Disc(this)">
                         <div class="col-md-9">
@@ -310,10 +310,10 @@
             }
         })
         <?php if (!empty($checking_trans)) { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Complete your transaction first!'
-        })
+        // Toast.fire({
+        //     icon: 'error',
+        //     title: 'Complete your transaction first!'
+        // })
         <?php } else { ?>
         if (data != "") {
             for (let index = 0; index < data.length; index++) {

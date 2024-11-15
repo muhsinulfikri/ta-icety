@@ -149,15 +149,7 @@ class CourseGuest extends Controller
 			DB::table('sertifikat_activity')->insert($data_sertif);
 
 			// $data['sertif'] = $this->certificateModel->getCertificate($data_sertif);
-			$data['sertif'] = DB::selectOne("
-				SELECT
-					FILE_SERTIFIKAT
-				FROM
-					sertifikat_activity
-				WHERE
-					ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-					AND ID_ACTIVITY = '" . $data['id_activity'] . "'
-			");
+			$data['sertif'] = (object) $data_sertif;
 		} else {
 			$data['sertif'] = $sertifCheck;
 		}

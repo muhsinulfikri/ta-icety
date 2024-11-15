@@ -35,7 +35,7 @@ class EventGuest extends Controller
 		$data['title'] = 'Event';
 		$data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		$data['checkout'] = $this->checkoutModel->get_all_order($data_user);
-		
+
 		// Pagination settings
 		$perPage = 9; // Jumlah item per halaman
 		$currentPage = request()->query('page', 1);
@@ -51,24 +51,24 @@ class EventGuest extends Controller
 				->Paginate($perPage, ['*'], 'page', $currentPage);
 		}else {
 			$events = DB::table('activity')
-				->selectRaw('activity.*, 
-							event.ID_EVENT, 
-							event.CATEGORY_EVENT, 
-							event.LOCATION, 
-							event.ORGANIZER, 
-							event.CONTACT_CUSTOMER, 
-							event.DESKRIPSI_EVENT, 
-							event.LINK_ZOOM, 
-								(SELECT 
-									COUNT(*) 
-								FROM 
-									payment p 
-								LEFT JOIN `order` o ON 
-									o.ID_PAY = p.ID_PAY 
-								WHERE 
-									o.ID_USER = ? 
-									AND o.ID_PRODUCT = activity.ID_ACTIVITY 
-									AND p.DATE_PAY IS NOT NULL) as DATA_CHECKING, 
+				->selectRaw('activity.*,
+							event.ID_EVENT,
+							event.CATEGORY_EVENT,
+							event.LOCATION,
+							event.ORGANIZER,
+							event.CONTACT_CUSTOMER,
+							event.DESKRIPSI_EVENT,
+							event.LINK_ZOOM,
+								(SELECT
+									COUNT(*)
+								FROM
+									payment p
+								LEFT JOIN `order` o ON
+									o.ID_PAY = p.ID_PAY
+								WHERE
+									o.ID_USER = ?
+									AND o.ID_PRODUCT = activity.ID_ACTIVITY
+									AND p.DATE_PAY IS NOT NULL) as DATA_CHECKING,
 									(DATEDIFF(CURDATE(), activity.DATE_START) >= 1) as EXPIRED', [session('user')[0]->get('ID_USER')])
 				->leftJoin('event', 'event.ID_ACTIVITY', '=', 'activity.ID_ACTIVITY')
 				->where('activity.TYPE_ACTIVITY', 2,)
@@ -77,7 +77,7 @@ class EventGuest extends Controller
 		}
 
 		// Load views
-		return 
+		return
 			view('template.header', $data) .
 			view('template_guest.event.event', compact('events', 'totalRows')) .
 			view('template.footer', $data);
@@ -119,7 +119,7 @@ class EventGuest extends Controller
 			);
 			DB::table('sertifikat_activity')->insert($data_sertif);
 
-			$data['sertif'] = $this->certificateModel->getCertificate($data_sertif);
+			$data['sertif'] = (object) $data_sertif;
 		}else{
 			$data['sertif'] = $sertifCheck;
 		}

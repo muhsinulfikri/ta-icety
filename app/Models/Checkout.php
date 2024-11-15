@@ -15,20 +15,20 @@ class Checkout extends Model
     {
         $sql = "
         SELECT
-            `order`.*, 
-            activity.TITLE_ACTIVITY, 
-            activity.IMAGE_ACTIVITY, 
-            ebook.JUDUL, 
+            `order`.*,
+            activity.TITLE_ACTIVITY,
+            activity.IMAGE_ACTIVITY,
+            ebook.JUDUL,
             ebook.IMAGE_EBOOK
-        FROM 
+        FROM
             `order`
-        LEFT JOIN 
+        LEFT JOIN
             activity ON activity.ID_ACTIVITY = `order`.ID_PRODUCT
-        LEFT JOIN 
+        LEFT JOIN
             ebook ON ebook.ID_BUKU = `order`.ID_PRODUCT
-        WHERE 
+        WHERE
             `order`.ID_USER = '" . $id_user . "'
-            AND 
+            AND
             `order`.ID_PAY IS NULL
     ";
 
@@ -37,7 +37,7 @@ class Checkout extends Model
     public function get_trans($id_user)
     {
         return DB::select("
-            SELECT 
+            SELECT
                 p.*,
                 o.ID_ORDER ,
                 o.ID_PRODUCT ,
@@ -46,17 +46,17 @@ class Checkout extends Model
                 a.TITLE_ACTIVITY ,
                 pm.STATUS,
                 pm.ID_PAY_METHOD
-            FROM 
+            FROM
                 payment p
-            LEFT JOIN `order` o ON 
-                o.ID_PAY = p.ID_PAY 
-            LEFT JOIN activity a ON 
+            LEFT JOIN `order` o ON
+                o.ID_PAY = p.ID_PAY
+            LEFT JOIN activity a ON
                 a.ID_ACTIVITY = o.ID_PRODUCT
-            LEFT JOIN payment_method pm ON 
-                pm.ID_PAY = p.ID_PAY 
-            WHERE 
+            LEFT JOIN payment_method pm ON
+                pm.ID_PAY = p.ID_PAY
+            WHERE
                 pm.STATUS = 'pending'
-                AND 
+                AND
                 p.KODE_USER = '$id_user'
         ");
     }
@@ -90,24 +90,24 @@ class Checkout extends Model
         }
 
         $sql = "
-            SELECT 
-                `order`.*, 
-                activity.TITLE_ACTIVITY, 
-                activity.IMAGE_ACTIVITY, 
-                ebook.JUDUL, 
+            SELECT
+                `order`.*,
+                activity.TITLE_ACTIVITY,
+                activity.IMAGE_ACTIVITY,
+                ebook.JUDUL,
                 ebook.IMAGE_EBOOK
-            FROM 
+            FROM
                 `order`
-            LEFT JOIN 
+            LEFT JOIN
                 activity ON activity.ID_ACTIVITY = `order`.ID_PRODUCT
-            LEFT JOIN 
+            LEFT JOIN
                 ebook ON ebook.ID_BUKU = `order`.ID_PRODUCT
-            WHERE 
+            WHERE
                 `order`.ID_USER = '$userId'
                 " . $OrderIDCheck . "
                 " . $ProductIDCheck . "
         ";
-        
+
         $queryResult = DB::select($sql);
 
         return !empty($id_activity) ? (count($queryResult) > 0 ? $queryResult[0] : null) : $queryResult;

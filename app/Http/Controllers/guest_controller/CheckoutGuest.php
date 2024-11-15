@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\guest_controller;
 
-use App\Http\Controllers\Controller;
+use App\Models\Ebook;
+use App\Models\Event;
+use App\Models\Promo;
 use App\Models\Course;
 use App\Models\Checkout;
-use App\Models\Event;
 use App\Models\Certificate;
-use App\Models\Ebook;
-use App\Models\Promo;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Exception;
+use Illuminate\Support\Facades\Session;
 
 class CheckoutGuest extends Controller
 {
@@ -55,15 +56,15 @@ class CheckoutGuest extends Controller
 
 		$data['promo'] = DB::Select("
 			SELECT
-				p.*
+				cp.*
 			FROM
-				promo p
-			LEFT JOIN tb_detail_promo tdp ON
-				tdp.ID_PROMO = p.ID_PROMO
+				claimed_promo cp
+			LEFT JOIN promo p ON
+				cp.ID_PROMO = p.ID_PROMO
 			WHERE
-				tdp.ID_USER IS NULL
+				cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 		");
-
+        // dd($data['promo']);
 		return view('template.header', $data) .
 			view('template_guest.checkout', $data) .
 			view('template.footer', $data);
@@ -84,23 +85,23 @@ class CheckoutGuest extends Controller
 
 			$id_product = $data['order'][0][0]->ID_PRODUCT;
 			if (substr($id_product, 0, 3) == "EBK") {
-			$data['promo'] = DB::Select("
-				SELECT
-					p.*
-				FROM
-					promo p
-				LEFT JOIN tb_detail_promo tdp ON
-					tdp.ID_PROMO = p.ID_PROMO
-				WHERE
-					tdp.ID_USER IS NULL
-				OR
-					p.PROMO_FOR = '0'
-				AND
-					p.PROMO_FOR = '3'
-			");
+                $data['promo'] = DB::Select("
+                    SELECT
+                        p.*
+                    FROM
+                        promo p
+                    LEFT JOIN claimed_promo cp ON
+                        cp.ID_PROMO = p.ID_PROMO
+                    WHERE
+                        cp.ID_USER IS NULL
+                    OR
+                        p.PROMO_FOR = '0'
+                    AND
+                        p.PROMO_FOR = '3'
+                ");
 			} else {
 				$cek = DB::SelectOne("
-					SELECT 
+					SELECT
 						TYPE_ACTIVITY
 					FROM
 						activity
@@ -110,13 +111,13 @@ class CheckoutGuest extends Controller
 
 				$data['promo'] = DB::Select("
 					SELECT
-						p.*
+						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME
 					FROM
-						promo p
-					LEFT JOIN tb_detail_promo tdp ON
-						tdp.ID_PROMO = p.ID_PROMO
+						claimed_promo cp
+					LEFT JOIN promo p ON
+				        cp.ID_PROMO = p.ID_PROMO
 					WHERE
-						tdp.ID_USER IS NULL
+				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 					AND
 						p.PROMO_FOR = '0'
 					OR
@@ -131,13 +132,13 @@ class CheckoutGuest extends Controller
 
 			$data['promo'] = DB::Select("
 				SELECT
-					p.*
-				FROM
-					promo p
-				LEFT JOIN tb_detail_promo tdp ON
-					tdp.ID_PROMO = p.ID_PROMO
-				WHERE
-					tdp.ID_USER IS NULL
+						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME
+					FROM
+						claimed_promo cp
+					LEFT JOIN promo p ON
+				        cp.ID_PROMO = p.ID_PROMO
+					WHERE
+				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 			");
 		}
 
@@ -269,13 +270,13 @@ class CheckoutGuest extends Controller
 	}
 
 	// Access payment gateway
-	public function get_order_id()
+	public function get_order_id(Request $request)
 	{
 		$ID_DISCOUNT = $_POST['Diskon'];
 		$PRICE = (int)$_POST['TotPrice'];
 
 		$check_discount = DB::SelectOne("
-			SELECT 
+			SELECT
 				p.*
 			FROM
 				promo p
@@ -418,225 +419,265 @@ class CheckoutGuest extends Controller
 				ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
 		");
 
+        DB::beginTransaction();
 
-		if ((int)$_POST['tot_bayar'] != 0) {
-			$checking_trans = $this->checkoutModel->get_trans(session('user')[0]->get('ID_USER'));
-			$id_pay = $checking_trans[0]->ID_PAY;
-			$url = 'https://api.midtrans.com/v2/' . $id_pay . '/status';
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'accept: application/json',
-				'authorization: Basic ' . $this->serverKeyMidtrans,
-				'content-type: application/json',
-			));
+        try {
+            if ((int)$_POST['tot_bayar'] != 0) {
+                $checking_trans = $this->checkoutModel->get_trans(session('user')[0]->get('ID_USER'));
+                $id_pay = $checking_trans[0]->ID_PAY;
+                $url = 'https://api.midtrans.com/v2/' . $id_pay . '/status';
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'accept: application/json',
+                    'authorization: Basic ' . $this->serverKeyMidtrans,
+                    'content-type: application/json',
+                ));
 
-			$response = curl_exec($ch);
-			curl_close($ch);
-			header('Content-Type: application/json');
-			$data = json_decode($response, true);
+                $response = curl_exec($ch);
+                curl_close($ch);
+                header('Content-Type: application/json');
+                $data = json_decode($response, true);
 
-			if (!empty($data['transaction_status'])) {
-				if ($data['transaction_status'] == 'pending') {
-					session()->flash('msg', "<script> 
-						const Toast = Swal.mixin({
-							toast: true,
-							position: 'top-end',
-							showConfirmButton: false,
-							timer: 3000,
-							timerProgressBar: true,
-							didOpen: (toast) => {
-								toast.addEventListener('mouseenter', Swal.stopTimer)
-								toast.addEventListener('mouseleave', Swal.resumeTimer)
-							}
-						})
-						Toast.fire({
-							icon: 'warning',
-							title: 'Purchase pending complete the transaction'
-						})
-						</script>
-					");
+                if (!empty($data['transaction_status'])) {
+                    if ($data['transaction_status'] == 'pending') {
+                        session()->flash('msg', "<script>
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Purchase pending complete the transaction'
+                            })
+                            </script>
+                        ");
 
-					$data_payment_method = array(
-						"TRANSACTION_ID" => $data['transaction_id'],
-						"PAY_METHOD" => $data['payment_type'],
-						"EXP_DATE" => $data['expiry_time']
-					);
-					// $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
-					DB::table('payment_method')
-						->where('ID_PAY', $id_pay)
-						->update($data_payment_method);
-				} else if ($data['transaction_status'] == 'settlement' || $data['transaction_status'] == 'capture') {
-					$data_payment_method = array(
-						"TRANSACTION_ID" => $data['transaction_id'],
-						"PAY_METHOD" => $data['payment_type'],
-						"EXP_DATE" => $data['expiry_time'],
-						"STATUS" => 'success'
-					);
-					// $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
-					DB::table('payment_method')
-						->where('ID_PAY', $id_pay)
-						->update($data_payment_method);
+                        $data_payment_method = array(
+                            "TRANSACTION_ID" => $data['transaction_id'],
+                            "PAY_METHOD" => $data['payment_type'],
+                            "EXP_DATE" => $data['expiry_time']
+                        );
+                        // $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
+                        DB::table('payment_method')
+                            ->where('ID_PAY', $id_pay)
+                            ->update($data_payment_method);
 
-					$data_payment = array(
-						"DATE_PAY" => date('Y-m-d H:i:s')
-					);
-					// $this->checkoutModel->update_payment($data_payment, $id_trans);
-					DB::table('payment')
-						->where('ID_PAY', $id_pay)
-						->update($data_payment);
-					if (!empty($type_acticity) && $type_acticity->TYPE_ACTIVITY == 1) {
-						foreach ($id_item as $item) {
-							$this->InsertDataMapping($item);
-						}
-					}
+                        DB::commit();
+                    } else if ($data['transaction_status'] == 'settlement' || $data['transaction_status'] == 'capture') {
+                        $data_payment_method = array(
+                            "TRANSACTION_ID" => $data['transaction_id'],
+                            "PAY_METHOD" => $data['payment_type'],
+                            "EXP_DATE" => $data['expiry_time'],
+                            "STATUS" => 'success'
+                        );
+                        // $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
+                        DB::table('payment_method')
+                            ->where('ID_PAY', $id_pay)
+                            ->update($data_payment_method);
 
-					session()->flash('msg', "<script> 
-						const Toast = Swal.mixin({
-							toast: true,
-							position: 'top-end',
-							showConfirmButton: false,
-							timer: 3000,
-							timerProgressBar: true,
-							didOpen: (toast) => {
-								toast.addEventListener('mouseenter', Swal.stopTimer)
-								toast.addEventListener('mouseleave', Swal.resumeTimer)
-							}
-						})
-						Toast.fire({
-							icon: 'success',
-							title: 'Purchase Success'
-						})
-						</script>
-					");
-				} else if ($data['transaction'] == 'expire') {
-					session()->flash('msg', "<script> 
-						const Toast = Swal.mixin({
-							toast: true,
-							position: 'top-end',
-							showConfirmButton: false,
-							timer: 3000,
-							timerProgressBar: true,
-							didOpen: (toast) => {
-								toast.addEventListener('mouseenter', Swal.stopTimer)
-								toast.addEventListener('mouseleave', Swal.resumeTimer)
-							}
-						})
-						Toast.fire({
-							icon: 'warning',
-							title: 'Purchase Failed, transaction was expire'
-						})
-						</script>
-					");
-					// $this->checkoutModel->delete_transaction($id_trans, $id_order);
-					DB::table('order')
-						->where('PRICE_ORDER', '<>', 0)
-						->whereIn('ID_ORDER', $id_order)
-						->update(['ID_PAY' => null]);
+                        $data_payment = array(
+                            "DATE_PAY" => date('Y-m-d H:i:s')
+                        );
+                        // $this->checkoutModel->update_payment($data_payment, $id_trans);
+                        DB::table('payment')
+                            ->where('ID_PAY', $id_pay)
+                            ->update($data_payment);
+                        if (!empty($type_acticity) && $type_acticity->TYPE_ACTIVITY == 1) {
+                            foreach ($id_item as $item) {
+                                $this->InsertDataMapping($item);
+                            }
+                        }
 
-					//delete in tb payment
-					DB::table('payment')
-						->where('ID_PAY', $id_pay)
-						->delete();
+                        $check_use_promo = DB::selectOne("
+                            SELECT
+                                count(p.ID_PAY) as pay_count,
+                                cp.ID_CLAIM
+                            FROM
+                                payment p
+                            LEFT JOIN payment_method pm ON
+                                pm.ID_PAY = p.ID_PAY
+                            LEFT JOIN claimed_promo cp ON
+                                p.KODE_USER = cp.ID_USER
+                            WHERE
+                                pm.STATUS = 'success'
+                            AND
+                                p.KODE_USER = '".session('user')[0]->get('ID_USER')."'
+                            AND
+                                pm.ID_PAY = '".$id_pay."'
+                        ");
 
-					//delete in tb payment_method
-					DB::table('payment_method')
-						->where('ID_PAY', $id_pay)
-						->delete();
-				} else {
-					session()->flash('msg', "<script> 
-						const Toast = Swal.mixin({
-							toast: true,
-							position: 'top-end',
-							showConfirmButton: false,
-							timer: 3000,
-							timerProgressBar: true,
-							didOpen: (toast) => {
-								toast.addEventListener('mouseenter', Swal.stopTimer)
-								toast.addEventListener('mouseleave', Swal.resumeTimer)
-							}
-						})
-						Toast.fire({
-							icon: 'warning',
-							title: 'Purchase Failed'
-						})
-						</script>
-					");
-					// $this->checkoutModel->delete_transaction($id_trans, $id_order);
-					DB::table('order')
-						->where('PRICE_ORDER', '<>', 0)
-						->whereIn('ID_ORDER', $id_order)
-						->update(['ID_PAY' => null]);
+                        if($check_use_promo->pay_count == 1){
+                            DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
+                        }
 
-					//delete in tb payment
-					DB::table('payment')
-						->where('ID_PAY', $id_pay)
-						->delete();
+                        session()->flash('msg', "<script>
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Purchase Success'
+                            })
+                            </script>
+                        ");
+
+                        DB::commit();
+                    } else if ($data['transaction'] == 'expire') {
+                        session()->flash('msg', "<script>
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Purchase Failed, transaction was expire'
+                            })
+                            </script>
+                        ");
+                        // $this->checkoutModel->delete_transaction($id_trans, $id_order);
+                        DB::table('order')
+                            ->where('PRICE_ORDER', '<>', 0)
+                            ->whereIn('ID_ORDER', $id_order)
+                            ->update(['ID_PAY' => null]);
+
+                        //delete in tb payment
+                        DB::table('payment')
+                            ->where('ID_PAY', $id_pay)
+                            ->delete();
+
+                        //delete in tb payment_method
+                        DB::table('payment_method')
+                            ->where('ID_PAY', $id_pay)
+                            ->delete();
+
+                        DB::commit();
+                    } else {
+                        session()->flash('msg', "<script>
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+                            Toast.fire({
+                                icon: 'warning',
+                                title: 'Purchase Failed'
+                            })
+                            </script>
+                        ");
+                        // $this->checkoutModel->delete_transaction($id_trans, $id_order);
+                        DB::table('order')
+                            ->where('PRICE_ORDER', '<>', 0)
+                            ->whereIn('ID_ORDER', $id_order)
+                            ->update(['ID_PAY' => null]);
+
+                        //delete in tb payment
+                        DB::table('payment')
+                            ->where('ID_PAY', $id_pay)
+                            ->delete();
 
 
-					//delete in tb payment_method
-					DB::table('payment_method')
-						->where('ID_PAY', $id_pay)
-						->delete();
-				}
-			}
-			return redirect('checkouts');
-		} else if ((int)$_POST['tot_bayar'] == 0) {
-			$ID_PAY = $this->GenerateUniqIDPay('CI3-checkout-' . date('Y-m-d H:i:s'));
-			$data_payment = array(
-				"ID_PAY" => $ID_PAY,
-				"TOKEN" => NULL,
-				"KODE_USER" => session('user')[0]->get('ID_USER'),
-				"DATE_CREATED" => date("Y-m-d H:i:s"),
-				"DATE_PAY" => date("Y-m-d H:i:s")
-			);
-			// $this->checkoutModel->insert_payment($data_payment);
-			DB::table("payment")->insert($data_payment);
+                        //delete in tb payment_method
+                        DB::table('payment_method')
+                            ->where('ID_PAY', $id_pay)
+                            ->delete();
 
-			foreach ($id_item as $item) {
-				$data_order = array(
-					"ID_PAY" => $ID_PAY,
-					"LOG_TIME" => date("Y-m-d H:i:s")
-				);
-				// $this->checkoutModel->update_order($data_order, $item, session('user')[0]->get('ID_USER'));
-				DB::table("order")
-					->where('ID_PRODUCT', $item)
-					->where('ID_USER', session('user')[0]->get('ID_USER'))
-					->update($data_order);
-				$id_item = DB::selectOne("
-					SELECT
-						TYPE_ACTIVITY
-					FROM
-						activity
-					WHERE
-						ID_ACTIVITY = '" . $item . "'
-				");
-				if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
-					$this->InsertDataMapping($item);
-				}
-			}
+                        DB::commit();
+                    }
+                }
+                return redirect('checkouts');
+            } else if ((int)$_POST['tot_bayar'] == 0) {
+                $ID_PAY = $this->GenerateUniqIDPay('CI3-checkout-' . date('Y-m-d H:i:s'));
+                $data_payment = array(
+                    "ID_PAY" => $ID_PAY,
+                    "TOKEN" => NULL,
+                    "KODE_USER" => session('user')[0]->get('ID_USER'),
+                    "DATE_CREATED" => date("Y-m-d H:i:s"),
+                    "DATE_PAY" => date("Y-m-d H:i:s")
+                );
+                // $this->checkoutModel->insert_payment($data_payment);
+                DB::table("payment")->insert($data_payment);
 
-			session()->flash('msg', "<script>
-				const Toast = Swal.mixin({
-					toast: true,
-					position: 'top-end',
-					showConfirmButton: false,
-					timer: 3000,
-					timerProgressBar: true,
-					didOpen: (toast) => {
-						toast.addEventListener('mouseenter', Swal.stopTimer)
-						toast.addEventListener('mouseleave', Swal.resumeTimer)
-					}
-				})
-				Toast.fire({
-					icon: 'success',
-					title: 'Purchase Success'
-				})
-				</script>
-			");
-			return redirect('checkouts');
-		}
+                foreach ($id_item as $item) {
+                    $data_order = array(
+                        "ID_PAY" => $ID_PAY,
+                        "LOG_TIME" => date("Y-m-d H:i:s")
+                    );
+                    // $this->checkoutModel->update_order($data_order, $item, session('user')[0]->get('ID_USER'));
+                    DB::table("order")
+                        ->where('ID_PRODUCT', $item)
+                        ->where('ID_USER', session('user')[0]->get('ID_USER'))
+                        ->update($data_order);
+                    $id_item = DB::selectOne("
+                        SELECT
+                            TYPE_ACTIVITY
+                        FROM
+                            activity
+                        WHERE
+                            ID_ACTIVITY = '" . $item . "'
+                    ");
+                    if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
+                        $this->InsertDataMapping($item);
+                    }
+                }
+
+                session()->flash('msg', "<script>
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Purchase Success'
+                    })
+                    </script>
+                ");
+
+                DB::commit();
+
+                return redirect('checkouts');
+            }
+        } catch (Exception $e){
+            DB::rollBack();
+                dd($e);
+        }
+
 	}
 
 	public function DeleteTrans(Request $req)
