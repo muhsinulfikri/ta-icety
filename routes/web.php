@@ -140,6 +140,7 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::get('profile/document', [ProfileGuest::class, 'document']);
     Route::get('profile/mycourses', [ProfileGuest::class, 'mycourses']);
     Route::get('profile/myevents', [ProfileGuest::class, 'myevents']);
+    Route::get('profile/myvoucher', 'guest_controller\ProfileGuest@vouchers');
     Route::post('profile/update', [ProfileGuest::class, 'update_profile']);
     Route::get('profile/mysertificate', [ProfileGuest::class, 'mysertificate']);
     Route::post('/profile/academic/change', [ProfileGuest::class, 'academic_change']);
@@ -148,9 +149,14 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::get('apply_instructor', 'InstructorController@apply_instructor');
     // END PROFILE
 
+    // VOUCHER
+    Route::get('vouchers', 'guest_controller\PromoGuest@index');
+    Route::post('voucher/store', 'guest_controller\PromoGuest@claimedVoucher');
+
+
     //PAYMENT & CART
-    Route::post('checkout', 'guest_controller\CheckoutGuest@index');
     Route::get('checkouts', 'guest_controller\CheckoutGuest@index');
+    Route::post('checkout', 'guest_controller\CheckoutGuest@index');
     Route::get('add/order', 'guest_controller\CheckoutGuest@addOrder');
     Route::post('purchase', 'guest_controller\CheckoutGuest@purchase');
     Route::get('delete/order', 'guest_controller\CheckoutGuest@deleteOrder');
@@ -173,14 +179,14 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/delete_question/{id}', 'CourseController@delete_question');
     Route::post('courses/store', 'CourseController@store');
     Route::post('courses/edit', 'CourseController@update_course'); // open page update
-    Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc 
+    Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc
     Route::get('courses/get_course_item/{id}', 'CourseController@get_course_item'); // get materi / quiz
     Route::post('courses/get_quiz', 'CourseController@send_question'); //send to another page
     Route::post('courses/update', 'CourseController@update'); // update kursus
     Route::post('courses/delete', 'CourseController@delete');
     Route::get('courses/lihat_peserta', 'CourseController@index_lihat_peserta');
     Route::get('courses/laporan_course', 'CourseController@laporan_course');
-    
+
     Route::get('courses/invite', 'CourseController@invite');
     Route::post('courses/invite_individu', 'CourseController@invite_individu');
     Route::post('courses/invite_batch', 'CourseController@invite_batch');

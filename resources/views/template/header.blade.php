@@ -36,7 +36,8 @@
     <script type="text/javascript" src="https://www.google.com/recaptcha/api.js"></script>
 
     <!-- sweetalert2 -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js">
+    </script>
 
 </head>
 
@@ -67,9 +68,11 @@
                     <div class="col-xl-4 col-lg-4 col-sm-6">
                         <div class="header-socials text-center text-lg-end">
                             <ul class="list-inline">
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a>
+                                </li>
                                 <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                </li>
                                 <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a></li>
                                 <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a></li>
                             </ul>
@@ -85,7 +88,8 @@
                     <div class="site-logo">
                         <a href="{{ url('') }}" class="d-flex">
                             <img class="" style="width: 35px; height: 35px;"
-                                src="<?= asset('assets_admin\images\logo\Logo TUT WURI HANDAYANI.png') ?>" alt="">
+                                src="<?= asset('assets_admin\images\logo\Logo TUT WURI HANDAYANI.png') ?>"
+                                alt="">
                             <img class="ms-3" style="width: auto; height: 35px;"
                                 src="<?= asset('assets_admin\images\logo\Logo MBKM.png') ?>" alt="">
                             <img class="ms-3" style="width: auto; height: 35px;"
@@ -141,6 +145,9 @@
                     <?php if (!empty(session('user')[0])) { ?>
                     <nav class="header-btn d-none d-md-block">
                         <ul class="primary-menu">
+                            <li>
+                                <a href="{{ url('vouchers') }}">Voucher</a>
+                            </li>
                             <li class="me-4">
                                 <a href="#"
                                     class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle"
@@ -165,14 +172,15 @@
                                         <li class="dropdown-item" style="pointer-events: none;">
                                             <div class="d-flex dropdown-item align-items-center">
                                                 <div class="img col-2">
-                                                    <img src="<?= (!empty($item->IMAGE_ACTIVITY)) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK; ?>"
-                                                        alt="Image" class="img-fluid" style="width:50px;height:50px" />
+                                                    <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                        alt="Image" class="img-fluid"
+                                                        style="width:50px;height:50px" />
                                                 </div>
                                                 <div class="col-7 ms-2" style="white-space:normal">
-                                                    <?= (!empty($item->TITLE_ACTIVITY)) ? $item->TITLE_ACTIVITY : $item->JUDUL; ?>
+                                                    <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
                                                 </div>
                                                 <div class="col-3 ms-2" style="white-space:normal">
-                                                    <?= ($item->PRICE_ORDER <> 0) ? "Rp " . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
+                                                    <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
                                                 </div>
                                             </div>
                                         </li>
@@ -207,7 +215,7 @@
                                     </img>
                                     <?php    } ?>
                                     <span class="text-truncate mx-2">
-                                        <?= (session('user')[0]['NAME']) ?>
+                                        <?= session('user')[0]['NAME'] ?>
                                     </span>
                                 </a>
                                 <ul class="submenu" style="left: initial;right:0">
@@ -218,7 +226,8 @@
                                     <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
                                     <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
                                     <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
-                                    <li><a class="" href="<?= url('profile/mysertificate') ?>">My Sertificate</a></li>
+                                    <li><a class="" href="<?= url('profile/mysertificate') ?>">My
+                                            Sertificate</a></li>
                                     <?php    } ?>
                                     <hr>
                                     <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>

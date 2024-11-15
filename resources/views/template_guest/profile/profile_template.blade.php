@@ -101,6 +101,12 @@
                                             <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">ٍMy Sertificate</span>
                                         </a>
                                     </li>
+                                    <li class="nav-item w-100">
+                                        <a href="/profile/myvoucher" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
+                                            <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">My
+                                                Voucher</span>
+                                        </a>
+                                    </li>
                                     <li class="w-100">
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
@@ -149,7 +155,7 @@
                         </div>
                         <div class="bg-white shadow rounded-2 overflow-hidden p-3 mt-3" style="height:max-content">
                             <div class="d-flex flex-column align-items-center align-items-sm-start">
-                                <?php 
+                                <?php
                                     $array = (array) $document;
                                     $status = true;
                                     if (!empty($document)) {

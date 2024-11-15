@@ -137,25 +137,27 @@
                                 <span class="fw-bold">Voucher Promo</span>
                                 <select name="promo_use" id="promoSelect" class="form-control my-2"
                                     style="background: white">
-                                    <?php if(!empty($promo)) { ?>
-                                    <option value="0" selected>Not Using Promo Voucher</option>
-                                    @foreach ($promo as $item)
-                                        @if ($TotalBayar > $item->AMMOUNT)
-                                            <option data-unit="<?= $item->UNIT ?>" data-amount="<?= $item->AMMOUNT ?>"
-                                                value="<?= $item->ID_PROMO ?>"><?= $item->PROMO_NAME ?>
-                                            </option>
-                                        @endif
-                                    @endforeach
+                                    <?php if(!empty($promo) && $promo[0]->STATUS == 2) { ?>
+                                        <option value="">No Voucher Available</option>
+                                    <?php } else if  (!empty($promo)){ ?>
+                                        <option value="0" selected>Not Using Promo Voucher</option>
+                                        @foreach ($promo as $item)
+                                            @if ($TotalBayar > $item->AMMOUNT)
+                                                <option data-unit="<?= $item->UNIT ?>" data-amount="<?= $item->AMMOUNT ?>"
+                                                    value="<?= $item->ID_PROMO ?>"><?= $item->PROMO_NAME ?>
+                                                </option>
+                                            @endif
+                                        @endforeach
                                     <?php } else { ?>
-                                    <option value="">No Voucher Available</option>
+                                        <option value="">No Voucher Available</option>
                                     <?php } ?>
                                 </select>
                             </div>
                         @endif
                         <div class="wc-proceed-to-checkout ms-3">
-                            <button type="button" class="checkout-button button alt wc-forward"
-                                onclick="CobaPayment()">
-                                {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
+                            <button type="button" class="checkout-button button alt wc-forward" id="btn_purchase"
+                            onclick="CobaPayment()">
+                            {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
                             </button>
                         </div>
                         <div class="wc-proceed-to-checkout">

@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
 class PromoController extends Controller
@@ -18,7 +19,7 @@ class PromoController extends Controller
                 p.*
             FROM
                 promo p
-        ");       
+        ");
 
         return
             view('template_main.admin_side.etc.header', $data) .

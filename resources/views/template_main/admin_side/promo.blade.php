@@ -93,7 +93,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Delete</h5>
+                <h5 class="modal-title">Add Promo</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -144,7 +144,7 @@
 
 {{-- Start Modal Update --}}
 <div class="modal" id="updateModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    aria-labelledby="staticBackdropLabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -314,12 +314,12 @@
         $('input[name="up_id_promo"]').val(data.ID_PROMO);
         $('input[name="up_promo_name"]').val(data.PROMO_NAME);
         $('select[name="up_promo_for"]').val(data.PROMO_FOR);
-        $('input[name="up_exp_date"]').val(data.EXP_DATE);
+        $('input[name="up_exp_date"]').val(data.EXP_DATE)
         $('#updateModal').modal('show');
     }
 
     console.log();
-    
+
 
     function opendeleteModal(viewData) {
         var data = JSON.parse(viewData)
