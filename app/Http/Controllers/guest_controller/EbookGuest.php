@@ -90,7 +90,6 @@ class EbookGuest extends Controller
         ");
 
         $data['checkout'] = $this->checkoutModel->get_all_order($data_user);
-        dd($data['checking_data']);
         return
             view('template.header', $data) .
             view('template_guest.ebook.ebook_detail', $data) .
