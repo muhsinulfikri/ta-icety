@@ -27,18 +27,18 @@ class EbookGuest extends Controller
         $ID_USER = (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 
         $data['ebook'] = DB::table('ebook')
-            ->selectRaw('ebook.*, 
-								(SELECT 
+            ->selectRaw('ebook.*,
+								(SELECT
                                     COUNT(*)
                                 FROM
                                     payment p
-                                LEFT JOIN `order` o ON 
-                                    o.ID_PAY  = p.ID_PAY 
+                                LEFT JOIN `order` o ON
+                                    o.ID_PAY  = p.ID_PAY
                                 LEFT JOIN ebook e ON
                                     e.ID_BUKU = o.ID_PRODUCT
-                                WHERE 
+                                WHERE
                                     o.ID_USER = ?
-                                AND 
+                                AND
                                     p.DATE_PAY IS NOT NULL) AS DATA_CHECKING', [$ID_USER])
             ->paginate(12);
         return
@@ -90,7 +90,7 @@ class EbookGuest extends Controller
         ");
 
         $data['checkout'] = $this->checkoutModel->get_all_order($data_user);
-        // dd($data);
+        dd($data['checking_data']);
         return
             view('template.header', $data) .
             view('template_guest.ebook.ebook_detail', $data) .
@@ -121,7 +121,7 @@ class EbookGuest extends Controller
 
         // dd($data['checking_data']);
         if ($data['checking_data']->DATA_CHECKING == 0) {
-            session()->flash('msg', "<script> 
+            session()->flash('msg', "<script>
 						const Toast = Swal.mixin({
 							toast: true,
 							position: 'top-end',
