@@ -31,11 +31,14 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="topbar-search ">
-                        <input type="text" placeholder="Search our courses" class="form-control search" id="search-form">
+                        <input type="text" placeholder="Search our courses" class="form-control search"
+                            id="search-form">
                         <label><i class="fa fa-search"></i></label>
                     </div>
                     <div class="dropdown mt-2">
-                        <div id="search-result" class="col-12 dropdown-menu rounded-2 custom-scrollbar-js dropdown-primary" style="min-height: 512px; overflow-y:scroll;">
+                        <div id="search-result"
+                            class="col-12 dropdown-menu rounded-2 custom-scrollbar-js dropdown-primary"
+                            style="min-height: 512px; overflow-y:scroll;">
                         </div>
                     </div>
                 </div>
@@ -44,47 +47,66 @@
     </div>
     <div>
         <div class="container-fluid container-padding">
-            <div class="row gap-3">
-                <div class="col-12 col-lg bg-white row">
-                    <?php foreach ($events as $item) : ?>
-                        <div class="col-xl-4 col-lg-6 col-md-6">
-                            <div class="px-0 px-sm-3">
-                                <div class="course-grid course-style-4 bg-white" style="padding: 30px 30px 10px 30px;">
-                                    <div class="course-header">
-                                        <div class="">
-                                            <img src="<?= $item->IMAGE_ACTIVITY ?>" alt="" class="" style="width: 100%; height: 300px; object-fit: cover;">
+            <div class="row course-gallery justify-content-center">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="row justify-content-center">
+                        <?php if (!empty($events)) { ?>
+                        <div class="row mt-md-4" style="margin-left: 0px !important; margin-right: 0px !important;">
+                            <?php foreach ($events as $item) : ?>
+                            <div class="col-xl-4 col-lg-6 col-md-6">
+                                <div class="px-0 px-sm-3">
+                                    <div class="course-grid course-style-4 bg-white px-2 px-md-5 mt-4 pb-2">
+                                        <div class="course-header">
+                                            <div class="course-thumb">
+                                                <a
+                                                    href="<?= url('event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY))) . '?id_activity=' . $item->ID_ACTIVITY ?>">
+                                                    <img src="<?= $item->IMAGE_ACTIVITY ?>" alt="image"
+                                                        style="width: 100%; height: 300px; object-fit: cover;">
+                                                </a>
+                                            </div>
                                         </div>
+
+                                        <div class="course-content">
+                                            <div>
+                                                <span
+                                                    class="course-price <?= $item->PRICE_ACTIVITY == 0 ? 'bg-success' : 'bg-primary' ?>"
+                                                    style="<?= $item->EXPIRED == 1 ? 'right: 135px;' : '' ?>">
+                                                    <?= !empty(session('user')) && $item->DATA_CHECKING != 0 ? 'PARTICIPATED' : ($item->PRICE_ACTIVITY == 0 ? 'FREE' : 'PAID') ?>
+                                                </span>
+                                                <?php if ($item->EXPIRED == 1) : ?>
+                                                <span class="course-price" style="right: 10px;">EXPIRED</span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <h3 class="course-title mb-0"> <a
+                                                href="<?= url('event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY))) . '?id_activity=' . $item->ID_ACTIVITY ?>"><?= $item->TITLE_ACTIVITY ?>
+                                            </a> </h3>
                                     </div>
 
-                                    <div class="course-content">
-                                        <div>
-                                            <span class="course-price <?= ($item->PRICE_ACTIVITY == 0) ? "bg-success" : "bg-primary" ?>" style="<?= $item->EXPIRED == 1 ? "right: 135px;" : '' ?>">
-                                                <?= (!empty(session('user')) && $item->DATA_CHECKING <> 0) ? "PARTICIPATED" : (($item->PRICE_ACTIVITY == 0) ? "FREE" : "PAID") ?>
-                                            </span>
-                                            <?php if ($item->EXPIRED == 1) : ?>
-                                                <span class="course-price" style="right: 10px;">EXPIRED</span>
-                                            <?php endif; ?>
-                                        </div>
-                                        <h3 class="course-title mb-0"> <a href="<?= url('event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY))) . '?id_activity=' . $item->ID_ACTIVITY ?>"><?= $item->TITLE_ACTIVITY ?> </a> </h3>
-                                    </div>
                                     <div class="course-meta mb-3">
-                                        <div class="text-muted m-0 pt-2 fs-6" style="overflow: hidden !important;
-                                        text-overflow: ellipsis !important;
-                                        display: -webkit-box !important;
-                                        -webkit-line-clamp: 2 !important;
-                                        -webkit-box-orient: vertical !important;">
+                                        <div class="text-muted m-0 pt-2 fs-6"
+                                            style="overflow: hidden !important;
+                                                        text-overflow: ellipsis !important;
+                                                        display: -webkit-box !important;
+                                                        -webkit-line-clamp: 2 !important;
+                                                        -webkit-box-orient: vertical !important;">
                                             <?= date_format(date_create($item->DATE_START), 'j F Y') ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                        <?php } else { ?>
+                            <h3 class="font-sm text-center">No Event available</h3>
+                        <?php } ?>
+                    </div>
                 </div>
                 <hr>
-                <div class="px-3 d-grid d-md-flex text-center justify-content-md-between justify-content-center align-items-center">
+                <div
+                    class="px-3 d-grid d-md-flex text-center justify-content-md-between justify-content-center align-items-center">
                     <div class="order-2 order-md-1 pt-3 pt-md-0">
-                        <span class="fs-8 pagination-text">Showing {{$events->currentPage()}} of {{$events->lastPage()}} Page</span>
+                        <span class="fs-8 pagination-text">Showing {{ $events->currentPage() }} of
+                            {{ $events->lastPage() }} Page</span>
                     </div>
                     <div class="order-1 order-md-2">
                         {{ $events->links() }}

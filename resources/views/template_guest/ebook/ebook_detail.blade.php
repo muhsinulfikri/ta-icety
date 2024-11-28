@@ -14,7 +14,13 @@
                             </div>
 
                             <div class="container">
-                                @if ($checking_data->DATA_CHECKING != 1)
+                                @if ($checking_data && $checking_data->DATA_CHECKING != 1)
+                                    <a
+                                            href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
+                                                class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
+                                                Item
+                                            </button></a>
+                                @else
                                     <div class="price-header mb-3">
                                         <h2 class="course-price">
                                             <?= $detail->PRICE == 0 ? 'Free' : 'Rp ' . number_format($detail->PRICE, 2, ',', '.') ?>
@@ -33,12 +39,6 @@
                                         class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
                                         Add to Cart
                                     </button>
-                                @else
-                                    <a
-                                        href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
-                                            class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
-                                            Item
-                                        </button></a>
                                 @endif
                                 <!-- <php endif ?> -->
                             </div>
@@ -101,29 +101,29 @@
                 <h4 class="mb-4">Buku Lainnya</h4>
                 <div class="row course-gallery ">
                     <?php foreach ($other_ebook as $item) : ?>
-                    <div class="course-item cat1 cat5 col-lg-6 col-md-6">
-                        <div class="px-0 px-sm-3">
-                            <div class="single-course style-2 bg-shade border-0">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-xl-5">
-                                        <div class="course-thumb"
-                                            style="min-height: 150px !important;background:url(<?= str_replace(' ', '%20', $item->IMAGE_EBOOK) ?>)">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-7">
-                                        <div class="course-content">
-                                            <h3 class="course-title"> <a
-                                                    href="{{ url('ebooks/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->JUDUL))) . '?id_book=' . $item->ID_BUKU }}"><?= $item->JUDUL ?>
-                                                </a> </h3>
-                                            <div class="course-price">
-                                                <?= $item->PRICE == 0 ? 'FREE' : 'Rp ' . number_format($item->PRICE, 0, ',', '.') ?>
+                        <a href="{{ url('ebooks/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->JUDUL))) . '?id_book=' . $item->ID_BUKU }}">
+                            <div class="course-item cat1 cat5 col-lg-6 col-md-6">
+                                <div class="px-0 px-sm-3">
+                                    <div class="single-course style-2 bg-shade border-0">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-xl-5">
+                                                <div class="course-thumb"
+                                                    style="min-height: 150px !important;background:url(<?= str_replace(' ', '%20', $item->IMAGE_EBOOK) ?>)">
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-7">
+                                                <div class="course-content">
+                                                    <h3 class="course-title"><?= $item->JUDUL ?></h3>
+                                                    <div class="course-price">
+                                                        <?= $item->PRICE == 0 ? 'FREE' : 'Rp ' . number_format($item->PRICE, 0, ',', '.') ?>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </a>
                     <?php endforeach; ?>
                 </div>
             </div>
