@@ -61,6 +61,8 @@ class EbookGuest extends Controller
                 e.ID_BUKU = '" . $id_buku . "'
         ");
 
+        $data['checking_data'] = null;
+
         if ($data_user != null) {
             $data['checking_data'] = DB::SelectOne("
                 SELECT
@@ -85,6 +87,8 @@ class EbookGuest extends Controller
                 ebook.*
             FROM
                 ebook
+            WHERE
+                ID_BUKU != '". $data['detail']->ID_BUKU."'
             ORDER BY RAND()
             LIMIT 4
         ");
