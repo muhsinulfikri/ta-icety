@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="book_iframe" style="align-content: center">
-                <iframe src="https://tbh-v2.is3.cloudhost.id/EBOOK/Ebook-1725337103-1725337103.pdf#toolbar=0&navpanes=0"
+                <iframe src="{{ $detail->LINK_EBOOK }}"
                     style="width: 100%; height: 1000px;" frameborder="0"></iframe>
             </div>
         </div>
