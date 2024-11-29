@@ -61,10 +61,12 @@ class EbookGuest extends Controller
                 e.ID_BUKU = '" . $id_buku . "'
         ");
 
-        $data['checking_data'] = null;
+        $data['checking_data'] = (object)[
+            'DATA_CHECKING' => 0
+        ];
 
         if ($data_user != null) {
-            $data['checking_data'] = DB::SelectOne("
+            $checking_result = DB::SelectOne("
                 SELECT
                     count(e.ID_BUKU) AS DATA_CHECKING
                 FROM
@@ -80,6 +82,9 @@ class EbookGuest extends Controller
                 AND
                     p.DATE_PAY IS NOT NULL
             ");
+            if ($checking_result) {
+                $data['checking_data'] = $checking_result;
+            }
         }
 
         $data['other_ebook'] = DB::Select("
