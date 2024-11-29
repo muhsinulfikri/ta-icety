@@ -14,31 +14,32 @@
                             </div>
 
                             <div class="container">
-                                @if ($checking_data && $checking_data->DATA_CHECKING != 1)
-                                    <a
-                                            href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
-                                                class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
-                                                Item
-                                            </button></a>
-                                @else
-                                    <div class="price-header mb-3">
-                                        <h2 class="course-price">
-                                            <?= $detail->PRICE == 0 ? 'Free' : 'Rp ' . number_format($detail->PRICE, 2, ',', '.') ?>
-                                        </h2>
-                                    </div>
+                                @if ($checking_data->DATA_CHECKING != 1)
+                                <div class="price-header mb-3">
+                                    <h2 class="course-price">
+                                        <?= $detail->PRICE == 0 ? 'Free' : 'Rp ' . number_format($detail->PRICE, 2, ',', '.') ?>
+                                    </h2>
+                                </div>
 
-                                    <form class="" id="FormBuyNow-info" method="POST"
-                                        action="<?= url('purchase') ?>">
-                                        @csrf
-                                        <div id="data-input-info"></div>
-                                        <div class="w-100 button button-enroll-course btn btn-main-2 rounded"
-                                            onclick="BuyNow()"><?= $detail->PRICE == 0 ? 'Add Item' : 'Buy Now' ?>
-                                        </div>
-                                    </form>
-                                    <button data-id-ebook="<?= $detail->ID_BUKU ?>" onclick="AddToCart(this)"
-                                        class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                        Add to Cart
-                                    </button>
+                                <form class="" id="FormBuyNow-info" method="POST"
+                                    action="<?= url('purchase') ?>">
+                                    @csrf
+                                    <div id="data-input-info"></div>
+                                    <div class="w-100 button button-enroll-course btn btn-main-2 rounded"
+                                        onclick="BuyNow()"><?= $detail->PRICE == 0 ? 'Add Item' : 'Buy Now' ?>
+                                    </div>
+                                </form>
+                                <button data-id-ebook="<?= $detail->ID_BUKU ?>" onclick="AddToCart(this)"
+                                    class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Add to Cart
+                                </button>
+                                @else
+                                <a
+                                        href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
+                                            class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
+                                            Item
+                                        </button></a>
+
                                 @endif
                                 <!-- <php endif ?> -->
                             </div>
