@@ -818,23 +818,8 @@ class CourseController extends Controller
                         'TYPE'          => $categoryList[$i],
                     ];
 
-                    // if (!empty($linkMateri[$i])) {
-                    //     $data_item['LINK_MATERI']   = $linkMateri[$i];
-                    // }
-
-                    if ($req->input('materi_option') == 'link'){
-                        $data_item['LINK_MATERI'] = $linkMateri[$i];
-                        $data_item['FILE'] = null;
-                    } elseif ($req->input('materi_option') == 'file'){
-                        if (!empty($file[$i])) { // File di update
-                            $data_item['FILE'] = $file[$i];
-                            $data_item['LINK_MATERI'] = null;
-                        } else if (!empty($file_default[$i])) { // tidak ada pembaruan file
-                            $data_item['FILE'] = $file_default[$i];
-                            $data_item['LINK_MATERI'] = null;
-                        } else {
-                            $data_item['FILE'] = null;
-                        }
+                    if (!empty($linkMateri[$i])) {
+                        $data_item['LINK_MATERI']   = $linkMateri[$i];
                     }
 
                     DB::table('item_course')->insert($data_item);

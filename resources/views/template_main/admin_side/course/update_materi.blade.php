@@ -16,8 +16,8 @@
     </div>
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="card-body">
-            <span class="text-danger">* Select pdf or link for materi</span>
-            <div class="form-group row">
+            <span class="text-danger" id="label_materi">* Select pdf or link for materi</span>
+            <div class="form-group row" id="select_materi">
                 <label class="col-sm-2 col-form-label control-label">Select Option</label>
                 <div class="col-md-5">
                     <div class="form-check">
@@ -93,21 +93,75 @@
         }
     });
 
-    function toggleInput(type) {
-        const fileInputGroup = document.getElementById('fileInputGroup');
-        const linkInputGroup = document.getElementById('linkInputGroup');
+    $(document).ready(function() {
+        // Fungsi untuk mengatur visibilitas input berdasarkan kondisi awal
+        function setInitialInputVisibility() {
+            const linkMateri = "<?= $item['LINK_MATERI'] ?>".trim();
+            const fileMateri = "<?= $item['FILE'] ?>".trim();
 
-        if (type === 'file') {
-            fileInputGroup.hidden = false;
-            linkInputGroup.hidden = true;
-        } else if (type === 'link') {
-            linkInputGroup.hidden = false;
-            fileInputGroup.hidden = true;
-        } else {
-            linkInputGroup.hidden = true;
-            fileInputGroup.hidden = true;
+            // Jika link materi tidak kosong
+            if (linkMateri !== '') {
+                // Pilih radio button link
+                $('#optionLink').prop('checked', true);
+                $('#label_materi').hide();
+                $('#select_materi').hide();
+
+                // Sembunyikan input file
+                $('#fileInputGroup').hide();
+
+                // Tampilkan input link
+                $('#linkInputGroup').show();
+            }
+            // Jika file materi tidak kosong
+            else if (fileMateri !== '') {
+                // Pilih radio button file
+                $('#optionFile').prop('checked', true);
+                $('#label_materi').hide();
+                $('#select_materi').hide();
+
+                // Tampilkan input file
+                $('#fileInputGroup').show();
+
+                // Sembunyikan input link
+                $('#linkInputGroup').hide();
+            }
+            // Jika keduanya kosong
+            else {
+                // Sembunyikan keduanya
+                $('#fileInputGroup').hide();
+                $('#linkInputGroup').hide();
+            }
         }
-    }
+
+        // Panggil fungsi saat dokumen siap
+        setInitialInputVisibility();
+
+        // Fungsi toggle input (yang sudah ada)
+        function toggleInput(type) {
+            const fileInputGroup = document.getElementById('fileInputGroup');
+            const linkInputGroup = document.getElementById('linkInputGroup');
+
+            if (type === 'file') {
+                fileInputGroup.hidden = false;
+                linkInputGroup.hidden = true;
+                // Reset link input saat beralih ke file
+                $('#materi_link').val('');
+            } else if (type === 'link') {
+                linkInputGroup.hidden = false;
+                fileInputGroup.hidden = true;
+                // Reset file input saat beralih ke link
+                $('#materi_file<?=$no?>').val('');
+            } else {
+                linkInputGroup.hidden = true;
+                fileInputGroup.hidden = true;
+            }
+        }
+
+        // Tambahkan event listener untuk radio button
+        $('input[name="materi_option[]"]').on('change', function() {
+            toggleInput($(this).val());
+        });
+    });
 
     $(document).ready(function() {
         var $editor = $('#mytextarea_{{ $no }}');
