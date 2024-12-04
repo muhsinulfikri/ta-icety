@@ -55,7 +55,7 @@ class Checkout extends Model
             LEFT JOIN payment_method pm ON
                 pm.ID_PAY = p.ID_PAY
             WHERE
-                pm.STATUS = 'pending'
+                pm.STATUS = 'PENDING'
                 AND
                 p.KODE_USER = '$id_user'
         ");

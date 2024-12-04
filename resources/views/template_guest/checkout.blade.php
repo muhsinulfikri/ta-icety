@@ -1,6 +1,6 @@
 <style>
     .page-header-custom {
-        background: url('<?= asset(' assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
+        background: url('<?=asset('assets_new')?>/images/bg/illustration-bg.png') 50% 50%;
         background-size: cover;
         background-repeat: no-repeat;
         z-index: initial;
@@ -164,31 +164,31 @@
     var TotalPayment = 0
 
     var idPromoCode = 0;
-    document.getElementById('promoSelect').addEventListener('change', function() {
-        idPromoCode = parseInt(this.value);
-        var selectedOption = this.options[this.selectedIndex];
-        var amountValue = selectedOption.getAttribute('data-amount');
-        var unitValue = selectedOption.getAttribute('data-unit');
-        var totalPay = TotalPayment;
+    // document.getElementById('promoSelect').addEventListener('change', function() {
+    //     idPromoCode = parseInt(this.value);
+    //     var selectedOption = this.options[this.selectedIndex];
+    //     var amountValue = selectedOption.getAttribute('data-amount');
+    //     var unitValue = selectedOption.getAttribute('data-unit');
+    //     var totalPay = TotalPayment;
 
-        if (idPromoCode === 0) {
-            document.getElementById('diskon_pay').textContent = "Rp 0";
-            document.getElementById('total_pay').textContent = "Rp " + totalPay;
-        }
-        if (unitValue === 'persen') {
-            discount = totalPay * (amountValue / 100);
-            totalPay = totalPay - (totalPay * (amountValue / 100));
+    //     if (idPromoCode === 0) {
+    //         document.getElementById('diskon_pay').textContent = "Rp 0";
+    //         document.getElementById('total_pay').textContent = "Rp " + totalPay;
+    //     }
+    //     if (unitValue === 'persen') {
+    //         discount = totalPay * (amountValue / 100);
+    //         totalPay = totalPay - (totalPay * (amountValue / 100));
 
-            document.getElementById('diskon_pay').textContent = "Rp " + discount;
-            document.getElementById('total_pay').textContent = "Rp " + (totalPay);
-        }
-        if (unitValue === 'nominal') {
-            document.getElementById('diskon_pay').textContent = "Rp " + amountValue;
-            document.getElementById('total_pay').textContent = "Rp " + (totalPay - amountValue);
-        }
-    });
+    //         document.getElementById('diskon_pay').textContent = "Rp " + discount;
+    //         document.getElementById('total_pay').textContent = "Rp " + (totalPay);
+    //     }
+    //     if (unitValue === 'nominal') {
+    //         document.getElementById('diskon_pay').textContent = "Rp " + amountValue;
+    //         document.getElementById('total_pay').textContent = "Rp " + (totalPay - amountValue);
+    //     }
+    // });
 
-    console.log(idPromoCode);
+    // console.log(idPromoCode);
     window.onload = function() {
         $('input[type="checkbox"]').prop('checked', false)
     }
@@ -313,7 +313,7 @@
         // Toast.fire({
         //     icon: 'error',
         //     title: 'Complete your transaction first!'
-        // })
+        })
         <?php } else { ?>
         if (data != "") {
             for (let index = 0; index < data.length; index++) {

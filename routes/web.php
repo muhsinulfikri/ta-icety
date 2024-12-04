@@ -164,6 +164,10 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('check_payment_status', 'guest_controller\CheckoutGuest@check_status');
     Route::post('get_order_id', 'guest_controller\CheckoutGuest@get_order_id');
     //END PAYMENT & CART
+
+    //API XENDIT
+    Route::post('/payment/get', 'guest_controller\CheckoutGuest@get_payment');
+    Route::get('check_payment_status/{any}', 'guest_controller\CheckoutGuest@check_payment_status');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {
@@ -199,3 +203,5 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('events/lihat_peserta', 'EventController@index_lihat_peserta');
     Route::get('events/laporan_event', 'EventController@laporan_event');
 });
+
+

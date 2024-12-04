@@ -1,6 +1,6 @@
 <style>
     .page-header-custom {
-        background: url('<?= asset(' assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
+        background: url('<?= asset('assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
         background-size: cover;
         background-repeat: no-repeat;
         z-index: initial;

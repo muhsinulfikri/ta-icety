@@ -17,7 +17,7 @@
     <!-- Iconfont Css -->
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/awesome/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/flaticon/flaticon.css">
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/fonts/gilroy/font-gilroy.css">
+    <!-- <link rel="stylesheet" href="{{ asset('assets_new') }}/fonts/gilroy/font-gilroy.css">bootstrap.js -->
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/magnific-popup/magnific-popup.css">
     <!-- animate.css -->
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/animate-css/animate.css">
