@@ -1,8 +1,7 @@
-<?= $ScriptMidtrans ?>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     .page-header-custom {
-        background: url('<?= asset(' assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
+        background: url('<?= asset('assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
         background-size: cover;
         background-repeat: no-repeat;
         z-index: initial;
@@ -27,6 +26,7 @@
 
 <section class="woocommerce single page-wrapper">
     <div class="container">
+        <div id="alert_div"></div>
         <div class="row">
             <div class="col-12 col-lg-9 ">
                 <form id="form-purchase" method="POST" action="<?= url('check_payment_status') ?>">
@@ -154,14 +154,13 @@
                                 </select>
                             </div>
                         @endif
-                        <div class="wc-proceed-to-checkout ms-3">
-                            <button type="button" class="checkout-button button alt wc-forward" id="btn_purchase"
-                            onclick="CobaPayment()">
+                        <div class="wc-proceed-to-checkout">
+                            <button type="button" class="checkout-button button alt wc-forward" style="padding: 0.718047em 1.41575em;" id="pay">
                             {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
                             </button>
                         </div>
                         <div class="wc-proceed-to-checkout">
-                            <div class="alt btn btn-danger w-100 rounded" style="    padding: 0.718047em 1.41575em;"
+                            <div class="alt btn btn-danger w-100 rounded" style="padding: 0.718047em 1.41575em;"
                                 onclick="$('#form-cancel-trans').submit()">
                                 Cancel Transaction
                             </div>
@@ -176,103 +175,127 @@
 
 <script>
     var idPromoCode = 0;
-    document.getElementById('promoSelect').addEventListener('change', function() {
-        idPromoCode = parseInt(this.value);
-        var selectedOption = this.options[this.selectedIndex];
-        var amountValue = selectedOption.getAttribute('data-amount');
-        var unitValue = selectedOption.getAttribute('data-unit');
-        var totalPay = <?= $TotalBayar ?>;
+    if (<?= $TotalBayar ?> != 0) {
+        document.getElementById('promoSelect').addEventListener('change', function() {
+            idPromoCode = parseInt(this.value);
+            var selectedOption = this.options[this.selectedIndex];
+            var amountValue = selectedOption.getAttribute('data-amount');
+            var unitValue = selectedOption.getAttribute('data-unit');
+            var totalPay = <?= $TotalBayar ?>;
 
-        if (idPromoCode === 0) {
-            document.getElementById('id_promo_code').value = idPromoCode;
-            document.getElementById('diskon_pay').textContent = "Rp 0";
-            document.getElementById('total_pay').textContent = "Rp " + totalPay;
-        }
-        if (unitValue === 'persen') {
-            discount = totalPay * (amountValue / 100);
-            discount = Math.round(discount);
-            totalPay = totalPay - (totalPay * (amountValue / 100));
-            totalPay = Math.round(totalPay);
+            if (idPromoCode === 0) {
+                document.getElementById('id_promo_code').value = idPromoCode;
+                document.getElementById('diskon_pay').textContent = "Rp 0";
+                document.getElementById('total_pay').textContent = "Rp " + totalPay;
+            }
+            if (unitValue === 'persen') {
+                discount = totalPay * (amountValue / 100);
+                discount = Math.round(discount);
+                totalPay = totalPay - (totalPay * (amountValue / 100));
+                totalPay = Math.round(totalPay);
 
-            document.getElementById('id_promo_code').value = idPromoCode;
-            document.getElementById('diskon_pay').textContent = "Rp " + discount;
-            document.getElementById('total_pay').textContent = "Rp " + (totalPay);
+                document.getElementById('id_promo_code').value = idPromoCode;
+                document.getElementById('diskon_pay').textContent = "Rp " + discount;
+                document.getElementById('total_pay').textContent = "Rp " + (totalPay);
+            }
+            if (unitValue === 'nominal') {
+                document.getElementById('id_promo_code').value = idPromoCode;
+                document.getElementById('diskon_pay').textContent = "Rp " + amountValue;
+                document.getElementById('total_pay').textContent = "Rp " + (totalPay - amountValue);
+            }
+        });
+    }
+
+    $('#pay').on('click', function () {
+        Swal.fire({
+            title: 'Loading Payment!',
+            html: 'Please Wait ...',
+            timerProgressBar: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        if (<?= $TotalBayar ?> == 0) {
+            $('#form-purchase').submit();
+            return;
         }
-        if (unitValue === 'nominal') {
-            document.getElementById('id_promo_code').value = idPromoCode;
-            document.getElementById('diskon_pay').textContent = "Rp " + amountValue;
-            document.getElementById('total_pay').textContent = "Rp " + (totalPay - amountValue);
-        }
+
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // AJAX call to get the order ID
+        $.ajax({
+            url: '/get_order_id',
+            type: "POST",
+            data: {
+                _token: csrfToken,
+                TotPrice: <?= $TotalBayar ?>,
+                Diskon: idPromoCode,
+                id_order: $('input:hidden[name="id_order[]"]').map(function () {
+                    return $(this).val();
+                }).get()
+            },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response.invoice.id);
+                getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
+            },
+            error: function (xhr, status, error) {
+                displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
+                console.error(error);
+                Swal.close();
+            }
+        });
     });
 
-    let timerInterval
-    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    // Function to handle the second step: fetching the invoice
+    async function getInvoiceXendit(data, csrfToken) {
+        try {
+            const invoiceData = {
+                xendit_id: data,
+            };
+            console.log(invoiceData);
 
-    function CobaPayment() {
-        if ($('#total_bayar').val() != 0) {
-            $.ajaxSetup({
+            // Fetch call to create the invoice
+            const fetchResponse = await fetch('/payment/get', {
+                method: 'POST',
                 headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
                     'X-CSRF-TOKEN': csrfToken
-                }
+                },
+                body: JSON.stringify(invoiceData),
             });
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url: '<?= Request::segment(0) ?>/get_order_id',
-                type: "POST",
-                data: {
-                    TotPrice: <?= $TotalBayar ?>,
-                    Diskon: idPromoCode,
-                    id_order: $('input:hidden[name="id_order[]"]').map(function() {
-                        return $(this).val()
-                    }).get()
-                },
-                dataType: 'json',
-                success: function(response) {
-                    console.log(response)
-                    if (response.token) {
-                        Swal.fire({
-                            title: 'Open payment gateway ...',
-                            html: 'it will be over in a few seconds.',
-                            timer: 5000,
-                            timerProgressBar: false,
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then((resp) => {
-                            if (resp.dismiss === Swal.DismissReason.timer) {
-                                snap.pay(response.token, {
-                                    onSuccess: function(result) {
-                                        $('#form-purchase').submit();
-                                    },
-                                    onPending: function(result) {
-                                        $('#form-purchase').submit();
-                                    },
-                                    onError: function(result) {
-                                        $('#form-purchase').submit();
-                                    },
-                                    onClose: function() {
-                                        $('#form-purchase').submit();
-                                    }
-                                })
 
-                            }
-                        })
-                    } else {
-                        Toast.fire({
-                            icon: 'error',
-                            title: 'Payment gateway get some trouble'
-                        })
-                    }
-                }
-            });
-        } else {
-            $('#form-purchase').submit()
+            const responseData = await fetchResponse.json();
+            console.log(fetchResponse);
+
+            if (fetchResponse.ok && responseData.invoice_url) {
+                window.location.href = responseData.invoice_url; // Redirect to the invoice URL
+            } else {
+                displayError('Payment Error', responseData?.message || 'An error occurred while creating the invoice.');
+                console.error(responseData);
+                Swal.close();
+            }
+        } catch (error) {
+            displayError('Payment Error', error.message || 'An unexpected error occurred.');
+            console.error(error);
+            Swal.close();
         }
     }
+
+
+    // Helper function to display error messages
+    function displayError(title, message) {
+        const alertContainer = document.getElementById('alert_div');
+        alertContainer.innerHTML = `
+            <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
+                <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" 
+                    style="transition: none; background-color: transparent; color: inherit;">
+                </button>
+            </div>
+        `;
+    }
+
 </script>

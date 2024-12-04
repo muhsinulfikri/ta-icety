@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Support\Facades\Session;
+use App\Services\XenditService;
+use Illuminate\Support\Facades\Redirect;
 
 class CheckoutGuest extends Controller
 {
@@ -27,6 +29,8 @@ class CheckoutGuest extends Controller
 	protected $certificateModel;
 	protected $ebookModel;
 	protected $promoModel;
+	protected $xenditService;
+
 	function __construct()
 	{
 		$this->eventModel = new Event();
@@ -35,11 +39,7 @@ class CheckoutGuest extends Controller
 		$this->certificateModel = new Certificate();
 		$this->ebookModel = new Ebook();
 		$this->promoModel = new Promo();
-		$this->serverKeyMidtrans = base64_encode("Mid-server-bc8oy07HC8V92YMl3oKmgL9K");
-		$this->clientKeyMidtrans = 'Mid-client-SmG8P47WnRFRNOIt';
-		// Durianpay::setApiKey('dp_live_HPkbQyQ29oUrgWL9');
-		// Durianpay::setApiKey('dp_test_aubDzC4Ddmpac05n');
-		// error_reporting(0);
+		$this->xenditService = new XenditService();
 	}
 
 	// PAYMENT CONTROLLER
@@ -64,7 +64,6 @@ class CheckoutGuest extends Controller
 			WHERE
 				cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 		");
-        // dd($data['promo']);
 		return view('template.header', $data) .
 			view('template_guest.checkout', $data) .
 			view('template.footer', $data);
@@ -141,8 +140,6 @@ class CheckoutGuest extends Controller
 				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 			");
 		}
-
-		$data['ScriptMidtrans'] = '<script type="text/javascript" src="https://app.midtrans.com/snap/snap.js" data-client-key="' . $this->clientKeyMidtrans . '"></script>';
 		return 	view('template.header', $data) .
 			view('template_guest.purchase', $data) .
 			view('template.footer', $data);
@@ -166,7 +163,6 @@ class CheckoutGuest extends Controller
 					"PRICE_ORDER" => $ebook->PRICE,
 					"LOG_TIME" => date("Y-m-d H:i:s")
 				);
-				// $this->checkoutModel->update_order($data_order, $id_activity, session('user')[0]->get('ID_USER'));
 				DB::table("order")
 					->where('ID_PRODUCT', $id_activity)
 					->where('ID_USER', session('user')[0]->get('ID_USER'))
@@ -180,7 +176,6 @@ class CheckoutGuest extends Controller
 					"PRICE_ORDER" => $ebook->PRICE,
 					"LOG_TIME" => date("Y-m-d H:i:s")
 				);
-				// $this->checkoutModel->insert_order($data_order);
 				DB::table("order")->insert($data_order);
 				$msg = "Successfully Added Course to Cart!";
 			}
@@ -195,7 +190,6 @@ class CheckoutGuest extends Controller
 						"PRICE_ORDER" => $course->PRICE_ACTIVITY,
 						"LOG_TIME" => date("Y-m-d H:i:s")
 					);
-					// $this->checkoutModel->update_order($data_order, $id_activity, session('user')[0]->get('ID_USER'));
 					DB::table("order")
 						->where('ID_PRODUCT', $id_activity)
 						->where('ID_USER', session('user')[0]->get('ID_USER'))
@@ -210,7 +204,6 @@ class CheckoutGuest extends Controller
 						"PRICE_ORDER" => $course->PRICE_ACTIVITY,
 						"LOG_TIME" => date("Y-m-d H:i:s")
 					);
-					// $this->checkoutModel->insert_order($data_order);
 					DB::table("order")->insert($data_order);
 					$msg = "Successfully Added Course to Cart!";
 				}
@@ -269,12 +262,21 @@ class CheckoutGuest extends Controller
 		}
 	}
 
+	public function get_payment(Request $request)
+	{
+		try {
+			$invoice = $this->xenditService->retrieveInvoiceById($request->xendit_id);
+			return $invoice;
+		} catch (\Xendit\XenditSdkException $e) {
+			echo 'Exception when calling InvoiceApi->getInvoiceById: ', $e->getMessage(), PHP_EOL;
+			echo 'Full Error: ', json_encode($e->getFullError()), PHP_EOL;
+		}
+	}
 	// Access payment gateway
 	public function get_order_id(Request $request)
 	{
 		$ID_DISCOUNT = $_POST['Diskon'];
 		$PRICE = (int)$_POST['TotPrice'];
-
 		$check_discount = DB::SelectOne("
 			SELECT
 				p.*
@@ -291,114 +293,68 @@ class CheckoutGuest extends Controller
 			$PRICE = $PRICE - ($PRICE * ($check_discount->AMMOUNT / 100));
 		}
 
-		$data_trans = DB::select("
-		SELECT
-		u.NAME ,
-		u.EMAIL ,
+		$data_trans = DB::selectOne("
+			SELECT
+				u.NAME ,
+				u.EMAIL ,
 				u.TELP
 			FROM
 				user u
 			WHERE
 				u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-		")[0];
+		");
 
 		$checking_trans = $this->checkoutModel->get_trans(session('user')[0]->get('ID_USER'));
-		$ID_PAY = $this->GenerateUniqIDPay('LARA10-checkout-' . date('Y-m-d H:i:s'));
+		$ID_PAY = $this->GenerateUniqIDPay('ICETY-XENDIT-checkout-' . date('Y-m-d H:i:s'));
 		if (empty($checking_trans)) {
-			$data_res = [
-				"transaction_details" => [
-					"order_id" => $ID_PAY,
-					"gross_amount" => (int) $PRICE
-				],
-				"customer_details" => [
-					"first_name" => $data_trans->NAME,
-					"email" => $data_trans->EMAIL,
-					"phone" => $data_trans->TELP,
-					"billing_address" => [
-						"first_name" => $data_trans->NAME,
-						"email" => $data_trans->EMAIL,
-						"phone" => $data_trans->TELP
-					]
-				],
-				"item_details" => []
+			$invoice = $this->xenditService->createInvoice([
+				'external_id' => $ID_PAY,
+				'payer_email' => $data_trans->EMAIL,
+				'amount' => (int) $PRICE,
+				'invoice_duration' => 7200,
+				"success_redirect_url" => url('check_payment_status/payment?id_pay='.$ID_PAY.''),
+				"failure_redirect_url" => url('purchase'),
+			]);
+
+			$data_payment = [
+				"ID_PAY" => $ID_PAY,
+				"KODE_USER" => session('user')[0]->get('ID_USER'),
+				"ID_DISCOUNT" => $ID_DISCOUNT ?? null,
+				"XENDIT_ID" => $invoice['id'],
+				"DATE_CREATED" => date("Y-m-d H:i:s")
 			];
+			DB::table("payment")->insert($data_payment);
+
+			$data_payment_method = [
+				"ID_PAY" => $ID_PAY,
+				"GROSS_AMMOUNT" => (int) $PRICE,
+				"STATUS" => $invoice['status'],
+				"PAY_METHOD" => $invoice['payment_method'],
+				"EXP_DATE" => $invoice['expiry_date'],
+			];
+			DB::table('payment_method')->insert($data_payment_method);
+
 			foreach ($_POST['id_order'] as $item) {
 				$_response = $this->checkoutModel->get_detail_order($item, "")[0];
 
-				$charLimit = 25;
-				$_response->TITLE_ACTIVITY = mb_substr($_response->TITLE_ACTIVITY, 0, $charLimit);
-				if (strlen($_response->TITLE_ACTIVITY) >= $charLimit) {
-					$_response->TITLE_ACTIVITY .= '...';
-				}
-
-				$name = "";
-				if (!empty($_response->JUDUL)) {
-					$name = $_response->JUDUL;
-				} else if (!empty($_response->TITLE_ACTIVITY)) {
-					$name = $_response->TITLE_ACTIVITY;
-				}
-
-				array_push(
-					$data_res['item_details'],
-					array(
-						'id' => $_response->ID_PRODUCT,
-						'quantity' => 1,
-						'price' => (int) $PRICE,
-						"name" => $name,
-						"brand" => "TBH Academy",
-						"category" => "Course",
-						"merchant_name" => "PT. DBI",
-						"url" => ""
-					)
-				);
-
-				$data_order = array(
+				$data_order = [
 					"ID_PAY" => $ID_PAY,
 					"LOG_TIME" => date("Y-m-d H:i:s")
-				);
+				];
 				DB::table('order')
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
 					->where('ID_USER', session('user')[0]['ID_USER'])
 					->update($data_order);
 			}
 
-			$url = 'https://app.midtrans.com/snap/v1/transactions';
-			$ch = curl_init($url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data_res));
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				'accept: application/json',
-				'authorization: Basic ' . $this->serverKeyMidtrans,
-				'content-type: application/json',
-			));
-
-			$response = curl_exec($ch);
-			curl_close($ch);
-			$data = json_decode($response, true);
-			$data_payment = array(
-				"ID_PAY" => $ID_PAY,
-				"TOKEN" => $data['token'],
-				"KODE_USER" => session('user')[0]->get('ID_USER'),
-				"DATE_CREATED" => date("Y-m-d H:i:s")
-			);
-			DB::table("payment")->insert($data_payment);
-
-			$data_payment = array(
-				"ID_PAY" => $ID_PAY,
-				"GROSS_AMMOUNT" => $_POST['TotPrice'],
-				"STATUS" => 'pending'
-			);
-			// $this->checkoutModel->insert_payment_method($data_payment);
-			DB::table('payment_method')->insert($data_payment);
-			echo json_encode([
-				'status' => 200,
-				'token' => $data['token']
-			]);
+			return response([
+				'status_code'       => 200,
+				'invoice'           => $invoice,
+			], 200);
 		} else {
 			echo json_encode([
 				'status' => 200,
-				'token' => $checking_trans[0]->TOKEN
+				'xendit_id' => $checking_trans[0]->XENDIT_ID
 			]);
 		}
 	}
@@ -422,209 +378,15 @@ class CheckoutGuest extends Controller
         DB::beginTransaction();
 
         try {
-            if ((int)$_POST['tot_bayar'] != 0) {
-                $checking_trans = $this->checkoutModel->get_trans(session('user')[0]->get('ID_USER'));
-                $id_pay = $checking_trans[0]->ID_PAY;
-                $url = 'https://api.midtrans.com/v2/' . $id_pay . '/status';
-                $ch = curl_init($url);
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'accept: application/json',
-                    'authorization: Basic ' . $this->serverKeyMidtrans,
-                    'content-type: application/json',
-                ));
-
-                $response = curl_exec($ch);
-                curl_close($ch);
-                header('Content-Type: application/json');
-                $data = json_decode($response, true);
-
-                if (!empty($data['transaction_status'])) {
-                    if ($data['transaction_status'] == 'pending') {
-                        session()->flash('msg', "<script>
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                            Toast.fire({
-                                icon: 'warning',
-                                title: 'Purchase pending complete the transaction'
-                            })
-                            </script>
-                        ");
-
-                        $data_payment_method = array(
-                            "TRANSACTION_ID" => $data['transaction_id'],
-                            "PAY_METHOD" => $data['payment_type'],
-                            "EXP_DATE" => $data['expiry_time']
-                        );
-                        // $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
-                        DB::table('payment_method')
-                            ->where('ID_PAY', $id_pay)
-                            ->update($data_payment_method);
-
-                        DB::commit();
-                    } else if ($data['transaction_status'] == 'settlement' || $data['transaction_status'] == 'capture') {
-                        $data_payment_method = array(
-                            "TRANSACTION_ID" => $data['transaction_id'],
-                            "PAY_METHOD" => $data['payment_type'],
-                            "EXP_DATE" => $data['expiry_time'],
-                            "STATUS" => 'success'
-                        );
-                        // $this->checkoutModel->update_payment_method($data_payment_method, $id_pay_method);
-                        DB::table('payment_method')
-                            ->where('ID_PAY', $id_pay)
-                            ->update($data_payment_method);
-
-                        $data_payment = array(
-                            "DATE_PAY" => date('Y-m-d H:i:s')
-                        );
-                        // $this->checkoutModel->update_payment($data_payment, $id_trans);
-                        DB::table('payment')
-                            ->where('ID_PAY', $id_pay)
-                            ->update($data_payment);
-                        if (!empty($type_acticity) && $type_acticity->TYPE_ACTIVITY == 1) {
-                            foreach ($id_item as $item) {
-                                $this->InsertDataMapping($item);
-                            }
-                        }
-
-                        $check_use_promo = DB::selectOne("
-                            SELECT
-                                count(p.ID_PAY) as pay_count,
-                                cp.ID_CLAIM
-                            FROM
-                                payment p
-                            LEFT JOIN payment_method pm ON
-                                pm.ID_PAY = p.ID_PAY
-                            LEFT JOIN claimed_promo cp ON
-                                p.KODE_USER = cp.ID_USER
-                            WHERE
-                                pm.STATUS = 'success'
-                            AND
-                                p.KODE_USER = '".session('user')[0]->get('ID_USER')."'
-                            AND
-                                pm.ID_PAY = '".$id_pay."'
-                        ");
-
-                        if($check_use_promo->pay_count == 1){
-                            DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
-                        }
-
-                        session()->flash('msg', "<script>
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                            Toast.fire({
-                                icon: 'success',
-                                title: 'Purchase Success'
-                            })
-                            </script>
-                        ");
-
-                        DB::commit();
-                    } else if ($data['transaction'] == 'expire') {
-                        session()->flash('msg', "<script>
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                            Toast.fire({
-                                icon: 'warning',
-                                title: 'Purchase Failed, transaction was expire'
-                            })
-                            </script>
-                        ");
-                        // $this->checkoutModel->delete_transaction($id_trans, $id_order);
-                        DB::table('order')
-                            ->where('PRICE_ORDER', '<>', 0)
-                            ->whereIn('ID_ORDER', $id_order)
-                            ->update(['ID_PAY' => null]);
-
-                        //delete in tb payment
-                        DB::table('payment')
-                            ->where('ID_PAY', $id_pay)
-                            ->delete();
-
-                        //delete in tb payment_method
-                        DB::table('payment_method')
-                            ->where('ID_PAY', $id_pay)
-                            ->delete();
-
-                        DB::commit();
-                    } else {
-                        session()->flash('msg', "<script>
-                            const Toast = Swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000,
-                                timerProgressBar: true,
-                                didOpen: (toast) => {
-                                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                                }
-                            })
-                            Toast.fire({
-                                icon: 'warning',
-                                title: 'Purchase Failed'
-                            })
-                            </script>
-                        ");
-                        // $this->checkoutModel->delete_transaction($id_trans, $id_order);
-                        DB::table('order')
-                            ->where('PRICE_ORDER', '<>', 0)
-                            ->whereIn('ID_ORDER', $id_order)
-                            ->update(['ID_PAY' => null]);
-
-                        //delete in tb payment
-                        DB::table('payment')
-                            ->where('ID_PAY', $id_pay)
-                            ->delete();
-
-
-                        //delete in tb payment_method
-                        DB::table('payment_method')
-                            ->where('ID_PAY', $id_pay)
-                            ->delete();
-
-                        DB::commit();
-                    }
-                }
-                return redirect('checkouts');
-            } else if ((int)$_POST['tot_bayar'] == 0) {
+            if ((int)$_POST['tot_bayar'] == 0) {
                 $ID_PAY = $this->GenerateUniqIDPay('CI3-checkout-' . date('Y-m-d H:i:s'));
                 $data_payment = array(
                     "ID_PAY" => $ID_PAY,
-                    "TOKEN" => NULL,
+                    "XENDIT_ID" => NULL,
                     "KODE_USER" => session('user')[0]->get('ID_USER'),
                     "DATE_CREATED" => date("Y-m-d H:i:s"),
                     "DATE_PAY" => date("Y-m-d H:i:s")
                 );
-                // $this->checkoutModel->insert_payment($data_payment);
                 DB::table("payment")->insert($data_payment);
 
                 foreach ($id_item as $item) {
@@ -632,7 +394,6 @@ class CheckoutGuest extends Controller
                         "ID_PAY" => $ID_PAY,
                         "LOG_TIME" => date("Y-m-d H:i:s")
                     );
-                    // $this->checkoutModel->update_order($data_order, $item, session('user')[0]->get('ID_USER'));
                     DB::table("order")
                         ->where('ID_PRODUCT', $item)
                         ->where('ID_USER', session('user')[0]->get('ID_USER'))
@@ -670,14 +431,79 @@ class CheckoutGuest extends Controller
                 ");
 
                 DB::commit();
-
                 return redirect('checkouts');
             }
         } catch (Exception $e){
             DB::rollBack();
-                dd($e);
+        	dd($e);
         }
+	}
 
+	public function check_payment_status(Request $req) {
+		$id_item = [];
+		$data_trans = DB::selectOne("
+			SELECT
+				p.XENDIT_ID as xendit_id,
+				o.ID_PRODUCT as id_product
+			FROM
+				payment p
+			LEFT JOIN `order` o ON
+				o.ID_PAY = p.ID_PAY
+			WHERE
+				p.ID_PAY = '".$req->id_pay."'
+		");
+		$id_item[] = $data_trans->id_product;
+		$type_acticity = DB::selectOne("
+			SELECT
+				TYPE_ACTIVITY
+			FROM
+				activity
+			WHERE
+				ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
+		");
+		$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
+
+		$data_payment = [
+			"DATE_PAY" => $check_xendit['updated'],
+		];
+		DB::table("payment")->where('ID_PAY', $req->id_pay)->update($data_payment);
+
+		$data_payment_method = [
+			"STATUS" => $check_xendit['status'],
+			"PAY_METHOD" => $check_xendit['payment_method'],
+			"EXP_DATE" => $check_xendit['expiry_date'],
+		];
+		DB::table('payment_method')->where('ID_PAY', $req->id_pay)->update($data_payment_method);
+
+		if (!empty($type_acticity) && $type_acticity->TYPE_ACTIVITY == 1) {
+			foreach ($id_item as $item) {
+				$this->InsertDataMapping($item);
+			}
+		}
+
+		$check_use_promo = DB::selectOne("
+			SELECT
+				count(p.ID_PAY) as pay_count,
+				cp.ID_CLAIM
+			FROM
+				payment p
+			LEFT JOIN payment_method pm ON
+				pm.ID_PAY = p.ID_PAY
+			LEFT JOIN claimed_promo cp ON
+				p.KODE_USER = cp.ID_USER
+			WHERE
+				pm.STATUS = 'SETTLED'
+			AND
+				p.KODE_USER = '".session('user')[0]->get('ID_USER')."'
+			AND
+				pm.ID_PAY = '".$req->id_pay."'
+		");
+
+		if($check_use_promo->pay_count == 1){
+			DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
+		}
+
+		return redirect('checkouts');
 	}
 
 	public function DeleteTrans(Request $req)
@@ -753,6 +579,6 @@ class CheckoutGuest extends Controller
 		$scrap  = str_replace($vocal, "", $string);
 		$begin  = substr($scrap, 0, 4);
 		$uniqid = strtoupper($begin);
-		return "PAY_" . $uniqid . substr(md5(time()), 0, 3);
+		return "PAY_ICETY_" . $uniqid . substr(md5(microtime()), 0, 7);
 	}
 }

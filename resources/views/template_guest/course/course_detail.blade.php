@@ -236,7 +236,6 @@
                         if ($tot_proggress == 100) { ?>
                         <div class="tab-pane fade" id="nav-sertif" role="tabpanel" aria-labelledby="nav-sertif-tab"
                             tabindex="0">
-                            <?php if ($grade > 75) { ?>
                             <div class="d-flex justify-content-center">
                                 <div class="blurred-image" style="pointer-events: none">
                                     <embed class="overlay" style="width:600px; height:500px; pointer-events: none;"
@@ -255,11 +254,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <?php } else { ?>
-                            <div class="mx-3 mx-lg-7 my-4 text-muted">
-                                Please complete the entire course and achieve a score above 75 poin.
-                            </div>
-                            <?php } ?>
                         </div>
                         <div class="tab-pane fade" id="nav-komen" role="tabpanel" aria-labelledby="nav-komen-tab"
                             tabindex="0">
