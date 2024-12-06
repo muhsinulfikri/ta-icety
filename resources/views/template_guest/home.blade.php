@@ -20,9 +20,7 @@
                     <h1 class="text-dark mt-0" style="font-weight: 500;">Everyone can<br>
                         <span style="font-weight: 700;">share and learn</span>
                     </h1>
-                    <p class="mb-40 text-dark"> Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores ullam
-                        libero magni reiciendis
-                        quam ipsa blanditiis, facilis velit eaque illo?</p>
+                    <p class="mb-40 text-dark"> Are you ready to grow with us?</p>
 
                     <div class="btn-container">
                         <a href="course" class="btn btn-main rounded">Find Courses</a>
@@ -399,26 +397,6 @@
     }
 </style>
 
-<section>
-    <div style="margin:auto;max-width: 1208px;max-height: 400px;">
-        <div class="splide img-header"
-            style="margin-top:120px; overflow:hidden;border-radius:1rem;max-width: 1208px;max-height: 400px;">
-            <div class="splide__track" style="aspect-ratio:151/50;">
-                <ul class="splide__list">
-                    @foreach ($carousel as $item)
-                        <li class="splide__slide">
-                            <section class="bg-fixed division" onclick="window.open('<?= $item->link ?>', '_blank')"
-                                style="background-size:cover;aspect-ratio:151/50;
-                            background-image: url(<?= $item->gambar ?>);
-                            width: 100%; height: 100%;">
-                            </section>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
 
 <section class="section-padding course-filter-section">
     <div class="container">

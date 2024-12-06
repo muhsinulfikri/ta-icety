@@ -1,11 +1,11 @@
 <!-- Login -->
 <div class="mb-5">
-    <div class="container d-grid d-md-flex p-4 p-md-0 position-relative">
+    <div class="container d-grid d-md-flex p-0 p-lg-4 position-relative">
         <div class="w-100">
             <div class="d-none d-lg-block">
                 <img src="<?= asset('assets/images/login-1.png') ?>" class="float-end d-block img-fluid rounded-5 rounded-start h-auto ">
             </div>
-            <div class="col-12 col-lg-6 h-100 p-4 pe-5 bg-white rounded-5 position-absolute" id="formLogin">
+            <div class="col-12 col-lg-6 h-100 p-4 pe-4 pe-md-5 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-md-4 flex-column justify-content-center h-100">
                     {{--
                         msg error
@@ -17,7 +17,7 @@
                             <input type="email" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" name="email" placeholder="Email" aria-describedby="emailHelp" required>
                         </div>
                         <div class="input-group my-4">
-                            <input type="password" class="form-control input-text woocommerce-Input woocommerce-Input--text" name="password" id="exampleInputPassword1" placeholder="Password" aria-describedby="passwordHelp" required>
+                            <input type="password" class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3" name="password" id="exampleInputPassword1" placeholder="Password" aria-describedby="passwordHelp" required>
                             <span class="align-self-center fw-semibold" id="togglePassword" style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i class="far fa-eye fs-4"></i></span>
                         </div>
                         <div class="mt-4 my-3">
@@ -40,7 +40,6 @@
                             <a href="<?= url('forgot-password') ?>" class="text-decoration-none fw-bold text-black">Forgot Password?</a>
                         </div>
                         <div class="my-4">
-                            {{-- <button type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0">Login</button> --}}
                             <button id="btn-login" type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0" disabled>Login</button>
                         </div>
                         <div class="my-4 text-center">

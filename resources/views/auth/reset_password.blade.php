@@ -4,7 +4,7 @@
             <div class="d-none d-lg-block">
                 <img src="<?= url('assets/images/login-1.png') ?>" class="float-end d-block img-fluid rounded-5 rounded-start h-auto ">
             </div>
-            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 position-absolute" id="formLogin">
+            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-4 flex-column justify-content-center h-100">
                     <h4 class="ps-1 fw-semibold">Create New Password</h4>
                     <h5 class="fw-normal mt-5">Your new password must be different from previous used passwords</h5>
@@ -87,11 +87,11 @@
     password.onchange = validatePassword;
     password2.onkeyup = validatePassword;
     document.addEventListener('DOMContentLoaded', function () {
-        @if (session()->has('succ_msg')) 
+        @if (session()->has('succ_msg'))
             Swal.fire({
                     icon: 'success',
                     title: '{{ session('succ_msg') }}'
-                }) 
+                })
         @endif
         @if (session()->has('resp_msg'))
             Swal.fire({
