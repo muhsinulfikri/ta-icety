@@ -166,19 +166,6 @@ class AuthController extends Controller
             Mail::to($req->input('email'))->send($mail);
             // END SEND EMAIL VERIFICATION
 
-            // SEND EMAIL VERIFICATION
-            $token_key = bin2hex(random_bytes(32));
-            $details = [
-                'name' => $req->input('name'),
-                'body' => 'Click this link below to verify your email.',
-                'link' => url('verification/confirm?token=' . $token_key),
-                'button' => "Verify",
-            ];
-            $mail = new MailSender($details);
-            $mail->subject("Email Verification");
-            Mail::to($req->input('email'))->send($mail);
-            // END SEND EMAIL VERIFICATION
-
             // SAVE TOKEN
             $formDataToken = [
                 'ID_USER' => $KODE_USER,
@@ -220,7 +207,7 @@ class AuthController extends Controller
         ');
 
         if ($status->STATUS != 1) {
-            // ACTIVATE USER 
+            // ACTIVATE USER
             DB::table('user')->where('ID_USER', '=', $getToken->ID_USER)->update(['STATUS' => 1]);
         }
 

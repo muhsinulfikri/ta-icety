@@ -30,6 +30,9 @@
     <link rel="stylesheet" href="{{ asset('assets_new') }}/css/style.css">
     <link rel="stylesheet" href="{{ asset('assets_new') }}/css/responsive.css">
 
+    {{-- captcha --}}
+    <link rel="stylesheet" href="{{ asset('css/sliderPuzzle.css') }}">
+
     <!-- Main jQuery -->
     <script src="{{ asset('assets_new') }}/vendors/jquery/jquery.js"></script>
 

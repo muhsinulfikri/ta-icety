@@ -5,7 +5,7 @@
                 <span class="col-md-11">Detail - Materi <?= $item['TITLE'] ?></span>
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}" required>
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
-                <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?>">
+
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
                 <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
@@ -16,36 +16,29 @@
     </div>
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="card-body">
-            <span class="text-danger" id="label_materi">* Select pdf or link for materi</span>
-            <div class="form-group row" id="select_materi">
-                <label class="col-sm-2 col-form-label control-label">Select Option</label>
-                <div class="col-md-5">
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="optionFile" name="materi_option[]" value="file" onclick="toggleInput('file')" >
-                        <label class="form-check-label" for="optionFile">Upload File</label>
-                    </div>
-                    <div class="form-check">
-                        <input type="radio" class="form-check-input" id="optionLink" name="materi_option[]" value="link" onclick="toggleInput('link')" >
-                        <label class="form-check-label" for="optionLink">Enter Link</label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row" id="fileInputGroup">
+            <?php
+            $hasFile = !empty($item['FILE']);
+            $hasLink = !empty($item['LINK_MATERI']);
+            ?>
+            <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?? null ?>">
+            <div class="form-group row" id="fileInputGroup_{{ $no }}" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
                 <label class="col-sm-2 col-form-label control-label">Chapter File</label>
-                <div class="col-md-5">
+                <div class="col-md-5" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
                     <div class="custom-file">
-                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
-                            class="custom-file-input file_materi" value="{{ $item['FILE'] }}">
+                        <input type="<?php echo $hasFile ? 'file' : 'hidden'; ?>" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
+                            class="custom-file-input file_materi" value="{{ $item['FILE'] ?? '' }}">
                     </div>
                 </div>
             </div>
-            <div class="form-group row" id="linkInputGroup">
+
+            <div class="form-group row" id="linkInputGroup_{{ $no }}" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
                 <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
-                <div class="col-md-5">
-                    <input id="materi_link" type="text" class="form-control" name="materi_link[]"
-                    value="{{ $item['LINK_MATERI'] }}">
+                <div class="col-md-5" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
+                    <input id="materi_link_{{ $no }}" type="<?php echo $hasLink ? 'text' : 'hidden'; ?>" class="form-control" name="materi_link[]"
+                    value="{{ $item['LINK_MATERI'] ?? '' }}">
                 </div>
             </div>
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label" required>Chapter Name</label>
                 <div class="col-md-10">
@@ -91,76 +84,6 @@
             dropifyInstance.destroy();
             dropifyInstance.init();
         }
-    });
-
-    $(document).ready(function() {
-        // Fungsi untuk mengatur visibilitas input berdasarkan kondisi awal
-        function setInitialInputVisibility() {
-            const linkMateri = "<?= $item['LINK_MATERI'] ?>".trim();
-            const fileMateri = "<?= $item['FILE'] ?>".trim();
-
-            // Jika link materi tidak kosong
-            if (linkMateri !== '') {
-                // Pilih radio button link
-                $('#optionLink').prop('checked', true);
-                $('#label_materi').hide();
-                $('#select_materi').hide();
-
-                // Sembunyikan input file
-                $('#fileInputGroup').hide();
-
-                // Tampilkan input link
-                $('#linkInputGroup').show();
-            }
-            // Jika file materi tidak kosong
-            else if (fileMateri !== '') {
-                // Pilih radio button file
-                $('#optionFile').prop('checked', true);
-                $('#label_materi').hide();
-                $('#select_materi').hide();
-
-                // Tampilkan input file
-                $('#fileInputGroup').show();
-
-                // Sembunyikan input link
-                $('#linkInputGroup').hide();
-            }
-            // Jika keduanya kosong
-            else {
-                // Sembunyikan keduanya
-                $('#fileInputGroup').hide();
-                $('#linkInputGroup').hide();
-            }
-        }
-
-        // Panggil fungsi saat dokumen siap
-        setInitialInputVisibility();
-
-        // Fungsi toggle input (yang sudah ada)
-        function toggleInput(type) {
-            const fileInputGroup = document.getElementById('fileInputGroup');
-            const linkInputGroup = document.getElementById('linkInputGroup');
-
-            if (type === 'file') {
-                fileInputGroup.hidden = false;
-                linkInputGroup.hidden = true;
-                // Reset link input saat beralih ke file
-                $('#materi_link').val('');
-            } else if (type === 'link') {
-                linkInputGroup.hidden = false;
-                fileInputGroup.hidden = true;
-                // Reset file input saat beralih ke link
-                $('#materi_file<?=$no?>').val('');
-            } else {
-                linkInputGroup.hidden = true;
-                fileInputGroup.hidden = true;
-            }
-        }
-
-        // Tambahkan event listener untuk radio button
-        $('input[name="materi_option[]"]').on('change', function() {
-            toggleInput($(this).val());
-        });
     });
 
     $(document).ready(function() {

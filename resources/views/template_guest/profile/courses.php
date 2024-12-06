@@ -9,10 +9,10 @@
             </tr>
         </thead>
         <tbody class="table-group-divider text-black" style="border-color:#C8C8C8; border-top-width: 2px !important">
-            <tr onclick="location.href='<?= base_url('course')?>" style="cursor:pointer">
+            <tr onclick="location.href='<?= url('course')?>" style="cursor:pointer">
                 <td class="py-3">
                     <div class="d-flex align-items-center">
-                        <img src="<?= base_url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
+                        <img src="<?= url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
                             style="width: 80px; height: 80px; object-fit: cover">
                         <span class="ms-2">Pelatihan desain grafis</span>
                     </div>
@@ -23,10 +23,10 @@
                     <span>Approved</span>
                 </td>
             </tr>
-            <tr onclick="location.href='<?= base_url('course')?>" style="cursor:pointer">
+            <tr onclick="location.href='<?= url('course')?>" style="cursor:pointer">
                 <td class="py-3">
                     <div class="d-flex align-items-center">
-                        <img src="<?= base_url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
+                        <img src="<?= url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
                             style="width: 80px; height: 80px; object-fit: cover">
                         <span class="ms-2">[BOOT CAMP STIKI] UI/UX Design with Adnan Zulkarnain & Hannie Modesty</span>
                     </div>
@@ -37,10 +37,10 @@
                     <span>Disapproved</span>
                 </td>
             </tr>
-            <tr onclick="location.href='<?= base_url('course')?>" style="cursor:pointer">
+            <tr onclick="location.href='<?= url('course')?>" style="cursor:pointer">
                 <td class="py-3">
                     <div class="d-flex align-items-center">
-                        <img src="<?= base_url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
+                        <img src="<?= url('assets/images/course-1.png') ?>" class="d-block img-fluid rounded-2"
                             style="width: 80px; height: 80px; object-fit: cover">
                         <span class="ms-2">Business Talk #4 How to an Opportunity from Different Prespective with Geby
                             Agatha CEO akululus</span>

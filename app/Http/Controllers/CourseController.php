@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
 use App\Models\Laporan;
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
@@ -10,6 +11,8 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+
+use function PHPUnit\Framework\isEmpty;
 
 class CourseController extends Controller
 {
@@ -100,47 +103,54 @@ class CourseController extends Controller
 
     public function store(Request $req)
     {
-        $activity = [
-            'ID_ACTIVITY'           => $this->GenerateUniqID('ACT', $req->input('title_activity')),
-            'TITLE_ACTIVITY'        => $req->input('title_activity'),
-            'ID_USER'               => session('user')[0]['ID_USER'],
-            'PRICE_ACTIVITY'        => $req->input('price_course'),
-            'IMAGE_ACTIVITY'        => FileUpload::S3($req->file('image_activity'), 'IMAGE_ACTIVITY', 'Image-Activity-' . strtotime(now())),
-            'TYPE_ACTIVITY'         => 1,
-            'SERTIF_CODE'           => $req->input('certif_code'),
-            'DATE_START'            => $req->input('date_start'),
-            'DATE_END'              => $req->input('date_end'),
-            'IS_PUBLIC'             => $req->input('is_public'),
-            'LOG_TIME'              => date('Y-m-d H:i:s'),
-            'SERTIF_IMAGE'          => FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now()))
-        ];
+        DB::beginTransaction();
+        try{
+            $activity = [
+                'ID_ACTIVITY'           => $this->GenerateUniqID('ACT', $req->input('title_activity')),
+                'TITLE_ACTIVITY'        => $req->input('title_activity'),
+                'ID_USER'               => session('user')[0]['ID_USER'],
+                'PRICE_ACTIVITY'        => $req->input('price_course'),
+                'IMAGE_ACTIVITY'        => FileUpload::S3($req->file('image_activity'), 'IMAGE_ACTIVITY', 'Image-Activity-' . strtotime(now())),
+                'TYPE_ACTIVITY'         => 1,
+                'SERTIF_CODE'           => $req->input('certif_code'),
+                'DATE_START'            => $req->input('date_start'),
+                'DATE_END'              => $req->input('date_end'),
+                'IS_PUBLIC'             => $req->input('is_public'),
+                'LOG_TIME'              => date('Y-m-d H:i:s'),
+                'SERTIF_IMAGE'          => FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now()))
+            ];
 
-        if ($req->input('status') == 'on') {
-            $activity['STATUS'] = 1;
-        } else {
-            $activity['STATUS'] = 0;
+            if ($req->input('status') == 'on') {
+                $activity['STATUS'] = 1;
+            } else {
+                $activity['STATUS'] = 0;
+            }
+
+            $course = [
+                'ID_COURSE'             => $this->GenerateUniqID('ACT', $req->input('announcement')),
+                'ID_ACTIVITY'           => $activity['ID_ACTIVITY'],
+                'PENGUMUMAN'            => $req->input('announcement'),
+                'DESKRIPSI_COURSE'      => $req->input('desc_course'),
+                'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
+                'KATEGORI'              => $req->input('category'),
+            ];
+
+            if ($req->input('req')) {
+                $course['REQUIREMENT']  = $req->input('req');
+            }
+
+            DB::table('activity')->insert($activity);
+            DB::table('course')->insert($course);
+
+            $data['ID_COURSE'] = $course['ID_COURSE'];
+            $this->item_materi($data, $req);
+            DB::commit();
+            return redirect('courses')->with(['succ_msg' => 'Successfully Add New Course', 'location' => 'courses']);
+        }catch (Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return redirect()->back()->with('err_msg', 'Terjadi kesalahan, mohon coba lagi nanti.' . $e->getMessage());
         }
-
-        $course = [
-            'ID_COURSE'             => $this->GenerateUniqID('ACT', $req->input('announcement')),
-            'ID_ACTIVITY'           => $activity['ID_ACTIVITY'],
-            'PENGUMUMAN'            => $req->input('announcement'),
-            'DESKRIPSI_COURSE'      => $req->input('desc_course'),
-            'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
-            'KATEGORI'              => $req->input('category'),
-        ];
-
-        if ($req->input('req')) {
-            $course['REQUIREMENT']  = $req->input('req');
-        }
-
-        DB::table('activity')->insert($activity);
-        DB::table('course')->insert($course);
-
-        $data['ID_COURSE'] = $course['ID_COURSE'];
-        $this->item_materi($data, $req);
-
-        return redirect('courses')->with(['succ_msg' => 'Successfully Add New Course', 'location' => 'courses']);
     }
 
     public function deskripsi_get($id)
@@ -798,28 +808,32 @@ class CourseController extends Controller
         $descMateriList     = $req->input('desc_materi');
         $linkYT             = $req->input('materi_link_yt');
         $file               = $req->file('materi_file');
-        $file_default       = $req->input('default_file');
+        $materiFile         = $req->input('default_file');
         $linkMateri         = $req->input('materi_link');
-
-
-        // dd($req->input('materi_option'));
 
         $idQuiz = [];
         if (!empty($orderList)) {
+            $uploadedFiles = [];
             for ($i = 0; $i < count($orderList); $i++) {
                 if ($categoryList[$i] == 1) {
                     $data_item = [
                         'ID_COURSE'     => $data['ID_COURSE'],
                         'TITLE'         => $materiTitleList[$i],
-                        'FILE'          => !empty($file[$i]) ? FileUpload::S3($file[$i], 'MATERI_FILE', 'Materi-' . str_replace(' ', '', $file[$i]->getClientOriginalName()) . '-' . strtotime(now())) : (!empty($file_default[$i]) ? $file_default[$i] : null),
+                        'FILE'          => !empty($materiFile[$i]) ? $materiFile[$i] :  null,
                         'LINK_YT'       => $linkYT[$i],
                         'DESKRIPSI'     => $descMateriList[$i],
                         'ORDER_LIST'    => $orderList[$i],
                         'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
                     ];
-
-                    if (!empty($linkMateri[$i])) {
-                        $data_item['LINK_MATERI']   = $linkMateri[$i];
+                    if ($data_item['FILE'] == null && $linkMateri[$i] == null) {
+                        foreach ($file as $key => $uploadedFile) {
+                            if (!in_array($uploadedFile, $uploadedFiles)) {
+                                $data_item['FILE'] = FileUpload::S3($uploadedFile, 'MATERI_FILE', 'Materi-' . str_replace(' ', '', $uploadedFile->getClientOriginalName()) . '-' . strtotime(now()));
+                                $uploadedFiles[] = $uploadedFile;
+                                break;
+                            }
+                        }
                     }
 
                     DB::table('item_course')->insert($data_item);
@@ -831,12 +845,9 @@ class CourseController extends Controller
                         'LINK_YT'       => null,
                         'DESKRIPSI'     => null,
                         'ORDER_LIST'    => $orderList[$i],
-                        'TYPE'          => $categoryList[$i]
+                        'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => null
                     ];
-
-                    if (!empty($linkMateri)) {
-                        $data_item['LINK_MATERI']   = $linkMateri[$i];
-                    }
 
                     $idQuiz[] = DB::table('item_course')->insertGetId($data_item);
                 }
