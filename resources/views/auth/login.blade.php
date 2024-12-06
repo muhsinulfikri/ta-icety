@@ -21,13 +21,27 @@
                             <span class="align-self-center fw-semibold" id="togglePassword" style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i class="far fa-eye fs-4"></i></span>
                         </div>
                         <div class="mt-4 my-3">
-                            <div class="g-recaptcha" data-sitekey="6LfZlSETAAAAAC5VW4R4tQP8Am_to4bM3dddxkEt"></div>
+                            <div class="slidercaptcha card" id="card-captcha">
+                                <div class="card-header">
+                                    <span>Please complete security verification before Login!</span>
+                                </div>
+                                <div class="card-body" id="body-captcha">
+                                    <div id="captcha"></div>
+                                </div>
+                            </div>
+                            <div id="checkmark" class="checkmark" style="display: none">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                    <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                                    <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                </svg>
+                            </div>
                         </div>
                         <div class="mt-3 my-3">
                             <a href="<?= url('forgot-password') ?>" class="text-decoration-none fw-bold text-black">Forgot Password?</a>
                         </div>
                         <div class="my-4">
-                            <button type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0">Login</button>
+                            {{-- <button type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0">Login</button> --}}
+                            <button id="btn-login" type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0" disabled>Login</button>
                         </div>
                         <div class="my-4 text-center">
                             <span>Don't have account? <a href="<?= url('register') ?>" class="text-decoration-none fw-bold text-black">Register</a></span>
@@ -52,7 +66,74 @@
         z-index: -999999;
         opacity: 0;
     }
+    svg {
+    width: 60px;
+    display: block;
+    margin: 40px auto 0;
+    }
+    .path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    &.circle {
+        -webkit-animation: dash .9s ease-in-out;
+        animation: dash .9s ease-in-out;
+    }
+    &.line {
+        stroke-dashoffset: 1000;
+        -webkit-animation: dash .9s .35s ease-in-out forwards;
+        animation: dash .9s .35s ease-in-out forwards;
+    }
+    &.check {
+        stroke-dashoffset: -100;
+        -webkit-animation: dash-check .9s .35s ease-in-out forwards;
+        animation: dash-check .9s .35s ease-in-out forwards;
+    }
+    }
+    p {
+    text-align: center;
+    margin: 20px 0 60px;
+    font-size: 1.25em;
+    &.success {
+        color: #73AF55;
+    }
+    &.error {
+        color: #D06079;
+    }
+    }
+    @-webkit-keyframes dash {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+    }
+    @keyframes dash {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+    }
+    @-webkit-keyframes dash-check {
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
+    }
+    @keyframes dash-check {
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
+}
 </style>
+<script src="{{ asset('js/sliderPuzzle.js') }}"></script>
 <script>
     window.onload = function() {
         var $recaptcha = document.querySelector('#g-recaptcha-response');

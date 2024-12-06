@@ -20,27 +20,42 @@
                 <label class="col-sm-2 col-form-label control-label">Select Option</label>
                 <div class="col-md-5">
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="optionFile" name="materi_option" onclick="toggleInput('file')">
-                        <label class="form-check-label" for="optionFile">Upload File</label>
+                        <input type="radio" class="form-check-input materi-option"
+                            id="optionFile_{{ $no }}"
+                            value="file"
+                            name="materi_option_{{ $no }}"
+                            data-no="{{ $no }}">
+                        <label class="form-check-label" for="optionFile_{{ $no }}">Upload File</label>
                     </div>
                     <div class="form-check">
-                        <input type="radio" class="form-check-input" id="optionLink" name="materi_option" onclick="toggleInput('link')">
-                        <label class="form-check-label" for="optionLink">Enter Link</label>
+                        <input type="radio" class="form-check-input materi-option"
+                            id="optionLink_{{ $no }}"
+                            value="link"
+                            name="materi_option_{{ $no }}"
+                            data-no="{{ $no }}">
+                        <label class="form-check-label" for="optionLink_{{ $no }}">Enter Link</label>
                     </div>
                 </div>
             </div>
-            <div class="form-group row" id="fileInputGroup" hidden>
+            <div class="form-group row" id="fileInputGroup_{{ $no }}" hidden>
                 <label class="col-sm-2 col-form-label control-label">File Materi</label>
                 <div class="col-md-5">
                     <div class="custom-file">
-                        <input id="materi_file" type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" class="custom-file-input file_materi" >
+                        <input id="materi_file_{{ $no }}"
+                            type="file"
+                            name="materi_file[]"
+                            accept=".pdf, .ppt, .pptx"
+                            class="custom-file-input file_materi_{{ $no }}">
                     </div>
                 </div>
             </div>
-            <div class="form-group row" id="linkInputGroup" hidden>
+            <div class="form-group row" id="linkInputGroup_{{ $no }}" hidden>
                 <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
                 <div class="col-md-5">
-                    <input id="materi_link" type="text" class="form-control" name="materi_link[]" >
+                    <input id="materi_link_{{ $no }}"
+                        type="text"
+                        class="form-control"
+                        name="materi_link[]">
                 </div>
             </div>
             <div class="form-group row">
@@ -76,44 +91,45 @@
         });
 
         $('#form-submit').on('submit', function(e) {
-            var fileInput = $('.file_materi')[0];
-            var files = fileInput.files;
-            var allowedExtensions = /(\.pdf|\.ppt|\.pptx)$/i;
+            $('.file_materi').each(function() {
+                var fileInput = $(this)[0];
+                var files = fileInput.files;
+                var allowedExtensions = /(\.pdf|\.ppt|\.pptx)$/i;
 
-            for (var i = 0; i < files.length; i++) {
-                if (!allowedExtensions.exec(files[i].name)) {
-                    alert('Invalid file type. Only PDF, PPT, and PPTX files are allowed.');
-                    fileInput.value = '';
-                    e.preventDefault();
-                    return;
+                if (files.length > 0) {
+                    for (var i = 0; i < files.length; i++) {
+                        if (!allowedExtensions.exec(files[i].name)) {
+                            alert('Invalid file type. Only PDF, PPT, and PPTX files are allowed.');
+                            fileInput.value = '';
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                 }
-            }
+            });
         });
     });
 
-    function toggleInput(type) {
-        const fileInputGroup = document.getElementById('fileInputGroup');
-        const linkInputGroup = document.getElementById('linkInputGroup');
-        const fileInputArea = $('#materi_file').dropify();
-        const linkInput = document.getElementById('materi_link');
+    function toggleMateriInput(no, type) {
+        // Reset semua input dan group
+        $(`#fileInputGroup_${no}, #linkInputGroup_${no}`).prop('hidden', true);
+        $(`#materi_file_${no}, #materi_link_${no}`).val('');
 
+        // Tampilkan input sesuai pilihan
         if (type === 'file') {
-            fileInputGroup.hidden = false;
-            linkInputGroup.hidden = true;
-            fileInputArea[0].disabled = false;
-            linkInput.disabled = true;
-            //reset input
-            linkInput.value = '';
-            fileInputArea.data('dropify').clearElement();
+            $(`#fileInputGroup_${no}`).prop('hidden', false);
         } else if (type === 'link') {
-            linkInputGroup.hidden = false;
-            fileInputGroup.hidden = true;
-            fileInputArea[0].disabled = true;
-            linkInput.disabled = false;
-            //reset input
-            fileInput.data('dropify').clearElement();
+            $(`#linkInputGroup_${no}`).prop('hidden', false);
         }
     }
+
+    document.querySelectorAll('.materi-option').forEach(radio => {
+        radio.addEventListener('click', function(e) {
+            const no = this.getAttribute('data-no');
+            const type = this.value;
+            toggleMateriInput(no, type);
+        });
+    });
 
     $(document).ready(function() {
         var $editor = $('#mytextarea_{{ $no }}');
@@ -149,7 +165,7 @@
     });
 
     $(document).ready(function() {
-        $('.file_materi').dropify({
+        $('.file_materi_{{ $no }}').dropify({
             messages: {
                 default: 'Drag atau drop untuk memilih gambar',
                 replace: 'Ganti',
