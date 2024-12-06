@@ -1,8 +1,42 @@
+<style>
+    .footer-logo {
+        tbh-footer: left;
+    }
+
+    @media (max-width: 768px) {
+        .tbh-footer {
+            text-align: center;
+            margin: 0 auto;
+        }
+    }
+
+    .footer-widget {
+        padding-right: 50px;
+        width: auto;
+    }
+
+    @media (max-width: 768px) {
+        .footer-widget {
+            text-align: center;
+            padding-right: 0;
+            width: 100%;
+        }
+
+        .footer-links {
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+    }
+</style>
 <section class="footer <?= $title == 'TBHAcademy' ? 'pt-200' : '' ?>">
-    <div class="footer-mid">
+    <div class="footer-mid pb-4 pb-lg-7">
         <div class="container">
             <div class="row">
-                <div class="col-xl-3 me-auto col-sm-8">
+                <div class="col-xl-3 me-auto col-sm-8 tbh-footer">
                     <div class="footer-logo mb-3">
                         <img src="<?= url('assets/images/white-logo.svg') ?>" class="w-75 img-fluid">
                     </div>
@@ -11,8 +45,8 @@
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-sm-6">
-                    <div class="footer-widget mb-5 mb-xl-0" style="width: fit-content;float: inline-end;padding-right: 50px;">
+                <div class="col-xl-4 col-sm-6  d-flex d-lg-block justify-content-center text-center text-lg-start">
+                    <div class="footer-widget mb-5 mb-xl-0 pe-0 pe-lg-7" style="width: fit-content;float: inline-end;padding-right: 50px;">
                         <h5 class="widget-title">Explore</h5>
                         <ul class="list-unstyled footer-links">
                             <li><a href="<?= url('') ?>">Home</a></li>
@@ -24,9 +58,9 @@
                 </div>
 
                 <div class="col-xl-5 col-sm-6">
-                    <div class="footer-widget mb-5 mb-xl-0">
+                    <div class="footer-widget mb-5 mb-xl-0  d-flex flex-column d-lg-block justify-content-center text-center text-lg-start">
                         <h5 class="widget-title">Address</h5>
-                        <div class="d-flex gap-5">
+                        <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
                                 <li>
                                     <h6 class="text-white">Phone</h6><a href="#">+62 899-2876-420</a>
@@ -53,9 +87,9 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-6 col-sm-12 col-lg-6">
-                    <p class="mb-0 copyright text-sm-center text-lg-start">© 2024 TBH Academy. All rights reserved.</p>
+                    <p class="mb-0 copyright text-center text-lg-start">© 2024 TBH Academy. All rights reserved.</p>
                 </div>
-                <div class="col-xl-6 col-sm-12 col-lg-6">
+                <div class="col-xl-6 col-sm-12 col-lg-6  d-none d-lg-block">
                     <div class="footer-btm-links text-start text-sm-center text-lg-end">
                         <a href="#">Legal</a>
                         <a href="#">Supports</a>

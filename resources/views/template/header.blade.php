@@ -13,7 +13,7 @@
     <!-- Mobile Specific Meta-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- bootstrap.min css -->
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/bootstrap.css">
     <!-- Iconfont Css -->
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/awesome/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/flaticon/flaticon.css">
@@ -56,6 +56,15 @@
 
         .menu-trigger {
             display: none;
+        }
+
+        .absolute-auth {
+            position: absolute;
+        }
+        @media (max-width: 991.98px) {
+            .absolute-auth {
+                position: initial;
+            }
         }
     </style>
     <header class="header-style-1">
@@ -114,7 +123,7 @@
                                 <a href="{{ url('event') }}">Event</a>
                             </li>
                             <li class="me-0">
-                                <a href="{{ url('ebooks') }}">Ebook
+                                <a href="{{ url('ebooks') }}">Ebook</a>
                             </li>
 
                             <?php if (!empty(session('user')[0])) { ?>
@@ -146,99 +155,98 @@
                     </div>
 
                     <?php if (!empty(session('user')[0])) { ?>
-                    <nav class="header-btn d-none d-md-block">
-                        <ul class="primary-menu">
-                            <li>
-                                <a href="{{ url('vouchers') }}">Voucher</a>
-                            </li>
-                            <li class="me-4">
-                                <a href="#"
-                                    class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle"
-                                    style="padding-left:12px;padding-right:12px;right:0;margin-right:1px"
-                                    onclick="$('#form_checkout').submit()">
-                                    <i class="far fa-shopping-cart" style="-webkit-text-stroke: 0.2px;"></i>
-                                    <?php    $totCheckout = (!empty($checkout) ? count($checkout) : 0);
-    if ($totCheckout > 0) { ?>
-                                    <span class="badge bg-danger rounded-circle position-absolute"
-                                        style="top: 0px; right: -5px;">
-                                        <?= count($checkout) ?>
-                                    </span>
-                                    <?php    } ?>
-                                </a>
-                                <?php    if ($title != 'Checkout') { ?>
-                                <ul class="submenu" style="left: initial;right:0;width: max-content;">
-                                    <h6 class="title mx-3 fs-5 my-3">Cart</h6>
-                                    <hr class="dropdown-divider">
-                                    <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
-                                        <?php        if (!empty($checkout)) { ?>
-                                        <?php            foreach ($checkout as $item): ?>
-                                        <li class="dropdown-item" style="pointer-events: none;">
-                                            <div class="d-flex dropdown-item align-items-center">
-                                                <div class="img col-2">
-                                                    <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
-                                                        alt="Image" class="img-fluid"
-                                                        style="width:50px;height:50px" />
+                        <nav class="header-btn d-none d-md-block">
+                            <ul class="primary-menu">
+                                <li>
+                                    <a href="{{ url('vouchers') }}">Voucher</a>
+                                </li>
+                                <li class="me-4">
+                                    <a href="#"
+                                        class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle"
+                                        style="padding-left:12px;padding-right:12px;right:0;margin-right:1px"
+                                        onclick="$('#form_checkout').submit()">
+                                        <i class="far fa-shopping-cart" style="-webkit-text-stroke: 0.2px;"></i>
+                                        <?php $totCheckout = (!empty($checkout) ? count($checkout) : 0);
+                                            if ($totCheckout > 0) { ?>
+                                        <span class="badge bg-danger rounded-circle position-absolute"
+                                            style="top: 0px; right: -5px;">
+                                            <?= count($checkout) ?>
+                                        </span>
+                                        <?php    } ?>
+                                    </a>
+                                    <?php if ($title != 'Checkout') { ?>
+                                    <ul class="submenu" style="left: initial;right:0;width: max-content;">
+                                        <h6 class="title mx-3 fs-5 my-3">Cart</h6>
+                                        <hr class="dropdown-divider">
+                                        <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
+                                            <?php if (!empty($checkout)) { ?>
+                                            <?php foreach ($checkout as $item): ?>
+                                            <li class="dropdown-item" style="pointer-events: none;">
+                                                <div class="d-flex dropdown-item align-items-center">
+                                                    <div class="img col-2">
+                                                        <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                            alt="Image" class="img-fluid"
+                                                            style="width:50px;height:50px" />
+                                                    </div>
+                                                    <div class="col-7 ms-2" style="white-space:normal">
+                                                        <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
+                                                    </div>
+                                                    <div class="col-3 ms-2" style="white-space:normal">
+                                                        <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
+                                                    </div>
                                                 </div>
-                                                <div class="col-7 ms-2" style="white-space:normal">
-                                                    <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
-                                                </div>
-                                                <div class="col-3 ms-2" style="white-space:normal">
-                                                    <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <?php            endforeach; ?>
-                                        <?php        } else { ?>
-                                        <tr>
-                                            <td colspan="5">
-                                                <div class="d-flex justify-content-center">
-                                                    <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg"
-                                                        height="210">
-                                                </div>
-                                                <p class="text-center">No Product</p>
-                                            </td>
-                                        </tr>
-                                        <?php        } ?>
+                                            </li>
+                                            <?php endforeach; ?>
+                                            <?php        } else { ?>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <div class="d-flex justify-content-center">
+                                                        <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg"
+                                                            height="210">
+                                                    </div>
+                                                    <p class="text-center">No Product</p>
+                                                </td>
+                                            </tr>
+                                            <?php        } ?>
+                                        </ul>
+                                        <hr class="dropdown-divider">
+                                        <p class="text-center m-0 p-0 mt-2"><a href="#"
+                                                onclick="$('#form_checkout').submit()" class="small">View All</a>
+                                        </p>
+
                                     </ul>
-                                    <hr class="dropdown-divider">
-                                    <p class="text-center m-0 p-0 mt-2"><a href="#"
-                                            onclick="$('#form_checkout').submit()" class="small">View All</a>
-                                    </p>
-
-                                </ul>
-                                <?php    } ?>
-                            </li>
-                            <li>
-                                <a href="#">
-                                    <?php    if (empty(session('user')[0]['PROFILE_PICTURE'])) { ?>
-                                    <i class="far fa-user"></i>
-                                    <?php    } else { ?>
-                                    <img class="nav-link rounded-circle "
-                                        style="height:40px;width:40px;background-size:cover;background-image: url('<?= session('user')[0]['PROFILE_PICTURE'] ?>')">
-                                    </img>
                                     <?php    } ?>
-                                    <span class="text-truncate mx-2">
-                                        <?= session('user')[0]['NAME'] ?>
-                                    </span>
-                                </a>
-                                <ul class="submenu" style="left: initial;right:0">
-                                    <?php    if (session('user')[0]['ID_ROLE'] == 1) { ?>
-                                    <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
-                                    <?php    } else { ?>
-                                    <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
-                                    <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
-                                    <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
-                                    <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
-                                    <li><a class="" href="<?= url('profile/mysertificate') ?>">My
-                                            Sertificate</a></li>
-                                    <?php    } ?>
-                                    <hr>
-                                    <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    </nav>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <?php if (empty(session('user')[0]['PROFILE_PICTURE'])) { ?>
+                                        <i class="far fa-user"></i>
+                                        <?php    } else { ?>
+                                        <img class="nav-link rounded-circle "
+                                            style="height:40px;width:40px;background-size:cover;background-image: url('<?= session('user')[0]['PROFILE_PICTURE'] ?>')">
+                                        </img>
+                                        <?php    } ?>
+                                        <span class="text-truncate mx-2">
+                                            <?= session('user')[0]['NAME'] ?>
+                                        </span>
+                                    </a>
+                                    <ul class="submenu" style="left: initial;right:0">
+                                        <?php if (session('user')[0]['ID_ROLE'] == 1) { ?>
+                                        <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
+                                        <?php    } else { ?>
+                                        <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
+                                        <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
+                                        <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
+                                        <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
+                                        <li><a class="" href="<?= url('profile/mysertificate') ?>">My
+                                                Sertificate</a></li>
+                                        <?php    } ?>
+                                        <hr>
+                                        <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
                     <?php  } else { ?>
                     <div class="header-btn d-none d-xl-block">
                         <a href="{{ url('login') }}" class="login">Login</a>

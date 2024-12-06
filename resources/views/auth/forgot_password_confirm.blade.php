@@ -4,7 +4,7 @@
             <div class="d-none d-lg-block">
                 <img src="<?= url('assets/images/login-1.png') ?>" class="float-end d-block img-fluid rounded-5 rounded-start h-auto ">
             </div>
-            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 position-absolute" id="formLogin">
+            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-4 flex-column justify-content-center h-100">
                     <h4 class="ps-1 fw-semibold">Check Your Email</h4>
                     <h5 class="fw-normal mt-5" style="line-height:inherit">We sent a password reset link to<br><?= $email ?></h5>

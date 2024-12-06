@@ -1,12 +1,12 @@
 <!-- Register -->
 <div class="mb-5">
-    <div class="container d-grid d-md-flex p-4 p-md-0 position-relative">
+    <div class="container d-grid d-md-flex p-0 p-lg-4 position-relative">
         <div class="w-100">
             <div class="d-none d-lg-block">
                 <img src="<?= asset('assets/images/login-1.png') ?>"
                     class="float-end d-block img-fluid rounded-5 rounded-start h-auto " alt="Gambar nih bos">
             </div>
-            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 position-absolute" id="formLogin">
+            <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-md-4 flex-column justify-content-center h-100">
                     <h4 class="ps-1 fw-semibold">Register as User</h4>
                     <form class="fw-normal" action="<?= url('register/store') ?>" method="POST">
@@ -32,7 +32,7 @@
                             </div>
                             <div class="input-group my-4">
                                 <input type="password"
-                                    class="form-control input-text woocommerce-Input woocommerce-Input--text"
+                                    class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3"
                                     id="registerPassword1" placeholder="Create password" name="password"
                                     aria-describedby="passwordHelp" required>
                                 <span class="align-self-center fw-semibold" id="togglePassword1"
@@ -41,7 +41,7 @@
                             </div>
                             <div class="input-group my-4 pb-lg-3">
                                 <input type="password"
-                                    class="form-control input-text woocommerce-Input woocommerce-Input--text"
+                                    class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3"
                                     id="registerPassword2" placeholder="Confirm Password"
                                     aria-describedby="passwordHelp" required>
                                 <span class="align-self-center fw-semibold" id="togglePassword2"

@@ -8,7 +8,7 @@
         background-color: #F5F5F5;
     }
 </style>
-<div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
+<div class="col ms-0 ms-md-4 mt-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
 
     <form action="profile/update" method="POST" enctype="multipart/form-data" id="form-profile">
         @csrf

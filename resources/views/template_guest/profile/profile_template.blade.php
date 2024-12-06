@@ -18,7 +18,7 @@
     <hr class="opacity-25">
     <div class="container-fluid">
         <div class="row main-content">
-            <div class="col-md-3 sidebar">
+            <div class="col-md-3 sidebar order-2 order-md-1 pt-4 pt-md-0">
                 <div class="sidebar__inner">
                     <div class="px-0" style="z-index: 0;">
                         <div class="bg-white shadow rounded-2 overflow-hidden" style="height:max-content">
@@ -26,7 +26,7 @@
                                 <ul class="sidebar-profile nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="menu">
                                     <li class="nav-item w-100 pt-2">
                                         <a href="/profile" class=" {{ request()->is('profile') ? 'active' : '' }}  .  nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-user"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Personal
+                                            <i class="fs-6 d-flex align-items-center far fa-user"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">Personal
                                                 Data</span>
                                         </a>
                                     </li>
@@ -39,7 +39,7 @@
                                     <?php if (session('user')[0]['ID_ROLE'] == 2) { ?>
                                         <li class="nav-item w-100">
                                             <a href="/profile/overview" class="overview  nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                <i class="fs-6 d-flex align-items-center far fa-bookmark"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Sale
+                                                <i class="fs-6 d-flex align-items-center far fa-bookmark"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Sale
                                                     Overview</span>
                                             </a>
                                         </li>
@@ -48,7 +48,7 @@
                                         </li>
                                         <li class="nav-item w-100">
                                             <a href="/dashboard" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                <i class="fs-6 d-flex align-items-center far fa-book-medical"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Create
+                                                <i class="fs-6 d-flex align-items-center far fa-book-medical"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Create
                                                     Activity</span>
                                             </a>
                                         </li>
@@ -62,7 +62,7 @@
                                     <li class="nav-item w-100">
                                         <a data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="true" aria-controls="submenu" class="nav-link d-flex align-middle px-4 py-3 rounded-0" style="cursor: pointer;">
                                             <i class="fs-6 d-flex align-items-center far fa-book-open"></i>
-                                            <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">My Activities</span>
+                                            <span class="ms-1 ps-2 fs-6 align-self-center">My Activities</span>
                                             <svg class="svg-inline--fa fa-chevron-down ms-auto" style="width: 18px" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
                                                 <path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z">
                                                 </path>
@@ -71,7 +71,7 @@
                                         <ul class="nav nav-list collapse" id="submenu">
                                             <li class="nav-item w-100">
                                                 <a href="/profile/mycourses" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                    <span class="ms-3 ps-3 fs-6 align-self-center d-none d-sm-inline">My Courses</span>
+                                                    <span class="ms-3 ps-3 fs-6 align-self-center">My Courses</span>
                                                 </a>
                                             </li>
                                             <li class="w-100">
@@ -79,7 +79,7 @@
                                             </li>
                                             <li class="nav-item w-100">
                                                 <a href="/profile/myevents" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                    <span class="ms-3 ps-3 fs-6 align-self-center d-none d-sm-inline">My Events</span>
+                                                    <span class="ms-3 ps-3 fs-6 align-self-center">My Events</span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -89,7 +89,7 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/myebook" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-book"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">My
+                                            <i class="fs-6 d-flex align-items-center far fa-book"></i> <span class="ms-1 ps-2 fs-6 align-self-center">My
                                                 Ebook</span>
                                         </a>
                                     </li>
@@ -103,7 +103,7 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/myvoucher" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">My
+                                            <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center">My
                                                 Voucher</span>
                                         </a>
                                     </li>
@@ -112,7 +112,7 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/academic" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Academic
+                                            <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Academic
                                                 Data</span>
                                         </a>
                                     </li>
@@ -121,7 +121,7 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/document" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-building"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Supporting
+                                            <i class="fs-6 d-flex align-items-center far fa-building"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Supporting
                                                 Documents</span>
                                         </a>
                                     </li>
@@ -131,11 +131,11 @@
                                     <li class="w-100">
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
-                                    <form action="/forgotPassword" id="forgot" method="POST">
+                                    <form class="w-100" action="/forgotPassword" id="forgot" method="POST">
                                         @csrf
                                         <li class="nav-item w-100">
                                             <a href="#" class="nav-link  d-flex align-middle px-4 py-3 rounded-0" onclick="forgot()">
-                                                <i class="fs-6 d-flex align-items-center far fa-lock"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Reset
+                                                <i class="fs-6 d-flex align-items-center far fa-lock"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Reset
                                                     Password</span>
                                             </a>
                                         </li>
@@ -146,7 +146,7 @@
                                     </li>
                                     <li class="nav-item w-100 pb-3">
                                         <a href="<?= url('logout') ?>" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-arrow-alt-to-left"></i> <span class="ms-1 ps-2 fs-6 align-self-center d-none d-sm-inline">Log
+                                            <i class="fs-6 d-flex align-items-center far fa-arrow-alt-to-left"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Log
                                                 out</span>
                                         </a>
                                     </li>
@@ -198,7 +198,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9 content">
+            <div class="col-md-9 content order-1 order-md-2">
                 <!-- Page -->
                 @yield('content')
             </div>
