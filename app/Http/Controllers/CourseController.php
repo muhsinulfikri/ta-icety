@@ -813,27 +813,19 @@ class CourseController extends Controller
 
         $idQuiz = [];
         if (!empty($orderList)) {
-            $uploadedFiles = [];
             for ($i = 0; $i < count($orderList); $i++) {
                 if ($categoryList[$i] == 1) {
                     $data_item = [
                         'ID_COURSE'     => $data['ID_COURSE'],
                         'TITLE'         => $materiTitleList[$i],
-                        'FILE'          => !empty($materiFile[$i]) ? $materiFile[$i] :  null,
                         'LINK_YT'       => $linkYT[$i],
                         'DESKRIPSI'     => $descMateriList[$i],
                         'ORDER_LIST'    => $orderList[$i],
                         'TYPE'          => $categoryList[$i],
                         'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
                     ];
-                    if ($data_item['FILE'] == null && $linkMateri[$i] == null) {
-                        foreach ($file as $key => $uploadedFile) {
-                            if (!in_array($uploadedFile, $uploadedFiles)) {
-                                $data_item['FILE'] = FileUpload::S3($uploadedFile, 'MATERI_FILE', 'Materi-' . str_replace(' ', '', $uploadedFile->getClientOriginalName()) . '-' . strtotime(now()));
-                                $uploadedFiles[] = $uploadedFile;
-                                break;
-                            }
-                        }
+                    if(empty($linkMateri[$i])){
+                        $data_item['FILE'] = !empty($file[$i]) ? FileUpload::S3($file[$i], 'MATERI_FILE', 'Materi-' . strtotime(now())) :  $materiFile[$i];
                     }
 
                     DB::table('item_course')->insert($data_item);

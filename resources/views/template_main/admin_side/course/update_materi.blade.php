@@ -5,7 +5,6 @@
                 <span class="col-md-11">Detail - Materi <?= $item['TITLE'] ?></span>
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}" required>
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
-
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
                 <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
@@ -21,12 +20,12 @@
             $hasLink = !empty($item['LINK_MATERI']);
             ?>
             <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?? null ?>">
-            <div class="form-group row" id="fileInputGroup_{{ $no }}" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
+            <div class="form-group row" id="fileInputGroup_{{ $no }}" @if(!$hasFile) style="display: none;" @endif>
                 <label class="col-sm-2 col-form-label control-label">Chapter File</label>
                 <div class="col-md-5" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
                     <div class="custom-file">
-                        <input type="<?php echo $hasFile ? 'file' : 'hidden'; ?>" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
-                            class="custom-file-input file_materi" value="{{ $item['FILE'] ?? '' }}">
+                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
+                            class="custom-file-input file_materi">
                     </div>
                 </div>
             </div>
@@ -118,6 +117,7 @@
 
     $(document).ready(function() {
         $('.file_materi').dropify({
+            defaultFile: "{{ $item['FILE'] }}",
             messages: {
                 default: 'Drag or Drop to Change Image',
                 replace: 'Change',
