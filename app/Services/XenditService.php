@@ -14,10 +14,10 @@ class XenditService
         Configuration::setXenditKey('xnd_production_HALDbZ0wkKNqsgeZw8cb04RxfwA3okR3lkpRZs9xRd6FtwntQUieg8vJLiCiU');
     }
 
-    public function createPaymentRequest($params)
-    {
-        return PaymentRequestApi::createPaymentRequest($params);
-    }
+    // public function createPaymentRequest($params)
+    // {
+    //     return PaymentRequestApi::createPaymentRequest($params);
+    // }
 
     public function createInvoice($params)
     {
@@ -37,12 +37,12 @@ class XenditService
         return $invoiceApi->getInvoiceById($invoice_id, $for_user_id);
     }
 
-    public function createPaymentMethod($params)
-    {
-        try {
-            return PaymentMethodApi::createPaymentMethod($params);
-        } catch (\Exception $e) {
-            throw new \Exception('Error creating payment method: ' . $e->getMessage());
-        }
-    }
+    // public function createPaymentMethod($params)
+    // {
+    //     try {
+    //         return PaymentMethodApi::createPaymentMethod($params);
+    //     } catch (\Exception $e) {
+    //         throw new \Exception('Error creating payment method: ' . $e->getMessage());
+    //     }
+    // }
 }

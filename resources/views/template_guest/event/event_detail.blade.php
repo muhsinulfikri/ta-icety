@@ -130,10 +130,10 @@
                                         <div class="row align-items-center">
                                             <div class="col-12">
                                                 <div class="instructor-content">
-                                                    <?php if (date('Y-m-d h:i:s') < $event->DATE_END) { ?>
+                                                    <?php if (date('Y-m-d h:i:s') > $event->DATE_START) { ?>
 
                                                         <div class="blurred-image" style="pointer-events: none">
-                                                            <embed class="overlay" style="width:200px; height:352px; pointer-events: none;" src="<?= $sertif->FILE_SERTIFIKAT ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0" type="text/plain"></embed>
+                                                            <embed class="overlay" style="height:200px; width:352px; pointer-events: none;" src="<?= $sertif->FILE_SERTIFIKAT ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0" type="text/plain"></embed>
                                                         </div>
                                                         <div class="mt-3 rounded-4 d-flex align-items-center">
                                                             <div class="mx-4 py-3 bg-white">
@@ -142,7 +142,7 @@
                                                                 <button type="button" class="btn btn-primary col-md-12 my-3" onclick="DownloadPdf(this)">Download PDF</button>
                                                             </div>
                                                         </div>
-                                                    <?php } else if (date('Y-m-d h:i:s') > $event->DATE_START) { ?>
+                                                    <?php } else if (date('Y-m-d h:i:s') < $event->DATE_START) { ?>
                                                         <h4 class="event-title mb-0">Event belum dimulai</h4>
                                                     <?php } else { ?>
                                                         <h4 class="event-title mb-0">Event sedang berlangsung</h4>
@@ -366,4 +366,10 @@
             return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
         }
     <?php } ?>
+    @if(session()->has('succ_msg'))
+        Swal.fire({
+            icon: 'success',
+            title: '{{ session('succ_msg') }}'
+        })
+    @endif
 </script>

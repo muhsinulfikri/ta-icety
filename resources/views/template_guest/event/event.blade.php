@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="topbar-search ">
-                        <input type="text" placeholder="Search our courses" class="form-control search"
+                        <input type="text" placeholder="Search our Events" class="form-control search"
                             id="search-form">
                         <label><i class="fa fa-search"></i></label>
                     </div>
@@ -55,17 +55,16 @@
                             <?php foreach ($events as $item) : ?>
                             <div class="col-xl-4 col-lg-6 col-md-6">
                                 <div class="px-0 px-sm-3">
-                                    <div class="course-grid course-style-4 bg-white px-2 px-md-5 mt-4 pb-2">
-                                        <div class="course-header">
-                                            <div class="course-thumb">
+                                    <div class="course-grid course-style-4 bg-white px-1 px-md-4 mt-4 pb-2">
+                                        <div class="course-header" style="margin-top: 10px">
+                                            <div class style="width: 100%; height: 100%;  overflow:hidden;">
                                                 <a
                                                     href="<?= url('event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY))) . '?id_activity=' . $item->ID_ACTIVITY ?>">
                                                     <img src="<?= $item->IMAGE_ACTIVITY ?>" alt="image"
-                                                        style="width: 100%; height: 300px; object-fit: cover;">
+                                                        style="width: 100%; height: 100%; object-fit: cover;">
                                                 </a>
                                             </div>
                                         </div>
-
                                         <div class="course-content">
                                             <div>
                                                 <span
