@@ -46,6 +46,14 @@
 
 <body id="top-header">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+    <style>
+        body {
+            font-family: "Noto Sans", serif !important;
+        }
+
         .header-navbar .site-logo {
             width: 15% !important;
         }
@@ -61,51 +69,106 @@
         .absolute-auth {
             position: absolute;
         }
+
         @media (max-width: 991.98px) {
             .absolute-auth {
                 position: initial;
             }
         }
+
+        .btn-primary {
+            color: white !important;
+            border-radius: 8px !important;
+            background-color: #AD0B0B !important;
+            padding: 8px 20px !important;
+        }
+
+        .btn-primary:hover {
+            background-color: #0B0B0B !important;
+            border-color: #0B0B0B !important;
+        }
+
+        .btn-secondary {
+            color: white !important;
+            border-radius: 8px !important;
+            background-color: #0B0B0B !important;
+            padding: 8px 20px !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: #AD0B0B !important;
+            border-color: #AD0B0B !important;
+        }
+
+        .btn-tertiary {
+            color: black !important;
+            border-color: #CACACA !important;
+            border-radius: 8px !important;
+            background-color: #CACACA !important;
+            padding: 8px 20px !important;
+        }
+
+        .btn-tertiary.active {
+            color: white !important;
+            border-color: black !important;
+            border-radius: 8px !important;
+            background-color: black !important;
+            padding: 8px 20px !important;
+        }
+
+        .btn-tertiary:hover {
+            color: black !important;
+            background-color: #979797 !important;
+            border-color: #979797 !important;
+        }
+
+        .btn-tertiary.active:hover {
+            color: white !important;
+            border-color: black !important;
+            border-radius: 8px !important;
+            background-color: black !important;
+            padding: 8px 20px !important;
+        }
+
+        .bg-icety {
+            background-color: #AD0B0B;
+        }
+
+        .a-header {
+            font-family: "Noto Sans", serif !important;
+            color: white !important;
+            transition: text-shadow 0.3s ease !important;
+        }
+
+        .a-header:hover {
+            text-shadow: 3px 3px 5px rgb(0 0 0 / 50%);
+        }
+
+        .header-style-1 .header-navbar {
+            padding: 10px 0px;
+        }
+
+        .menu_fixed {
+            box-shadow: none !important;
+        }
     </style>
     <header class="header-style-1">
-        <div class="header-topbar topbar-style-1">
+        <div class="header-topbar topbar-style-1" style="background-color: white;">
             <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-xl-8 col-lg-8 col-sm-6">
-                        <div class="header-contact text-center text-sm-start text-lg-start">
-                            <a href="#">1010 Moon ave, New York, NY US</a>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-sm-6">
-                        <div class="header-socials text-center text-lg-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-pinterest"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fab fa-youtube"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-end">
+                    <img src="{{ asset('icety_assets') }}/id.svg" style="height: 30px; padding: 4px 0;" />
                 </div>
             </div>
         </div>
 
-        <div class="header-navbar navbar-sticky">
+        <div class="header-navbar navbar-sticky bg-icety">
             <div class="container">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="site-logo">
-                        <a href="{{ url('') }}" class="d-flex">
-                            <img class="" style="width: 35px; height: 35px;"
-                                src="<?= asset('assets_admin\images\logo\Logo TUT WURI HANDAYANI.png') ?>"
+                        <a href="{{ url('') }}" class="d-flex mt-2">
+                            <img class=""
+                                src="<?= asset('icety_assets/logo.svg') ?>"
                                 alt="">
-                            <img class="ms-3" style="width: auto; height: 35px;"
-                                src="<?= asset('assets_admin\images\logo\Logo MBKM.png') ?>" alt="">
-                            <img class="ms-3" style="width: auto; height: 35px;"
-                                src="<?= asset('assets_admin\images\logo\logo-STIKI-PNG.png') ?>" alt="">
                         </a>
                     </div>
 
@@ -117,29 +180,32 @@
                     <nav class="site-navbar ms-auto">
                         <ul class="primary-menu">
                             <li class="current">
-                                <a href="{{ url('course') }}">Course</a>
+                                <a href="{{ url('') }}" class="fw-normal a-header">Home</a>
+                            </li>
+                            <li class="current">
+                                <a href="{{ url('about') }}" class="fw-normal a-header">About ICETy</a>
                             </li>
                             <li class="">
-                                <a href="{{ url('event') }}">Event</a>
+                                <a href="{{ url('store') }}" class="fw-normal a-header">Store</a>
                             </li>
                             <li class="me-0">
-                                <a href="{{ url('ebooks') }}">Ebook</a>
+                                <a href="{{ url('blog') }}" class="fw-normal a-header">Blog</a>
                             </li>
 
                             <?php if (!empty(session('user')[0])) { ?>
-                            <li class="d-md-none">
-                                <a href="#" onclick="$('#form_checkout').submit()">Cart</a>
-                            </li>
-                            <li class="d-md-none">
-                                <a href="{{ url('profile') }}">My Profile</a>
-                            </li>
+                                <li class="d-md-none">
+                                    <a href="#" onclick="$('#form_checkout').submit()">Cart</a>
+                                </li>
+                                <li class="d-md-none">
+                                    <a href="{{ url('profile') }}">My Profile</a>
+                                </li>
                             <?php } else { ?>
-                            <li class="d-md-none">
-                                <a href="{{ url('login') }}">Login</a>
-                            </li>
-                            <li class="d-md-none">
-                                <a href="{{ url('register') }}">Sign up</a>
-                            </li>
+                                <li class="d-md-none">
+                                    <a href="{{ url('login') }}">Login</a>
+                                </li>
+                                <li class="d-md-none">
+                                    <a href="{{ url('register') }}">Sign up</a>
+                                </li>
                             <?php } ?>
                         </ul>
 
@@ -167,64 +233,64 @@
                                         onclick="$('#form_checkout').submit()">
                                         <i class="far fa-shopping-cart" style="-webkit-text-stroke: 0.2px;"></i>
                                         <?php $totCheckout = (!empty($checkout) ? count($checkout) : 0);
-                                            if ($totCheckout > 0) { ?>
-                                        <span class="badge bg-danger rounded-circle position-absolute"
-                                            style="top: 0px; right: -5px;">
-                                            <?= count($checkout) ?>
-                                        </span>
+                                        if ($totCheckout > 0) { ?>
+                                            <span class="badge bg-danger rounded-circle position-absolute"
+                                                style="top: 0px; right: -5px;">
+                                                <?= count($checkout) ?>
+                                            </span>
                                         <?php    } ?>
                                     </a>
                                     <?php if ($title != 'Checkout') { ?>
-                                    <ul class="submenu" style="left: initial;right:0;width: max-content;">
-                                        <h6 class="title mx-3 fs-5 my-3">Cart</h6>
-                                        <hr class="dropdown-divider">
-                                        <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
-                                            <?php if (!empty($checkout)) { ?>
-                                            <?php foreach ($checkout as $item): ?>
-                                            <li class="dropdown-item" style="pointer-events: none;">
-                                                <div class="d-flex dropdown-item align-items-center">
-                                                    <div class="img col-2">
-                                                        <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
-                                                            alt="Image" class="img-fluid"
-                                                            style="width:50px;height:50px" />
-                                                    </div>
-                                                    <div class="col-7 ms-2" style="white-space:normal">
-                                                        <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
-                                                    </div>
-                                                    <div class="col-3 ms-2" style="white-space:normal">
-                                                        <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <?php endforeach; ?>
-                                            <?php        } else { ?>
-                                            <tr>
-                                                <td colspan="5">
-                                                    <div class="d-flex justify-content-center">
-                                                        <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg"
-                                                            height="210">
-                                                    </div>
-                                                    <p class="text-center">No Product</p>
-                                                </td>
-                                            </tr>
-                                            <?php        } ?>
-                                        </ul>
-                                        <hr class="dropdown-divider">
-                                        <p class="text-center m-0 p-0 mt-2"><a href="#"
-                                                onclick="$('#form_checkout').submit()" class="small">View All</a>
-                                        </p>
+                                        <ul class="submenu" style="left: initial;right:0;width: max-content;">
+                                            <h6 class="title mx-3 fs-5 my-3">Cart</h6>
+                                            <hr class="dropdown-divider">
+                                            <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
+                                                <?php if (!empty($checkout)) { ?>
+                                                    <?php foreach ($checkout as $item): ?>
+                                                        <li class="dropdown-item" style="pointer-events: none;">
+                                                            <div class="d-flex dropdown-item align-items-center">
+                                                                <div class="img col-2">
+                                                                    <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                                        alt="Image" class="img-fluid"
+                                                                        style="width:50px;height:50px" />
+                                                                </div>
+                                                                <div class="col-7 ms-2" style="white-space:normal">
+                                                                    <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
+                                                                </div>
+                                                                <div class="col-3 ms-2" style="white-space:normal">
+                                                                    <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    <?php endforeach; ?>
+                                                <?php        } else { ?>
+                                                    <tr>
+                                                        <td colspan="5">
+                                                            <div class="d-flex justify-content-center">
+                                                                <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg"
+                                                                    height="210">
+                                                            </div>
+                                                            <p class="text-center">No Product</p>
+                                                        </td>
+                                                    </tr>
+                                                <?php        } ?>
+                                            </ul>
+                                            <hr class="dropdown-divider">
+                                            <p class="text-center m-0 p-0 mt-2"><a href="#"
+                                                    onclick="$('#form_checkout').submit()" class="small">View All</a>
+                                            </p>
 
-                                    </ul>
+                                        </ul>
                                     <?php    } ?>
                                 </li>
                                 <li>
                                     <a href="#">
                                         <?php if (empty(session('user')[0]['PROFILE_PICTURE'])) { ?>
-                                        <i class="far fa-user"></i>
+                                            <i class="far fa-user"></i>
                                         <?php    } else { ?>
-                                        <img class="nav-link rounded-circle "
-                                            style="height:40px;width:40px;background-size:cover;background-image: url('<?= session('user')[0]['PROFILE_PICTURE'] ?>')">
-                                        </img>
+                                            <img class="nav-link rounded-circle "
+                                                style="height:40px;width:40px;background-size:cover;background-image: url('<?= session('user')[0]['PROFILE_PICTURE'] ?>')">
+                                            </img>
                                         <?php    } ?>
                                         <span class="text-truncate mx-2">
                                             <?= session('user')[0]['NAME'] ?>
@@ -232,14 +298,14 @@
                                     </a>
                                     <ul class="submenu" style="left: initial;right:0">
                                         <?php if (session('user')[0]['ID_ROLE'] == 1) { ?>
-                                        <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
+                                            <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
                                         <?php    } else { ?>
-                                        <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
-                                        <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
-                                        <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
-                                        <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
-                                        <li><a class="" href="<?= url('profile/mysertificate') ?>">My
-                                                Sertificate</a></li>
+                                            <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
+                                            <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
+                                            <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
+                                            <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
+                                            <li><a class="" href="<?= url('profile/mysertificate') ?>">My
+                                                    Sertificate</a></li>
                                         <?php    } ?>
                                         <hr>
                                         <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>
@@ -248,10 +314,9 @@
                             </ul>
                         </nav>
                     <?php  } else { ?>
-                    <div class="header-btn d-none d-xl-block">
-                        <a href="{{ url('login') }}" class="login">Login</a>
-                        <a href="{{ url('register') }}" class="btn btn-main-2 btn-sm-2 rounded">Sign up</a>
-                    </div>
+                        <div class="header-btn d-none d-xl-block">
+                            <a href="{{ url('login') }}" class="fw-normal a-header">Login</a>
+                        </div>
                     <?php } ?>
                 </div>
             </div>

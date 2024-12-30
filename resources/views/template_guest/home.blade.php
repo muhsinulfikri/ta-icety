@@ -1,103 +1,207 @@
 <style>
     .banner-image {
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0)), url('assets/images/home-1.png') !important;
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.9), rgba(0, 0, 0, 0)), url('icety_assets/bg_banner.svg') !important;
         background-repeat: no-repeat !important;
-        background-position: center !important;
+        background-position: bottom !important;
         background-size: cover !important;
     }
 
     .banner-style-4 {
         background: white;
     }
+
+    .course-grid-template {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .font-title {
+        font-size: 4rem;
+        line-height: 4.5rem;
+    }
+
+
+    @media (max-width: 1200px) {
+        .course-grid-template {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .course-grid-template {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .font-title {
+            font-size: 3rem;
+            line-height: 3.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .course-grid-template {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+    }
 </style>
-
-<section class=" banner-image banner-style-4 banner-padding">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+<section class=" banner-image banner-style-4 banner-padding p-0">
     <div class="container">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-md-12 col-xl-6 col-lg-6 ps-5">
+        <div class="row flex-column-reverse flex-lg-row align-items-center justify-content-center">
+            <div class="col-md-12 col-xl-6 col-lg-6 ps-0 ps-lg-5 mb-7 mb-lg-0">
                 <div class="banner-content ">
-                    <span class="subheading text-dark">The Brain & Heart Academy</span>
-                    <h1 class="text-dark mt-0" style="font-weight: 500;">Everyone can<br>
-                        <span style="font-weight: 700;">share and learn</span>
-                    </h1>
-                    <p class="mb-40 text-dark"> Are you ready to grow with us?</p>
+                    <div class="fw-bold text-black font-title">Upskill Your</div>
+                    <div class="fw-bold text-black pt-2 font-title">Current Career</div>
+                    <div class="text-black mt-4 fs-5">Tingkatkan keterampilan kebersihan dan sanitasi Anda di ICETy.org untuk sukses lebih besar dan lingkungan lebih sehat!</div>
 
-                    <div class="btn-container">
-                        <a href="course" class="btn btn-main rounded">Find Courses</a>
-                        <a href="login" class="btn btn-white rounded ms-2">Get started </a>
-                    </div>
+                    <a href="course" class="btn btn-secondary rounded mt-40">Find your courses here</a>
                 </div>
             </div>
 
             <div class="col-md-12 col-xl-6 col-lg-6">
-                <div class="banner-img-round mt-5 mt-lg-0 ps-5">
-                    <!-- <img src="{{ asset('assets_new') }}/images/banner/banner_img.png" alt="" class="img-fluid"> -->
+                <div class="banner-img-round mt-0 pb-5 ps-0 ps-lg-5 pt-4" style="justify-self: center;">
+                    <img src="{{ asset('icety_assets') }}/banner.svg" alt="" class="img-fluid">
                 </div>
             </div>
         </div> <!-- / .row -->
     </div> <!-- / .container -->
 </section>
 
-<section class="counter-section4">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-12 counter-inner">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="counter-item mb-5 mb-lg-0">
-                            <div class="count">
-                                <span class="counter h2">32</span><span>+</span>
-                            </div>
-                            <p>Courses</p>
-                        </div>
-                    </div>
+<!-- Sponsor -->
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="counter-item mb-5 mb-lg-0">
-                            <div class="count">
-                                <span class="counter h2">100</span><span>+</span>
-                            </div>
-                            <p>Active Users</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="counter-item mb-5 mb-lg-0">
-                            <div class="count">
-                                <span class="counter h2">30 </span>
-                            </div>
-                            <p>Export</p>
-                        </div>
+<section class="container sponsor py-3 my-2">
+    <div class="row">
+        <div class="col-12 col-lg-2 mb-3 mb-lg-0">
+            <div class="fs-5 text-black fw-semibold text-center text-lg-start">Thanks For</div>
+            <div class="fs-5 text-black fw-semibold  text-center text-lg-start" style="margin-top: -8px;">Our Supporter</div>
+        </div>
+        <div class="col-12 col-lg-10">
+            <div>
+                <div id="sponsorCarousel" class="splide">
+                    <div class="splide__track">
+                        <ul class="splide__list">
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/1.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/2.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/3.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/4.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/5.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/6.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/7.svg" class="img-fluid">
+                                </div>
+                            </li>
+                            <li class="splide__slide d-flex justify-content-center">
+                                <div class="text-center align-content-center">
+                                    <img src="{{ asset('icety_assets') }}/sponsor/8.svg" class="img-fluid">
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
+
+        </div>
+    </div>
+
+</section>
+
+<script>
+    // Initialize Splide
+    new Splide('#sponsorCarousel', {
+        type: 'loop',
+        perPage: 6,
+        perMove: 1,
+        breakpoints: {
+            768: {
+                perPage: 3,
+            },
+        },
+        pagination: false,
+        arrows: false,
+        setInterval: 1000,
+        autoplay: true,
+        pauseOnHover: true,
+    }).mount();
+</script>
+
+
+
+<!-- Why Us -->
+<style>
+    .card-why {
+        transition: text-shadow 0.5s ease;
+        border: none;
+    }
+
+    .card-why:hover {
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    }
+</style>
+
+<section class="container py-6">
+    <div class="text-center fs-3 fw-semibold text-black">Mengapa Memilih ICETy.org</div>
+    <div class="d-flex flex-column flex-md-row gap-5 justify-content-between pt-6">
+        <div class="card card-why flex-fill p-4 hover-shadow">
+            <div class="align-self-center mb-4">
+                <img src="{{ asset('icety_assets') }}/icon-solusi.svg" class="img-fluid" style="width: 55px; height:55px" />
+            </div>
+            <div class="text-center text-black fw-semibold fs-5">Solusi Praktis</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Menyediakan solusi kebersihan dan sanitasi untuk berbagai kebutuhan masyarakat dan industri.</div>
+        </div>
+        <div class="card card-why flex-fill p-4 hover-shadow">
+            <div class="align-self-center mb-4">
+                <img src="{{ asset('icety_assets') }}/icon-kursus.svg" class="img-fluid" style="width: 55px; height:55px" />
+            </div>
+            <div class="text-center text-black fw-semibold fs-5">Pengalaman Kursus Online</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Modul kursus interaktif dengan teknologi VR dan AR untuk pembelajaran kebersihan yang menyeluruh.</div>
+        </div>
+        <div class="card card-why flex-fill p-4 hover-shadow">
+            <div class="align-self-center mb-4">
+                <img src="{{ asset('icety_assets') }}/icon-citra.svg" class="img-fluid" style="width: 55px; height:55px" />
+            </div>
+            <div class="text-center text-black fw-semibold fs-5">Meningkatkan Citra Pariwisata Indonesia</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Mendukung destinasi wisata Indonesia agar berstandar internasional dalam kebersihan dan sanitasi.</div>
         </div>
     </div>
 </section>
 
+
+
+
 <!-- Carousel Start -->
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var splide = new Splide('.splide', {
-            type: 'loop',
-            focus: 0,
-            autoplay: true,
-            interval: 5000,
-        });
-        splide.mount();
-    });
-</script>
-
 <style>
     .splide__arrow:hover {
-        border-color: var(--theme-primary-color) !important;
+        border-color: black !important;
         background: transparent !important
     }
 
     .splide__pagination__page.is-active {
-        background: #FC8B14;
+        background: black;
     }
 
     .splide__arrow {
@@ -108,7 +212,6 @@
     }
 
     .splide__arrow:hover {
-        border: 4px;
         border-style: solid;
         border-color: #bbb;
         opacity: 1;
@@ -119,7 +222,7 @@
     }
 
     .splide__arrow svg {
-        fill: var(--theme-primary-color) !important;
+        fill: black !important;
     }
 
     .splide__arrow--prev svg {
@@ -132,7 +235,7 @@
 
     .splide__pagination {
         bottom: 1.5em;
-        margin-bottom: -20px;
+        margin-bottom: -10px;
     }
 
     .mt-70-m {
@@ -397,8 +500,359 @@
     }
 </style>
 
+<div style="margin:auto;max-width: 1200px;max-height: 300px;">
+    <div class="splide-carousel splide img-header mt-3" style="overflow:hidden;border-radius:1rem;max-width: 1200px;max-height: 300px;">
+        <div class="splide__track" style="aspect-ratio:4/1;">
+            <ul class="splide__list">
+                <li class="splide__slide">
+                    <section class="bg-fixed division  py-6  px-7"
+                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-1.svg');width:100%; height: 100%;">
 
-<section class="section-padding course-filter-section">
+                    </section>
+
+                </li>
+                <li class="splide__slide">
+                    <section class="bg-fixed division  py-6  px-7"
+                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-2.svg');width:100%; height: 100%;">
+
+                    </section>
+                </li>
+                <li class="splide__slide">
+                    <section class="bg-fixed division  py-6  px-7"
+                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-3.svg');width:100%; height: 100%;">
+
+                    </section>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    new Splide('.splide-carousel', {
+        type: 'loop',
+        focus: 0,
+        autoplay: true,
+        interval: 5000,
+    }).mount();
+</script>
+
+
+<!-- Course -->
+<section style="background: #E3E3E3;">
+    <div class="container py-6 mt-5 mt-md-7">
+        <div class="text-center fs-3 fw-semibold text-black">Kembangkan berbagai keterampilan baru bersama ICETy</div>
+
+        <div class="d-flex gap-4 mt-5 mb-4">
+            <button class="btn btn-tertiary active">Course</button>
+            <button class="btn btn-tertiary ">E-Book</button>
+        </div>
+
+
+        <div class="d-grid gap-4 course-grid-template">
+            @include(
+            'template_guest.card_course',
+            [
+            'id' => '1',
+            'banner' => 'card1.svg',
+            'title' => 'Food Safety Management Course',
+            'badge' => 'ICETy Class',
+            'description' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
+            'students' => '88',
+            'link' => '/'
+            ]
+            )
+            @include(
+            'template_guest.card_course',
+            [
+            'id' => '2',
+            'banner' => 'card2.svg',
+            'title' => 'The Chemistry of Cleaning',
+            'badge' => 'ICETy Class',
+            'description' => 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
+            'students' => '73',
+            'link' => '/'
+            ]
+            )
+            @include(
+            'template_guest.card_course',
+            [
+            'id' => '3',
+            'banner' => 'card3.svg',
+            'title' => 'Handling Chemical Safety Course',
+            'badge' => 'ICETy Class',
+            'description' => 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
+            'students' => '106',
+            'link' => '/'
+            ]
+            )
+            @include(
+            'template_guest.card_course',
+            [
+            'id' => '4',
+            'banner' => 'card4.svg',
+            'title' => 'Cleanliness Management',
+            'badge' => 'ICETy Class',
+            'description' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
+            'students' => '88',
+            'link' => '/'
+            ]
+            )
+        </div>
+
+        <div class="text-center text-sm-start"">
+            <button class=" btn btn-secondary my-4 style="font-size: 0.8rem">Tampilkan semua</button>
+
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Testimoni -->
+<section class="py-7" style="background: #404040;">
+    <div class="container">
+        <div class="text-center fs-2 fw-semibold text-white mb-5">Testimoni</div>
+
+        <div id="testimoniCarousel" class="splide">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Indah Rahayu',
+                        'position' => 'Supervisor Kebersihan, Hotel Nusantara',
+                        'testimoni' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
+                        ]
+                        )
+                    </li>
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Rudi Hartono',
+                        'position' => 'Manajer Keamanan Pangan, Restoran Lezat',
+                        'testimoni' => 'Pelatihan Food Safety Management memberi pemahaman yang lebih baik pada tim kami dalam menjaga keamanan pangan setiap hari.',
+                        ]
+                        )
+                    </li>
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Dian Permata',
+                        'position' => 'Kepala Departemen K3, PT Sukses Bersama',
+                        'testimoni' => 'The Chemistry of Cleaning sangat membuka wawasan kami tentang kebersihan. Materi mudah dipahami dan aplikatif.',
+                        ]
+                        )
+                    </li>
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Ari Prakoso',
+                        'position' => 'Supervisor Produksi, PT Tani Jaya',
+                        'testimoni' => 'Kursus ICETy.org membantu kami meningkatkan higienitas di lini produksi. Sangat bermanfaat untuk seluruh tim!',
+                        ]
+                        )
+                    </li>
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Nyoman Sarya',
+                        'position' => 'Staf Kebersihan, Rumah Sakit Harmoni',
+                        'testimoni' => 'Materi di ICETy mudah dipahami dan langsung bisa diterapkan. Sangat mendukung tugas sehari-hari!',
+                        ]
+                        )
+                    </li>
+                    <li class="splide__slide align-self-center h-100">
+                        @include(
+                        'template_guest.card_testimoni',
+                        [
+                        'banner' => 'avatar.svg',
+                        'name' => 'Siti Kurniasari',
+                        'position' => 'Kepala Divisi Kebersihan, Mall Indah',
+                        'testimoni' => 'Kelas Handling Chemical Safety sangat informatif, kami jadi lebih siap dalam menangani bahan kimia dengan aman.',
+                        ]
+                        )
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Initialize Splide
+    new Splide('#testimoniCarousel', {
+        type: 'loop',
+        perPage: 3,
+        perMove: 1,
+        breakpoints: {
+            768: {
+                perPage: 1,
+            },
+        },
+        pagination: false,
+        arrows: false,
+        setInterval: 1000,
+        autoplay: true,
+        pauseOnHover: true,
+    }).mount();
+</script>
+
+
+<!-- FAQ -->
+<style>
+    .accordion {
+        --bs-accordion-btn-bg: none;
+    }
+
+    .accordion-item {
+        border: 1px solid black;
+        border-radius: calc(0.375rem - 1px) !important;
+
+    }
+
+    .accordion-button {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:not(:first-of-type) {
+        border-top: 1px solid black !important;
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item.accordion-button {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:first-of-type .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:last-of-type .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-button:hover {
+        background-color: white !important;
+        box-shadow: 3px 3px 5px rgb(0 0 0 / 50%) !important;
+    }
+
+    .accordion-button:focus {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: black !important;
+        background-color: white !important;
+        box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color) !important;
+    }
+
+
+    .accordion-button:not(.collapsed)::after {
+        background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+        transform: var(--bs-accordion-btn-icon-transform) !important;
+    }
+
+    .accordion-button::after {
+        background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+        --bs-accordion-btn-icon-width: 2rem !important;
+    }
+</style>
+
+
+<section class="py-7">
+    <div class="container">
+        <div class="text-center fs-2 fw-semibold text-black mb-5">Pertanyaan yang sering diajukan</div>
+
+        <div>
+            <div class="accordion d-flex flex-column gap-4" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="one">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colOne" aria-expanded="false" aria-controls="colOne">
+                            Apa saja media komunikasi yang digunakan dalam Course ICETy?
+                        </button>
+                    </h2>
+                    <div id="colOne" class="accordion-collapse collapse" aria-labelledby="one">
+                        <div class="accordion-body">
+                            ICETy menggunakan media gambar, video, quiz, e-book yang interaktif serta pengalaman 360 derajat, menggunakan VR (virtual reality) & AR (augmented reality).
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="two">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
+                            ICETy melibatkan berbagai pakar, praktisi industri, asosiasi profesi, lembaga sertifikasi, serta pembuat kebijakan.
+                        </button>
+                    </h2>
+                    <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two">
+                        <div class="accordion-body">
+                            Siapa saja yang dilibatkan dalam pembuatan modul OCE yang disusun khusus oleh ICETy?
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="three">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colThree" aria-expanded="false" aria-controls="colThree">
+                            Apakah saya akan mendapatkan sertifikat setelah menyelesaikan kursus ICETy.org?
+                        </button>
+                    </h2>
+                    <div id="colThree" class="accordion-collapse collapse" aria-labelledby="three">
+                        <div class="accordion-body">
+                            Setelah Anda menyelesaikan progress hingga 100% dan telah mendapatkan nilai post test lebih dari 80, Anda akan masuk pada tahap verification. Setelah itu, Anda akan mendapatkan sertifikat melalui email, dan dapat juga diakses melalui web pada tombol ‘Credential’.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="four">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFour" aria-expanded="false" aria-controls="colFour">
+                            Berapa lama waktu yang diperlukan untuk menyelesaikan kursus ICETy.org?
+                        </button>
+                    </h2>
+                    <div id="colFour" class="accordion-collapse collapse" aria-labelledby="four">
+                        <div class="accordion-body">
+                            Pada masing-masing kursus, rata-rata waktu penyelesaiannya adalah 1-2 jam. Pada kursus ICETy.org tidak ada batasan waktu dalam penyelesaian kursus.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="five">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFive" aria-expanded="false" aria-controls="colFive">
+                            Apakah saya tetap dapat mengakses materi kursus sekalipun sudah menyelesaikan kursus?
+                        </button>
+                    </h2>
+                    <div id="colFive" class="accordion-collapse collapse" aria-labelledby="five">
+                        <div class="accordion-body">
+                            Setelah Anda selesai mengerjakan atau sudah mendapat sertifikat, Anda tetap akan dapat mengakses materi dalam kursus yang telah diambil selama 1 tahun.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- <section class="section-padding course-filter-section">
     <div class="container">
         <div class="row align-items-center justify-content-between mb-30">
             <div class="col-xl-12">
@@ -410,9 +864,9 @@
                 <div class="filter-wrap text-center">
                     <ul class="course-filter ">
                         <?php foreach ($kategori as $item_kategori) : ?>
-                        <li><a href="#" data-value="<?= $item_kategori->ID_KATEGORI ?>"
-                                id="nav-<?= $item_kategori->ID_KATEGORI ?>"
-                                onclick="ChangeNav(this, event)"><?= $item_kategori->KATEGORI ?></a></li>
+                            <li><a href="#" data-value="<?= $item_kategori->ID_KATEGORI ?>"
+                                    id="nav-<?= $item_kategori->ID_KATEGORI ?>"
+                                    onclick="ChangeNav(this, event)"><?= $item_kategori->KATEGORI ?></a></li>
                         <?php endforeach ?>
                         <li><a href="course">See All </a></li>
                     </ul>
@@ -434,7 +888,6 @@
             </div>
         </div>
     </div>
-    <!--course-->
 </section>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -524,60 +977,59 @@
         <div class="row course-gallery ">
             <?php foreach ($event as $item) { ?>
 
-            <div class="course-item cat1 cat5 col-lg-6 col-md-6">
-                <div class="single-course style-2 bg-shade border-0">
-                    <div class="row g-0 align-items-center">
-                        <div class="col-xl-5">
-                            <div class="course-thumb"
-                                style="background:url(<?= str_replace(' ', '%20', $item->IMAGE_ACTIVITY) ?>)">
-                            </div>
-                        </div>
-                        <div class="col-xl-7">
-                            <div class="course-content">
-                                <div class="course-price"><?= date_format(date_create($item->LOG_TIME), 'j F Y') ?>
+                <div class="course-item cat1 cat5 col-lg-6 col-md-6">
+                    <div class="single-course style-2 bg-shade border-0">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-xl-5">
+                                <div class="course-thumb"
+                                    style="background:url(<?= str_replace(' ', '%20', $item->IMAGE_ACTIVITY) ?>)">
                                 </div>
-                                <h3 class="course-title"> <a
-                                        href="<?= 'event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY)) . '?id_activity=' . $item->ID_ACTIVITY ?>"><?= $item->TITLE_ACTIVITY ?>
-                                    </a> </h3>
+                            </div>
+                            <div class="col-xl-7">
+                                <div class="course-content">
+                                    <div class="course-price"><?= date_format(date_create($item->LOG_TIME), 'j F Y') ?>
+                                    </div>
+                                    <h3 class="course-title"> <a
+                                            href="<?= 'event/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY)) . '?id_activity=' . $item->ID_ACTIVITY ?>"><?= $item->TITLE_ACTIVITY ?>
+                                        </a> </h3>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             <?php } ?>
         </div>
     </div>
-    <!--course-->
 </section>
 
 <section class="cta">
     <div class="container">
         <div class="row cta-inner-section g-0" style="background: white;">
             <?php if (empty(session('user')[0]) || session('user')[0]['ID_ROLE'] != '2') { ?>
-            <div class="col-xl-6 col-lg-6">
-                <div class="info-box style-1">
-                    <span class="subtitle"># Become a Instructor</span>
-                    <h2 class="font-lg mb-20 mt-10">Become an Instructor Right Now</h2>
-                    <a href="#" class="btn btn-main-2 rounded">Apply Now <i class="fa fa-angle-right"></i></a>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="info-box style-1">
+                        <span class="subtitle"># Become a Instructor</span>
+                        <h2 class="font-lg mb-20 mt-10">Become an Instructor Right Now</h2>
+                        <a href="#" class="btn btn-main-2 rounded">Apply Now <i class="fa fa-angle-right"></i></a>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
             <?php if (empty(session('user')[0])) { ?>
-            <div class="col-xl-6 col-lg-6">
-                <div class="info-box">
-                    <span class="subtitle"># Want to join </span>
-                    <h2 class="font-lg mb-20 mt-10">Not Sure Where to Begin?</h2>
-                    <a href="#" class="btn btn-main rounded">Get Started <i class="fa fa-angle-right"></i></a>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="info-box">
+                        <span class="subtitle"># Want to join </span>
+                        <h2 class="font-lg mb-20 mt-10">Not Sure Where to Begin?</h2>
+                        <a href="#" class="btn btn-main rounded">Get Started <i class="fa fa-angle-right"></i></a>
+                    </div>
                 </div>
-            </div>
             <?php } else { ?>
-            <div class="col-xl-6 col-lg-6">
-                <div class="info-box">
-                    <span class="subtitle"></span>
-                    <h2 class="font-lg mb-20 mt-10"></h2>
-                    <a href="#" class="btn btn-main rounded"></a>
+                <div class="col-xl-6 col-lg-6">
+                    <div class="info-box">
+                        <span class="subtitle"></span>
+                        <h2 class="font-lg mb-20 mt-10"></h2>
+                        <a href="#" class="btn btn-main rounded"></a>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
         </div>
     </div>
@@ -589,7 +1041,7 @@
     function ChangeNav(element, event) {
         event.preventDefault()
         <?php foreach ($kategori as $item_kategori) : ?>
-        $("#nav-<?= $item_kategori->ID_KATEGORI ?>").parent().removeClass("active")
+            $("#nav-<?= $item_kategori->ID_KATEGORI ?>").parent().removeClass("active")
         <?php endforeach; ?>
         $(element).parent().addClass("active")
         GetCourse($(element).data('value'))
@@ -618,4 +1070,4 @@
             }
         });
     }
-</script>
+</script> -->
