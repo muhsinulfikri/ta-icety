@@ -24,6 +24,7 @@ Route::get('/', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 
 Route::get('/about', 'GuestController@about');
+Route::get('/blog', 'GuestController@blog');
 
 //COURSE GUEST
 Route::get('course', 'guest_controller\CourseGuest@index');

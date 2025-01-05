@@ -59,6 +59,16 @@ class GuestController extends Controller
 			view('template.footer', $data);
 	}
 
+	public function blog()
+	{
+		$data['title'] = 'TBHAcademy';
+
+		return
+			view('template.header', $data) .
+			view('template_guest.blog', $data) .
+			view('template.footer', $data);
+	}
+
 	public function courseCategories(Request $req)
 	{
 		$category = $req->input('category');
