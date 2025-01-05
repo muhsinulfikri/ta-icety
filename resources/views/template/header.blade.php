@@ -50,6 +50,10 @@
     </style>
 
     <style>
+
+        *{
+            font-family: "Noto Sans", serif !important;
+        }
         body {
             font-family: "Noto Sans", serif !important;
         }

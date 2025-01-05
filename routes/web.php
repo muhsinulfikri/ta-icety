@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 
+Route::get('/store', 'GuestController@store');
 Route::get('/about', 'GuestController@about');
 Route::get('/blog', 'GuestController@blog');
 
