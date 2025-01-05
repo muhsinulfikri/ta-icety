@@ -27,6 +27,7 @@ Route::post('guest/category', 'GuestController@courseCategories');
 Route::get('course', 'guest_controller\CourseGuest@index');
 Route::get('course/search', 'guest_controller\CourseGuest@SearchCourse');
 Route::post('course/category', 'guest_controller\CourseGuest@getFilterByKat');
+Route::get('course/info/testing', 'guest_controller\CourseGuest@infoCourse');
 Route::get('course/info/{any}', 'guest_controller\CourseGuest@infoCourse');
 Route::post('course/detail/addkomen', 'guest_controller\CourseGuest@addkomen');
 //END COURSE GUEST
@@ -203,5 +204,3 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('events/lihat_peserta', 'EventController@index_lihat_peserta');
     Route::get('events/laporan_event', 'EventController@laporan_event');
 });
-
-

@@ -545,69 +545,204 @@
         <div class="text-center fs-3 fw-semibold text-black">Kembangkan berbagai keterampilan baru bersama ICETy</div>
 
         <div class="d-flex gap-4 mt-5 mb-4">
-            <button class="btn btn-tertiary active">Course</button>
-            <button class="btn btn-tertiary ">E-Book</button>
+            <button class="btn btn-tertiary btn-course active">Course</button>
+            <button class="btn btn-tertiary btn-ebook">E-Book</button>
         </div>
 
 
-        <div class="d-grid gap-4 course-grid-template">
-            @include(
-            'template_guest.card_course',
-            [
-            'id' => '1',
-            'banner' => 'card1.svg',
-            'title' => 'Food Safety Management Course',
-            'badge' => 'ICETy Class',
-            'description' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            'students' => '88',
-            'link' => '/'
-            ]
-            )
-            @include(
-            'template_guest.card_course',
-            [
-            'id' => '2',
-            'banner' => 'card2.svg',
-            'title' => 'The Chemistry of Cleaning',
-            'badge' => 'ICETy Class',
-            'description' => 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            'students' => '73',
-            'link' => '/'
-            ]
-            )
-            @include(
-            'template_guest.card_course',
-            [
-            'id' => '3',
-            'banner' => 'card3.svg',
-            'title' => 'Handling Chemical Safety Course',
-            'badge' => 'ICETy Class',
-            'description' => 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            'students' => '106',
-            'link' => '/'
-            ]
-            )
-            @include(
-            'template_guest.card_course',
-            [
-            'id' => '4',
-            'banner' => 'card4.svg',
-            'title' => 'Cleanliness Management',
-            'badge' => 'ICETy Class',
-            'description' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            'students' => '88',
-            'link' => '/'
-            ]
-            )
+        <div class="d-grid gap-4 course-grid-template course-container">
+
+        </div>
+        <div class="d-grid gap-4 course-grid-template ebook-container" style="display: none !important;">
+
         </div>
 
         <div class="text-center text-sm-start"">
-            <button class=" btn btn-secondary my-4 style="font-size: 0.8rem">Tampilkan semua</button>
+            <button class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</button>
 
         </div>
 
     </div>
 </section>
+
+
+<script>
+    function createCard(data) {
+        return `
+            <div class="card card-course overflow-hidden" id="card-${data.id}" style="width: 276px; max-width: 276px; justify-self: center;">
+                <div>
+                    <img src="{{ asset('icety_assets') }}/${data.banner}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                </div>
+                <div class="t-section h-100 w-100">
+                    <div class="p-3 h-100">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.badge}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3" style="line-height: 22px;">${data.title}</div>
+                        <div class="card-info" style="display: none;">
+                            <div class="text-black fs-6 mb-2" style="line-height: 20px;">${data.description}</div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <div>
+                                    <img src="{{ asset('icety_assets') }}/icon-team.svg" class="img-fluid" style="height: 12px;" />
+                                    <span class="text-black" style="font-size: 0.9rem">${data.students} Students</span>
+                                </div>
+                                <div>
+                                    ${generateStars(data.stars)}
+                                </div>
+                            </div>
+                            <a href="${data.link}" class="card-link">Find out more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function generateStars(stars) {
+        let starHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= stars) {
+                starHTML += `<img src="{{ asset('icety_assets') }}/star-black.svg" class="img-fluid" style="height: 12px;" />`;
+            } else {
+                starHTML += `<img src="{{ asset('icety_assets') }}/star-gray.svg" class="img-fluid" style="height: 12px;" />`;
+            }
+        }
+        return starHTML;
+    }
+
+    const coursesData = [{
+            id: '1',
+            banner: 'card1.svg',
+            title: 'Food Safety Management Course',
+            badge: 'ICETy Class',
+            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
+            students: '88',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '2',
+            banner: 'card2.svg',
+            title: 'The Chemistry of Cleaning',
+            badge: 'ICETy Class',
+            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
+            students: '73',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '3',
+            banner: 'card3.svg',
+            title: 'Handling Chemical Safety Course',
+            badge: 'ICETy Class',
+            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
+            students: '106',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '4',
+            banner: 'card4.svg',
+            title: 'Cleanliness Management',
+            badge: 'ICETy Class',
+            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
+            students: '88',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        }
+    ];
+
+    coursesData.forEach(data => {
+        $('.course-container').append(createCard(data));
+
+        $(`#card-${data.id} .t-section`).hover(
+            function() {
+                $(`#card-${data.id}  .card-info`).css({
+                    display: "block",
+                });
+            },
+            function() {
+                $(`#card-${data.id}  .card-info`).css({
+                    display: "none",
+                });
+            },
+        );
+    });
+
+    const ebooksData = [{
+            id: '5',
+            banner: 'card1.svg',
+            title: 'Food Safety Management Course',
+            badge: 'ICETy E-Book',
+            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
+            students: '88',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '6',
+            banner: 'card2.svg',
+            title: 'The Chemistry of Cleaning',
+            badge: 'ICETy E-Book',
+            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
+            students: '73',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '7',
+            banner: 'card3.svg',
+            title: 'Handling Chemical Safety Course',
+            badge: 'ICETy E-Book',
+            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
+            students: '106',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        },
+        {
+            id: '8',
+            banner: 'card4.svg',
+            title: 'Cleanliness Management',
+            badge: 'ICETy E-Book',
+            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
+            students: '88',
+            stars: 4,
+            link: '/course/info/66?id_activity=ACT_a2e'
+        }
+    ];
+
+    ebooksData.forEach(data => {
+        $('.ebook-container').append(createCard(data));
+
+        $(`#card-${data.id} .t-section`).hover(
+            function() {
+                $(`#card-${data.id}  .card-info`).css({
+                    display: "block",
+                });
+            },
+            function() {
+                $(`#card-${data.id}  .card-info`).css({
+                    display: "none",
+                });
+            },
+        );
+    });
+
+    $('.btn-course').on('click', function() {
+        $('.btn-ebook').removeClass('active')
+
+        $(this).addClass('active')
+        $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
+        $('.course-container').show()
+    });
+
+    $('.btn-ebook').on('click', function() {
+        $('.btn-course').removeClass('active')
+
+        console.log("haah")
+        $(this).addClass('active')
+        $('.ebook-container').show()
+        $('.course-container')[0].style.setProperty('display', 'none', 'important')
+    });
+</script>
 
 
 <!-- Testimoni -->
@@ -799,12 +934,12 @@
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="two">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
-                            ICETy melibatkan berbagai pakar, praktisi industri, asosiasi profesi, lembaga sertifikasi, serta pembuat kebijakan.
+                            Siapa saja yang dilibatkan dalam pembuatan modul OCE yang disusun khusus oleh ICETy?
                         </button>
                     </h2>
                     <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two">
                         <div class="accordion-body">
-                            Siapa saja yang dilibatkan dalam pembuatan modul OCE yang disusun khusus oleh ICETy?
+                            ICETy melibatkan berbagai pakar, praktisi industri, asosiasi profesi, lembaga sertifikasi, serta pembuat kebijakan.
                         </div>
                     </div>
                 </div>

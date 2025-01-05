@@ -152,6 +152,41 @@
             box-shadow: none !important;
         }
     </style>
+
+    <style>
+        .card-badge {
+            width: fit-content;
+            font-size: 0.75rem !important;
+            line-height: 22px;
+            border-radius: 30px;
+            box-shadow: 1px 1px 8px rgb(0 0 0 / 25%) !important;
+        }
+
+        .card-course {
+            box-shadow: 2px 2px 2px rgb(0 0 0 / 25%) !important;
+            border: none;
+            height: 286px;
+            max-height: 286px;
+        }
+
+        .card-course .t-section:hover {
+            position: absolute;
+            bottom: 0;
+            height: 100%;
+            background-color: rgb(255, 255, 255);
+            transition: transform 0.3s ease, height 0.3s ease;
+        }
+
+        .card-link {
+            text-decoration: underline !important;
+            color: #0B0B0B !important;
+            font-weight: 600;
+        }
+
+        .card-link:hover {
+            color: #AD0B0B !important;
+        }
+    </style>
     <header class="header-style-1">
         <div class="header-topbar topbar-style-1" style="background-color: white;">
             <div class="container">

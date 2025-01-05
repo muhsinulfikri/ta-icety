@@ -36,7 +36,7 @@
         }
     }
 </style>
-<section class="footer">
+<section class="footer" style="background-color: #680706 !important">
     <div class=" footer-mid pb-4 pb-lg-7">
         <div class="container">
             <div class="row">
