@@ -1,4 +1,8 @@
 <style>
+    .footer {
+        font-family: "Noto Sans", serif !important;
+    }
+
     .footer-logo {
         tbh-footer: left;
     }
@@ -32,16 +36,27 @@
         }
     }
 </style>
-<section class="footer <?= $title == 'TBHAcademy' ? 'pt-200' : '' ?>">
-    <div class="footer-mid pb-4 pb-lg-7">
+<section class="footer" style="background-color: #680706 !important">
+    <div class=" footer-mid pb-4 pb-lg-7">
         <div class="container">
             <div class="row">
                 <div class="col-xl-3 me-auto col-sm-8 tbh-footer">
                     <div class="footer-logo mb-3">
-                        <img src="<?= url('assets/images/white-logo.svg') ?>" class="w-75 img-fluid">
+                        <img src="<?= url('icety_assets/logo-footer.svg') ?>" class="w-75 img-fluid">
                     </div>
-                    <div class="widget footer-widget mb-5 mb-lg-0">
-                        <p>Everyone can share and learn</p>
+                    <div class="widget footer-widget text-white">
+                        <p class="text-white" style="font-size: 0.8rem;line-height: 20px">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet</p>
+                    </div>
+                    <div class="d-flex gap-3 pt-2 mb-5 mb-lg-0  justify-content-center justify-content-md-start">
+                        <a href="#">
+                            <img src="{{ asset('icety_assets') }}/logo-ig.svg" class="img-fluid" />
+                        </a>
+                        <a href="#">
+                            <img src="{{ asset('icety_assets') }}/logo-linkedin.svg" class="img-fluid" />
+                        </a>
+                        <a href="#">
+                            <img src="{{ asset('icety_assets') }}/logo-youtube.svg" class="img-fluid" />
+                        </a>
                     </div>
                 </div>
 
@@ -63,17 +78,18 @@
                         <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
                                 <li>
-                                    <h6 class="text-white">Phone</h6><a href="#">+62 899-2876-420</a>
+                                    <h6 class="text-white">Phone</h6><a href="#">0811-8878-333</a>
                                 </li>
                                 <li>
-                                    <h6 class="text-white">Email</h6><a href="#">inbis@stiki.ac.id</a>
+                                    <h6 class="text-white">Email</h6><a href="#">customercare@iclean.co.id</a>
                                 </li>
                             </ul>
                             <ul class="list-unstyled footer-links" style="flex:2">
                                 <li>
                                     <h6 class="text-white">Location</h6><a href="#">
-                                        Jl. Raya Tidar No.100, Karangbesuki,<br> Kec. Sukun,
-                                        Kota Malang, East Java 65146, 13910</a>
+                                        Wisma BCA - BSD City Wing A lt.1,
+                                        Jl. Kapten Soebijanto Djojohadikusumo No.1, Lengkong,
+                                        Serpong Sub-District, South Tangerang City, Banten 15322
                                 </li>
                             </ul>
                         </div>
@@ -87,13 +103,11 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-6 col-sm-12 col-lg-6">
-                    <p class="mb-0 copyright text-center text-lg-start">© 2024 TBH Academy. All rights reserved.</p>
+                    <p class="mb-0 copyright text-center text-lg-start text-white" style="font-size: 0.8rem;">Copyright ©2022 All rights reserved | This template is made by ICETy.org</p>
                 </div>
                 <div class="col-xl-6 col-sm-12 col-lg-6  d-none d-lg-block">
                     <div class="footer-btm-links text-start text-sm-center text-lg-end">
-                        <a href="#">Legal</a>
-                        <a href="#">Supports</a>
-                        <a href="#">Terms</a>
+
                     </div>
                 </div>
             </div>

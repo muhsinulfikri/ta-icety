@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Course;
@@ -35,7 +36,7 @@ class GuestController extends Controller
 			FROM
 				tb_carousel
 		');
-		
+
 		$data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		$checkoutModel = new Checkout();
 		$data['checkout'] = $checkoutModel->get_all_order($data_user);
@@ -43,14 +44,45 @@ class GuestController extends Controller
 		$data['event'] = $eventModel->get_home_event();
 		// dd($data);
 		return
-		view('template.header', $data) .
-		view('template_guest.home', $data) .
-		view('template.footer', $data);
+			view('template.header', $data) .
+			view('template_guest.home', $data) .
+			view('template.footer', $data);
 	}
+
+	public function about()
+	{
+		$data['title'] = 'TBHAcademy';
+
+		return
+			view('template.header', $data) .
+			view('template_guest.about', $data) .
+			view('template.footer', $data);
+	}
+
+	public function blog()
+	{
+		$data['title'] = 'TBHAcademy';
+
+		return
+			view('template.header', $data) .
+			view('template_guest.blog', $data) .
+			view('template.footer', $data);
+	}
+
+	public function store()
+	{
+		$data['title'] = 'TBHAcademy';
+
+		return
+			view('template.header', $data) .
+			view('template_guest.store', $data) .
+			view('template.footer', $data);
+	}
+
 	public function courseCategories(Request $req)
 	{
 		$category = $req->input('category');
-		$condition = $category ? ['activity.TYPE_ACTIVITY = 1', 'course.KATEGORI = '. $category] : ['activity.TYPE_ACTIVITY = 1'];
+		$condition = $category ? ['activity.TYPE_ACTIVITY = 1', 'course.KATEGORI = ' . $category] : ['activity.TYPE_ACTIVITY = 1'];
 		$courseModel = new Course();
 		$data['course'] = $courseModel->get_home_course($condition);
 		return view('template_guest.home_course', $data);
