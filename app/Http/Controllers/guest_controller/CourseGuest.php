@@ -8,6 +8,7 @@ use App\Models\Checkout;
 use App\Models\Event;
 use App\Models\Category;
 use App\Models\Certificate;
+use App\Models\Ebook;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -350,6 +351,12 @@ class CourseGuest extends Controller
 		");
 
 		$data['checkout'] = $this->checkoutModel->get_all_order($data_user);
+
+		$courseModel = new Course();
+		$data['courses'] = $courseModel->get_courses(["activity.ID_ACTIVITY != '" . $id_activity . "'"]);
+		$ebookModel = new Ebook();
+		$data['ebooks'] = $ebookModel->get_all_book_home();
+
 		return
 			view('template.header', $data) .
 			view('template_guest.course.course_info', $data) .

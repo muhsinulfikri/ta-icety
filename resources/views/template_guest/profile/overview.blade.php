@@ -81,7 +81,7 @@
             <input type="number" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Nominal" name="nominal" aria-describedby="" required="">
         </div>
         <div class="d-flex w-100 align-items-center justify-content-center">
-            <button type="submit" class="btn btn-third btn-main rounded rounded-4 fw-semibold py-2 w-auto mt-4" style="--bs-btn-padding-x: 4.5rem;">Send</button>
+            <button type="submit" class="btn btn-primary rounded rounded-4 fw-semibold py-2 w-auto mt-4" style="--bs-btn-padding-x: 4.5rem;">Send</button>
         </div>
     </div>
 

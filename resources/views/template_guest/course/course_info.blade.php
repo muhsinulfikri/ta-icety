@@ -54,11 +54,10 @@
         <!-- Course -->
         <div class="row">
             <div class="col-12 col-md-8 pe-0 pe-md-4 d-flex flex-column gap-3">
-                <h2>Food Safety Management Course</h2>
-                <div class="font ">Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan pest control.</div>
+                <h2><?= $course->TITLE_ACTIVITY ?></h2>
                 <div class="" style="border: 3px solid black"></div>
                 <div class="font " style="font-size: 0.9rem;">
-                    Di dalam module course ini terbagi menjadi 18 sesi yang tediri dari reading material, quiz, video clip, & post test. Setelah mengikuti keseluruhan sesi, anda akan mendapatkan Acknowledgement. Apabila Anda berhasil menyelesaikan post test dengan minimum threshold 80 point, maka Anda akan mendapatkan Certificate Food Safety Management Course (FSMC) yang diterima setelah proses knowledge validation (Anda akan menerima notifikasi email untuk proses knowledge validation. Dengan mengikuti course ini dan mendapatkan sertifikat, maka anda telah siap menjadi professional di industri culinary.
+                    <?= $course->DESKRIPSI_COURSE ?>
                 </div>
                 <div class="rounded px-3 py-3 d-flex gap-3 col-12 col-md-11" style="background: #E3E3E3;">
                     <div>
@@ -70,22 +69,45 @@
                     </div>
                 </div>
                 <h2 class="font mt-2">What You Will Learn</h2>
-                <div class="font ">Dalam course ini Anda akan memahami berbagai hal yang harus diketahui tentang keamanan pangan, antara lain:</div>
+                <div class="font "><?= $course->DESKRIPSI_COURSE_ITEM ?></div>
                 <h3 class="font ">course outcomes</h3>
                 <div class="my-2" style="border: 2px solid black;"></div>
-                <ul class="ps-4 ul">
-                    <li class="font">Understand Food Safety Management</li>
-                </ul>
+                <?php
+
+                use Illuminate\Support\Facades\Request;
+
+                if (!empty($item_course)) { ?>
+                    <?php foreach ($item_course as $item) :  ?>
+                        <ul class="ps-4 ul">
+                            <li class="font"><?= $item->TITLE ?></li>
+                        </ul>
+                    <?php endforeach; ?>
+                <?php } else { ?>
+                    <div class="d-flex flex-column align-items-center">
+                        <img src="{{ asset('assets_new') }}/images/empty.svg"
+                            width="350">
+                        <h4 class="font-sm text-center">Tidak ada bab</h4>
+                    </div>
+                <?php } ?>
+
                 <div class="my-2" style="border: 2px solid black;"></div>
-                <ol class="ps-4 ol">
-                    <li class="font ps-1">Personal Hygiene Program</li>
-                    <li class="font ps-1">Time & Temperature Control in Culinary Process</li>
-                    <li class="font ps-1">The Flow Of Food: Purchasing-Receiving-Storing-Cooking-Serving</li>
-                    <li class="font ps-1">Cleaning & Sanitation</li>
-                    <li class="font ps-1">Integrated Pest Management</li>
-                </ol>
+
                 <div>
-                    <button class=" btn btn-secondary mt-3" style="padding-left: 2rem !important; padding-right: 2rem !important">Join Now</button>
+                    <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
+                        <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                            class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                            Join Now
+                        </button>
+                    <?php } else if (empty($course->REQUIREMENT)) { ?>
+                        <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                            class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                            Join Now
+                        </button>
+                    <?php } else { ?>
+                        <label class="text-black" style="align-items: center">Please finish <span class="fw-bold text-danger"><?= $course->REQ_NAME ?></span> course first
+                            before take this course</label>
+                    <?php } ?>
+
                 </div>
                 <div class="font fst-italic" style="font-size: 0.6rem;">
                     * Private access classes available
@@ -93,7 +115,7 @@
             </div>
             <div class="col-12 col-md-3 ms-0 ms-md-4 mt-4 mt-md-0 rounded-3 overflow-hidden h-100" style="background-color: #E3E3E3;">
                 <div>
-                    <img src="{{ asset('icety_assets') }}/card1.svg" class="img-fluid w-100" />
+                    <img src="<?= $course->IMAGE_ACTIVITY ?>" class="img-fluid w-100" />
                 </div>
                 <div class="d-flex flex-column gap-3 py-3 px-4">
                     <div class="d-flex gap-3">
@@ -101,8 +123,8 @@
                             <img src="{{ asset('icety_assets') }}/icon-course.svg" class="img-fluid mt-1" />
                         </div>
                         <div>
-                            <div class="font fw-bold">Course type</div>
-                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Short course</div>
+                            <div class="font fw-bold">Course categories</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px"><?= $course->KATEGORI ?></div>
                         </div>
                     </div>
                     <div class="d-flex gap-3">
@@ -120,7 +142,7 @@
                         </div>
                         <div>
                             <div class="font fw-bold">Start date</div>
-                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Start any time</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px"><?= date('F d, Y', strtotime($course->DATE_START)) ?></div>
                         </div>
                     </div>
                     <div class="d-flex gap-3">
@@ -129,7 +151,7 @@
                         </div>
                         <div>
                             <div class="font fw-bold">Duration</div>
-                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Flexible</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Until <?= date('F d, Y', strtotime($course->DATE_END)) ?></div>
                         </div>
                     </div>
                     <div class="d-flex gap-3">
@@ -138,11 +160,24 @@
                         </div>
                         <div>
                             <div class="font fw-bold">Cost</div>
-                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Rp500,000 (IDR) to learn</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px"><?= $course->PRICE_ACTIVITY == 0 ? 'Free' : 'Rp ' . number_format($course->PRICE_ACTIVITY, 2, ',', '.') ?> to learn</div>
                         </div>
                     </div>
                     <div>
-                        <button class=" btn btn-secondary mt-3" style="padding-left: 2rem !important; padding-right: 2rem !important; font-size: 0.8rem">Join Now</button>
+                        <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
+                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                Join Now
+                            </button>
+                        <?php } else if (empty($course->REQUIREMENT)) { ?>
+                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                Join Now
+                            </button>
+                        <?php } else { ?>
+                            <label class="text-black" style="align-items: center">Please finish <span class="fw-bold text-danger"><?= $course->REQ_NAME ?></span> course first
+                                before take this course</label>
+                        <?php } ?>
                         <div class="font fst-italic mt-1" style="font-size: 0.6rem;">
                             * Private access classes available
                         </div>
@@ -155,6 +190,44 @@
 
     </div>
 </section>
+
+<script>
+    function AddToCart(e) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+        <?php if (!empty(session('user'))) { ?>
+            $.ajax({
+                url: '<?= Request::segment(0) ?>/add/order',
+                type: "GET",
+                data: {
+                    id_activity: $(e).data("id-activity"),
+                    type: 1
+                },
+                dataType: 'json',
+                success: function(data) {
+                    Toast.fire({
+                        icon: (data.Status) ? 'success' : 'error',
+                        title: data.Message
+                    })
+                }
+            });
+        <?php } else { ?>
+            Toast.fire({
+                icon: 'error',
+                title: 'Please login first!'
+            })
+        <?php } ?>
+    }
+</script>
 
 <!-- Another Course -->
 <section class="pb-7">
@@ -178,28 +251,30 @@
 
 
 <script>
-    function createCard(data) {
+    function createCardCourse(data) {
         return `
-            <div class="card card-course overflow-hidden" id="card-${data.id}" style="width: 276px; max-width: 276px; justify-self: center;">
+            <div class="card card-course overflow-hidden" id="card-${data.ID_ACTIVITY}" style="width: 276px; max-width: 276px; justify-self: center;">
                 <div>
-                    <img src="{{ asset('icety_assets') }}/${data.banner}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                    <img src="${data.IMAGE_ACTIVITY}" class="img-fluid" style="aspect-ratio: 23/13;" />
                 </div>
                 <div class="t-section h-100 w-100">
                     <div class="p-3 h-100">
-                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.badge}</div>
-                        <div class="fw-semibold text-black fs-5 mb-3" style="line-height: 22px;">${data.title}</div>
-                        <div class="card-info" style="display: none;">
-                            <div class="text-black fs-6 mb-2" style="line-height: 20px;">${data.description}</div>
-                            <div class="d-flex justify-content-between mb-1">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.KATEGORI}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.TITLE_ACTIVITY}</div>
+                        <div class="card-info" style="display: none;     height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100"> 
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_COURSE ?? "-"}</div>
                                 <div>
-                                    <img src="{{ asset('icety_assets') }}/icon-team.svg" class="img-fluid" style="height: 12px;" />
-                                    <span class="text-black" style="font-size: 0.9rem">${data.students} Students</span>
-                                </div>
-                                <div>
-                                    ${generateStars(data.stars)}
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5"> 
+                                                ${(data.PRICE_ACTIVITY === 0) ? "Free" : "Rp " + data.PRICE_ACTIVITY.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="course/info/${data.TITLE_ACTIVITY.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_ACTIVITY}" class="card-link">Find out more</a>
                                 </div>
                             </div>
-                            <a href="${data.link}" class="card-link">Find out more</a>
                         </div>
                     </div>
                 </div>
@@ -207,134 +282,47 @@
         `;
     }
 
-    function generateStars(stars) {
-        let starHTML = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= stars) {
-                starHTML += `<img src="{{ asset('icety_assets') }}/star-black.svg" class="img-fluid" style="height: 12px;" />`;
-            } else {
-                starHTML += `<img src="{{ asset('icety_assets') }}/star-gray.svg" class="img-fluid" style="height: 12px;" />`;
-            }
-        }
-        return starHTML;
-    }
-
-    const coursesData = [{
-            id: '1',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '2',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy Class',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '3',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy Class',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '4',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        }
-    ];
-
+    const coursesData = @json($courses);
     coursesData.forEach(data => {
-        $('.course-container').append(createCard(data));
-
-        $(`#card-${data.id} .t-section`).hover(
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "block",
-                });
-            },
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "none",
-                });
-            },
-        );
+        $('.course-container').append(createCardCourse(data));
     });
 
-    const ebooksData = [{
-            id: '5',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '6',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '7',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy E-Book',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '8',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        }
-    ];
+    function createCardBook(data) {
+        return `
+            <div class="card card-course overflow-hidden" id="card-${data.ID_BUKU}" style="width: 276px; max-width: 276px; justify-self: center;">
+                <div>
+                    <img src="${data.IMAGE_EBOOK}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                </div>
+                <div class="t-section h-100 w-100">
+                    <div class="p-3 h-100">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.AUTHOR}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.JUDUL}</div>
+                        <div class="card-info" style="display: none;    height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100"> 
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESC ?? "-"}</div>
+                                <div>
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5"> 
+                                                ${(data.PRICE === 0) ? "Free" : "Rp " + data.PRICE.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="ebooks/detail/${data.JUDUL.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_book=${data.ID_BUKU}" class="card-link">Find out more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    const ebooksData = @json($ebooks);
+
 
     ebooksData.forEach(data => {
-        $('.ebook-container').append(createCard(data));
-
-        $(`#card-${data.id} .t-section`).hover(
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "block",
-                });
-            },
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "none",
-                });
-            },
-        );
+        $('.ebook-container').append(createCardBook(data));
     });
 
     $('.btn-course').on('click', function() {

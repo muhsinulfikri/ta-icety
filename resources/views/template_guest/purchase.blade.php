@@ -51,22 +51,22 @@
                                     foreach ($order[0] as $item) :
                                         $TotalBayar += $item->PRICE_ORDER;
                                     ?>
-                                    <tr class="">
-                                        <td class="flex-row d-flex align-items-center">
-                                            <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
-                                                class="d-block img-fluid rounded-2 w-25">
-                                            <span
-                                                class="ms-2"><?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?></span>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td></td>
-                                        <td class="product-subtotal">
-                                            <?= 'Rp ' . number_format($item->PRICE_ORDER, 0, ',', '.') ?></td>
-                                    </tr>
-                                    <input type="hidden" name="tot_bayar" value="<?= $TotalBayar ?>">
-                                    <input type="hidden" name="id_activity[]" value="<?= $item->ID_PRODUCT ?>">
-                                    <input type="hidden" name="price[]" value="<?= $item->PRICE_ORDER ?>">
+                                        <tr class="">
+                                            <td class="flex-row d-flex align-items-center">
+                                                <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                    class="d-block img-fluid rounded-2 w-25">
+                                                <span
+                                                    class="ms-2"><?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?></span>
+                                            </td>
+                                            <td>
+                                            </td>
+                                            <td></td>
+                                            <td class="product-subtotal">
+                                                <?= 'Rp ' . number_format($item->PRICE_ORDER, 0, ',', '.') ?></td>
+                                        </tr>
+                                        <input type="hidden" name="tot_bayar" value="<?= $TotalBayar ?>">
+                                        <input type="hidden" name="id_activity[]" value="<?= $item->ID_PRODUCT ?>">
+                                        <input type="hidden" name="price[]" value="<?= $item->PRICE_ORDER ?>">
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
@@ -79,7 +79,7 @@
                     <input type="hidden" name="id_pay_method"
                         value="<?= !empty($checking_trans) ? $checking_trans[0]->ID_PAY_METHOD : '' ?>">
                     <?php foreach ($order[0] as $item) { ?>
-                    <input type="hidden" name="id_order_whenPay[]" value="<?= $item->ID_ORDER ?>">
+                        <input type="hidden" name="id_order_whenPay[]" value="<?= $item->ID_ORDER ?>">
                     <?php } ?>
                 </form>
                 <div class="d-flex flex-column flex-md-row justify-content-end mt-4">
@@ -88,7 +88,7 @@
                         @csrf
                         <input type="hidden" name="id_trans" value="<?= !empty($checking_trans) ? $id_trans : '' ?>">
                         <?php foreach ($order[0] as $item) { ?>
-                        <input type="hidden" name="id_order[]" value="<?= $item->ID_ORDER ?>">
+                            <input type="hidden" name="id_order[]" value="<?= $item->ID_ORDER ?>">
                         <?php } ?>
                     </form>
                     {{-- <div class="wc-proceed-to-checkout mx-auto">
@@ -133,30 +133,30 @@
                             </tbody>
                         </table>
                         @if ($TotalBayar != 0)
-                            <div style="margin-top: 20px">
-                                <span class="fw-bold">Voucher Promo</span>
-                                <select name="promo_use" id="promoSelect" class="form-control my-2"
-                                    style="background: white">
-                                    <?php if(!empty($promo) && $promo[0]->STATUS == 2) { ?>
-                                        <option value="">No Voucher Available</option>
-                                    <?php } else if  (!empty($promo)){ ?>
-                                        <option value="0" selected>Not Using Promo Voucher</option>
-                                        @foreach ($promo as $item)
-                                            @if ($TotalBayar > $item->AMMOUNT)
-                                                <option data-unit="<?= $item->UNIT ?>" data-amount="<?= $item->AMMOUNT ?>"
-                                                    value="<?= $item->ID_PROMO ?>"><?= $item->PROMO_NAME ?>
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    <?php } else { ?>
-                                        <option value="">No Voucher Available</option>
-                                    <?php } ?>
-                                </select>
-                            </div>
+                        <div style="margin-top: 20px">
+                            <span class="fw-bold">Voucher Promo</span>
+                            <select name="promo_use" id="promoSelect" class="form-control my-2"
+                                style="background: white">
+                                <?php if (!empty($promo) && $promo[0]->STATUS == 2) { ?>
+                                    <option value="">No Voucher Available</option>
+                                <?php } else if (!empty($promo)) { ?>
+                                    <option value="0" selected>Not Using Promo Voucher</option>
+                                    @foreach ($promo as $item)
+                                    @if ($TotalBayar > $item->AMMOUNT)
+                                    <option data-unit="<?= $item->UNIT ?>" data-amount="<?= $item->AMMOUNT ?>"
+                                        value="<?= $item->ID_PROMO ?>"><?= $item->PROMO_NAME ?>
+                                    </option>
+                                    @endif
+                                    @endforeach
+                                <?php } else { ?>
+                                    <option value="">No Voucher Available</option>
+                                <?php } ?>
+                            </select>
+                        </div>
                         @endif
                         <div class="wc-proceed-to-checkout">
-                            <button type="button" class="checkout-button button alt wc-forward" style="padding: 0.718047em 1.41575em;" id="pay">
-                            {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
+                            <button type="button" class="checkout-button btn btn-secondary" style="padding: 0.718047em 1.41575em;" id="pay">
+                                {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
                             </button>
                         </div>
                         <div class="wc-proceed-to-checkout">
@@ -206,7 +206,7 @@
         });
     }
 
-    $('#pay').on('click', function () {
+    $('#pay').on('click', function() {
         Swal.fire({
             title: 'Loading Payment!',
             html: 'Please Wait ...',
@@ -232,16 +232,16 @@
                 _token: csrfToken,
                 TotPrice: <?= $TotalBayar ?>,
                 Diskon: idPromoCode,
-                id_order: $('input:hidden[name="id_order[]"]').map(function () {
+                id_order: $('input:hidden[name="id_order[]"]').map(function() {
                     return $(this).val();
                 }).get()
             },
             dataType: 'json',
-            success: function (response) {
+            success: function(response) {
                 console.log(response.invoice.id);
                 getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
             },
-            error: function (xhr, status, error) {
+            error: function(xhr, status, error) {
                 displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
                 console.error(error);
                 Swal.close();
@@ -297,5 +297,4 @@
             </div>
         `;
     }
-
 </script>

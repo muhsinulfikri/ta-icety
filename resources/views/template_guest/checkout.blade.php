@@ -1,6 +1,6 @@
 <style>
     .page-header-custom {
-        background: url('<?=asset('assets_new')?>/images/bg/illustration-bg.png') 50% 50%;
+        background: url('<?= asset('assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
         background-size: cover;
         background-repeat: no-repeat;
         z-index: initial;
@@ -43,48 +43,48 @@
                             <tbody class="table-group-divider text-black"
                                 style="border-color:#C8C8C8; border-top-width: 2px !important">
                                 <?php if (!empty($checkout)) { ?>
-                                <?php foreach ($checkout as $item) : ?>
-                                <tr class="align-items-center" id="items-<?= $item->ID_ORDER ?>">
-                                    <td scope="row" class="text-center align-items-center">
-                                        <input class="form-check-input" type="checkbox" name="cb_order"
-                                            value="<?= $item->ID_ORDER ?>" data-price="<?= $item->PRICE_ORDER ?>"
-                                            style="cursor: pointer;" onchange="CountTotalPrice(this)">
-                                    </td>
-                                    <td class="flex-row d-flex align-items-center">
-                                        <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
-                                            class="d-block img-fluid rounded-2 w-25">
-                                        <span
-                                            class="ms-2"><?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?></span>
-                                    </td>
-                                    <td class="align-items-center product-subtotal">
-                                        <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
-                                    </td>
-                                    <td></td>
-                                    <td class="align-items-center">
-                                        <button type="button" class="btn btn-outline-danger"
-                                            data-id="<?= $item->ID_ORDER ?>" onclick="DeleteProduct(this)">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z">
-                                                </path>
-                                                <path fill-rule="evenodd"
-                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z">
-                                                </path>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
+                                    <?php foreach ($checkout as $item) : ?>
+                                        <tr class="align-items-center" id="items-<?= $item->ID_ORDER ?>">
+                                            <td scope="row" class="text-center align-items-center">
+                                                <input class="form-check-input" type="checkbox" name="cb_order"
+                                                    value="<?= $item->ID_ORDER ?>" data-price="<?= $item->PRICE_ORDER ?>"
+                                                    style="cursor: pointer;" onchange="CountTotalPrice(this)">
+                                            </td>
+                                            <td class="flex-row d-flex align-items-center">
+                                                <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                    class="d-block img-fluid rounded-2 w-25">
+                                                <span
+                                                    class="ms-2"><?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?></span>
+                                            </td>
+                                            <td class="align-items-center product-subtotal">
+                                                <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
+                                            </td>
+                                            <td></td>
+                                            <td class="align-items-center">
+                                                <button type="button" class="btn btn-outline-danger"
+                                                    data-id="<?= $item->ID_ORDER ?>" onclick="DeleteProduct(this)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                        <path
+                                                            d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z">
+                                                        </path>
+                                                        <path fill-rule="evenodd"
+                                                            d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z">
+                                                        </path>
+                                                    </svg>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 <?php } else { ?>
-                                <tr>
-                                    <td colspan="5">
-                                        <div class="d-flex justify-content-center">
-                                            <img src="{{ asset('assets_new') }}/images/empty.svg" width="350">
-                                        </div>
-                                        <h3 class="font-sm text-center">No product</h2>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="d-flex justify-content-center">
+                                                <img src="{{ asset('assets_new') }}/images/empty.svg" width="350">
+                                            </div>
+                                            <h3 class="font-sm text-center">No product</h2>
+                                        </td>
+                                    </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -123,7 +123,7 @@
                             <span class="fw-bold">Voucher Promo</span>
                             <select name="promo_use" id="promoSelect" class="form-control my-2"
                                 style="background: white">
-                                <?php if(!empty($promo)) { ?>
+                                <?php if (!empty($promo)) { ?>
                                 <option value="0" selected>Not Using Promo Voucher</option>
                                 @foreach ($promo as $item)
                                     <option data-unit="<?= $item->UNIT ?>" data-amount="<?= $item->AMMOUNT ?>"
@@ -139,16 +139,16 @@
                             @csrf
                             <div id="data-input"></div>
                             <div class="wc-proceed-to-checkout">
-                                <button type="button" class="checkout-button button alt wc-forward" onclick="BuyNow()">
+                                <button type="button" class="checkout-button btn btn-secondary rounded" onclick="BuyNow()">
                                     Proceed to checkout
                                 </button>
                             </div>
                             <?php if (!empty($checking_trans)) { ?>
-                            <div class="wc-proceed-to-checkout">
-                                <button class="alt btn btn-main-2 btn-sm w-100 rounded" onclick="BuyNow()">
-                                    Check Last Transaction
-                                </button>
-                            </div>
+                                <div class="wc-proceed-to-checkout">
+                                    <button class="alt btn btn-tertiary btn-sm w-100 rounded" onclick="BuyNow()">
+                                        Check Last Transaction
+                                    </button>
+                                </div>
                             <?php } ?>
                         </form>
                     </div>
@@ -242,9 +242,9 @@
 
     function getData(key) {
         <?php if (!empty($list_promo)) { ?>
-        <?php foreach ($list_promo as $item) { ?>
-        $('#search-result').append(
-            `<button class="d-flex flex-row align-items-center dropdown-item py-3"
+            <?php foreach ($list_promo as $item) { ?>
+                $('#search-result').append(
+                    `<button class="d-flex flex-row align-items-center dropdown-item py-3"
                         data-promo-name="<?= $item->PROMO_NAME ?>"
                         data-value="<?= $item->AMMOUNT ?>"
                         data-id-code="<?= $item->ID_PROMO ?>" onclick="Disc(this)">
@@ -256,10 +256,10 @@
                             <?= $item->AMMOUNT ?> %
                         </div>
                     </button>`
-        )
-        <?php } ?>
+                )
+            <?php } ?>
         <?php } else { ?>
-        $('#search-result').append(`<a class='dropdown-item'>No promo found</a>`)
+            $('#search-result').append(`<a class='dropdown-item'>No promo found</a>`)
         <?php } ?>
 
         if ($('#search-result').html() != "") {
@@ -310,11 +310,11 @@
             }
         })
         <?php if (!empty($checking_trans)) { ?>
-        // Toast.fire({
-        //     icon: 'error',
-        //     title: 'Complete your transaction first!'
-        })
-        <?php } else { ?>
+            // Toast.fire({
+            //     icon: 'error',
+            //     title: 'Complete your transaction first!'
+    })
+    <?php } else { ?>
         if (data != "") {
             for (let index = 0; index < data.length; index++) {
                 $('#data-input').append('<input type="hidden" name="id_order_purchase[' + index + ']" value="' + data[
@@ -328,7 +328,7 @@
                 title: '<?= empty($checkout) != '' ? 'No product in cart!' : 'Please choose product first!' ?>'
             })
         }
-        <?php } ?>
+    <?php } ?>
     }
 
     var format = function(num) {

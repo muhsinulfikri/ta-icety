@@ -42,7 +42,7 @@
             <span><small class="text-danger">* If you graduated, just left semester field empty</small></span>
         </div>
 
-        <button type="button" class="btn btn-main-2 btn-primary rounded rounded-4 fw-semibold py-2 w-100 mt-5 edit" style="--bs-btn-padding-x: 4.5rem;">Save</button>
+        <button type="button" class="btn btn-primary rounded rounded-4 fw-semibold py-2 w-100 mt-5 edit" style="--bs-btn-padding-x: 4.5rem;">Save</button>
     </form>
 </div>
 
