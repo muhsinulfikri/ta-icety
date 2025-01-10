@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Course;
 use App\Models\Checkout;
+use App\Models\Ebook;
 use App\Models\Event;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,11 @@ class GuestController extends Controller
 			FROM
 				tb_carousel
 		');
+
+		$courseModel = new Course();
+		$data['course'] = $courseModel->get_home_course_all();
+		$ebookModel = new Ebook();
+		$data['ebook'] = $ebookModel->get_all_book_home();
 
 		$data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		$checkoutModel = new Checkout();
@@ -72,6 +78,11 @@ class GuestController extends Controller
 	public function store()
 	{
 		$data['title'] = 'TBHAcademy';
+
+		$courseModel = new Course();
+		$data['course'] = $courseModel->get_home_course_all();
+		$ebookModel = new Ebook();
+		$data['ebook'] = $ebookModel->get_all_book_home();
 
 		return
 			view('template.header', $data) .

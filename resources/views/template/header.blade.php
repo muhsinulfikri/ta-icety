@@ -50,10 +50,6 @@
     </style>
 
     <style>
-        * {
-            font-family: "Noto Sans", serif !important;
-        }
-
         body {
             font-family: "Noto Sans", serif !important;
         }
@@ -198,6 +194,36 @@
 
         .card-link:hover {
             color: #AD0B0B !important;
+        }
+
+        .card-course .title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .description p {
+            display: -webkit-box;
+            font-family: "Noto Sans", serif !important;
+            color: black !important;
+            line-height: 20px;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .description {
+            display: -webkit-box;
+            font-family: "Noto Sans", serif !important;
+            color: black !important;
+            line-height: 20px;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
     </style>
     <header class="header-style-1">

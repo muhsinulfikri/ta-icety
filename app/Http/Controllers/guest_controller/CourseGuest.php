@@ -61,7 +61,7 @@ class CourseGuest extends Controller
 
 		$data['id_activity'] = $_GET['id_activity'];
 		$data['course'] = $this->courseModel->get_course($data['id_activity']);
-		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE ."'".
+		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 		$data['item_course'] = $this->courseModel->get_item_course($condition);
@@ -100,7 +100,7 @@ class CourseGuest extends Controller
 				nilai_quiz
 			WHERE
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-				AND ID_QUIZ = ".$data['last_item'][0]->ID_ITEM."
+				AND ID_QUIZ = " . $data['last_item'][0]->ID_ITEM . "
 			");
 
 		$cek_quiz = DB::select("
@@ -110,7 +110,7 @@ class CourseGuest extends Controller
 				item_course
 			WHERE
 				TYPE = 2
-				AND ID_COURSE = '".$data['course']->ID_COURSE."'
+				AND ID_COURSE = '" . $data['course']->ID_COURSE . "'
 			");
 
 		if (count($data['last_item']) == count($data['data_all_mapping']) && (!empty($cek_nilai->NILAI) ? $cek_nilai->NILAI == 100 : false)) {
@@ -213,7 +213,7 @@ class CourseGuest extends Controller
 		if ($data['status'] == 2) {
 			$data_all_mapping = $this->courseModel->get_counttask($_POST['id_activity']);
 			$data_mapping = ['STATUS' => 1];
-			$count = ['MAPPING_COUNT' => ((int) $data_all_mapping[0]->MAPPING_COUNT)+1];
+			$count = ['MAPPING_COUNT' => ((int) $data_all_mapping[0]->MAPPING_COUNT) + 1];
 			// $this->courseModel->UpdateMapping($data_mapping, $condition_update_mapping);
 			//UPDATE STATUS MAPPING LAST ITEM COURSE
 			DB::table("mapping_course")
@@ -272,7 +272,7 @@ class CourseGuest extends Controller
 			LEFT JOIN detail_quiz dq ON
 				dq.ID_QUIZ = tc.ID_ITEM
 			WHERE
-				".implode('AND ', $condition)."
+				" . implode('AND ', $condition) . "
 			ORDER BY RAND()
 			";
 			$data['detail_item_course'] = DB::select($sql);
@@ -313,7 +313,7 @@ class CourseGuest extends Controller
 		$id_activity = $_GET['id_activity'];
 		$data['checking_trans'] = $this->checkoutModel->get_trans($data_user);
 		$data['course'] = $this->courseModel->get_course($id_activity);
-		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE. "'";
+		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'";
 		$data_itemCourse = $this->courseModel->get_item_course($condition);
 		$data['item_course'] = array();
 		$data['total_item'] = array(
@@ -413,7 +413,8 @@ class CourseGuest extends Controller
 				ic.ID_ITEM = $id_quiz
 		");
 
-		$max_id_item = DB::selectOne("
+		$max_id_item = DB::selectOne(
+			"
 			SELECT
 				MAX(ID_ITEM) AS MAX_ID
 			FROM
@@ -456,11 +457,11 @@ class CourseGuest extends Controller
 					ID_USER = '" . $id_user . "'
 			");
 
-			$data_ids = array_map(function($item) {
+			$data_ids = array_map(function ($item) {
 				return $item->ID_ACTIVITY;
 			}, $data_id);
-			$placeholders = "'". implode("','", $data_ids) . "'";
-			$condition = "WHERE activity.TYPE_ACTIVITY = 1 AND activity.ID_ACTIVITY IN (".$placeholders.")";
+			$placeholders = "'" . implode("','", $data_ids) . "'";
+			$condition = "WHERE activity.TYPE_ACTIVITY = 1 AND activity.ID_ACTIVITY IN (" . $placeholders . ")";
 		}
 		if ($id_user != null) {
 			$data['course'] = DB::select('
@@ -505,7 +506,7 @@ class CourseGuest extends Controller
 					activity
 				LEFT JOIN course ON
 					course.ID_ACTIVITY = activity.ID_ACTIVITY
-				'.$condition.'
+				' . $condition . '
 				');
 		} else {
 			$data['course'] = DB::select('
@@ -525,15 +526,15 @@ class CourseGuest extends Controller
 	}
 
 	public function addKomen(Request $request)
-    {
-        $data = [
-            'ID_USER' => $request->input('id_user'),
-            'ID_ACTIVITY' => $request->input('id_activity'),
-            'komentar' => $request->input('komentar'),
-            'LOG_TIME' => date('Y-m-d H:i:s'),
-        ];
-        DB::table('tb_komentar')->insert($data);
-        return redirect()->back();
-    }
+	{
+		$data = [
+			'ID_USER' => $request->input('id_user'),
+			'ID_ACTIVITY' => $request->input('id_activity'),
+			'komentar' => $request->input('komentar'),
+			'LOG_TIME' => date('Y-m-d H:i:s'),
+		];
+		DB::table('tb_komentar')->insert($data);
+		return redirect()->back();
+	}
 	// END COURSE CONTROLLER
 }

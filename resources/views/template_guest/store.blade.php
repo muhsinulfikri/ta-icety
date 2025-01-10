@@ -133,28 +133,30 @@
 
 
 <script>
-    function createCard(data) {
+    function createCardCourse(data) {
         return `
-            <div class="card card-course overflow-hidden" id="card-${data.id}" style="width: 276px; max-width: 276px; justify-self: center;">
+            <div class="card card-course overflow-hidden" id="card-${data.ID_ACTIVITY}" style="width: 276px; max-width: 276px; justify-self: center;">
                 <div>
-                    <img src="{{ asset('icety_assets') }}/${data.banner}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                    <img src="${data.IMAGE_ACTIVITY}" class="img-fluid" style="aspect-ratio: 23/13;" />
                 </div>
                 <div class="t-section h-100 w-100">
                     <div class="p-3 h-100">
-                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.badge}</div>
-                        <div class="fw-semibold text-black fs-5 mb-3" style="line-height: 22px;">${data.title}</div>
-                        <div class="card-info" style="display: none;">
-                            <div class="text-black fs-6 mb-2" style="line-height: 20px;">${data.description}</div>
-                            <div class="d-flex justify-content-between mb-1">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.KATEGORI}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.TITLE_ACTIVITY}</div>
+                        <div class="card-info" style="display: none;     height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100"> 
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_COURSE ?? "-"}</div>
                                 <div>
-                                    <img src="{{ asset('icety_assets') }}/icon-team.svg" class="img-fluid" style="height: 12px;" />
-                                    <span class="text-black" style="font-size: 0.9rem">${data.students} Students</span>
-                                </div>
-                                <div>
-                                    ${generateStars(data.stars)}
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5"> 
+                                                ${(data.PRICE_ACTIVITY === 0) ? "Free" : "Rp " + data.PRICE_ACTIVITY.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="course/info/${data.TITLE_ACTIVITY.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_ACTIVITY}" class="card-link">Find out more</a>
                                 </div>
                             </div>
-                            <a href="${data.link}" class="card-link">Find out more</a>
                         </div>
                     </div>
                 </div>
@@ -162,255 +164,49 @@
         `;
     }
 
-    function generateStars(stars) {
-        let starHTML = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= stars) {
-                starHTML += `<img src="{{ asset('icety_assets') }}/star-black.svg" class="img-fluid" style="height: 12px;" />`;
-            } else {
-                starHTML += `<img src="{{ asset('icety_assets') }}/star-gray.svg" class="img-fluid" style="height: 12px;" />`;
-            }
-        }
-        return starHTML;
+    const coursesData = @json($course);
+    coursesData.forEach(data => {
+        $('.course-container').append(createCardCourse(data));
+    });
+
+    function createCardBook(data) {
+        return `
+            <div class="card card-course overflow-hidden" id="card-${data.ID_BUKU}" style="width: 276px; max-width: 276px; justify-self: center;">
+                <div>
+                    <img src="${data.IMAGE_EBOOK}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                </div>
+                <div class="t-section h-100 w-100">
+                    <div class="p-3 h-100">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.AUTHOR}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.JUDUL}</div>
+                        <div class="card-info" style="display: none;    height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100"> 
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESC ?? "-"}</div>
+                                <div>
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5"> 
+                                                ${(data.PRICE === 0) ? "Free" : "Rp " + data.PRICE.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="ebooks/detail/${data.JUDUL.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_book=${data.ID_BUKU}" class="card-link">Find out more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
     }
 
-    const coursesData = [{
-            id: '1',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '2',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy Class',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '3',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy Class',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '4',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '5',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '6',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy Class',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '7',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy Class',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '8',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '9',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy Class',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '10',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy Class',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-    ];
+    const ebooksData = @json($ebook);
 
-    coursesData.forEach(data => {
-        $('.course-container').append(createCard(data));
-
-        $(`#card-${data.id} .t-section`).hover(
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "block",
-                });
-            },
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "none",
-                });
-            },
-        );
-    });
-
-    const ebooksData = [{
-            id: '11',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '12',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '13',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy E-Book',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '14',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '15',
-            banner: 'card1.svg',
-            title: 'Food Safety Management Course',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '16',
-            banner: 'card2.svg',
-            title: 'The Chemistry of Cleaning',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman dasar mengenai cleaning dan sanitasi, serta aspek pendukung kebersihan lainnya.',
-            students: '73',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '17',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy E-Book',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '18',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '19',
-            banner: 'card3.svg',
-            title: 'Handling Chemical Safety Course',
-            badge: 'ICETy E-Book',
-            description: 'Penanganan dan penyimpanan bahan Kimia berbahaya serta pertolongan pertama saat terkena bahan Kimia',
-            students: '106',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        },
-        {
-            id: '20',
-            banner: 'card4.svg',
-            title: 'Cleanliness Management',
-            badge: 'ICETy E-Book',
-            description: 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning dan',
-            students: '88',
-            stars: 4,
-            link: '/course/info/66?id_activity=ACT_a2e'
-        }
-    ];
 
     ebooksData.forEach(data => {
-        $('.ebook-container').append(createCard(data));
-
-        $(`#card-${data.id} .t-section`).hover(
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "block",
-                });
-            },
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "none",
-                });
-            },
-        );
+        $('.ebook-container').append(createCardBook(data));
     });
+
 
     $('.btn-course').on('click', function() {
         $('.btn-ebook').removeClass('active')
