@@ -298,14 +298,14 @@
                         <nav class="header-btn d-none d-md-block">
                             <ul class="primary-menu">
                                 <li>
-                                    <a href="{{ url('vouchers') }}">Voucher</a>
+                                    <a href="{{ url('vouchers') }}" class=" a-header fw-normal">Voucher</a>
                                 </li>
                                 <li class="me-4">
                                     <a href="#"
-                                        class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle"
+                                        class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle text-white"
                                         style="padding-left:12px;padding-right:12px;right:0;margin-right:1px"
                                         onclick="$('#form_checkout').submit()">
-                                        <i class="far fa-shopping-cart" style="-webkit-text-stroke: 0.2px;"></i>
+                                        <i class="far fa-shopping-cart text-white" style="-webkit-text-stroke: 0.1px;"></i>
                                         <?php $totCheckout = (!empty($checkout) ? count($checkout) : 0);
                                         if ($totCheckout > 0) { ?>
                                             <span class="badge bg-danger rounded-circle position-absolute"
@@ -315,7 +315,7 @@
                                         <?php    } ?>
                                     </a>
                                     <?php if ($title != 'Checkout') { ?>
-                                        <ul class="submenu" style="left: initial;right:0;width: max-content;">
+                                        <ul class="submenu rounded mt-2" style="left: initial;right:0;width: max-content;">
                                             <h6 class="title mx-3 fs-5 my-3">Cart</h6>
                                             <hr class="dropdown-divider">
                                             <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
@@ -358,9 +358,9 @@
                                     <?php    } ?>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a href="#" class="a-header fw-normal">
                                         <?php if (empty(session('user')[0]['PROFILE_PICTURE'])) { ?>
-                                            <i class="far fa-user"></i>
+                                            <i class="far fa-user text-white"></i>
                                         <?php    } else { ?>
                                             <img class="nav-link rounded-circle "
                                                 style="height:40px;width:40px;background-size:cover;background-image: url('<?= session('user')[0]['PROFILE_PICTURE'] ?>')">
@@ -370,7 +370,7 @@
                                             <?= session('user')[0]['NAME'] ?>
                                         </span>
                                     </a>
-                                    <ul class="submenu" style="left: initial;right:0">
+                                    <ul class="submenu rounded mt-2" style="left: initial;right:0">
                                         <?php if (session('user')[0]['ID_ROLE'] == 1) { ?>
                                             <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
                                         <?php    } else { ?>

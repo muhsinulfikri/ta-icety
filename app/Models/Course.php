@@ -33,6 +33,25 @@ class Course extends Model
                 LIMIT 4");
         return $data;
     }
+    public function get_courses($condition)
+    {
+        $data = DB::select("
+            SELECT
+                activity.*,
+                course.DESKRIPSI_COURSE,
+                kategori.KATEGORI 
+            FROM
+                activity
+                LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
+            WHERE
+                activity.TYPE_ACTIVITY = 1 AND
+                " . implode(' AND ', $condition) . "
+            ORDER BY
+                activity.LOG_TIME DESC 
+                LIMIT 4");
+        return $data;
+    }
     public function get_home_course($id_category)
     {
         $data = DB::select("

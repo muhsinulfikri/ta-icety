@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-end btn-container">
                     <button type="button" class="btn btn-danger rounded-4 fw-semibold w-100 edit-cancel mb-2 d-none">Cancel</button>
-                    <button type="button" class="btn btn-main-2 rounded-4 fw-semibold w-100 edit-file mb-2">Change File</button>
+                    <button type="button" class="btn btn-primary rounded-4 fw-semibold w-100 edit-file mb-2">Change File</button>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <?php $sertif = explode(';', !empty($document->SERTIFIKAT) ? $document->SERTIFIKAT : '' );
+                        <?php $sertif = explode(';', !empty($document->SERTIFIKAT) ? $document->SERTIFIKAT : '');
                         foreach ($sertif as $link) { ?>
                             <div class="col-md-4">
                                 <object style="width: 100%; height: 309px;" data="<?= $link ?>">
@@ -126,7 +126,7 @@
                 </div>
                 <div class="col-md-4 d-flex align-items-end btn-container">
                     <button type="button" class="btn btn-danger rounded-4 fw-semibold w-100 edit-cancel mb-2 d-none">Cancel</button>
-                    <button type="button" class="btn btn-main-2 rounded-4 fw-semibold w-100 edit-file mb-2">Change File</button>
+                    <button type="button" class="btn btn-primary rounded-4 fw-semibold w-100 edit-file mb-2">Change File</button>
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
     </section>
 </div>
 
- <!-- $this->session->flashdata('resp_msg');  -->
+<!-- $this->session->flashdata('resp_msg');  -->
 
 <style>
     .btn-file {
@@ -228,7 +228,7 @@
     initFileUploader('#recom-letter-section', 1, 'recom')
     initFileUploader('#cert-section', 1, 'cert')
 
-    document.getElementById('input-file1').addEventListener('change', function () {
+    document.getElementById('input-file1').addEventListener('change', function() {
         const uploadButton = document.getElementById('upload-button1');
         if (this.files.length > 0) {
             uploadButton.style.display = 'inline-block';
@@ -236,20 +236,21 @@
             uploadButton.style.display = 'none';
         }
     });
-    document.getElementById('input-file2').addEventListener('change', function () {
+    document.getElementById('input-file2').addEventListener('change', function() {
         const uploadButton2 = document.getElementById('upload-button2');
         uploadButton2.style.display = this.files.length > 0 ? 'inline-block' : 'none';
     });
 
-    document.getElementById('input-file3').addEventListener('change', function () {
+    document.getElementById('input-file3').addEventListener('change', function() {
         const uploadButton3 = document.getElementById('upload-button3');
         uploadButton3.style.display = this.files.length > 0 ? 'inline-block' : 'none';
     });
 
-    document.getElementById('input-file4').addEventListener('change', function () {
+    document.getElementById('input-file4').addEventListener('change', function() {
         const uploadButton4 = document.getElementById('upload-button4');
         uploadButton4.style.display = this.files.length > 0 ? 'inline-block' : 'none';
     });
+
     function initFileUploader(sectioId, limitFile, type) {
         $(document).ready(function() {
             $(sectioId + " #input-file").fileinput({
