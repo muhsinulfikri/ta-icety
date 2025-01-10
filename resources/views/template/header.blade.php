@@ -50,10 +50,10 @@
     </style>
 
     <style>
-
-        *{
+        * {
             font-family: "Noto Sans", serif !important;
         }
+
         body {
             font-family: "Noto Sans", serif !important;
         }
@@ -179,6 +179,15 @@
             height: 100%;
             background-color: rgb(255, 255, 255);
             transition: transform 0.3s ease, height 0.3s ease;
+        }
+
+        .card-course .t-section .card-info {
+            display: none !important;
+        }
+
+        .card-course .t-section:hover .card-info,
+        .card-course .t-section:focus-within .card-info {
+            display: block !important;
         }
 
         .card-link {

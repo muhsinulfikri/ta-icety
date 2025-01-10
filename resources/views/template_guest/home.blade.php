@@ -653,18 +653,30 @@
     coursesData.forEach(data => {
         $('.course-container').append(createCard(data));
 
-        $(`#card-${data.id} .t-section`).hover(
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "block",
-                });
-            },
-            function() {
-                $(`#card-${data.id}  .card-info`).css({
-                    display: "none",
-                });
-            },
-        );
+        // $(`#card-${data.id} .t-section`).hover(
+        //     function() {
+        //         $(`#card-${data.id}  .card-info`).css({
+        //             display: "block",
+        //         });
+        //     },
+        //     function() {
+        //         $(`#card-${data.id}  .card-info`).css({
+        //             display: "none",
+        //         });
+        //     },
+        // );
+
+        // $(`#card-${data.id} .t-section`).on("touchstart", function() {
+        //     $(`#card-${data.id}  .card-info`).css({
+        //         display: "block"
+        //     });
+        // });
+
+        // $(`#card-${data.id} .t-section`).on("touchend", function() {
+        //     $(`#card-${data.id}  .card-info`).css({
+        //         display: "none"
+        //     })
+        // });
     });
 
     const ebooksData = [{
