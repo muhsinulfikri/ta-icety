@@ -1,14 +1,30 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+
 class Ebook extends Model
 {
     protected $table = 'ebook';
     protected $primaryKey = 'ID_BUKU';
     public $timestamps = false;
+
+    public function get_all_book_home()
+    {
+        $data = DB::select("
+            SELECT
+                *
+            FROM
+                ebook
+            ORDER BY
+                LOG_TIME DESC 
+                LIMIT 4");
+        return $data;
+    }
+
     public function get_all_book()
     {
         $this->db->select('ebook.*');

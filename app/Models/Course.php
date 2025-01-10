@@ -15,6 +15,24 @@ class Course extends Model
     }
 
     // QUERY GET DATA
+    public function get_home_course_all()
+    {
+        $data = DB::select("
+            SELECT
+                activity.*,
+                course.DESKRIPSI_COURSE,
+                kategori.KATEGORI 
+            FROM
+                activity
+                LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
+            WHERE
+                activity.TYPE_ACTIVITY = 1 
+            ORDER BY
+                activity.LOG_TIME DESC 
+                LIMIT 4");
+        return $data;
+    }
     public function get_home_course($id_category)
     {
         $data = DB::select("
@@ -25,7 +43,7 @@ class Course extends Model
             LEFT JOIN course ON
                 course.ID_ACTIVITY = activity.ID_ACTIVITY
             WHERE
-                ".implode(' AND ', $id_category)."
+                " . implode(' AND ', $id_category) . "
             ORDER BY activity.LOG_TIME DESC
             LIMIT 4");
         return $data;
@@ -336,7 +354,7 @@ class Course extends Model
 				ID_ACTIVITY = '" . $id_activity . "'
 		");
 
-		$dataNewMapping = DB::select('
+        $dataNewMapping = DB::select('
 			SELECT
 				ic.ID_ITEM
 			FROM
@@ -370,7 +388,7 @@ class Course extends Model
                 DB::table('mapping_course')->insert($newDataMapping);
             }
 
-		    DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
+            DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
         }
 
         // $mapping = $this->db->get_where('mapping_course', ['ID_USER' => session('user')[0]->get('ID_USER'), 'ID_ACTIVITY' => $id_activity])->result_array();
@@ -509,4 +527,3 @@ class Course extends Model
         return $data;
     }
 }
-
