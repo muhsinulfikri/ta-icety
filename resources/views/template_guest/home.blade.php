@@ -682,7 +682,7 @@
                         @include(
                         'template_guest.card_testimoni',
                         [
-                        'banner' => 'avatar.svg',
+                        'banner' => 'avatar-2.svg',
                         'name' => 'Rudi Hartono',
                         'position' => 'Manajer Keamanan Pangan, Restoran Lezat',
                         'testimoni' => 'Pelatihan Food Safety Management memberi pemahaman yang lebih baik pada tim kami dalam menjaga keamanan pangan setiap hari.',
@@ -693,7 +693,7 @@
                         @include(
                         'template_guest.card_testimoni',
                         [
-                        'banner' => 'avatar.svg',
+                        'banner' => 'avatar-3.svg',
                         'name' => 'Dian Permata',
                         'position' => 'Kepala Departemen K3, PT Sukses Bersama',
                         'testimoni' => 'The Chemistry of Cleaning sangat membuka wawasan kami tentang kebersihan. Materi mudah dipahami dan aplikatif.',
@@ -704,7 +704,7 @@
                         @include(
                         'template_guest.card_testimoni',
                         [
-                        'banner' => 'avatar.svg',
+                        'banner' => 'avatar-4.svg',
                         'name' => 'Ari Prakoso',
                         'position' => 'Supervisor Produksi, PT Tani Jaya',
                         'testimoni' => 'Kursus ICETy.org membantu kami meningkatkan higienitas di lini produksi. Sangat bermanfaat untuk seluruh tim!',
@@ -715,7 +715,7 @@
                         @include(
                         'template_guest.card_testimoni',
                         [
-                        'banner' => 'avatar.svg',
+                        'banner' => 'avatar-5.svg',
                         'name' => 'Nyoman Sarya',
                         'position' => 'Staf Kebersihan, Rumah Sakit Harmoni',
                         'testimoni' => 'Materi di ICETy mudah dipahami dan langsung bisa diterapkan. Sangat mendukung tugas sehari-hari!',
@@ -726,7 +726,7 @@
                         @include(
                         'template_guest.card_testimoni',
                         [
-                        'banner' => 'avatar.svg',
+                        'banner' => 'avatar-6.svg',
                         'name' => 'Siti Kurniasari',
                         'position' => 'Kepala Divisi Kebersihan, Mall Indah',
                         'testimoni' => 'Kelas Handling Chemical Safety sangat informatif, kami jadi lebih siap dalam menangani bahan kimia dengan aman.',

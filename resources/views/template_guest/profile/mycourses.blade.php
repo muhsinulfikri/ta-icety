@@ -1,7 +1,7 @@
 @extends('template_guest.profile.profile_template')
 @section('content')
 <div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
-    <h3 class="fw-bold pb-4" style="color:#5580E9">My Courses</h3>
+    <h3 class="fw-bold pb-4" style="color:#AD0B0B">My Courses</h3>
     <table class="table" style="color: #8A8A8E">
         <thead>
             <tr class="fw-normal text-black">

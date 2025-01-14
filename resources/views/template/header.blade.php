@@ -376,10 +376,10 @@
                                         <?php    } else { ?>
                                             <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
                                             <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
-                                            <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li>
+                                            <!-- <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li> -->
                                             <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
                                             <li><a class="" href="<?= url('profile/mysertificate') ?>">My
-                                                    Sertificate</a></li>
+                                                    Certificate</a></li>
                                         <?php    } ?>
                                         <hr>
                                         <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>

@@ -18,7 +18,7 @@
                 <img class="nav-link rounded-circle mb-2" src="<?= (!empty($data_personal->FOTO_PROFILE) ? $data_personal->FOTO_PROFILE : 'assets/images/person-circle.svg') ?>" id="preview" style="height:150px; width:150px; object-fit: cover;" />
             </button>
         </div>
-        <h3 class="fw-bold py-4" style="color:#5580E9">Personal Data</h3>
+        <h3 class="fw-bold py-4" style="color:#AD0B0B">Personal Data</h3>
         <h5 class="text-black ps-1">Email</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="email" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Email" value="<?= $data_personal->EMAIL ?>" aria-describedby="emailHelp" readonly>
@@ -43,7 +43,7 @@
         <input type="hidden" name="jk" id="setJK" value="<?= $data_personal->JK ?>">
     </form>
 
-    <button type="submit" class="btn btn-primary btn-main rounded rounded-4 fw-semibold py-2 w-100 mt-5 edit" style="--bs-btn-padding-x: 4.5rem;">Edit</button>
+    <button type="submit" class="btn btn-primary rounded rounded-4 fw-semibold py-2 w-100 mt-5 edit" style="--bs-btn-padding-x: 4.5rem;">Edit</button>
 </div>
 
 <script>
