@@ -39,7 +39,7 @@
                     </div>
                     <div class="">
                         <i class="bi bi-envelope fs-5"></i>
-                        <span class="ms-3">tbhacademy@gmail.com</span>
+                        <span class="ms-3">ICETy@gmail.com</span>
                     </div>
                     <div class="d-inline-flex">
                         <i class="bi bi-geo-alt fs-5"></i>

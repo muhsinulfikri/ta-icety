@@ -1,7 +1,7 @@
 @extends('template_guest.profile.profile_template')
 @section('content')
 <div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
-    <h3 class="fw-bold pb-2" style="color:#5580E9">Overview</h3>
+    <h3 class="fw-bold pb-2" style="color:#AD0B0B">Overview</h3>
     <div class="row my-4">
         <div class="col-6">
             <div class="card mx-2 border-0 shadow rounded-4">
@@ -152,7 +152,7 @@
                 label: "Today's Revenue",
 
                 data: [0, 5000, 20000, 25000],
-                borderColor: "#5580e9",
+                borderColor: "#AD0B0B",
                 backgroundColor: "#ffff"
             }]
         },
@@ -201,7 +201,7 @@
             datasets: [{
                 label: "Today's Order",
                 data: [0, 1, 3, 5],
-                borderColor: "#5580e9",
+                borderColor: "#AD0B0B",
                 backgroundColor: "#ffff"
             }]
         },
@@ -250,7 +250,7 @@
             datasets: [{
                 label: 'Total Courses',
                 data: [0, 2, 5, 8],
-                borderColor: "#5580e9",
+                borderColor: "#AD0B0B",
                 backgroundColor: "#ffff"
             }]
         },
@@ -299,7 +299,7 @@
             datasets: [{
                 label: 'Total Purchase',
                 data: [0, 17, 25, 48],
-                borderColor: "#5580e9",
+                borderColor: "#AD0B0B",
                 backgroundColor: "#ffff"
             }]
         },
@@ -348,7 +348,7 @@
             datasets: [{
                 label: 'Total Profit',
                 data: [100000, 50000, 350000, 200000],
-                borderColor: "#5580e9",
+                borderColor: "#AD0B0B",
                 backgroundColor: "#ffff"
             }]
         },

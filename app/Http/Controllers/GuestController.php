@@ -22,7 +22,7 @@ class GuestController extends Controller
 
 	public function index()
 	{
-		$data['title'] = 'TBHAcademy';
+		$data['title'] = 'ICETy';
 
 		$data['kategori'] = DB::select('
 			SELECT
@@ -57,7 +57,7 @@ class GuestController extends Controller
 
 	public function about()
 	{
-		$data['title'] = 'TBHAcademy';
+		$data['title'] = 'About | ICETy';
 
 		return
 			view('template.header', $data) .
@@ -67,8 +67,14 @@ class GuestController extends Controller
 
 	public function blog()
 	{
-		$data['title'] = 'TBHAcademy';
+		$data['title'] = 'Blog | ICETy ';
 
+		$data['blog'] = DB::select("
+			SELECT
+				*
+			FROM
+				blog
+		");
 		return
 			view('template.header', $data) .
 			view('template_guest.blog', $data) .
@@ -77,7 +83,7 @@ class GuestController extends Controller
 
 	public function store()
 	{
-		$data['title'] = 'TBHAcademy';
+		$data['title'] = 'Store | ICETy';
 
 		$courseModel = new Course();
 		$data['course'] = $courseModel->get_home_course_all();

@@ -1,6 +1,17 @@
+<!-- Header -->
+<section class="py-5 py-md-7" style="background-color: #B90C0B;">
+    <div class="container">
+        <h1 class="font text-center" style="color: white !important">VOUCHER</h1>
+        <div class="justify-content-center mt-3 d-flex">
+            <a href="/" class="font" style="color: white !important;text-decoration: underline;text-decoration-color: white;">Home</a>
+            <div class="ms-2 me-1" style="border-left: 2px solid white;height: 27px">&nbsp;</div>
+            <div class="font" style="color: white !important;">Voucher</div>
+        </div>
+    </div>
+</section>
+
+
 <div class="container px-4 px-md-0 py-4 pb-6 pt-3">
-    <h5 class="py-2 fw-semibold">Voucher Promo</h5>
-    <hr class="opacity-25">
 
     <div class="row gap-4 mt-5">
             @if ($promo == null)

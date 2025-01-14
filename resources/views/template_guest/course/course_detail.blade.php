@@ -5,13 +5,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-7 col-xl-8">
-                    <div class="course-header-wrapper">
+                    <div class="mb-3">
                         <div>
                             <h2 class="course-title bg-white">
                                 <?= $course->TITLE_ACTIVITY ?>
                             </h2>
+
                         </div>
                     </div>
+                    <div class="mb-3" style="border: 3px solid black"></div>
+
                     <nav class="course-single-tabs learn-press-nav-tabs">
                         <div class="nav nav-tabs course-nav" id="nav-tab" role="tablist">
                             <a class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home"
@@ -61,45 +64,45 @@
                                         <div class="col-lg-12 col-md-8">
                                             <div class="komentar-content">
                                                 @if ($komentar == null)
-                                                    <div class="d-flex flex-column align-items-center">
-                                                        <img src="{{ asset('assets_new') }}/images/empty.svg"
-                                                            width="350">
-                                                        <h4 class="font-sm text-center">Belum Ada Komentar</h4>
-                                                    </div>
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <img src="{{ asset('assets_new') }}/images/empty.svg"
+                                                        width="350">
+                                                    <h4 class="font-sm text-center">Belum Ada Komentar</h4>
+                                                </div>
                                                 @endif
                                                 @if ($komentar != null)
-                                                    <div class="container my-2 py-2">
-                                                        <div class="row d-flex justify-content-center">
-                                                            <div class="col-md-12 col-lg-10">
-                                                                <div class="card text-body">
-                                                                    @foreach ($komentar as $item)
-                                                                        <div class="card-body p-4">
-                                                                            <div class="d-flex flex-start">
-                                                                                <img class="rounded-circle shadow-1-strong me-3"
-                                                                                    src="<?= $item->FOTO_PROFILE == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973461_1280.png' : $item->FOTO_PROFILE ?>"
-                                                                                    alt="avatar" width="60"
-                                                                                    height="60" />
-                                                                                <div>
-                                                                                    <h6 class="fw-bold mb-1">
-                                                                                        <?= $item->NAME ?></h6>
-                                                                                    <div
-                                                                                        class="d-flex align-items-center mb-3">
-                                                                                        <p class="mb-0">
-                                                                                            <?= date('F d, Y', strtotime($item->LOG_TIME)) ?>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                    <p class="mb-0">
-                                                                                        <?= $item->komentar ?>
-                                                                                    </p>
-                                                                                </div>
+                                                <div class="container my-2 py-2">
+                                                    <div class="row d-flex justify-content-center">
+                                                        <div class="col-md-12 col-lg-10">
+                                                            <div class="card text-body">
+                                                                @foreach ($komentar as $item)
+                                                                <div class="card-body p-4">
+                                                                    <div class="d-flex flex-start">
+                                                                        <img class="rounded-circle shadow-1-strong me-3"
+                                                                            src="<?= $item->FOTO_PROFILE == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973461_1280.png' : $item->FOTO_PROFILE ?>"
+                                                                            alt="avatar" width="60"
+                                                                            height="60" />
+                                                                        <div>
+                                                                            <h6 class="fw-bold mb-1">
+                                                                                <?= $item->NAME ?></h6>
+                                                                            <div
+                                                                                class="d-flex align-items-center mb-3">
+                                                                                <p class="mb-0">
+                                                                                    <?= date('F d, Y', strtotime($item->LOG_TIME)) ?>
+                                                                                </p>
                                                                             </div>
+                                                                            <p class="mb-0">
+                                                                                <?= $item->komentar ?>
+                                                                            </p>
                                                                         </div>
-                                                                        <hr class="my-0" />
-                                                                    @endforeach
+                                                                    </div>
                                                                 </div>
+                                                                <hr class="my-0" />
+                                                                @endforeach
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -113,38 +116,44 @@
 
                 <div class="col-lg-5 col-xl-4">
                     <!-- Course Sidebar start -->
-                    <div class="course-sidebar course-sidebar-2 mt-5 mt-lg-0">
-                        <div class="course-widget course-details-info">
-                            <div class="course-thumbnail">
+                    <div class="course-sidebar course-sidebar-2 mt-5 mt-lg-0 rounded" style="">
+                        <div class="course-widget course-details-info rounded-3 p-0" style="margin: 30px;background: #E3E3E3;">
+                            <div class="course-thumbnail mb-0">
                                 <img src="<?= $course->IMAGE_ACTIVITY ?>" alt="" class="img-fluid w-100" />
-                                <div
-                                    class="my-3 fw-bold d-flex align-self-end justify-content-end pe-0 align-items-center text-black">
-                                    Share :<span class="fs-5"> <i class="fab fa-facebook mx-2"
-                                            style="cursor: pointer"></i><i class="fab fa-twitter me-2"
-                                            style="cursor: pointer"></i><i class="fab fa-instagram"
-                                            style="cursor: pointer"></i></span>
-                                </div>
+
                             </div>
 
-                            <ul class="course-sidebar-list">
+                            <ul class="course-sidebar-list py-3 px-4 mt-0">
+                                <li class="border-0">
+                                    <div class="d-flex gap-3">
+                                        <div class="text-black fs-4 mt-1">
+                                            <i class="far fa-sliders-h"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-black fw-bold">Progress</div>
+                                            <div class="" style="font-size: 0.9rem;margin-top: -4px">
+                                                <h2
+                                                    class="course-price <?= $tot_proggress == 100 ? 'text-success' : 'text-danger' ?>">
+                                                    <?= ceil($tot_proggress) ?>%
+                                                </h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                                 <li>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class="far fa-sliders-h"></i>Progress</span>
-                                        <div class="price-header">
-                                            <h2
-                                                class="course-price <?= $tot_proggress == 100 ? 'text-success' : 'text-danger' ?>">
-                                                <?= ceil($tot_proggress) ?>%
-                                            </h2>
+                                    <div class="d-flex gap-3">
+                                        <div class="text-black fs-4 mt-1">
+                                            <i class="fas fa-play-circle"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-black fw-bold">Kategori</div>
+                                            <div class="text-black" style="font-size: 0.9rem;margin-top: -4px">
+                                                <?= $course->KATEGORI ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </li>
 
-                                <li>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span><i class="fas fa-play-circle"></i>Kategori</span>
-                                        <?= $course->KATEGORI ?>
-                                    </div>
-                                </li>
                             </ul>
 
                         </div>
@@ -162,10 +171,10 @@
                                 href="#nav-announcement" role="tab" aria-controls="nav-announcement-tab"
                                 aria-selected="false">Announcement</a>
                             <?php if ($tot_proggress == 100) { ?>
-                            <a class="nav-item nav-link" id="nav-sertif-tab" data-bs-toggle="tab" href="#nav-sertif"
-                                role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a>
-                            <a class="nav-item nav-link" id="nav-komen-tab" data-bs-toggle="tab" href="#nav-komen"
-                                role="tab" aria-controls="nav-komen-tab" aria-selected="false">Komentar</a>
+                                <a class="nav-item nav-link" id="nav-sertif-tab" data-bs-toggle="tab" href="#nav-sertif"
+                                    role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a>
+                                <a class="nav-item nav-link" id="nav-komen-tab" data-bs-toggle="tab" href="#nav-komen"
+                                    role="tab" aria-controls="nav-komen-tab" aria-selected="false">Komentar</a>
                             <?php } ?>
                         </div>
                     </nav>
@@ -182,35 +191,35 @@
                                     <?php
                                     $quiz = 0;
                                     $materi = 0;
-                                    
+
                                     foreach ($item_course as $item) {
                                         if ($item->TYPE <> 2) { ?>
-                                        
-                                    <button
-                                        class="button <?= $item->STATUS == 1 ? 'btn-main-outline' : 'btn-grey' ?> px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
-                                        id="show-detail-<?= $item->ID_ITEM ?>" data-status="<?= $item->STATUS ?>"
-                                        data-iditem="<?= $item->ID_ITEM ?>" data-type="<?= $item->TYPE ?>"
-                                        onclick="ShowDetailItem(this)" <?= $item->STATUS == 0 ? 'disabled' : '' ?>>
-                                        <?= $item->TITLE ?>
-                                    </button>
-                                    <?php } else { ?>
-                                    <button
-                                        class="button <?= $item->STATUS == 1 ? 'btn-main-outline' : 'btn-grey' ?> px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
-                                        id="show-detail-<?= $item->ID_ITEM ?>" data-status="<?= $item->STATUS ?>"
-                                        data-iditem="<?= $item->ID_ITEM ?>" data-type="<?= $item->TYPE ?>"
-                                        onclick="ShowDetailItem(this)" <?= $item->STATUS == 0 ? 'disabled' : '' ?>>
-                                        Quiz <?= ++$quiz ?>
-                                    </button>
+
+                                            <button
+                                                class="button <?= $item->STATUS == 1 ? 'btn-main-outline' : 'btn-grey' ?> px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
+                                                id="show-detail-<?= $item->ID_ITEM ?>" data-status="<?= $item->STATUS ?>"
+                                                data-iditem="<?= $item->ID_ITEM ?>" data-type="<?= $item->TYPE ?>"
+                                                onclick="ShowDetailItem(this)" <?= $item->STATUS == 0 ? 'disabled' : '' ?>>
+                                                <?= $item->TITLE ?>
+                                            </button>
+                                        <?php } else { ?>
+                                            <button
+                                                class="button <?= $item->STATUS == 1 ? 'btn-main-outline' : 'btn-grey' ?> px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
+                                                id="show-detail-<?= $item->ID_ITEM ?>" data-status="<?= $item->STATUS ?>"
+                                                data-iditem="<?= $item->ID_ITEM ?>" data-type="<?= $item->TYPE ?>"
+                                                onclick="ShowDetailItem(this)" <?= $item->STATUS == 0 ? 'disabled' : '' ?>>
+                                                Quiz <?= ++$quiz ?>
+                                            </button>
                                     <?php }
                                     } ?>
                                     <?php
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
-                                    <button
-                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                        onclick="ShowCertificateCode(this)" data-type="5">
-                                        Show Certificate Code
-                                    </button>
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowCertificateCode(this)" data-type="5">
+                                            Show Certificate Code
+                                        </button>
                                     <?php } ?>
                                 </div>
                                 <div class="col bg-white shadow rounded" id="detail-item">
@@ -234,54 +243,54 @@
                         </div>
                         <?php
                         if ($tot_proggress == 100) { ?>
-                        <div class="tab-pane fade" id="nav-sertif" role="tabpanel" aria-labelledby="nav-sertif-tab"
-                            tabindex="0">
-                            <div class="d-flex justify-content-center">
-                                <div class="blurred-image" style="pointer-events: none">
-                                    <embed class="overlay" style="width:600px; height:500px; pointer-events: none;"
-                                        src="<?= $sertif->FILE_SERTIFIKAT ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"
-                                        type="text/plain"></emb>
-                                </div>
-                                <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
-                                    <div class="mx-4 py-3 bg-white">
-                                        <label>Sertificate Code</label>
-                                        <form action="javascript:void(0)">
-                                            <input type="text" class="form-control mb-4" name=""
-                                                id="input-code">
-                                            <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                onclick="DownloadPdf(this)">Download PDF</button>
-                                        </form>
+                            <div class="tab-pane fade" id="nav-sertif" role="tabpanel" aria-labelledby="nav-sertif-tab"
+                                tabindex="0">
+                                <div class="d-flex justify-content-center">
+                                    <div class="blurred-image" style="pointer-events: none">
+                                        <embed class="overlay" style="width:600px; height:500px; pointer-events: none;"
+                                            src="<?= $sertif->FILE_SERTIFIKAT ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"
+                                            type="text/plain"></emb>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="nav-komen" role="tabpanel" aria-labelledby="nav-komen-tab"
-                            tabindex="0">
-                            <div style="display: flex; justify-content: center; width: 100%;">
-                                <form action="addkomen" method="POST" style="width: 100%; max-width: 800px;">
-                                    @csrf
-                                    <input type="hidden" name="id_activity" value="<?= $id_activity ?>">
-                                    <input type="hidden" name="id_user"
-                                        value="<?= session('user')[0]['ID_USER'] ?>">
-                                    <div
-                                        style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); margin: 1rem auto; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center;">
-                                        <div style="width: 100%; padding: 1rem;">
-                                            <label for="komentar">Komentar</label>
-                                            <textarea class="form-control mb-4" rows="4" name="komentar" id="komentar" required style="width: 100%;"></textarea>
-                                            <div style="display: flex; justify-content: flex-end;">
-                                                <button type="submit" class="btn btn-primary"
-                                                    style="width: 20%;">Kirim</button>
-                                            </div>
+                                    <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+                                        <div class="mx-4 py-3 bg-white">
+                                            <label>Sertificate Code</label>
+                                            <form action="javascript:void(0)">
+                                                <input type="text" class="form-control mb-4" name=""
+                                                    id="input-code">
+                                                <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                    onclick="DownloadPdf(this)">Download PDF</button>
+                                            </form>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
+                            <div class="tab-pane fade" id="nav-komen" role="tabpanel" aria-labelledby="nav-komen-tab"
+                                tabindex="0">
+                                <div style="display: flex; justify-content: center; width: 100%;">
+                                    <form action="addkomen" method="POST" style="width: 100%; max-width: 800px;">
+                                        @csrf
+                                        <input type="hidden" name="id_activity" value="<?= $id_activity ?>">
+                                        <input type="hidden" name="id_user"
+                                            value="<?= session('user')[0]['ID_USER'] ?>">
+                                        <div
+                                            style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); margin: 1rem auto; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center;">
+                                            <div style="width: 100%; padding: 1rem;">
+                                                <label for="komentar">Komentar</label>
+                                                <textarea class="form-control mb-4" rows="4" name="komentar" id="komentar" required style="width: 100%;"></textarea>
+                                                <div style="display: flex; justify-content: flex-end;">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        style="width: 20%;">Kirim</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
 
-                            <div class="container my-2 py-2">
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-md-12 col-lg-10">
-                                        <div class="card text-body">
-                                            @foreach ($komentar as $item)
+                                <div class="container my-2 py-2">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-12 col-lg-10">
+                                            <div class="card text-body">
+                                                @foreach ($komentar as $item)
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
                                                         <img class="rounded-circle shadow-1-strong me-3"
@@ -301,12 +310,12 @@
                                                     </div>
                                                 </div>
                                                 <hr class="my-0" />
-                                            @endforeach
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -354,45 +363,45 @@
 
     <?php if ($tot_proggress == 100) { ?>
 
-    function DownloadPdf(e) {
-        if ($('#input-code').val() == '<?= $course->SERTIF_CODE ?>') {
-            var file = '<?= empty($sertif->FILE_SERTIFIKAT) ? null : $sertif->FILE_SERTIFIKAT ?>'
+        function DownloadPdf(e) {
+            if ($('#input-code').val() == '<?= $course->SERTIF_CODE ?>') {
+                var file = '<?= empty($sertif->FILE_SERTIFIKAT) ? null : $sertif->FILE_SERTIFIKAT ?>'
 
-            $.ajax({
-                url: '<?= Request::segment(0) ?>/update-sertif',
-                type: "POST",
-                data: {
-                    id_activity: "<?= $course->ID_ACTIVITY ?>",
-                },
-                success: function(data) {
-                    window.open(file, '_blank');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("AJAX Error: ", textStatus, errorThrown);
-                    console.error("Response Text: ", jqXHR.responseText);
-                }
-            });
-        } else {
-            Toast.fire({
-                icon: 'error',
-                title: 'Wrong Code!'
-            })
+                $.ajax({
+                    url: '<?= Request::segment(0) ?>/update-sertif',
+                    type: "POST",
+                    data: {
+                        id_activity: "<?= $course->ID_ACTIVITY ?>",
+                    },
+                    success: function(data) {
+                        window.open(file, '_blank');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error: ", textStatus, errorThrown);
+                        console.error("Response Text: ", jqXHR.responseText);
+                    }
+                });
+            } else {
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Wrong Code!'
+                })
+            }
         }
-    }
 
-    function filename(path) {
-        path = path.substring(path.lastIndexOf("/") + 1);
-        return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
-    }
+        function filename(path) {
+            path = path.substring(path.lastIndexOf("/") + 1);
+            return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
+        }
     <?php } ?>
 
     function ShowCertificateCode(e) {
         <?php foreach ($item_course as $item) :  ?>
-        $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-main-2')
-        $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
         <?php endforeach; ?>
         $(e).removeClass('btn-main-outline')
-        $(e).addClass('btn-main-2')
+        $(e).addClass('btn-primary')
         $("#detail-item").html(
             '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
         );
@@ -438,11 +447,11 @@
             })
         } else {
             if ($(e).data("type") != 4) {
-                $('.btn-code').removeClass('btn-main-2')
+                $('.btn-code').removeClass('btn-primary')
                 $('.btn-code').addClass('btn-main-outline')
                 <?php foreach ($item_course as $item) :  ?>
-                $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-main-2')
-                $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+                    $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+                    $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
                 <?php endforeach; ?>
             }
             GetItemCourse(e)
@@ -451,11 +460,11 @@
 
     function CheckingMapping() {
         <?php foreach ($item_course as $item) :  ?>
-        if (<?= $item->STATUS ?> != 1) {
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('border-primary')
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('text-disable')
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).prop("disabled", true)
-        }
+            if (<?= $item->STATUS ?> != 1) {
+                $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('border-primary')
+                $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('text-disable')
+                $('#show-detail-' + <?= $item->ID_ITEM ?>).prop("disabled", true)
+            }
         <?php endforeach; ?>
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -485,7 +494,7 @@
 
     function GetItemCourse(e) {
         $(e).removeClass('btn-main-outline');
-        $(e).addClass('btn-main-2');
+        $(e).addClass('btn-primary');
         $("#detail-item").html(
             '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
         );

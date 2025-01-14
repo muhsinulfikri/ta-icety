@@ -13,9 +13,22 @@
     }
 </style>
 
+<!-- Header -->
+<section class="py-5 py-md-7" style="background-color: #B90C0B;">
+    <div class="container">
+        <h1 class="font text-center" style="color: white !important">PROFILE</h1>
+        <div class="justify-content-center mt-3 d-flex">
+            <a href="/" class="font" style="color: white !important;text-decoration: underline;text-decoration-color: white;">Home</a>
+            <div class="ms-2 me-1" style="border-left: 2px solid white;height: 27px">&nbsp;</div>
+            <div class="font" style="color: white !important;">Profile</div>
+        </div>
+    </div>
+</section>
+
+
+
 <div class="container px-4 px-md-0 py-4 pb-6 pt-3">
-    <h5 class="py-2 fw-semibold">Profile</h5>
-    <hr class="opacity-25">
+
     <div class="container-fluid">
         <div class="row main-content">
             <div class="col-md-3 sidebar order-2 order-md-1 pt-4 pt-md-0">
@@ -38,7 +51,7 @@
                                     <!-- if(instructor) -->
                                     <?php if (session('user')[0]['ID_ROLE'] == 2) { ?>
                                         <li class="nav-item w-100">
-                                            <a href="/profile/overview" class="overview  nav-link d-flex align-middle px-4 py-3 rounded-0">
+                                            <a href="/profile/overview" class="{{ request()->is('profile/overview') ? 'active' : '' }}  overview  nav-link d-flex align-middle px-4 py-3 rounded-0">
                                                 <i class="fs-6 d-flex align-items-center far fa-bookmark"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Sale
                                                     Overview</span>
                                             </a>
@@ -47,7 +60,7 @@
                                             <hr class="my-0 border border-1 mx-3">
                                         </li>
                                         <li class="nav-item w-100">
-                                            <a href="/dashboard" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
+                                            <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}  nav-link d-flex align-middle px-4 py-3 rounded-0">
                                                 <i class="fs-6 d-flex align-items-center far fa-book-medical"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Create
                                                     Activity</span>
                                             </a>
@@ -60,7 +73,7 @@
                                     <!-- INSTRUCTOR SIDEBAR END -->
 
                                     <li class="nav-item w-100">
-                                        <a data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="true" aria-controls="submenu" class="nav-link d-flex align-middle px-4 py-3 rounded-0" style="cursor: pointer;">
+                                        <a data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="true" aria-controls="submenu" class="{{ request()->is('profile/mycourses') ? 'active' : '' }}  nav-link d-flex align-middle px-4 py-3 rounded-0" style="cursor: pointer;">
                                             <i class="fs-6 d-flex align-items-center far fa-book-open"></i>
                                             <span class="ms-1 ps-2 fs-6 align-self-center">My Activities</span>
                                             <svg class="svg-inline--fa fa-chevron-down ms-auto" style="width: 18px" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
@@ -74,21 +87,21 @@
                                                     <span class="ms-3 ps-3 fs-6 align-self-center">My Courses</span>
                                                 </a>
                                             </li>
-                                            <li class="w-100">
+                                            <!-- <li class="w-100">
                                                 <hr class="my-0 border border-1 mx-3">
                                             </li>
                                             <li class="nav-item w-100">
                                                 <a href="/profile/myevents" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
                                                     <span class="ms-3 ps-3 fs-6 align-self-center">My Events</span>
                                                 </a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                     </li>
                                     <li class="w-100">
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
                                     <li class="nav-item w-100">
-                                        <a href="/profile/myebook" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
+                                        <a href="/profile/myebook" class="{{ request()->is('profile/myebook') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
                                             <i class="fs-6 d-flex align-items-center far fa-book"></i> <span class="ms-1 ps-2 fs-6 align-self-center">My
                                                 Ebook</span>
                                         </a>
@@ -97,12 +110,12 @@
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
                                     <li class="nav-item w-100">
-                                        <a href="/profile/mysertificate" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
+                                        <a href="/profile/mysertificate" class="{{ request()->is('profile/mysertificate') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
                                             <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">ٍMy Sertificate</span>
                                         </a>
                                     </li>
                                     <li class="nav-item w-100">
-                                        <a href="/profile/myvoucher" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
+                                        <a href="/profile/myvoucher" class="{{ request()->is('profile/myvoucher') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
                                             <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center">My
                                                 Voucher</span>
                                         </a>
@@ -111,7 +124,7 @@
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
                                     <li class="nav-item w-100">
-                                        <a href="/profile/academic" class="nav-link  d-flex align-middle px-4 py-3 rounded-0">
+                                        <a href="/profile/academic" class="{{ request()->is('profile/academic') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
                                             <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Academic
                                                 Data</span>
                                         </a>
@@ -120,7 +133,7 @@
                                         <hr class="my-0 border border-1 mx-3">
                                     </li>
                                     <li class="nav-item w-100">
-                                        <a href="/profile/document" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
+                                        <a href="/profile/document" class=" {{ request()->is('profile/document') ? 'active' : '' }}  nav-link d-flex align-middle px-4 py-3 rounded-0">
                                             <i class="fs-6 d-flex align-items-center far fa-building"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Supporting
                                                 Documents</span>
                                         </a>
@@ -156,11 +169,11 @@
                         <div class="bg-white shadow rounded-2 overflow-hidden p-3 mt-3" style="height:max-content">
                             <div class="d-flex flex-column align-items-center align-items-sm-start">
                                 <?php
-                                    $array = (array) $document;
-                                    $status = true;
-                                    if (!empty($document)) {
-                                        $status = $document->STATUS === 0 ? false : (!empty($document->STATUS) ? false : true);
-                                    }
+                                $array = (array) $document;
+                                $status = true;
+                                if (!empty($document)) {
+                                    $status = $document->STATUS === 0 ? false : (!empty($document->STATUS) ? false : true);
+                                }
                                 ?>
                                 <?php $totDoc = (!empty($document)) ? count(array_filter($array)) : 0; ?>
                                 <?php if (session('user')[0]['ID_ROLE'] == 3 && $status) { ?>
@@ -186,7 +199,7 @@
                                             <span class="text-danger" style="text-align: justify;">We are sorry to reject your application because there is a discrepancy between the standard
                                                 documents you submitted and our standard documents. Please correct your data again and click the button above to submit again..</span>
                                         </div>
-                                    <?php } else if($document->STATUS == 0) { ?>
+                                    <?php } else if ($document->STATUS == 0) { ?>
                                         <div class="row">
                                             <button type="button" class="btn btn-muted rounded-4 fw-semibold w-100 mb-3" disabled>Apply as an Instructor</button>
                                             <span style="color: #edab00; text-align: justify;">Please be patient as we are still evaluating your personal data and documents.</span>

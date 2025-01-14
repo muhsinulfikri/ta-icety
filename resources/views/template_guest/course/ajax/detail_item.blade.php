@@ -57,11 +57,11 @@
             $url = $detail_item_course->LINK_YT;
             if (preg_match('/\/d\/(.*?)\//', $url, $matches)) { ?>
             <h6 class="fw-semibold pb-3">File Kursus :</h6>
-                <button type="button" class="btn btn-main-2 rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
+                <button type="button" class="btn btn-secondary rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
                     Buka File </button>
             <?php } else if (preg_match($pattern, $url, $matches)) { ?>
                 <h6 class="fw-semibold pb-3">Video Kursus :</h6>
-                <button type="button" class="btn btn-main-2 rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
+                <button type="button" class="btn btn-secondary rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
                     Buka Video
                 </button>
             <?php } else {
@@ -73,7 +73,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="YTModalTitle"><?= $detail_item_course->TITLE ?></h5>
-                            <button type="button" class="btn btn-main-2" id="btn-modal-close" data-dismiss="modal">
+                            <button type="button" class="btn btn-secondary" id="btn-modal-close" data-dismiss="modal">
                                 <i class="bi bi-x"></i>
                             </button>
                         </div>
@@ -110,7 +110,7 @@
 
     <?php if ($type == 1 && !empty($data_all_mapping) && $last_item[0]->ID_ITEM == $id_item) { ?>
         <div class="mx-4 my-4">
-            <button class="btn btn-main-2 mt-4 px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="2" data-type="1" onclick="NextItem(this)">
+            <button class="btn btn-secondary mt-4 px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="2" data-type="1" onclick="NextItem(this)">
                 Continue
             </button>
         </div>
@@ -140,11 +140,11 @@
                         $("#jwbn_<?= $item->ID_DETAIL . '1' ?>").trigger('click')
 
                         function SelectJwbn<?= $item->ID_DETAIL . '' . $item->ORDER_LIST ?>(e) {
-                            $("#jwbn_<?= $item->ID_DETAIL . '1' ?>").removeClass("btn-main-2")
-                            $("#jwbn_<?= $item->ID_DETAIL . '2' ?>").removeClass("btn-main-2")
-                            $("#jwbn_<?= $item->ID_DETAIL . '3' ?>").removeClass("btn-main-2")
+                            $("#jwbn_<?= $item->ID_DETAIL . '1' ?>").removeClass("btn-secondary")
+                            $("#jwbn_<?= $item->ID_DETAIL . '2' ?>").removeClass("btn-secondary")
+                            $("#jwbn_<?= $item->ID_DETAIL . '3' ?>").removeClass("btn-secondary")
                             $('input[name="jwbn[]"]').eq(<?= $no_soal++ ?>).val($(e).data("value"))
-                            $(e).addClass("btn-main-2")
+                            $(e).addClass("btn-secondary")
                         }
                     </script>
                 </div>
@@ -161,7 +161,7 @@
                 </div>
             </div>
             <?php if (!empty($data_all_mapping) && $last_item[0]->ID_ITEM == $id_item) { ?>
-                <button class="btn btn-main-2 mt-4 px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="2" data-type="2" onclick="NextItem(this)">
+                <button class="btn btn-secondary mt-4 px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="2" data-type="2" onclick="NextItem(this)">
                     Continue
                 </button>
             <?php } ?>
@@ -179,7 +179,7 @@
         <?php } ?>
 
         <?php if ($quiz_grade == NULL) { ?>
-            <button class="btn btn-main-2 px-4 py-2 mt-2 mt-lg-6 mb-3 rounded-3 shadow fw-semibold w-100" data-bs-toggle="modal" data-bs-target="#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>">
+            <button class="btn btn-secondary px-4 py-2 mt-2 mt-lg-6 mb-3 rounded-3 shadow fw-semibold w-100" data-bs-toggle="modal" data-bs-target="#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>">
                 Kumpulkan Kuis
             </button>
             <div class="modal fade" id="ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -196,7 +196,7 @@
                         </div>
                         <div class="modal-footer row mx-2 border-0" id="footer_modal_<?= $item->ID_ITEM ?>">
                             <button type="button" class="btn btn-danger rounded fw-semibold  col" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-main-2 rounded fw-semibold col" onclick="submitKuis<?= $item->ID_ITEM ?>(this)">Submit</button>
+                            <button type="button" class="btn btn-secondary rounded fw-semibold col" onclick="submitKuis<?= $item->ID_ITEM ?>(this)">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -230,7 +230,7 @@
                 </script>
             </div>
         <?php } else if ($quiz_grade->NILAI < 75) { ?>
-            <button class="btn btn-main-2 px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="0" data-type="3" onclick="ShowDetailItem(this)">
+            <button class="btn btn-secondary px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="0" data-type="3" onclick="ShowDetailItem(this)">
                 Try The Quiz Again
             </button>
         <?php } ?>
