@@ -48,7 +48,7 @@
         </div>
 
         <div class="mt-4">
-            <p>{{ $item->TEXT_BLOG }}</p>
+            <p style="text-align: justify">{{ $item->TEXT_BLOG }}</p>
             <div class="font" style="font-size: 0.8rem">Kunjungi ICETy.org untuk kursus dan ebook eksklusif tentang <span class="text-lowercase">{{ $item->TITLE_BLOG }}</span>.</div>
         </div>
     </div>

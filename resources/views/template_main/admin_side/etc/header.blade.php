@@ -61,9 +61,9 @@
             <div class="header">
                 <div class="logo logo-dark logo logo-dark">
                     <a href="<?php url('/'); ?>" class="d-flex justify-content-center mt-3">
-                        <img src="<?= asset('assets/images/logo.svg') ?>" alt="Logo">
+                        <img src="<?= asset('icety_assets/logo-dark.svg') ?>" alt="Logo">
                         <img class="logo-fold justify-content-center w-50"
-                            src="<?= asset('assets/images/logo_colored.svg') ?>" alt="Logo">
+                            src="<?= asset('icety_assets/logo.svg') ?>" alt="Logo">
                     </a>
                 </div>
                 <div class="nav-wrap">

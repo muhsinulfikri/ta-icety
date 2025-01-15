@@ -71,6 +71,7 @@ class CheckoutGuest extends Controller
 	public function purchase()
 	{
 		(session('user')[0] == null) ? redirect('login') : "";
+        $currentTime = date('Y-m-d H:i:s');
 		$data['title'] = 'Purchase';
 		$data['id_trans'] = $this->GenerateUniqID_Transaction(time());
 
@@ -110,7 +111,7 @@ class CheckoutGuest extends Controller
 
 				$data['promo'] = DB::Select("
 					SELECT
-						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME
+						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME, p.EXP_DATE
 					FROM
 						claimed_promo cp
 					LEFT JOIN promo p ON
@@ -119,8 +120,10 @@ class CheckoutGuest extends Controller
 				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
 					AND
 						p.PROMO_FOR = '0'
-					OR
+                    OR
 						p.PROMO_FOR = '" . $cek->TYPE_ACTIVITY . "'
+                    AND
+                        p.EXP_DATE > '". $currentTime ."'
 				");
 			}
 		} else {
@@ -131,13 +134,15 @@ class CheckoutGuest extends Controller
 
 			$data['promo'] = DB::Select("
 				SELECT
-						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME
+						cp.*, p.AMMOUNT, p.UNIT, p.PROMO_NAME, p.EXP_DATE
 					FROM
 						claimed_promo cp
 					LEFT JOIN promo p ON
 				        cp.ID_PROMO = p.ID_PROMO
 					WHERE
 				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
+                    AND
+                        p.EXP_DATE > '". $currentTime ."'
 			");
 		}
 		return 	view('template.header', $data) .
