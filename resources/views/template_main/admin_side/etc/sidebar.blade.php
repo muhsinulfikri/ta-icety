@@ -46,6 +46,17 @@
                 </a>
             </li>
             <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="<?= url('blogs') ?>"
+                    style="<?= $title == 'Blog' ? 'color: #4b94f7 ; background-color: #e2edfe' : '' ?>;">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-book" style="<?= $title == 'Blog' ? 'color: #4b94f7;' : '' ?>;"></i>
+                    </span>
+                    <span class="title">Blog</span>
+                    <span class="arrow">
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="<?= url('promo') ?>"
                     style="<?= $title == 'Promo' ? 'color: #4b94f7 ; background-color: #e2edfe' : '' ?>;">
                     <span class="icon-holder">

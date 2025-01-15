@@ -71,6 +71,11 @@ Route::get('verification/confirm', 'AuthController@verifAccount');
 // 1 Admin
 Route::middleware(['usersession:1'])->group(function () {
 
+    Route::get('blogs', 'BlogController@index');
+    Route::post('blogs/store', 'BlogController@store');
+    Route::post('blogs/update', 'BlogController@update');
+    Route::post('blogs/delete', 'BlogController@delete');
+
     Route::get('ebook', 'EbookController@index');
     Route::post('ebook/store', 'EbookController@store');
     Route::post('ebook/update', 'EbookController@update');
