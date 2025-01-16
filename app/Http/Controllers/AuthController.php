@@ -30,7 +30,7 @@ class AuthController extends Controller
 
     public function login()
     {
-        $data['title'] = "Login TBH";
+        $data['title'] = "Login ICETy";
 
         if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 1) {
             return redirect('dashboard');
@@ -118,7 +118,7 @@ class AuthController extends Controller
 
     public function register()
     {
-        $data['title'] = "Register TBH";
+        $data['title'] = "Register ICETy";
 
         return
             view('template.header', $data) .

@@ -144,12 +144,12 @@
                         <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.KATEGORI}</div>
                         <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.TITLE_ACTIVITY}</div>
                         <div class="card-info" style="display: none;     height: 150px;">
-                            <div class="d-flex flex-column justify-content-between h-100"> 
+                            <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_COURSE ?? "-"}</div>
                                 <div>
                                     <div class="d-flex justify-content-between mb-1 ">
                                         <div>
-                                            <span class="text-black fw-bold fs-5"> 
+                                            <span class="text-black fw-bold fs-5">
                                                 ${(data.PRICE_ACTIVITY === 0) ? "Free" : "Rp " + data.PRICE_ACTIVITY.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
                                             </span>
                                         </div>
@@ -180,12 +180,12 @@
                         <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.AUTHOR}</div>
                         <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.JUDUL}</div>
                         <div class="card-info" style="display: none;    height: 150px;">
-                            <div class="d-flex flex-column justify-content-between h-100"> 
+                            <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESC ?? "-"}</div>
                                 <div>
                                     <div class="d-flex justify-content-between mb-1 ">
                                         <div>
-                                            <span class="text-black fw-bold fs-5"> 
+                                            <span class="text-black fw-bold fs-5">
                                                 ${(data.PRICE === 0) ? "Free" : "Rp " + data.PRICE.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
                                             </span>
                                         </div>
