@@ -32,7 +32,7 @@ class BlogController extends Controller
             'CATEGORY_BLOG'       => $req->input('category_blog'),
             'IMAGE_BLOG'          => FileUpload::S3($req->file('image_blog'), 'IMAGE_BLOG', 'Image-Blog-' . strtotime(now())),
             'TEXT_BLOG'           => $req->input('text_blog'),
-            'DATE_UPLOAD'         => date('Y-m-d H:i:s')
+            'DATE_UPLOAD'         => date('Y-m-d')
         ];
 
         DB::table('blog')->insert($data);
@@ -45,7 +45,7 @@ class BlogController extends Controller
             'TITLE_BLOG'          => $req->input('up_title_blog'),
             'CATEGORY_BLOG'       => $req->input('up_category_blog'),
             'TEXT_BLOG'           => $req->input('up_text_blog'),
-            'DATE_UPLOAD'         => date('Y-m-d H:i:s')
+            'DATE_UPLOAD'         => date('Y-m-d')
         ];
 
         if ($req->hasFile('up_image_blog')) {

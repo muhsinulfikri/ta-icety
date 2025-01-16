@@ -16,13 +16,7 @@
     <div class="d-flex flex-column">
         <div class="d-flex flex-column-reverse flex-md-row justify-content-between">
             <div class="bg-black shadow text-white px-2 py-0 mb-2 card-badge font" style="color: white !important;">{{ $item->CATEGORY_BLOG }}</div>
-            <div class="font ms-2 fw-semibold" style="font-size: 0.75rem !important;line-height: 22px;">
-                <?php
-                $date = new DateTime($item->DATE_UPLOAD);
-                $formatter = new IntlDateFormatter('id_ID', IntlDateFormatter::FULL, IntlDateFormatter::NONE);
-                $formatter->setPattern('EEEE, dd MMMM yyyy');
-                echo $formatter->format($date);
-                ?>
+            <div class="font ms-2 fw-semibold formatted-date" data-date="{{ $item->DATE_UPLOAD }}" style="font-size: 0.75rem !important;line-height: 22px;">
             </div>
         </div>
 
@@ -55,3 +49,40 @@
     @endforeach
 
 </section>
+<script>
+    //format date indonesia
+    document.addEventListener('DOMContentLoaded', () => {
+    // Array untuk hari dan bulan dalam Bahasa Indonesia
+    const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const bulan = [
+        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    // Ambil semua elemen dengan kelas "formatted-date"
+    const dateElements = document.querySelectorAll('.formatted-date');
+
+    // Loop melalui setiap elemen dan format tanggalnya
+    dateElements.forEach(el => {
+        const dateUpload = el.getAttribute('data-date'); // Ambil tanggal dari atribut data
+        const date = new Date(dateUpload); // Buat objek Date
+
+        if (!isNaN(date.getTime())) { // Pastikan tanggal valid
+            const hariIndo = hari[date.getDay()];
+            const tanggal = date.getDate();
+            const bulanIndo = bulan[date.getMonth()];
+            const tahun = date.getFullYear();
+
+            // Format akhir
+            const formattedDate = `${hariIndo}, ${tanggal} ${bulanIndo} ${tahun}`;
+
+            // Tampilkan hasil di elemen
+            el.innerText = formattedDate;
+        } else {
+            el.innerText = 'Tanggal tidak valid'; // Jika tanggal tidak valid
+        }
+    });
+});
+
+
+</script>
