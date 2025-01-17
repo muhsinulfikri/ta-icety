@@ -1,26 +1,12 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<style>
-    .page-header-custom {
-        background: url('<?= asset('assets_new') ?>/images/bg/illustration-bg.png') 50% 50%;
-        background-size: cover;
-        background-repeat: no-repeat;
-        z-index: initial;
-    }
-</style>
-
-<section class="page-header page-header-custom">
+<section class="py-5 py-md-7" style="background-color: #B90C0B;">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-xl-8">
-                <div class="title-block">
-                    <h1>Courses</h1>
-                    <ul class="header-bradcrumb justify-content-center">
-                        <li><a href="{{ url('') }}">Home</a></li>
-                        <li class="active" aria-current="page">Courses</li>
-                    </ul>
-                </div>
-            </div>
+        <h1 class="font text-center" style="color: white !important">COURSES</h1>
+        <div class="justify-content-center mt-3 d-flex">
+            <a href="/" class="font" style="color: white !important;text-decoration: underline;text-decoration-color: white;">Home</a>
+            <div class="ms-2 me-1" style="border-left: 2px solid white;height: 27px">&nbsp;</div>
+            <div class="font" style="color: white !important;">Courses</div>
         </div>
     </div>
 </section>

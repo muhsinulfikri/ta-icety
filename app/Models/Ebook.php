@@ -20,7 +20,7 @@ class Ebook extends Model
             FROM
                 ebook
             ORDER BY
-                LOG_TIME DESC 
+                LOG_TIME DESC
                 LIMIT 4");
         return $data;
     }
@@ -29,17 +29,17 @@ class Ebook extends Model
     {
         $this->db->select('ebook.*');
         $this->db->select("(
-            SELECT 
+            SELECT
                 COUNT(*)
             FROM
                 payment p
-            LEFT JOIN `order` o ON 
-                o.ID_PAY  = p.ID_PAY 
-            WHERE 
+            LEFT JOIN `order` o ON
+                o.ID_PAY  = p.ID_PAY
+            WHERE
                 o.ID_USER = '" . $this->session->userdata('ID_USER') . "'
-                AND 
+                AND
                 o.ID_PRODUCT = `ebook`.ID_BUKU
-                AND 
+                AND
                 p.DATE_PAY IS NOT NULL ) as DATA_CHECKING");
         return $this->db->get('ebook')->result_array();
     }
@@ -48,17 +48,17 @@ class Ebook extends Model
     {
         $this->db->select('ebook.*');
         $this->db->select("(
-            SELECT 
+            SELECT
                 COUNT(*)
             FROM
                 payment p
-            LEFT JOIN `order` o ON 
-                o.ID_PAY  = p.ID_PAY 
-            WHERE 
+            LEFT JOIN `order` o ON
+                o.ID_PAY  = p.ID_PAY
+            WHERE
                 o.ID_USER = '" . $this->session->userdata('ID_USER') . "'
-                AND 
+                AND
                 `order`.ID_PRODUCT = `ebook`.ID_BUKU
-                AND 
+                AND
                 p.DATE_PAY IS NOT NULL ) as DATA_CHECKING");
         $this->db->where('ebook.ID_USER', $id);
         return $this->db->get('ebook')->result_array();
@@ -66,24 +66,34 @@ class Ebook extends Model
 
     public function get_book($id_book)
     {
-        if (!empty($this->session->userdata('ID_USER'))) {
-            $this->db->select("(
-                SELECT 
-                    COUNT(*)
-                FROM
-                    payment p
-                LEFT JOIN `order` o ON 
-                    o.ID_PAY  = p.ID_PAY 
-                WHERE 
-                    o.ID_USER = '" . $this->session->userdata('ID_USER') . "'
-                    AND 
-                    `order`.ID_PRODUCT = `activity`.ID_ACTIVITY
-                    AND 
-                    p.DATE_PAY IS NOT NULL ) as DATA_CHECKING");
-            return $this->db->get_where('activity', ['activity.TYPE_ACTIVITY' => 2, 'activity.ID_ACTIVITY' => $id_book])->row_array();
+        if (!empty(session('user'))) {
+            $data = DB::selectOne("
+            SELECT
+                e.*,
+                (SELECT COUNT(*)
+                    FROM payment p
+                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
+                    WHERE o.ID_USER = '".session('user')[0]->get('ID_USER')."'
+                    AND o.ID_PRODUCT = '".$id_book."'
+                    AND p.DATE_PAY IS NOT NULL) as DATA_CHECKING
+            FROM
+                ebook e
+            WHERE
+                e.ID_BUKU = '".$id_book."'
+            ");
+            return $data;
+            // return $this->db->get_where('activity', ['activity.TYPE_ACTIVITY' => 2, 'activity.ID_ACTIVITY' => $id_book])->row_array();
         } else {
-
-            return $this->db->get_where('activity', ['activity.TYPE_ACTIVITY' => 2, 'activity.ID_ACTIVITY' => $id_book])->row_array();
+            $data = DB::selectOne("
+                SELECT
+                    e.*
+                FROM
+                    ebook e
+                WHERE
+                    e.ID_BUKU = '".$id_book."'
+            ");
+            return $data;
+            // return $this->db->get_where('activity', ['activity.TYPE_ACTIVITY' => 2, 'activity.ID_ACTIVITY' => $id_book])->row_array();
         }
     }
 

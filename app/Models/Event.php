@@ -19,16 +19,18 @@ class Event extends Model
     public function get_home_event()
     {
         $data = DB::select("
-        SELECT 
-            * 
-        FROM 
-            activity 
-        WHERE 
+        SELECT
+            *
+        FROM
+            activity a
+        LEFT JOIN event e ON
+            e.ID_ACTIVITY = a.ID_ACTIVITY
+        WHERE
             TYPE_ACTIVITY = 2
             AND
             STATUS = 1
-        ORDER BY 
-            LOG_TIME DESC 
+        ORDER BY
+            LOG_TIME DESC
         LIMIT 4
         ");
 
@@ -60,12 +62,12 @@ class Event extends Model
     public function get_event_pagination($start = "")
     {
         $data['query'] = DB::select("
-        SELECT 
+        SELECT
             activity.*,
             (DATEDIFF(CURDATE(), activity.DATE_START) >= 1) as EXPIRED
-            FROM 
+            FROM
                 activity
-            LIMIT 
+            LIMIT
                 $start;
         ");
 
@@ -82,14 +84,16 @@ class Event extends Model
     public function get_other_event($id_activity)
     {
         $data = DB::select('
-        SELECT 
-            activity.*,
-            DATEDIFF(CURDATE(), activity.DATE_START) >= 1 AS EXPIRED
-        FROM 
-            activity
-        WHERE 
-            activity.TYPE_ACTIVITY = 2
-            AND activity.ID_ACTIVITY <> "' . $id_activity . '"
+        SELECT
+            a.*, e.ORGANIZER,
+            DATEDIFF(CURDATE(), a.DATE_START) >= 1 AS EXPIRED
+        FROM
+            activity a
+        LEFT JOIN event e ON
+            e.ID_ACTIVITY = a.ID_ACTIVITY
+        WHERE
+            a.TYPE_ACTIVITY = 2
+            AND a.ID_ACTIVITY <> "' . $id_activity . '"
         ORDER BY RAND()
         LIMIT 6;
         ');
@@ -99,18 +103,18 @@ class Event extends Model
     {
         if (!empty(session('user'))) {
             $data = DB::selectOne('
-            SELECT 
-                activity.*, 
-                event.ID_EVENT, 
-                event.CATEGORY_EVENT, 
-                event.LOCATION, 
-                event.ORGANIZER, 
-                event.CONTACT_CUSTOMER, 
-                event.DESKRIPSI_EVENT, 
+            SELECT
+                activity.*,
+                event.ID_EVENT,
+                event.CATEGORY_EVENT,
+                event.LOCATION,
+                event.ORGANIZER,
+                event.CONTACT_CUSTOMER,
+                event.DESKRIPSI_EVENT,
                 event.LINK_ZOOM,
                 (SELECT COUNT(*)
                     FROM payment p
-                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY 
+                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
                     WHERE o.ID_USER = "' . session('user')[0]->get('ID_USER') . '"
                     AND o.ID_PRODUCT = "' . $id_activity . '"
                     AND p.DATE_PAY IS NOT NULL) as DATA_CHECKING,
@@ -123,22 +127,22 @@ class Event extends Model
             return $data;
         } else {
             $data = DB::selectOne('
-            SELECT 
-                activity.*, 
-                event.ID_EVENT, 
-                event.CATEGORY_EVENT, 
-                event.LOCATION, 
-                event.ORGANIZER, 
-                event.CONTACT_CUSTOMER, 
-                event.DESKRIPSI_EVENT, 
+            SELECT
+                activity.*,
+                event.ID_EVENT,
+                event.CATEGORY_EVENT,
+                event.LOCATION,
+                event.ORGANIZER,
+                event.CONTACT_CUSTOMER,
+                event.DESKRIPSI_EVENT,
                 event.LINK_ZOOM,
                 DATEDIFF(CURDATE(), activity.DATE_START) >= 1 AS EXPIRED
-            FROM 
+            FROM
                 activity
-            LEFT OUTER JOIN 
+            LEFT OUTER JOIN
                 event ON event.ID_ACTIVITY = activity.ID_ACTIVITY
-            WHERE 
-                activity.TYPE_ACTIVITY = 2 
+            WHERE
+                activity.TYPE_ACTIVITY = 2
                 AND activity.ID_ACTIVITY = "' . $id_activity . '"
             ');
             return $data;

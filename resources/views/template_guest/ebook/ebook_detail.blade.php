@@ -1,276 +1,378 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<section class="page-wrapper">
-    <div class="tutori-course-content">
-        <div class="container">
-            <div class="row pt-3">
-                <div class="col-lg-5">
-                    <!-- event Sidebar start -->
-                    <div class="course-sidebar course-sidebar-2 mt-5 mt-lg-0">
-                        <div class="">
-                            <div class="course-thumbnail d-flex justify-content-center">
-                                <div class="pe-0 pe-sm-5 rounded-1">
-                                    <img src="<?= $detail->IMAGE_EBOOK ?>" class="d-block img-fluid h-auto ">
-                                </div>
-                            </div>
 
-                            <div class="container">
-                                @if ($checking_data->DATA_CHECKING != 1)
-                                <div class="price-header mb-3">
-                                    <h2 class="course-price">
-                                        <?= $detail->PRICE == 0 ? 'Free' : 'Rp ' . number_format($detail->PRICE, 2, ',', '.') ?>
-                                    </h2>
-                                </div>
+<style>
+    body {
+        font-family: "Noto Sans", serif !important;
+    }
 
-                                <form class="" id="FormBuyNow-info" method="POST"
-                                    action="<?= url('purchase') ?>">
-                                    @csrf
-                                    <div id="data-input-info"></div>
-                                    <div class="w-100 button button-enroll-course btn btn-main-2 rounded"
-                                        onclick="BuyNow()"><?= $detail->PRICE == 0 ? 'Add Item' : 'Buy Now' ?>
-                                    </div>
-                                </form>
-                                <button data-id-ebook="<?= $detail->ID_BUKU ?>" onclick="AddToCart(this)"
-                                    class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    Add to Cart
-                                </button>
-                                @else
-                                <a
-                                        href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
-                                            class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
-                                            Item
-                                        </button></a>
+    .font {
+        font-family: "Noto Sans", serif !important;
+        color: black !important;
+        line-height: 22px !important;
+    }
 
-                                @endif
-                                <!-- <php endif ?> -->
-                            </div>
 
-                        </div>
+    .ul li {
+        list-style-type: disc !important;
+    }
+
+    .ol li {
+        list-style-type: decimal !important;
+    }
+
+    .course-grid-template {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @media (max-width: 1200px) {
+        .course-grid-template {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @media (max-width: 991.98px) {
+        .course-grid-template {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .font-title {
+            font-size: 3rem;
+            line-height: 3.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .course-grid-template {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+    }
+</style>
+
+<section class="py-6 bg-aqua">
+    <div class="container">
+
+        <!-- Course -->
+        <div class="row">
+            <div class="col-12 col-md-8 pe-0 pe-md-4 d-flex flex-column gap-3">
+                <h2><?= $ebook->JUDUL ?></h2>
+                <div class="" style="border: 3px solid black"></div>
+                <div class="font " style="font-size: 0.9rem;">
+                    <?= $ebook->DESC ?>
+                </div>
+                <div class="rounded px-3 py-3 d-flex gap-3 col-12 col-md-11" style="background: #E3E3E3;">
+                    <div>
+                        <img src="{{ asset('icety_assets') }}/logo-completion.svg" class="img-fluid" style="width: 47px" />
+                    </div>
+                    <div>
+                        <div class="font fw-bold fs-5">Certificate of Completion</div>
+                        <div class="font mt-1">Completing this course leads to obtaining a Certificate of Completion.</div>
                     </div>
                 </div>
+                <h2 class="font mt-2">What You Will Learn</h2>
+                {{-- <div class="font "><?= $event->DESKRIPSI_EVENT ?></div> --}}
 
-                <div class="col-lg-7 ps-3">
-                    <div class="course-header-wrapper">
-
+                <div>
+                    <?php if ($checking_data->DATA_CHECKING == 1) { ?>
+                        <a
+                            href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $ebook->JUDUL))) . '?id_book=' . $ebook->ID_BUKU }}">
+                            <button
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">See
+                                Item
+                            </button>
+                        </a>
+                    <?php } else {?>
+                        <button data-id-ebook="<?= $ebook->ID_BUKU ?>" onclick="AddToCart(this)"
+                            class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                            Add to cart
+                        </button>
+                        <?php } ?>
+                </div>
+            </div>
+            <div class="col-12 col-md-3 ms-0 ms-md-4 mt-4 mt-md-0 rounded-3 overflow-hidden h-100" style="background-color: #E3E3E3;">
+                <div>
+                    <img src="<?= $ebook->IMAGE_EBOOK ?>" class="img-fluid w-100" />
+                </div>
+                <div class="d-flex flex-column gap-3 py-3 px-4">
+                    <div class="d-flex gap-3">
                         <div>
-                            <h2 class="course-title bg-white">
-                                <?= $detail->JUDUL ?>
-                            </h2>
+                            <img src="{{ asset('icety_assets') }}/icon-course.svg" class="img-fluid mt-1" />
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Ebook Genre</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">{{ $ebook->GENRE }}</div>
                         </div>
                     </div>
-                    <nav class="course-single-tabs learn-press-nav-tabs">
-                        <div class="nav nav-tabs course-nav" id="nav-tab" role="tablist">
-                            <a class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home"
-                                role="tab" aria-controls="nav-home-tab" aria-selected="true">Overview</a>
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-sertificate.svg" class="img-fluid mt-1" />
                         </div>
-                    </nav>
+                        <div>
+                            <div class="font fw-bold">Credential type</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Certificate of completion</div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-calendar.svg" class="img-fluid mt-1" />
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Author</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">{{ $ebook->AUTHOR }}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-time.svg" class="img-fluid mt-1" />
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Tahun</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">{{ $ebook->TAHUN }}</div>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-cost.svg" class="img-fluid mt-1" />
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Cost</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px"><?= $ebook->PRICE == 0 ? 'Free' : 'Rp ' . number_format($ebook->PRICE, 2, ',', '.') ?> to learn</div>
+                        </div>
+                    </div>
+                    <div>
+                        <?php if ($checking_data->DATA_CHECKING == 1) { ?>
+                            <a
+                                href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $ebook->JUDUL))) . '?id_book=' . $ebook->ID_BUKU }}">
+                                <button
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">See
+                                    Item
+                                </button>
+                            </a>
+                        <?php } else {?>
+                            <button data-id-ebook="<?= $ebook->ID_BUKU ?>" onclick="AddToCart(this)"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                Add to cart
+                            </button>
+                        <?php } ?>
+                    </div>
 
-                    <div class="tab-content tutori-course-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                            aria-labelledby="nav-home-tab">
-                            <div class="single-course-details">
-                                <h4 class="event-title mb-0">Description</h4>
-                                <p>
-                                    <?= $detail->DESC ? $detail->DESC : '-' ?>
-                                </p>
+                </div>
 
-                                <h4 class="event-title mb-0">Genre</h4>
-                                <p>
-                                    <?= $detail->GENRE ? $detail->GENRE : '-' ?>
-                                </p>
+            </div>
+        </div>
 
-                                <h4 class="course-title mb-0">Author</h4>
-                                <p>
-                                    <?= $detail->AUTHOR ?>
-                                </p>
+    </div>
+</section>
 
-                                <h4 class="course-title mb-0">Year</h4>
-                                <p>
-                                    <?= $detail->TAHUN ?>
-                                </p>
+<script>
+    function AddToCart(e) {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        },
+        didDestroy: (toast) => {
+            location.reload();
+        }
+    });
 
+    <?php if (!empty(session('user'))) { ?>
+    $.ajax({
+        url: '<?= Request::segment(0) ?>/add/order',
+        type: "GET",
+        data: {
+            id_ebook: $(e).data("id-ebook"),
+            type: 2
+        },
+        dataType: 'json',
+        success: function(data) {
+            Toast.fire({
+                icon: (data.Status) ? 'success' : 'error',
+                title: data.Message
+            });
+        }
+    });
+    <?php } else { ?>
+    Toast.fire({
+        icon: 'error',
+        title: 'Please Login First!'
+    });
+    <?php } ?>
+}
+
+</script>
+
+<!-- Another Course -->
+<section class="pb-7">
+    <div class="container ">
+        <div class="fs-3 fw-semibold text-black mb-3">Ikuti juga Lainnya</div>
+
+
+        <div class="d-grid gap-4 course-grid-template ebook-container">
+
+        </div>
+
+
+    </div>
+</section>
+
+
+<script>
+    function createCardEbook(data) {
+        return `
+            <div class="card card-course overflow-hidden" id="card-${data.ID_BUKU}" style="width: 276px; max-width: 276px; justify-self: center;">
+                <div>
+                    <img src="${data.IMAGE_EBOOK}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                </div>
+                <div class="t-section h-100 w-100">
+                    <div class="p-3 h-100">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.AUTHOR}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.JUDUL}</div>
+                        <div class="card-info" style="display: none;    height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESC ?? "-"}</div>
+                                <div>
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5">
+                                                ${(data.PRICE === 0) ? "Free" : "Rp " + data.PRICE.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="${data.JUDUL.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_BUKU}" class="card-link">Find out more</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        `;
+    }
 
-        <div class="container pt-4">
-            <hr class="mt-4" />
+    const ebookData = @json($other_ebook);
 
-            <div class="course-latest">
-                <h4 class="mb-4">Buku Lainnya</h4>
-                <div class="row course-gallery ">
-                    <?php foreach ($other_ebook as $item) : ?>
-                        <a href="{{ url('ebooks/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->JUDUL))) . '?id_book=' . $item->ID_BUKU }}">
-                            <div class="course-item cat1 cat5 col-lg-6 col-md-6">
-                                <div class="px-0 px-sm-3">
-                                    <div class="single-course style-2 bg-shade border-0">
-                                        <div class="row g-0 align-items-center">
-                                            <div class="col-xl-5">
-                                                <div class="course-thumb"
-                                                    style="min-height: 150px !important;background:url(<?= str_replace(' ', '%20', $item->IMAGE_EBOOK) ?>)">
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-7">
-                                                <div class="course-content">
-                                                    <h3 class="course-title"><?= $item->JUDUL ?></h3>
-                                                    <div class="course-price">
-                                                        <?= $item->PRICE == 0 ? 'FREE' : 'Rp ' . number_format($item->PRICE, 0, ',', '.') ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
+
+    ebookData.forEach(data => {
+        $('.ebook-container').append(createCardEbook(data));
+    });
+    $('.ebook-container').show()
+
+</script>
+
+
+<!-- FAQ -->
+<style>
+    .accordion {
+        --bs-accordion-btn-bg: none;
+    }
+
+    .accordion-item {
+        border: 1px solid black;
+        border-radius: calc(0.375rem - 1px) !important;
+
+    }
+
+    .accordion-button {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:not(:first-of-type) {
+        border-top: 1px solid black !important;
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item.accordion-button {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:first-of-type .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-item:last-of-type .accordion-button.collapsed {
+        border-radius: calc(0.375rem - 1px) !important;
+    }
+
+    .accordion-button:hover {
+        background-color: white !important;
+        box-shadow: 3px 3px 5px rgb(0 0 0 / 50%) !important;
+    }
+
+    .accordion-button:focus {
+        border: none !important;
+        box-shadow: none !important;
+    }
+
+    .accordion-button:not(.collapsed) {
+        color: black !important;
+        background-color: white !important;
+        box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color) !important;
+    }
+
+
+    .accordion-button:not(.collapsed)::after {
+        background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+        transform: var(--bs-accordion-btn-icon-transform) !important;
+    }
+
+    .accordion-button::after {
+        background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+        --bs-accordion-btn-icon-width: 2rem !important;
+    }
+</style>
+
+
+<section class="py-7" style="background: #E3E3E3;">
+    <div class="container">
+        <div class="text-center fs-2 fw-semibold text-black mb-5">Pertanyaan yang sering diajukan</div>
+
+        <div>
+            <div class="accordion d-flex flex-column gap-4" id="faqAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="one">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colOne" aria-expanded="false" aria-controls="colOne">
+                            Apa saja media komunikasi yang digunakan dalam Course ICETy?
+                        </button>
+                    </h2>
+                    <div id="colOne" class="accordion-collapse collapse" aria-labelledby="one">
+                        <div class="accordion-body">
+                            ICETy menggunakan media gambar, video, quiz, e-book yang interaktif serta pengalaman 360 derajat, menggunakan VR (virtual reality) & AR (augmented reality).
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="two">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
+                            Siapa saja yang dilibatkan dalam pembuatan modul OCE yang disusun khusus oleh ICETy?
+                        </button>
+                    </h2>
+                    <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two">
+                        <div class="accordion-body">
+                            ICETy melibatkan berbagai pakar, praktisi industri, asosiasi profesi, lembaga sertifikasi, serta pembuat kebijakan.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="three">
+                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colThree" aria-expanded="false" aria-controls="colThree">
+                            Apa bahasa yang digunakan dalam kursus-kursus di dalam ICETy?
+                        </button>
+                    </h2>
+                    <div id="colThree" class="accordion-collapse collapse" aria-labelledby="three">
+                        <div class="accordion-body">
+                            Untuk saat ini, ICETy menggunakan bahasa Indonesia sebagai bahasa utama dalam pembelajaran.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<style>
-    .blurred-image {
-        overflow: hidden;
-    }
-
-    .overlay {
-        -webkit-filter: blur(4px);
-        filter: blur(4px);
-        pointer-events: none;
-    }
-
-    .box-input {
-        max-height: 250px;
-    }
-</style>
-
-<script>
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 1000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    })
-
-    function AddToCart(e) {
-        <?php if (!empty(session('user'))) { ?>
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            },
-            didDestroy: (toast) => {
-                location.reload();
-            }
-        })
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
-                id_activity: $(e).data("id-ebook"),
-                type: 2
-            },
-            dataType: 'json',
-            success: function(data) {
-                Toast.fire({
-                    icon: (data.Status) ? 'success' : 'error',
-                    title: data.Message
-                })
-            }
-        });
-        <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please Login First!'
-        })
-        <?php } ?>
-    }
-
-    function BuyNow() {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            }
-        })
-        <?php if (!empty(session('user'))) { ?>
-        <?php if (!empty($checking_trans)) { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'You have unfinished transactions!'
-        })
-        <?php } else { ?>
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
-                id_activity: '<?= $detail->ID_BUKU ?>',
-                type: 3
-            },
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-
-                let timerInterval
-                $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' +
-                    data.IdOrder + '" />')
-                Swal.fire({
-                    title: 'Create Order!',
-                    html: 'Please Wait ...',
-                    timer: 2000,
-                    timerProgressBar: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval)
-                    }
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        $("#FormBuyNow-info").submit();
-                    }
-                })
-            }
-        });
-        <?php } ?>
-        <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please Login First!'
-        })
-        <?php } ?>
-    }
-    // <php if (!empty(session('user')) && $event->DATA_CHECKING <> 0) { ?>
-
-
-    // function filename(path) {
-    //     path = path.substring(path.lastIndexOf("/") + 1);
-    //     return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
-    // }
-    // <php } ?>
-</script>
