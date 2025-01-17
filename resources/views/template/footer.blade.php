@@ -65,9 +65,9 @@
                         <h5 class="widget-title">Explore</h5>
                         <ul class="list-unstyled footer-links">
                             <li><a href="<?= url('') ?>">Home</a></li>
-                            <li><a href="<?= url('course') ?>">Course</a></li>
-                            <li><a href="<?= url('event') ?>">Event</a></li>
-                            <li><a href="<?= url('') ?>">About</a></li>
+                            <li><a href="<?= url('/store#course-section') ?>">Course</a></li>
+                            <li><a href="<?= url('/store#course-section') ?>">Event</a></li>
+                            <li><a href="<?= url('/about') ?>">About</a></li>
                         </ul>
                     </div>
                 </div>

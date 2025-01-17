@@ -89,7 +89,9 @@ class GuestController extends Controller
 		$data['course'] = $courseModel->get_home_course_all();
 		$ebookModel = new Ebook();
 		$data['ebook'] = $ebookModel->get_all_book_home();
-
+        $eventModel = new Event();
+		$data['event'] = $eventModel->get_home_event();
+        // dd($data['event']);
 		return
 			view('template.header', $data) .
 			view('template_guest.store', $data) .

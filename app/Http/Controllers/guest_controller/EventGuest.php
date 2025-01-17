@@ -124,6 +124,7 @@ class EventGuest extends Controller
 			$data['sertif'] = $sertifCheck;
 		}
 		$data['checkout'] = $this->checkoutModel->get_all_order($data_user);
+        // dd($data['other_event']);
 		return
 		 view('template.header', $data) .
 		 view('template_guest.event.event_detail', $data) .

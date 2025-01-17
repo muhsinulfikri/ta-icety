@@ -52,6 +52,8 @@ class EbookGuest extends Controller
         $data['title'] = 'Ebook';
         $data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
         $id_buku = $_GET['id_book'];
+        $ebookModel = new Ebook();
+		$data['ebook'] = $ebookModel->get_book($id_buku);
         $data['detail'] = DB::Selectone("
             SELECT
                 e.*
@@ -97,7 +99,7 @@ class EbookGuest extends Controller
             ORDER BY RAND()
             LIMIT 4
         ");
-
+        // dd($data['ebook'], $data['checking_data']);
         $data['checkout'] = $this->checkoutModel->get_all_order($data_user);
         return
             view('template.header', $data) .

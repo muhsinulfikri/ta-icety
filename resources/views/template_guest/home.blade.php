@@ -547,6 +547,7 @@
         <div class="d-flex gap-4 mt-5 mb-4">
             <button class="btn btn-tertiary btn-course active">Course</button>
             <button class="btn btn-tertiary btn-ebook">E-Book</button>
+            <button class="btn btn-tertiary btn-event">Event</button>
         </div>
 
 
@@ -556,8 +557,11 @@
         <div class="d-grid gap-4 course-grid-template ebook-container" style="display: none !important;">
 
         </div>
+        <div class="d-grid gap-4 course-grid-template event-container" style="display: none !important;">
 
-        <div class="text-center text-sm-start"">
+        </div>
+
+        <div class="text-center text-sm-start">
             <a href=" store" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
 
         </div>
@@ -578,12 +582,12 @@
                         <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.KATEGORI}</div>
                         <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.TITLE_ACTIVITY}</div>
                         <div class="card-info" style="display: none;     height: 150px;">
-                            <div class="d-flex flex-column justify-content-between h-100"> 
+                            <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_COURSE ?? "-"}</div>
                                 <div>
                                     <div class="d-flex justify-content-between mb-1 ">
                                         <div>
-                                            <span class="text-black fw-bold fs-5"> 
+                                            <span class="text-black fw-bold fs-5">
                                                 ${(data.PRICE_ACTIVITY === 0) ? "Free" : "Rp " + data.PRICE_ACTIVITY.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
                                             </span>
                                         </div>
@@ -614,12 +618,12 @@
                         <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.AUTHOR}</div>
                         <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.JUDUL}</div>
                         <div class="card-info" style="display: none;    height: 150px;">
-                            <div class="d-flex flex-column justify-content-between h-100"> 
+                            <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESC ?? "-"}</div>
                                 <div>
                                     <div class="d-flex justify-content-between mb-1 ">
                                         <div>
-                                            <span class="text-black fw-bold fs-5"> 
+                                            <span class="text-black fw-bold fs-5">
                                                 ${(data.PRICE === 0) ? "Free" : "Rp " + data.PRICE.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
                                             </span>
                                         </div>
@@ -640,21 +644,71 @@
     ebooksData.forEach(data => {
         $('.ebook-container').append(createCardBook(data));
     });
+    function createCardEvent(data) {
+        return `
+            <div class="card card-course overflow-hidden" id="card-${data.ID_ACTIVITY}" style="width: 276px; max-width: 276px; justify-self: center;">
+                <div>
+                    <img src="${data.IMAGE_ACTIVITY}" class="img-fluid" style="aspect-ratio: 23/13;" />
+                </div>
+                <div class="t-section h-100 w-100">
+                    <div class="p-3 h-100">
+                        <div class="bg-black shadow text-white px-2 py-0 mb-3 card-badge">${data.ORGANIZER}</div>
+                        <div class="fw-semibold text-black fs-5 mb-3 title" style="line-height: 22px;">${data.TITLE_ACTIVITY}</div>
+                        <div class="card-info" style="display: none;    height: 150px;">
+                            <div class="d-flex flex-column justify-content-between h-100">
+                                <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_EVENT ?? "-"}</div>
+                                <div>
+                                    <div class="d-flex justify-content-between mb-1 ">
+                                        <div>
+                                            <span class="text-black fw-bold fs-5">
+                                                ${(data.PRICE_ACTIVITY === 0) ? "Free" : "Rp " + data.PRICE_ACTIVITY.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,').replace('.', ',')}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <a href="event/detail/${data.TITLE_ACTIVITY.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_ACTIVITY}" class="card-link">Find out more</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
-    $('.btn-course').on('click', function() {
+    const eventData = @json($event);
+
+
+    eventData.forEach(data => {
+        $('.event-container').append(createCardEvent(data));
+    });
+
+
+    $(document).on('click','.btn-course', function() {
         $('.btn-ebook').removeClass('active')
+        $('.btn-event').removeClass('active')
 
         $(this).addClass('active')
         $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
+        $('.event-container')[0].style.setProperty('display', 'none', 'important')
         $('.course-container').show()
     });
 
-    $('.btn-ebook').on('click', function() {
+    $(document).on('click','.btn-ebook', function() {
         $('.btn-course').removeClass('active')
-
+        $('.btn-event').removeClass('active')
         $(this).addClass('active')
         $('.ebook-container').show()
         $('.course-container')[0].style.setProperty('display', 'none', 'important')
+        $('.event-container')[0].style.setProperty('display', 'none', 'important')
+    });
+
+    $(document).on('click', '.btn-event', function() {
+        $('.btn-course').removeClass('active')
+        $('.btn-ebook').removeClass('active')
+        $(this).addClass('active')
+        $('.event-container').show()
+        $('.course-container')[0].style.setProperty('display', 'none', 'important')
+        $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
     });
 </script>
 
