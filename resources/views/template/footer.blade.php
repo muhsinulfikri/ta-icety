@@ -7,11 +7,26 @@
         tbh-footer: left;
     }
 
+
+
+
+
     @media (max-width: 768px) {
+
         .tbh-footer {
             text-align: center;
             margin: 0 auto;
         }
+    }
+
+    @media (max-width: 1200px) {
+        .footer-links-1 li {
+            display: inline-block !important;
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+
+
     }
 
     .footer-widget {
@@ -42,28 +57,33 @@
             <div class="row">
                 <div class="col-xl-3 me-auto col-sm-8 tbh-footer">
                     <div class="footer-logo mb-3">
-                        <img src="<?= url('icety_assets/logo-footer.svg') ?>" class="w-75 img-fluid">
+                        <a href="https://www.icety.org/" target="_blank">
+                            <img src="<?= url('icety_assets/logo-footer.svg') ?>" class="w-75 img-fluid">
+                        </a>
                     </div>
                     <div class="widget footer-widget text-white">
-                        <p class="text-white" style="font-size: 0.8rem;line-height: 20px">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet</p>
+                        <p class="text-white" style="font-size: 0.8rem;line-height: 20px"></p>
                     </div>
                     <div class="d-flex gap-3 pt-2 mb-5 mb-lg-0  justify-content-center justify-content-md-start">
-                        <a href="#">
+                        <a href="https://www.instagram.com/icetystudio/" target="_blank">
                             <img src="{{ asset('icety_assets') }}/logo-ig.svg" class="img-fluid" />
                         </a>
-                        <a href="#">
+                        <a href="https://id.linkedin.com/company/icety" target="_blank">
                             <img src="{{ asset('icety_assets') }}/logo-linkedin.svg" class="img-fluid" />
                         </a>
-                        <a href="#">
+                        <a href="https://www.youtube.com/channel/UCJMrxaHPEKL3PL1ohFhjbjg?sub_confirmation=1" target="_blank">
                             <img src="{{ asset('icety_assets') }}/logo-youtube.svg" class="img-fluid" />
+                        </a>
+                        <a href="https://wa.me/628119006393" target="_blank">
+                            <img src="{{ asset('icety_assets') }}/logo-wa.svg" class="img-fluid" />
                         </a>
                     </div>
                 </div>
 
-                <div class="col-xl-4 col-sm-6  d-flex d-lg-block justify-content-center text-center text-lg-start">
-                    <div class="footer-widget mb-5 mb-xl-0 pe-0 pe-lg-7" style="width: fit-content;float: inline-end;padding-right: 50px;">
+                <div class="col-xl-2 col-sm-12 pt-lg-5 pt-xl-0 d-flex d-xl-block justify-content-center justify-content-lg-start text-lg-start text-center text-xl-start">
+                    <div class="footer-widget mb-5 mb-xl-0 pe-0 pe-xl-7" style="width: fit-content;float: inline-end;padding-right: 50px;">
                         <h5 class="widget-title">Explore</h5>
-                        <ul class="list-unstyled footer-links">
+                        <ul class="list-unstyled footer-links footer-links-1">
                             <li><a href="<?= url('') ?>">Home</a></li>
                             <li><a href="<?= url('/store#course-section') ?>">Course</a></li>
                             <li><a href="<?= url('/store#course-section') ?>">Event</a></li>
@@ -72,8 +92,19 @@
                     </div>
                 </div>
 
-                <div class="col-xl-5 col-sm-6">
-                    <div class="footer-widget mb-5 mb-xl-0  d-flex flex-column d-lg-block justify-content-center text-center text-lg-start">
+                <div class="col-xl-2 col-sm-12  d-flex d-xl-block justify-content-center justify-content-lg-start text-lg-start text-center text-xl-start">
+                    <div class="footer-widget mb-5 mb-xl-0 pe-0" style="width: fit-content;">
+                        <h5 class="widget-title">The Platform</h5>
+                        <ul class="list-unstyled footer-links footer-links-1">
+                            <li><a href="https://www.openlearning.com">Open Learning</a></li>
+                            <li><a href="https://solutions.openlearning.com/terms-of-service?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Terms of Service</a></li>
+                            <li><a href="https://solutions.openlearning.com/privacy-policy?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-sm-12">
+                    <div class="footer-widget pe-0 mb-5 mb-xl-0  d-flex flex-column d-lg-block justify-content-center text-center text-lg-start">
                         <h5 class="widget-title">Address</h5>
                         <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
@@ -83,8 +114,6 @@
                                 <li>
                                     <h6 class="text-white">Email</h6><a href="#">customercare@iclean.co.id</a>
                                 </li>
-                            </ul>
-                            <ul class="list-unstyled footer-links" style="flex:2">
                                 <li>
                                     <h6 class="text-white">Location</h6><a href="#">
                                         Wisma BCA - BSD City Wing A lt.1,
@@ -92,6 +121,9 @@
                                         Serpong Sub-District, South Tangerang City, Banten 15322
                                 </li>
                             </ul>
+                            <!-- <ul class="list-unstyled footer-links" style="flex:2"> -->
+
+                            <!-- </ul> -->
                         </div>
                     </div>
                 </div>
