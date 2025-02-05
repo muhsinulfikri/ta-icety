@@ -12,6 +12,7 @@
 
     <!-- Mobile Specific Meta-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ asset('assets') }}/images/favicon.ico">
     <!-- bootstrap.min css -->
     <link rel="stylesheet" href="{{ asset('assets_new') }}/css/bootstrap.css">
     <!-- Iconfont Css -->
