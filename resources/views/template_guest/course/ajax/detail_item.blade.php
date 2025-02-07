@@ -43,8 +43,9 @@
                             `<iframe src="${embedUrl}" style="width:600px; height:500px;" frameborder="0"></iframe>`
                         );
                     }else {
+                        const link_file = file ? file : materiLink;
                         $('#document-frame').html(
-                            `<iframe src="${file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
+                            `<iframe src="${link_file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
                         );
                     }
                 }
@@ -52,44 +53,49 @@
         </section>
         <hr>
         <section id="video-course">
-        <?php
-            $pattern = '/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/i';
+            <?php
+            $youtubePattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
+            $googleDrivePattern = '/drive\.google\.com\/file\/d\/([^\/]+)\//i';
             $url = $detail_item_course->LINK_YT;
-            if (preg_match('/\/d\/(.*?)\//', $url, $matches)) { ?>
-            <h6 class="fw-semibold pb-3">File Kursus :</h6>
-                <button type="button" class="btn btn-secondary rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
-                    Buka File </button>
-            <?php } else if (preg_match($pattern, $url, $matches)) { ?>
-                <h6 class="fw-semibold pb-3">Video Kursus :</h6>
-                <button type="button" class="btn btn-secondary rounded w-100" data-toggle="modal" data-target="#YTModal" onclick=" window.open('<?= $detail_item_course->LINK_YT ?>')">
-                    Buka Video
+
+            if (preg_match($googleDrivePattern, $url, $matches)) {
+                $fileId = $matches[1];
+                ?>
+                <h6 class="fw-semibold pb-3">File Kursus :</h6>
+                <button type="button" class="btn btn-secondary rounded w-100" data-bs-toggle="modal" data-bs-target="#YTModal">
+                    Open File
                 </button>
-            <?php } else {
-                echo '<h6>Video cannot be opened. Contact instructor for more information.</h6>';
-            }
-            ?>
-            <!-- <div class="modal fade" id="YTModal">
+            <?php } elseif (preg_match($youtubePattern, $url, $matches)) {
+                $videoId = $matches[1];
+                ?>
+                <h6 class="fw-semibold pb-3">Video Kursus :</h6>
+                <button type="button" class="btn btn-secondary rounded w-100" data-bs-toggle="modal" data-bs-target="#YTModal">
+                    Open Video
+                </button>
+            <?php } else { ?>
+                <h6>Video cannot be opened. Contact the instructor for more information.</h6>
+            <?php } ?>
+
+            <div class="modal fade" id="YTModal">
                 <div class="modal-dialog modal-lg modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="YTModalTitle"><?= $detail_item_course->TITLE ?></h5>
-                            <button type="button" class="btn btn-secondary" id="btn-modal-close" data-dismiss="modal">
+                            <h5 class="modal-title"><?= $detail_item_course->TITLE ?></h5>
+                            <button type="button" class="btn btn-secondary" id="btn-modal-close" data-bs-dismiss="modal">
                                 <i class="bi bi-x"></i>
                             </button>
                         </div>
                         <div class="modal-body">
                             <?php
-                            $pattern = '/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/i';
-                            $url = $detail_item_course->LINK_YT;
-                            if (preg_match('/\/d\/(.*?)\//', $url, $matches)) {
-                                echo '<iframe id="video-frame" src="https://drive.google.com/file/d/' . $matches[1] . '/preview" class="w-100 d-none" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
-                            } else if (preg_match($pattern, $url, $matches)) {
-                                echo '<iframe id="video-frame" src="https://www.youtube.com/embed/' . $matches[1] . '" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
+                            if (!empty($fileId)) {
+                                echo '<iframe id="video-frame" src="https://drive.google.com/file/d/' . $fileId . '/preview" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
+                            } elseif (!empty($videoId)) {
+                                echo '<iframe id="video-frame" src="https://www.youtube.com/embed/' . $videoId . '" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
                             } else {
-                                echo '<h6>Video cannot be opened. Contact instructor for more information.</h6>';
+                                echo '<h6>Video cannot be opened. Contact the instructor for more information.</h6>';
                             }
                             ?>
-                            <div id="loading-message" class=" rounded-5 p-3 pb-4 h-auto d-flex flex-column">
+                            <div id="loading-message" class="rounded-5 p-3 pb-4 h-auto d-flex flex-column">
                                 <div class="d-flex justify-content-center">
                                     <img src="https://assets.materialup.com/uploads/b68f4460-aaa9-4e19-99d8-232dfea1c537/preview.gif" alt="Loader.gif" style="max-width: 50%;" />
                                 </div>
@@ -97,7 +103,7 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
         </section>
         <hr>
         <section id="desc-course">
