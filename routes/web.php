@@ -101,6 +101,10 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('instructor/accept', 'InstructorController@accept');
     Route::post('instructor/decline', 'InstructorController@decline');
 
+    Route::get('redeem-code/', 'RedeemCodeController@index');
+    Route::post('redeem-code/submit', 'RedeemCodeController@submit');
+    Route::get('redeem-code/excell/{id}', 'RedeemCodeController@gen_excell');
+
     // Koperasi Controller
     Route::get('bentuk', 'KoperasiController@index_bentuk');
     Route::post('bentuk/store', 'KoperasiController@store_bentuk');
