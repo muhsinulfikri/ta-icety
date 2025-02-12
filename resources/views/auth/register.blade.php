@@ -12,6 +12,7 @@
                     <form class="fw-normal" action="<?= url('register/store') ?>" method="POST">
                         @csrf
                         <div id="form-1">
+
                             <div class="my-4 float-label-control">
                                 <input type="text"
                                     class="form-control input-text woocommerce-Input woocommerce-Input--text"
@@ -26,6 +27,15 @@
                             </div>
                             <div class="my-4 float-label-control">
                                 <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Agency" name="Agency/Univ" aria-describedby="" required>
+                            </div>
+                            <div class="my-4 float-label-control">
+                                <select name="category_user" id="category_user" class="form-control form-select pe-5" style="color: #999999" required>
+                                    <option value="" disabled selected>Choose your Category</option>
+                                    <option value="1">All</option>
+                                    <option value="2">Perusahaan</option>
+                                    <option value="3">Umum</option>
+                                    <option value="4">Instansi</option>
+                                </select>
                             </div>
                             <div class="my-4 float-label-control">
                                 <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Phone Number" name="Telp Number" aria-describedby="" required>

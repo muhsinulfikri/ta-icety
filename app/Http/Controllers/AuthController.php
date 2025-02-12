@@ -141,6 +141,7 @@ class AuthController extends Controller
             // Create a new user instance
             $User = new User();
             $User->ID_USER = $KODE_USER;
+            $User->ID_CATEGORY_USER = $req->input('category_user');
             $User->NAME = $req->input('name');
             $User->EMAIL = $req->input('email');
             $User->PASS = hash('sha256', md5($req->input('password')));

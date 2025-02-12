@@ -51,6 +51,7 @@
                             <th>No</th>
                             <th>Name</th>
                             <th>Discount</th>
+                            <th>Kuota</th>
                             <th>Expired Date</th>
                             <th>Action</th>
                         </tr>
@@ -64,6 +65,7 @@
                                 <td><?= $number ?></td>
                                 <td><?= $item->PROMO_NAME ?></td>
                                 <td><?= $item->AMMOUNT ?></td>
+                                <td><?= $item->KUOTA ?></td>
                                 <td><?= $item->EXP_DATE ?></td>
                                 <td>
                                     <button type="button"
@@ -120,12 +122,24 @@
                         <div class="input_discount"></div>
                     </div>
                     <div class="form-group mb-3">
+                        <label>Kuota<span class="text-danger">*</span></label>
+                        <input placeholder="ex: 100" type="number" name="kuota" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
                         <label>Discount For<span class="text-danger">*</span></label>
                         <select name="promo_for" id="promo_for" class="form-control">
                             <option value="0">All</option>
                             <option value="1">Course's</option>
                             <option value="2">Event's</option>
                             <option value="3">Book's</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Category User<span class="text-danger">*</span></label>
+                        <select name="category_user" id="category_user" class="form-control">
+                            <option value="0">All</option>
+                            <option value="1">Instructor</option>
+                            <option value="2">Student</option>
                         </select>
                     </div>
                     <div class="form-group mb-3">
