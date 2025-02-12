@@ -52,6 +52,16 @@
                         value="<?= $item['PIL_C'] ?>">
                 </div>
             </div>
+            <div class="radio col-md-12 mb-2">
+                <div class="row">
+                    <input id="radio4{{ $no }}{{ $index }}"
+                        name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio"
+                        value="d" <?= $item['KUNCI'] == 'd' ? 'checked' : '' ?>>
+                    <label for="radio4{{ $no }}{{ $index }}" class="mr-1">D. </label>
+                    <input type="text" class="form-control col-md-10" name="jawaban_d[]"
+                        value="<?= $item['PIL_D'] ?>">
+                </div>
+            </div>
         </div>
     </div>
 </div>
