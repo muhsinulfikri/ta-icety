@@ -166,6 +166,8 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     // VOUCHER
     Route::get('vouchers', 'guest_controller\PromoGuest@index');
     Route::post('voucher/store', 'guest_controller\PromoGuest@claimedVoucher');
+    
+    Route::post('voucher/trial-code', 'RedeemCodeController@redeem_course_using_code');
 
 
     //PAYMENT & CART

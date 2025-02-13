@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -162,7 +163,7 @@ class RedeemCodeController extends Controller
             ORDER BY 
                 trc.ID_CATEGORY_USER ASC
         ");
-        
+
         $spreadsheet = new Spreadsheet();
 
         $ObjSheet = $spreadsheet->getActiveSheet();
@@ -191,7 +192,7 @@ class RedeemCodeController extends Controller
             $ObjSheet->setCellValue('D' . $rowStart, $item->KODE)->getStyle('D' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('E' . $rowStart, $item->NAME_CATEGORY_USER)->getStyle('E' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('F' . $rowStart, $item->EXPIRED_DATE)->getStyle('F' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
-            
+
             $rowStart++;
         }
 
@@ -213,5 +214,171 @@ class RedeemCodeController extends Controller
         $sixDigitID = strtoupper(substr($hash, 0, 6));
         $generatedID = $first . '_' . $sixDigitID;
         return $generatedID;
+    }
+
+    public function redeem_course_using_code(Request $req)
+    {
+        $trialCode = $req->input('trial_code');
+        $dataCode = DB::selectOne("
+            SELECT
+                trc.ID_REDEEM ,
+                trc.ID_ACTIVITY ,
+                trc.ID_CATEGORY_USER ,
+                trc.EXPIRED_DATE ,
+                trc.KODE ,
+                trc.IS_REDEEM ,
+                a.TITLE_ACTIVITY ,
+                a.PRICE_ACTIVITY 
+            FROM
+                tb_redeem_code trc 
+            LEFT JOIN activity a ON
+                a.ID_ACTIVITY = trc.ID_ACTIVITY
+            WHERE
+                trc.KODE = '" . $trialCode . "'
+        ");
+
+        $userData = DB::selectOne("
+            SELECT
+                u.ID_CATEGORY_USER
+            FROM
+                user u
+            WHERE
+                u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+        ");
+
+        $dataAct = DB::selectOne("
+            SELECT
+                o.ID_PRODUCT ,
+                o.ID_PAY
+            FROM
+                `order` o
+            WHERE
+                o.ID_PRODUCT = '" . $dataCode->ID_ACTIVITY . "'
+                AND
+                o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+                AND
+                o.ID_PAY IS NOT NULL
+        ");
+
+        if (empty($dataCode)) {
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: Code not found'
+            ], 200);
+        }
+
+        if ($userData->ID_CATEGORY_USER !== $dataCode->ID_CATEGORY_USER) {
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: Code cannot used in your category'
+            ], 200);
+        }
+
+        if (!empty($dataCode) && $dataCode->IS_REDEEM === 1) {
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: Code has been used'
+            ], 200);
+        }
+
+        if (!empty($dataCode) && strtotime($dataCode->EXPIRED_DATE . ' 00:00:00') < strtotime(date('Y-m-d H:i:s'))) {
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: Code has been expired'
+            ], 200);
+        }
+
+        if (!empty($dataAct)) {
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: You already have claim course "' . $dataCode->TITLE_ACTIVITY . '"'
+            ], 200);
+        }
+
+        try {
+            // Insert to Payment
+            $data_payment = array(
+                "ID_PAY" => $dataCode->ID_REDEEM,
+                "XENDIT_ID" => NULL,
+                "KODE_USER" => session('user')[0]->get('ID_USER'),
+                "DATE_CREATED" => date("Y-m-d H:i:s"),
+                "DATE_PAY" => date("Y-m-d H:i:s")
+            );
+            DB::beginTransaction();
+            DB::table("payment")->insert($data_payment);
+            DB::commit();
+
+            // Check Order Exist or Not, If Exist it will update, If Not it will Insert
+            $data_order = array(
+                "ID_ORDER" => 'ORD_' . $dataCode->KODE,
+                "ID_PRODUCT" => $dataCode->ID_ACTIVITY,
+                "ID_PAY" => $dataCode->ID_REDEEM,
+                "ID_USER" => session('user')[0]->get('ID_USER'),
+                "PRICE_ORDER" => $dataCode->PRICE_ACTIVITY,
+                "LOG_TIME" => date("Y-m-d H:i:s")
+            );
+            $data_where = [
+                'ID_PRODUCT' => $dataCode->ID_ACTIVITY,
+                'ID_USER' => session('user')[0]->get('ID_USER')
+            ];
+            DB::beginTransaction();
+            DB::table("order")->updateOrInsert($data_where, $data_order);
+            DB::commit();
+
+            // Insert to mapping course
+            $this->InsertDataMapping($dataCode->ID_ACTIVITY);
+
+            // Update status redeem code to used
+            $data_order = array(
+                "ID_USER" => session('user')[0]->get('ID_USER'),
+                "IS_REDEEM" => 1,
+                "TGL_REDEEM" => date("Y-m-d H:i:s")
+            );
+            $data_where = [
+                'ID_REDEEM' => $dataCode->ID_REDEEM
+            ];
+            DB::beginTransaction();
+            DB::table("tb_redeem_code")->where($data_where)->update($data_order);
+            DB::commit();
+
+            return response([
+                'status' => true,
+                'msg' => 'Successfully used trial code'
+            ], 200);
+        } catch (Exception $err) {
+            DB::rollBack();
+
+            return response([
+                'status' => false,
+                'msg' => 'Failed to use code, error: ' . $err->getMessage()
+            ], 200);
+        }
+    }
+
+    public function InsertDataMapping($item)
+    {
+        $courseModel = new Course();
+        $data_course = $courseModel->get_course($item);
+        $condition = "item_course.ID_COURSE = '" . $data_course->ID_COURSE . "'";
+        $data_itemCourse = $courseModel->get_item_course($condition);
+        for ($i = 0; $i < count($data_itemCourse); $i++) {
+            if ($i == 0) {
+                $data_mapping = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $item,
+                    "ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
+                    "STATUS" => 1
+                );
+            } else {
+                $data_mapping = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $item,
+                    "ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
+                    "STATUS" => 0
+                );
+            }
+
+            DB::table('mapping_course')->insert($data_mapping);
+        }
     }
 }
