@@ -27,6 +27,15 @@
         <div class="my-3 float-label-control">
             <input type="text" name="name_user" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Nama" value="<?= $data_personal->NAME ?>" readonly>
         </div>
+        <?php
+        $categoryUser = ($data_personal->ID_CATEGORY_USER == 2) ? "Perusahaan" :
+                        (($data_personal->ID_CATEGORY_USER == 3) ? "Umum" :
+                        (($data_personal->ID_CATEGORY_USER == 4) ? "Instansi" : "All"));
+        ?>
+        <h5 class="text-black ps-1 mt-4">Kategori Pengguna</h5>
+        <div class="my-3 float-label-control">
+            <input type="text" name="category_user" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Kategori Pengguna" value="<?= $categoryUser ?>" readonly disabled>
+        </div>
         <h5 class="text-black ps-1 mt-4">Phone Number</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="no_hp" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Number" value="<?= $data_personal->TELP ?>" readonly>
