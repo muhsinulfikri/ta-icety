@@ -33,6 +33,8 @@ class PromoController extends Controller
             'PROMO_NAME'    => $req->input('promo_name'),
             'AMMOUNT'       => $req->input('discount'),
             'UNIT'          => $req->input('unit'),
+            'KUOTA'         => $req->input('kuota'),
+            'CATEGORY_USER' => $req->input('category_user'),
             'PROMO_FOR'     => $req->input('promo_for'),
             'EXP_DATE'      => $req->input('exp_date'),
             'LOG_TIME'      => date('Y-m-d H:i:s')

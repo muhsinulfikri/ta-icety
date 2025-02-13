@@ -20,22 +20,63 @@ class PromoGuest extends Controller
 	// PROMO CONTROLLER
 	public function index()
 	{
-		$data['title'] = 'Promo';
-        $data['promo'] = DB::select("
-            SELECT
-                promo.*
-            FROM
-                promo
-            LEFT JOIN
-                claimed_promo
-            ON
-                promo.ID_PROMO = claimed_promo.ID_PROMO
-            WHERE
-                claimed_promo.ID_PROMO IS NULL
-        ");
+        $data['title'] = 'Promo';
+        if(session('user')[0]['ID_ROLE'] == 2){
+            $data['promo'] = DB::select("
+                SELECT
+                    promo.*
+                FROM
+                    promo
+                LEFT JOIN
+                    claimed_promo
+                ON
+                    promo.ID_PROMO = claimed_promo.ID_PROMO
+                WHERE
+                    claimed_promo.ID_PROMO IS NULL
+                AND
+                    promo.KUOTA > 0
+                AND
+                    promo.CATEGORY_USER = 1
+            ");
+        } else if(session('user')[0]['ID_ROLE'] == 3){
+            $data['promo'] = DB::select("
+                SELECT
+                    promo.*
+                FROM
+                    promo
+                LEFT JOIN
+                    claimed_promo
+                ON
+                    promo.ID_PROMO = claimed_promo.ID_PROMO
+                WHERE
+                    claimed_promo.ID_PROMO IS NULL
+                AND
+                    promo.KUOTA > 0
+                AND
+                    promo.CATEGORY_USER = 2
+            ");
+        } else {
+            $data['promo'] = DB::select("
+                SELECT
+                    promo.*
+                FROM
+                    promo
+                LEFT JOIN
+                    claimed_promo
+                ON
+                    promo.ID_PROMO = claimed_promo.ID_PROMO
+                WHERE
+                    claimed_promo.ID_PROMO IS NULL
+                AND
+                    promo.KUOTA > 0
+                AND
+                    promo.CATEGORY_USER = 0
+            ");
+        }
+
         // dd($data)
         if($data == null){
-            
+
         }
         return
             view('template.header', $data).
@@ -62,6 +103,7 @@ class PromoGuest extends Controller
         }
         // dd($data, $claimed_promo);
         DB::table('claimed_promo')->insert($data);
+        DB::update('UPDATE promo SET KUOTA = KUOTA -1 where ID_PROMO = "'.$data['ID_PROMO'].'" AND KUOTA > 0');
         return redirect('vouchers')->with('succ_msg','Successfully Claim Voucher');
     }
 }

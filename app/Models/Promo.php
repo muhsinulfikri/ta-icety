@@ -32,26 +32,26 @@ class Promo extends Model
     public function getPromo($id_user)
     {
         $data = DB::select('
-        SELECT 
-            promo.ID_PROMO, 
-            promo.PROMO_NAME, 
-            promo.AMMOUNT, 
+        SELECT
+            promo.ID_PROMO,
+            promo.PROMO_NAME,
+            promo.AMMOUNT,
             promo.EXP_DATE
-        FROM 
+        FROM
             claimed_promo
-        LEFT JOIN 
+        LEFT JOIN
             promo ON promo.ID_PROMO = claimed_promo.ID_PROMO
-        WHERE 
+        WHERE
             claimed_promo.ID_USER = "'.$id_user.'"
         AND claimed_promo.STATUS = 0;
         ');
         return $data;
     }
-    
+
     public function getPromoById($id_promo)
     {
         $this->db->select('promo.ID_PROMO, promo.PROMO_NAME, promo.AMMOUNT, promo.EXP_DATE');
-        $this->db->join('promo', 'promo.ID_PROMO = claimed_promo.ID_PROMO', 'left');        
+        $this->db->join('promo', 'promo.ID_PROMO = claimed_promo.ID_PROMO', 'left');
         return $this->db->get_where('claimed_promo', ['claimed_promo.ID_PROMO' => $id_promo])->row_array();
     }
 

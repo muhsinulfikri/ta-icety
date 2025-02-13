@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use App\Mail\MailSender;
+use Exception;
 use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
@@ -141,6 +142,7 @@ class AuthController extends Controller
             // Create a new user instance
             $User = new User();
             $User->ID_USER = $KODE_USER;
+            $User->ID_CATEGORY_USER = $req->input('category_user');
             $User->NAME = $req->input('name');
             $User->EMAIL = $req->input('email');
             $User->PASS = hash('sha256', md5($req->input('password')));
@@ -161,22 +163,27 @@ class AuthController extends Controller
                 'link' => url('verification/confirm?token=' . $token_key),
                 'button' => "Verify",
             ];
-            $mail = new MailSender($details);
-            $mail->subject("Email Verification");
-            Mail::to($req->input('email'))->send($mail);
+            try {
+                $mail = new MailSender($details);
+                $mail->subject("Email Verification");
+                Mail::to($req->input('email'))->send($mail);
+                $formDataToken = [
+                    'ID_USER' => $KODE_USER,
+                    'KEY' => $token_key,
+                    'TYPE' => 2,
+                    'STATUS' => 0,
+                    'LOG_TIME' => date('Y-m-d H:i:s'),
+                ];
+                DB::table('token')->insert($formDataToken);
+
+                return redirect('login')->with('succ_msg', 'Your account is registered, Please verify your account in your email before login!');
+            } catch(Exception $e){
+                return redirect('register')->with('error_msg', 'Failed to send email. Please try again later!');
+            }
             // END SEND EMAIL VERIFICATION
 
             // SAVE TOKEN
-            $formDataToken = [
-                'ID_USER' => $KODE_USER,
-                'KEY' => $token_key,
-                'TYPE' => 2,
-                'STATUS' => 0,
-                'LOG_TIME' => date('Y-m-d H:i:s'),
-            ];
-            DB::table('token')->insert($formDataToken);
 
-            return redirect('login')->with('succ_msg', 'Your account is registered, Please verify your account in your email before login!');
         } else {
             return redirect('register')->with('error_msg', 'Email already Registered!');
         }

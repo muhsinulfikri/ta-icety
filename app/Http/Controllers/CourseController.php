@@ -129,6 +129,7 @@ class CourseController extends Controller
             $course = [
                 'ID_COURSE'             => $this->GenerateUniqID('ACT', $req->input('announcement')),
                 'ID_ACTIVITY'           => $activity['ID_ACTIVITY'],
+                'ALIAS'                 => $req->input('alias_course'),
                 'PENGUMUMAN'            => $req->input('announcement'),
                 'DESKRIPSI_COURSE'      => $req->input('desc_course'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
@@ -236,6 +237,7 @@ class CourseController extends Controller
                 a.STATUS ,
                 a.SERTIF_IMAGE ,
                 c.ID_COURSE ,
+                c.ALIAS,
                 c.REQUIREMENT ,
                 c.PENGUMUMAN ,
                 c.DESKRIPSI_COURSE ,
@@ -320,7 +322,7 @@ class CourseController extends Controller
                 $data['no_index'] = 0;
 
                 foreach ($dataquiz as $quiz) {
-                    list($quiz->PIL_A, $quiz->PIL_B, $quiz->PIL_C) = explode(";", $quiz->PIL_JWB);
+                    list($quiz->PIL_A, $quiz->PIL_B, $quiz->PIL_C, $quiz->PIL_D) = explode(";", $quiz->PIL_JWB);
                     $data['quiz'][$quiz->ID_QUIZ][] = [
                         'ID_DETAIL'  => $quiz->ID_DETAIL,
                         'ID_QUIZ'    => $quiz->ID_QUIZ,
@@ -329,6 +331,7 @@ class CourseController extends Controller
                         'PIL_A'      => $quiz->PIL_A,
                         'PIL_B'      => $quiz->PIL_B,
                         'PIL_C'      => $quiz->PIL_C,
+                        'PIL_D'      => $quiz->PIL_D,
                         'KUNCI'      => $quiz->KUNCI,
                         'ORDER_LIST' => $quiz->ORDER_LIST,
                         'NO'         => $data['no_index']
@@ -394,6 +397,7 @@ class CourseController extends Controller
 
             $course = [
                 'ID_ACTIVITY'           => $req->input('ID_ACTIVITY'),
+                'ALIAS'                 => $req->input('alias_course'),
                 'PENGUMUMAN'            => $req->input('announcement'),
                 'DESKRIPSI_COURSE'      => $req->input('desc'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
@@ -497,6 +501,7 @@ class CourseController extends Controller
         $jawaban_a              = $req->input('jawaban_a');
         $jawaban_b              = $req->input('jawaban_b');
         $jawaban_c              = $req->input('jawaban_c');
+        $jawaban_d              = $req->input('jawaban_d');
         $order_list_quiz        = $req->input('order_list_question');
         $question               = $req->input('question');
         $kunci_soal             = $req->input('kunci_soal');
@@ -509,7 +514,7 @@ class CourseController extends Controller
                     'ID_QUIZ'       => $id_quiz,
                     'ID_COURSE'     => $data['ID_COURSE'],
                     'SOAL'          => $questions[$j],
-                    'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo]]),
+                    'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
                     'KUNCI'         => $kunci_soal[$i][$j],
                     'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                 ];
@@ -771,6 +776,7 @@ class CourseController extends Controller
         $jawaban_a          = $req->input('jawaban_a');
         $jawaban_b          = $req->input('jawaban_b');
         $jawaban_c          = $req->input('jawaban_c');
+        $jawaban_d          = $req->input('jawaban_d');
         $order_list_quiz    = $req->input('order_list_question');
         $question           = $req->input('question');
         $kunci_soal         = $req->input('kunci_soal');
@@ -786,7 +792,7 @@ class CourseController extends Controller
                         'ID_QUIZ'       => $id_quiz,
                         'ID_COURSE'     => $data['ID_COURSE'],
                         'SOAL'          => $questions[$j],
-                        'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo]]),
+                        'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
                         'KUNCI'         => $kunci_soal[$i][$j],
                         'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                     ];
