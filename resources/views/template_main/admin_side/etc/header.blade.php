@@ -51,6 +51,8 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.6/dist/sweetalert2.all.min.js">
     </script>
 
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
 </head>
 
 <body>
@@ -98,7 +100,7 @@
                                             <p class="m-b-0 text-dark font-weight-semibold">
                                                 <?= session('user')[0]['NAME'] ?></p>
                                             <p class="m-b-0 opacity-07">
-                                                <?= (session('user')[0]['ID_ROLE'] == 1 ? 'Admin' : 'Instructor' ) ?>
+                                                <?= (session('user')[0]['ID_ROLE'] == 1 ? 'Admin' : 'Instructor') ?>
                                             </p>
                                         </div>
                                     </div>
