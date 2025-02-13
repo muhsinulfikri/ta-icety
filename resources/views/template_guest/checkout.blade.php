@@ -18,7 +18,6 @@
         </div>
     </div>
 </section>
-
 <section class="woocommerce single page-wrapper">
     <div class="container">
         <div class="row">

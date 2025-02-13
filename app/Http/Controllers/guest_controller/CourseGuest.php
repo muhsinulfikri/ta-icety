@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Category;
 use App\Models\Certificate;
 use App\Models\Ebook;
+use Exception;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -53,6 +54,7 @@ class CourseGuest extends Controller
 			view('template_guest.course.course', $data) .
 			view('template.footer', $data);
 	}
+
 	public function detailCourse()
 	{
 		if (session('user') == null) {
@@ -62,6 +64,7 @@ class CourseGuest extends Controller
 
 		$data['id_activity'] = $_GET['id_activity'];
 		$data['course'] = $this->courseModel->get_course($data['id_activity']);
+
 		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
@@ -79,9 +82,10 @@ class CourseGuest extends Controller
 			ORDER BY ID_ITEM DESC
 		');
 
-		$condition_all_mapping =
-			"ID_USER = '" . session('user')[0]->get('ID_USER') .
-			"'AND ID_ACTIVITY = '" . $data['id_activity'] . "'";
+		$condition_all_mapping = "
+			ID_USER = '" . session('user')[0]->get('ID_USER') .
+			"'AND ID_ACTIVITY = '" . $data['id_activity'] . "'
+		";
 		// $data['data_all_mapping'] = $this->courseModel->get_all_mapping($condition_all_mapping);
 		$data['data_all_mapping'] = DB::select("
 			SELECT
@@ -102,7 +106,7 @@ class CourseGuest extends Controller
 			WHERE
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 				AND ID_QUIZ = " . $data['last_item'][0]->ID_ITEM . "
-			");
+		");
 
 		$cek_quiz = DB::select("
 			SELECT
@@ -112,7 +116,7 @@ class CourseGuest extends Controller
 			WHERE
 				TYPE = 2
 				AND ID_COURSE = '" . $data['course']->ID_COURSE . "'
-			");
+		");
 
 		if (count($data['last_item']) == count($data['data_all_mapping']) && (!empty($cek_nilai->NILAI) ? $cek_nilai->NILAI == 100 : false)) {
 			$data['tot_proggress'] = 100;
@@ -136,9 +140,9 @@ class CourseGuest extends Controller
 		");
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
 			$bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-            $countSertif = DB::table('sertifikat_activity')
-                            ->where('ID_ACTIVITY', $data['id_activity'])
-                            ->count() + 1;
+			$countSertif = DB::table('sertifikat_activity')
+				->where('ID_ACTIVITY', $data['id_activity'])
+				->count() + 1;
 			$sertif_number = $countSertif . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
 			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE);
 			$data_sertif = array(
@@ -157,6 +161,7 @@ class CourseGuest extends Controller
 		} else {
 			$data['sertif'] = $sertifCheck;
 		}
+
 		//get nilai
 		$data['nilai'] = DB::selectOne("
 			SELECT
@@ -166,6 +171,7 @@ class CourseGuest extends Controller
 			WHERE
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 		");
+
 		// KOMENTAR
 		$data['komentar'] = DB::select("
 			SELECT
@@ -181,10 +187,22 @@ class CourseGuest extends Controller
 				tk.ID_ACTIVITY = '" . $data['id_activity'] . "'
 		");
 		$data['checkout'] = $this->checkoutModel->get_all_order(session('user')[0]->get('ID_USER'));
+
+		$orderData = Checkout::where(["ID_PRODUCT" => $data['id_activity'], "ID_USER" => session('user')[0]->get('ID_USER')])
+			->orderBy('LOG_TIME', 'DESC')
+			->first();
+			
+		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
+			return view('template.header', $data) .
+				view('template_guest.course.course_detail_expired', $data) .
+				view('template.footer', $data);
+		}
+
 		return view('template.header', $data) .
 			view('template_guest.course.course_detail', $data) .
 			view('template.footer', $data);
 	}
+
 	public function getDetailItemCourse()
 	{
 		$data['id_item'] = $_POST['id_item'];
@@ -294,6 +312,7 @@ class CourseGuest extends Controller
 		');
 		return view('template_guest.course.ajax.detail_item', $data);
 	}
+
 	public function getMappingCourse()
 	{
 		$condition_all_mapping = "ID_USER = '" . session('user')[0]->get('ID_USER') . "' AND ID_ACTIVITY = '" . $_POST['id_activity'] . "'";
@@ -308,6 +327,7 @@ class CourseGuest extends Controller
 		');
 		echo json_encode($data_all_mapping);
 	}
+
 	public function infoCourse()
 	{
 		$data['title'] = 'Course';
@@ -365,6 +385,7 @@ class CourseGuest extends Controller
 			view('template_guest.course.course_info', $data) .
 			view('template.footer', $data);
 	}
+
 	public function QuizEvaluation()
 	{
 		$id_quiz = $_POST['id_quiz'];
@@ -445,6 +466,7 @@ class CourseGuest extends Controller
 
 		echo $nilai;
 	}
+
 	public function searchCourse()
 	{
 		$keyword = $_GET['keyword'];
@@ -452,6 +474,7 @@ class CourseGuest extends Controller
 		return
 			view('template_guest.course.ajax.item_search', $data);
 	}
+
 	public function getFilterByKat(Request $req)
 	{
 		// $condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND course.KATEGORI = '" . $_POST['category'] . "'" : "WHERE activity.TYPE_ACTIVITY = 1";
@@ -546,5 +569,59 @@ class CourseGuest extends Controller
 		DB::table('tb_komentar')->insert($data);
 		return redirect()->back();
 	}
+
+	public function buyBack(Request $req)
+	{
+		$idAct = $req->input('id_activity');
+
+		$dataOrder = DB::selectOne("
+			SELECT 
+				o.* ,
+				a.TITLE_ACTIVITY 
+			FROM 
+				`order` o 
+			LEFT JOIN activity a ON
+				a.ID_ACTIVITY = o.ID_PRODUCT 
+			WHERE 
+				o.ID_PRODUCT = ?
+				AND 
+				o.ID_USER = ?
+			ORDER BY 
+				o.LOG_TIME DESC
+		", [$idAct, Session::get('user')[0]->get('ID_USER')]);
+
+		$slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $dataOrder->TITLE_ACTIVITY));
+		try {
+			// Check Order Exist or Not, If Exist it will update, If Not it will Insert
+			$data_order = array(
+				"ID_ORDER" => $this->GenerateUniqChild('ORD', uniqid()),
+				"ID_PRODUCT" => $dataOrder->ID_PRODUCT,
+				"ID_USER" => $dataOrder->ID_USER,
+				"ID_PAY" => NULL,
+				"PRICE_ORDER" => $dataOrder->PRICE_ORDER,
+				"MAPPING_COUNT" => $dataOrder->MAPPING_COUNT,
+				"COURSE_COMPLETED" => $dataOrder->COURSE_COMPLETED,
+				"LOG_TIME" => date("Y-m-d H:i:s"),
+				"EXPIRED_DATE" => NULL
+			);
+			DB::beginTransaction();
+			DB::table("order")->insert($data_order);
+			DB::commit();
+
+			return redirect('course/detail/' . $slug . '?id_activity=' . $idAct)->with('succ_msg', 'Successfully create buy back transaction');
+		} catch (Exception $err) {
+			DB::rollBack();
+			return redirect('course/detail/' . $slug . '?id_activity=' . $idAct)->with('err_msg', 'Failed to buy back, error: ' . $err->getMessage());
+		}
+	}
 	// END COURSE CONTROLLER
+
+	public function GenerateUniqChild($first, $val)
+	{
+		$input = $val;
+		$hash = md5($input);
+		$sixDigitID = strtoupper(substr($hash, 0, 6));
+		$generatedID = $first . '_' . $sixDigitID;
+		return $generatedID;
+	}
 }

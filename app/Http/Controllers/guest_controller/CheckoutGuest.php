@@ -68,6 +68,7 @@ class CheckoutGuest extends Controller
 			view('template_guest.checkout', $data) .
 			view('template.footer', $data);
 	}
+
 	public function purchase()
 	{
 		(session('user')[0] == null) ? redirect('login') : "";
@@ -149,6 +150,7 @@ class CheckoutGuest extends Controller
 			view('template_guest.purchase', $data) .
 			view('template.footer', $data);
 	}
+
 	public function addOrder()
 	{
 		$id_activity = $_GET['id_activity'];
@@ -249,6 +251,7 @@ class CheckoutGuest extends Controller
 			'Message' => (!empty(session('user')[0]->get('ID_USER'))) ? $msg : 'Please login first!'
 		));
 	}
+
 	public function deleteOrder()
 	{
 		try {
@@ -277,6 +280,7 @@ class CheckoutGuest extends Controller
 			echo 'Full Error: ', json_encode($e->getFullError()), PHP_EOL;
 		}
 	}
+
 	// Access payment gateway
 	public function get_order_id(Request $request)
 	{
@@ -344,9 +348,12 @@ class CheckoutGuest extends Controller
 
 				$data_order = [
 					"ID_PAY" => $ID_PAY,
-					"LOG_TIME" => date("Y-m-d H:i:s")
-				];
+					"LOG_TIME" => date("Y-m-d H:i:s"),
+					"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+				];				
+				
 				DB::table('order')
+					->where('ID_ORDER', $_response->ID_ORDER)
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
 					->where('ID_USER', session('user')[0]['ID_USER'])
 					->update($data_order);
@@ -363,6 +370,7 @@ class CheckoutGuest extends Controller
 			]);
 		}
 	}
+
 	public function check_status(Request $req)
 	{
 		(session('user')[0]->get('ID_USER') == null) ? redirect('login') : "";
@@ -444,7 +452,8 @@ class CheckoutGuest extends Controller
         }
 	}
 
-	public function check_payment_status(Request $req) {
+	public function check_payment_status(Request $req) 
+	{
 		$id_item = [];
 		$data_trans = DB::selectOne("
 			SELECT
@@ -534,31 +543,37 @@ class CheckoutGuest extends Controller
 
 		return redirect('checkouts');
 	}
+
 	public function InsertDataMapping($item)
 	{
 		$data_course = $this->courseModel->get_course($item);
 		$condition = "item_course.ID_COURSE = '" . $data_course->ID_COURSE . "'";
 		$data_itemCourse = $this->courseModel->get_item_course($condition);
-		for ($i = 0; $i < count($data_itemCourse); $i++) {
-			if ($i == 0) {
-				$data_mapping = array(
-					"ID_USER" => session('user')[0]->get('ID_USER'),
-					"ID_ACTIVITY" => $item,
-					"ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
-					"STATUS" => 1
-				);
-			} else {
-				$data_mapping = array(
-					"ID_USER" => session('user')[0]->get('ID_USER'),
-					"ID_ACTIVITY" => $item,
-					"ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
-					"STATUS" => 0
-				);
+		$existMapping = DB::table('mapping_course')->where(['ID_ACTIVITY' => $data_course->ID_ACTIVITY])->get();
+
+		if (empty($existMapping)) {
+			for ($i = 0; $i < count($data_itemCourse); $i++) {
+				if ($i == 0) {
+					$data_mapping = array(
+						"ID_USER" => session('user')[0]->get('ID_USER'),
+						"ID_ACTIVITY" => $item,
+						"ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
+						"STATUS" => 1
+					);
+				} else {
+					$data_mapping = array(
+						"ID_USER" => session('user')[0]->get('ID_USER'),
+						"ID_ACTIVITY" => $item,
+						"ID_ITEM" => $data_itemCourse[$i]->ID_ITEM,
+						"STATUS" => 0
+					);
+				}
+				// $this->checkoutModel->insert_mapping($data_mapping);
+				DB::table('mapping_course')->insert($data_mapping);
 			}
-			// $this->checkoutModel->insert_mapping($data_mapping);
-			DB::table('mapping_course')->insert($data_mapping);
 		}
 	}
+
 	public function GenerateUniqID_Order($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
@@ -568,6 +583,7 @@ class CheckoutGuest extends Controller
 		$uniqid = strtoupper($begin);
 		return "ORD_" . $uniqid . substr(md5(time()), 0, 6);
 	}
+
 	public function GenerateUniqID_Transaction($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
@@ -577,6 +593,7 @@ class CheckoutGuest extends Controller
 		$uniqid = strtoupper($begin);
 		return "TRAN_" . $uniqid . substr(md5(time()), 0, 6);
 	}
+	
 	public function GenerateUniqIDPay($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);

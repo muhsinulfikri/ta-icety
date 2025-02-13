@@ -10,7 +10,6 @@
                             <h2 class="course-title bg-white">
                                 <?= $course->TITLE_ACTIVITY ?>
                             </h2>
-
                         </div>
                     </div>
                     <div class="mb-3" style="border: 3px solid black"></div>
@@ -120,9 +119,7 @@
                         <div class="course-widget course-details-info rounded-3 p-0" style="margin: 30px;background: #E3E3E3;">
                             <div class="course-thumbnail mb-0">
                                 <img src="<?= $course->IMAGE_ACTIVITY ?>" alt="" class="img-fluid w-100" />
-
                             </div>
-
                             <ul class="course-sidebar-list py-3 px-4 mt-0">
                                 <li class="border-0">
                                     <div class="d-flex gap-3">
@@ -155,7 +152,6 @@
                                 </li>
 
                             </ul>
-
                         </div>
                     </div>
                 </div>
@@ -530,7 +526,6 @@
         });
     }
 
-
     const readmoreText = document.querySelector('.readmore-text');
     const readmoreBtn = document.querySelector('.readmore-btn');
     const icon = document.getElementById('icon-btn');
@@ -554,7 +549,6 @@
 
     readmoreText.style.height = defaultHeight;
     readmoreBtn.addEventListener('click', toggleExpandedState);
-
 
     // document.addEventListener('contextmenu', event => event.preventDefault());
     // document.onkeydown = (e) => {

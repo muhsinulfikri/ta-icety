@@ -184,6 +184,8 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     //API XENDIT
     Route::post('/payment/get', 'guest_controller\CheckoutGuest@get_payment');
     Route::get('check_payment_status/{any}', 'guest_controller\CheckoutGuest@check_payment_status');
+
+    Route::get('/buyback', 'guest_controller\CourseGuest@buyBack');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {

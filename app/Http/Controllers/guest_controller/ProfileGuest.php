@@ -158,7 +158,7 @@ class ProfileGuest extends Controller
         $data['course'] = [];
         $mycourse = $user->get_my_product();
         foreach ($mycourse as $item) {
-            if ($item->DATA_CHECKING == 1) {
+            if ($item->DATA_CHECKING >= 1) {
                 array_push($data['course'], $item);
             }
         }
