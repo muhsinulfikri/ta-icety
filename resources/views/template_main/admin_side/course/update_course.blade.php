@@ -29,6 +29,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Alias <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="alias_course" placeholder="Alias Course"
+                                required pattern="[A-Z\s]+" title="Only uppercase letters are allowed" oninput="this.value = this.value.toUpperCase()">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Price Course</label>
                         <div class="col-md-5">
                             <input type="number" class="form-control CurrencyInput" name="price" value="">
@@ -219,6 +227,9 @@
     $('input[name="ID_ACTIVITY"]').val(id_act);
     $('input[name="ID_COURSE"]').val(data.ID_COURSE);
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
+    console.log($('input[name="alias_course"]').val(data.ALIAS));
+
+    $('input[name="alias_course"]').val(data.ALIAS)
     if (price == 0) {
         $('#setFree').prop('checked', true);
         $('input[name="price"]').val(0);
