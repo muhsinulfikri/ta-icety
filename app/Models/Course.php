@@ -21,15 +21,15 @@ class Course extends Model
             SELECT
                 activity.*,
                 course.DESKRIPSI_COURSE,
-                kategori.KATEGORI 
+                kategori.KATEGORI
             FROM
                 activity
                 LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
-                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
+                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
             WHERE
-                activity.TYPE_ACTIVITY = 1 
+                activity.TYPE_ACTIVITY = 1
             ORDER BY
-                activity.LOG_TIME DESC 
+                activity.LOG_TIME DESC
                 LIMIT 4");
         return $data;
     }
@@ -39,16 +39,16 @@ class Course extends Model
             SELECT
                 activity.*,
                 course.DESKRIPSI_COURSE,
-                kategori.KATEGORI 
+                kategori.KATEGORI
             FROM
                 activity
                 LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
-                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
+                LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
             WHERE
                 activity.TYPE_ACTIVITY = 1 AND
                 " . implode(' AND ', $condition) . "
             ORDER BY
-                activity.LOG_TIME DESC 
+                activity.LOG_TIME DESC
                 LIMIT 4");
         return $data;
     }
@@ -158,6 +158,7 @@ class Course extends Model
                 o.COURSE_COMPLETED = 1
         ) AS REQ,
         course.PENGUMUMAN,
+        course.ALIAS,
         course.DESKRIPSI_COURSE,
         course.DESKRIPSI_COURSE_ITEM,
         course.SUMMARY,

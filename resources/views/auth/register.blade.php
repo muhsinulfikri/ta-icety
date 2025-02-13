@@ -154,4 +154,12 @@
 
     password.onchange = validatePassword;
     password2.onkeyup = validatePassword;
+
+    document.getElementById("category_user").addEventListener("change", function() {
+        if (this.value) {
+            this.style.color = "black";
+        } else {
+            this.style.color = "#999999";
+        }
+    });
 </script>

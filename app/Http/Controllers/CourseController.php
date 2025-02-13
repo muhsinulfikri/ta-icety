@@ -129,6 +129,7 @@ class CourseController extends Controller
             $course = [
                 'ID_COURSE'             => $this->GenerateUniqID('ACT', $req->input('announcement')),
                 'ID_ACTIVITY'           => $activity['ID_ACTIVITY'],
+                'ALIAS'                 => $req->input('alias_course'),
                 'PENGUMUMAN'            => $req->input('announcement'),
                 'DESKRIPSI_COURSE'      => $req->input('desc_course'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
@@ -236,6 +237,7 @@ class CourseController extends Controller
                 a.STATUS ,
                 a.SERTIF_IMAGE ,
                 c.ID_COURSE ,
+                c.ALIAS,
                 c.REQUIREMENT ,
                 c.PENGUMUMAN ,
                 c.DESKRIPSI_COURSE ,
@@ -395,6 +397,7 @@ class CourseController extends Controller
 
             $course = [
                 'ID_ACTIVITY'           => $req->input('ID_ACTIVITY'),
+                'ALIAS'                 => $req->input('alias_course'),
                 'PENGUMUMAN'            => $req->input('announcement'),
                 'DESKRIPSI_COURSE'      => $req->input('desc'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
