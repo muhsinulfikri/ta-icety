@@ -26,19 +26,18 @@
                                     aria-describedby="emailHelp" required>
                             </div>
                             <div class="my-4 float-label-control">
-                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Agency" name="Agency/Univ" aria-describedby="" required>
-                            </div>
-                            <div class="my-4 float-label-control">
                                 <select name="category_user" id="category_user" class="form-control form-select pe-5" style="color: #999999" required>
                                     <option value="" disabled selected>Choose your Category</option>
-                                    <option value="1">All</option>
                                     <option value="2">Perusahaan</option>
                                     <option value="3">Umum</option>
                                     <option value="4">Instansi</option>
                                 </select>
                             </div>
                             <div class="my-4 float-label-control">
-                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Phone Number" name="Telp Number" aria-describedby="" required>
+                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="Agency" name="agency" aria-describedby="" required>
+                            </div>
+                            <div class="my-4 float-label-control">
+                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Phone Number" name="telp" aria-describedby="" required>
                             </div>
                             <div class="input-group my-4">
                                 <input type="password"
@@ -161,5 +160,20 @@
         } else {
             this.style.color = "#999999";
         }
+    });
+
+    $(document).ready(function () {
+        $("#category_user").change(function () {
+            let agencyInput = $("#exampleInputAgency");
+            let agencyField = agencyInput.closest(".float-label-control");
+
+            if ($(this).val() === "3") { // Jika "Umum" dipilih
+                agencyField.hide();
+                agencyInput.removeAttr("required");
+            } else {
+                agencyField.show();
+                agencyInput.attr("required", "required");
+            }
+        });
     });
 </script>

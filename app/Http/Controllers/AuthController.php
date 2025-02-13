@@ -134,36 +134,37 @@ class AuthController extends Controller
             ->get();
 
         if ($check_user->isEmpty()) {
-            $KODE_USER = $this->GenerateUniqID($req->input('name'));
-
-            // Generate a unique user ID
-            $KODE_USER = $this->GenerateUniqID($req->input('name'));
-
-            // Create a new user instance
-            $User = new User();
-            $User->ID_USER = $KODE_USER;
-            $User->ID_CATEGORY_USER = $req->input('category_user');
-            $User->NAME = $req->input('name');
-            $User->EMAIL = $req->input('email');
-            $User->PASS = hash('sha256', md5($req->input('password')));
-            $User->ID_ROLE = 3;
-            $User->STATUS = 0;
-            $User->IS_DELETE = 0;
-            $User->TELP = $req->input('telp');
-
-            // Save the user to the database
-            $User->save();
-            DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
-                                            'UNIV' =>$req->input('agency')]);
-            // Send email verification
-            $token_key = bin2hex(random_bytes(32));
-            $details = [
-                'name' => $req->input('name'),
-                'body' => 'Click this link below to verify your email.',
-                'link' => url('verification/confirm?token=' . $token_key),
-                'button' => "Verify",
-            ];
             try {
+                $KODE_USER = $this->GenerateUniqID($req->input('name'));
+
+                // Generate a unique user ID
+                $KODE_USER = $this->GenerateUniqID($req->input('name'));
+
+                // Create a new user instance
+                $User = new User();
+                $User->ID_USER = $KODE_USER;
+                $User->ID_CATEGORY_USER = $req->input('category_user');
+                $User->NAME = $req->input('name');
+                $User->EMAIL = $req->input('email');
+                $User->PASS = hash('sha256', md5($req->input('password')));
+                $User->ID_ROLE = 3;
+                $User->STATUS = 0;
+                $User->IS_DELETE = 0;
+                $User->TELP = $req->input('telp');
+
+                // Save the user to the database
+                $User->save();
+                DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
+                                                'UNIV' =>$req->input('agency')]);
+                // Send email verification
+                $token_key = bin2hex(random_bytes(32));
+                $details = [
+                    'name' => $req->input('name'),
+                    'body' => 'Click this link below to verify your email.',
+                    'link' => url('verification/confirm?token=' . $token_key),
+                    'button' => "Verify",
+                ];
+
                 $mail = new MailSender($details);
                 $mail->subject("Email Verification");
                 Mail::to($req->input('email'))->send($mail);
