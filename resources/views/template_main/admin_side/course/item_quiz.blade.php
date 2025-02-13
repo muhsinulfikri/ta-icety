@@ -1,3 +1,16 @@
+<style>
+    .ui-sortable-helper {
+        opacity: 0.7;
+        cursor: grabbing !important;
+    }
+    .ui-state-highlight { 
+        height: 210px; 
+        line-height: 1.2em; 
+        background: #edf2f9; 
+        border-radius: .25rem; 
+    }
+</style>
+
 <div class="card" id="quiz_item_{{ $id_quiz }}">
     <div class="card-header">
         <h5 class="card-title d-flex align-items-center row">
@@ -44,7 +57,7 @@
     $('#add_new_soal_{{ $no }}').click(function() {
         $('#add_new_soal_{{ $no }}').toggleClass("is-loading");
         $.ajax({
-            url: 'add_question/' + {{ $no }} + '/' + no_quiz,
+            url: 'add_question/' + {{$no}} + '/' + no_quiz,
             success: function(html) {
                 $(".soal_form_{{ $no }}").append(html);
                 $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
@@ -53,4 +66,14 @@
             }
         });
     })
+
+    $(".soal_form_{{ $no }}").sortable({
+        cursor: "grabbing",
+        helper: "clone",
+         placeholder: "ui-state-highlight",
+        start: function(event, ui) {
+            ui.helper.addClass("ui-sortable-helper");
+        }
+    });
+    $(".soal_form_{{ $no }}").disableSelection();
 </script>
