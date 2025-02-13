@@ -1,4 +1,4 @@
-<div class="form-soal-{{ $no }}{{ $index }}">
+<div class="form-soal-{{ $no }}{{ $index }}" py-4 my-3 pl-4" style="border: 1px solid #edf2f9; border-radius: .25rem; cursor: grab">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label control-label" id="label_soal">Question</label>
         <input type="hidden" class="form-control" name="order_list_question[]" value="{{ $no }}">
@@ -60,3 +60,4 @@
         e.preventDefault();
     });
 </script>
+
