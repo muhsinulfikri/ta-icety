@@ -69,7 +69,6 @@ class CourseGuest extends Controller
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 		$data['item_course'] = $this->courseModel->get_item_course($condition);
-		// $data['last_item'] = $this->courseModel->get_last_item_course($data['id_activity']);
 		$data['last_item'] = DB::select('
 			SELECT
 				*
@@ -127,8 +126,6 @@ class CourseGuest extends Controller
 			$data['tot_proggress'] = 100;
 			DB::table('order')->where('ID_USER', session('user')[0]->get('ID_USER'))->where('ID_PRODUCT', $data['id_activity'])->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping'])]);
 		}
-
-		// $sertifCheck = $this->certificateModel->getCertificate($con);
 		$sertifCheck = DB::selectOne("
 			SELECT
 				ID_SERTIFIKAT,
@@ -153,10 +150,7 @@ class CourseGuest extends Controller
 				"FILE_SERTIFIKAT" => $sertif_path,
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
-			// $this->certificateModel->createCertificate($data_sertif);
 			DB::table('sertifikat_activity')->insert($data_sertif);
-
-			// $data['sertif'] = $this->certificateModel->getCertificate($data_sertif);
 			$data['sertif'] = (object) $data_sertif;
 		} else {
 			$data['sertif'] = $sertifCheck;
@@ -211,7 +205,6 @@ class CourseGuest extends Controller
 		$data['id_activity'] = $_POST['type'] . '/' . $_POST['id_activity'];
 		if ($data['type'] == 3) {
 			$data['type'] = 2;
-			// $this->courseModel->DeleteQuizPenilaian(['ID_QUIZ' => $data['id_item'], 'ID_USER' => session('user')[0]->get('ID_USER')]);
 			//DELETE NILAI YANG ADA
 			DB::table('nilai_quiz')->where('ID_QUIZ', $data['id_item'])->where('ID_USER', session('user')[0]->get('ID_USER'))->delete();
 		} else {
@@ -223,7 +216,6 @@ class CourseGuest extends Controller
 			"ID_ACTIVITY = '" . $_POST['id_activity'] . "'",
 			"STATUS <> 1"
 		);
-		// $data['data_all_mapping'] = $this->courseModel->get_all_mapping($condition_all_mapping);
 		$data['data_all_mapping'] = DB::select("
 			SELECT
 				*
@@ -236,7 +228,6 @@ class CourseGuest extends Controller
 			$data_all_mapping = $this->courseModel->get_counttask($_POST['id_activity']);
 			$data_mapping = ['STATUS' => 1];
 			$count = ['MAPPING_COUNT' => ((int) $data_all_mapping[0]->MAPPING_COUNT) + 1];
-			// $this->courseModel->UpdateMapping($data_mapping, $condition_update_mapping);
 			//UPDATE STATUS MAPPING LAST ITEM COURSE
 			DB::table("mapping_course")
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
@@ -248,7 +239,6 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $_POST['id_activity'])
 				->update($count);
 		}
-		// $data['last_item'] = $this->courseModel->get_last_item_course($_POST['id_activity'])[0];
 		// GET ID_ITEM DARI LAST ITEM YANG DI TELAH DIBUKA
 		$data['last_item'] = DB::select('
 			SELECT
@@ -263,7 +253,6 @@ class CourseGuest extends Controller
 		');
 		$limit_question = empty($data['last_item'][0]->LIMIT_QUESTION) ? 0 : $data['last_item'][0]->LIMIT_QUESTION;
 		$condition = ['tc.ID_ITEM = ' . $data['id_item']];
-		// $data['detail_item_course'] = $this->courseModel->get_detail_item_course($condition, $data['type']);
 		// GET DATA UNTUK MATERI, ELSE QUIZ
 		$sql = "
 			SELECT
@@ -283,6 +272,7 @@ class CourseGuest extends Controller
 				tc.LINK_YT ,
 				tc.DESKRIPSI ,
 				tc.`TYPE` ,
+				tc.MIN_NILAI ,
 				dq.ID_DETAIL,
 				dq.ID_QUIZ ,
 				dq.SOAL ,
@@ -299,16 +289,21 @@ class CourseGuest extends Controller
 			";
 			$data['detail_item_course'] = DB::select($sql);
 		}
-		// $data['quiz_grade'] = $this->courseModel->get_quiz_grade($data['id_item']);
 		// GET NILAI QUIZ
 		$data['quiz_grade'] = DB::selectOne('
 			SELECT
-				NILAI
+				nq.NILAI,
+				ic.MIN_NILAI
 			FROM
-				nilai_quiz
+				nilai_quiz nq
+			LEFT JOIN detail_quiz dq ON
+				dq.ID_QUIZ = nq.ID_QUIZ
+			LEFT JOIN item_course ic ON
+				ic.ID_ITEM = dq.ID_QUIZ
 			WHERE
-				ID_USER = "' . session('user')[0]->get('ID_USER') . '"
-				AND ID_QUIZ = ' . $data['id_item'] . '
+				nq.ID_USER = "' . session('user')[0]->get('ID_USER') . '"
+			AND 
+				nq.ID_QUIZ = ' . $data['id_item'] . '
 		');
 		return view('template_guest.course.ajax.detail_item', $data);
 	}

@@ -30,10 +30,18 @@
     <input id="file-upload" type="file" name="materi_file[]" style="display: none;">
     <input type="hidden" name="default_file[]">
     <input type="hidden" name="materi_title[]">
+    <input type="hidden" name="materi_link_yt[]">
     <input type="hidden" name="materi_link[]">
     <input type="hidden" name="desc_materi[]">
     <input type="hidden" name="ID_QUIZ[]" value="<?= $ID_ITEM ?>">
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
+        <div class="form-group ps-3 pe-3 row mt-3">
+            <label class="col mt-3">Minimum Nilai Lulus<span class="text-danger">*</span></label>
+            <div class="col-md-10">
+                <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}" value="{{$MIN_NILAI}}" placeholder="75" required>
+                <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+            </div>
+        </div>
         <div class="card-body">
             <div class="soal_form_{{ $no }}"></div>
             <div class="form-group row justify-content-center align-items-center">

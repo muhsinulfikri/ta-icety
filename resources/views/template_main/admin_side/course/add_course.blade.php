@@ -114,13 +114,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Certifikat Template <span class="text-danger">*</span>
+                        <label class="col-sm-2 col-form-label control-label">Certifikat Template</span>
                         </label>
                         <div class="col-md-5">
                             <div class="custom-file">
                                 <input type="file" name="sertif_image" class="custom-file-input dropify"
-                                    accept=".jpg" data-allowed-file-extensions="jpg" required>
-                                <small class="text-danger">* Input JPG only file</small>
+                                    accept=".jpg" data-allowed-file-extensions="jpg">
+                                <small class="text-danger">Input JPG only file, Jika tidak input maka akan menggunakan sertifikat template</small>
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
                                 class="text-danger">*</span></label>
-                        <div class="col-md-10">
+                        <div class="col-md-5">
                             <select class="select2" name="is_public">
                                 <option value="1">Public</option>
                                 <option value="0">Private</option>
