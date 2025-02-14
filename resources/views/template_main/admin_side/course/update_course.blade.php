@@ -2,7 +2,7 @@
     <div class="">
         <div class="card-body">
             <div class="row">
-                <div class="col-md-6 align-self-center">
+                <div class="col-md-6 align-self-center mt-5">
                     <h3 class="fw-bold" style="color:#45b104">Update Course </h3>
                 </div>
             </div>
@@ -31,14 +31,14 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Alias <span
                                 class="text-danger">*</span></label>
-                        <div class="col-md-5">
+                        <div class="col-md-10">
                             <input type="text" class="form-control" name="alias_course" placeholder="Alias Course"
                                 required pattern="[A-Z\s]+" title="Only uppercase letters are allowed" oninput="this.value = this.value.toUpperCase()">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Price Course</label>
-                        <div class="col-md-5">
+                        <div class="col-md-10">
                             <input type="number" class="form-control CurrencyInput" name="price" value="">
                             <span class="d-flex align-items-center mt-2">
                                 <div class="switch m-r-10">
@@ -98,7 +98,7 @@
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Certifikat Template <span class="text-danger">*</span>
                         </label>
-                        <div class="col-md-5">
+                        <div class="col-md-10">
                             <div class="custom-file">
                                 <input type="file" name="sertif_image" class="custom-file-input dropify"
                                     accept=".jpg" data-allowed-file-extensions="jpg">
@@ -425,7 +425,7 @@
                 $('#requirement-container').html(`
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Requirement</label>
-                        <div class="col-md-5">
+                        <div class="col-md-10">
                             <select name="req" id="reqSelect" class="select2" placeholder="Select Requirement ...">
                                 @foreach ($data['requirement'] as $item)
                                     <option value="{{ $item->ID_ACTIVITY }}">{{ $item->TITLE_ACTIVITY }}</option>

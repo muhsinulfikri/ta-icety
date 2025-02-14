@@ -212,8 +212,8 @@
                             </h5>
                         </div>
                         <div class="modal-footer row mx-2 border-0" id="footer_modal_<?= $item->ID_ITEM ?>">
-                            <button type="button" class="btn btn-danger rounded fw-semibold  col" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-secondary rounded fw-semibold col" onclick="submitKuis<?= $item->ID_ITEM ?>(this)">Submit</button>
+                            <button type="button" class="btn btn-danger rounded fw-semibold col" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-dark rounded fw-semibold col" onclick="submitKuis<?= $item->ID_ITEM ?>(this)">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -246,7 +246,7 @@
                     }
                 </script>
             </div>
-        <?php } else if ($quiz_grade->NILAI < 75) { ?>
+        <?php } else if ($quiz_grade->NILAI < $quiz_grade->MIN_NILAI ?? 75) { ?>
             <button class="btn btn-secondary px-4 py-2 mb-3 rounded-3 shadow fw-semibold w-100" data-iditem="<?= $id_item ?>" data-status="0" data-type="3" onclick="ShowDetailItem(this)">
                 Try The Quiz Again
             </button>

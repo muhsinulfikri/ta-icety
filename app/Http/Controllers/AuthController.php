@@ -21,7 +21,7 @@ class AuthController extends Controller
             'transport' => 'smtp',
             'host' => 'smtp-relay.brevo.com',
             'port' => 587,
-            'from' => ['address' => 'noreply@tbhv3.my.id', 'name' => 'The Brain & Heart Official'],
+            'from' => ['address' => 'noreply@icety.id', 'name' => 'Icety Official'],
             'encryption' => 'tls',
             'username' => 'dbi.malang.o@gmail.com',
             'password' => '7YPLNq6KfpydDGBT',
@@ -155,7 +155,7 @@ class AuthController extends Controller
                 // Save the user to the database
                 $User->save();
                 DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
-                                                'UNIV' =>$req->input('agency')]);
+                                                                'UNIV' =>$req->input('agency')]);
                 // Send email verification
                 $token_key = bin2hex(random_bytes(32));
                 $details = [
@@ -179,6 +179,7 @@ class AuthController extends Controller
 
                 return redirect('login')->with('succ_msg', 'Your account is registered, Please verify your account in your email before login!');
             } catch(Exception $e){
+                dd($e);
                 return redirect('register')->with('error_msg', 'Failed to send email. Please try again later!');
             }
             // END SEND EMAIL VERIFICATION

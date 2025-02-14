@@ -117,7 +117,7 @@ class CourseController extends Controller
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),
                 'LOG_TIME'              => date('Y-m-d H:i:s'),
-                'SERTIF_IMAGE'          => FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now()))
+                'SERTIF_IMAGE'          => $req->hasFile('sertif_image') ? FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now())) : null
             ];
 
             if ($req->input('status') == 'on') {
@@ -149,6 +149,7 @@ class CourseController extends Controller
             return redirect('courses')->with(['succ_msg' => 'Successfully Add New Course', 'location' => 'courses']);
         }catch (Throwable $e) {
             DB::rollBack();
+            dd($e);
             Log::error($e->getMessage());
             return redirect()->back()->with('err_msg', 'Terjadi kesalahan, mohon coba lagi nanti.' . $e->getMessage());
         }
@@ -311,13 +312,15 @@ class CourseController extends Controller
                 $data['id_quiz'] = $item_data->ID_ITEM;
                 $dataquiz = DB::select("
                     SELECT
-                        *
+                        dq.*,
+                        ic.MIN_NILAI
                     FROM
-                        detail_quiz
+                        detail_quiz dq
+                    LEFT JOIN item_course ic ON
+                        ic.ID_ITEM = dq.ID_QUIZ
                     WHERE
                         ID_QUIZ = '" . $item_data->ID_ITEM . "'
                 ");
-
                 $data['quiz'] = [];
                 $data['no_index'] = 0;
 
@@ -333,12 +336,14 @@ class CourseController extends Controller
                         'PIL_C'      => $quiz->PIL_C,
                         'PIL_D'      => $quiz->PIL_D,
                         'KUNCI'      => $quiz->KUNCI,
+                        'MIN_NILAI'   => $quiz->MIN_NILAI,
                         'ORDER_LIST' => $quiz->ORDER_LIST,
                         'NO'         => $data['no_index']
                     ];
 
                     foreach ($data['quiz'][$quiz->ID_QUIZ] as $ID_ITEM) {
                         $data['ID_ITEM'] = $ID_ITEM['ID_QUIZ'];
+                        $data['MIN_NILAI'] = $quiz->MIN_NILAI;
                     }
                     $data['no_index']++;
                 }
@@ -370,6 +375,7 @@ class CourseController extends Controller
     public function update(Request $req)
     {
         try {
+            DB::beginTransaction();
             $activity = [
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
@@ -416,9 +422,11 @@ class CourseController extends Controller
 
             $data['ID_COURSE'] = $req->input('ID_COURSE');
             $this->update_item_materi($data, $req);
-
+            DB::commit();
             return redirect('courses')->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
         } catch (ValidationException $e) {
+            DB::rollBack();
+            log::error($e->getMessage(), $e->errors(), $e->getLine());
             return response()->json([
                 'status' => 'failure',
                 'errors' => $e->errors()
@@ -460,9 +468,11 @@ class CourseController extends Controller
         $linkMateri         = $req->input('materi_link');
         $linkYT             = $req->input('materi_link_yt');
         $idQuiz             = [];
+        $nomor = 0;
 
         if (!empty($orderList)) {
             for ($i = 0; $i < count($orderList); $i++) {
+                $nomor++;
                 if ($categoryList[$i] == 1) {
                     $data_item = [
                         'ID_COURSE'     => $data['ID_COURSE'],
@@ -484,7 +494,8 @@ class CourseController extends Controller
                         'DESKRIPSI'     => null,
                         'ORDER_LIST'    => $orderList[$i],
                         'TYPE'          => $categoryList[$i],
-                        'LINK_MATERI'   => null
+                        'LINK_MATERI'   => null,
+                        'MIN_NILAI'     => $req->input('min_nilai_'.$nomor),
                     ];
                     $idQuiz[] = DB::table('item_course')->insertGetId($data_item);
                 }
@@ -509,7 +520,7 @@ class CourseController extends Controller
         $tmpNo = 0;
         foreach ($question as $i => $questions) {
             $id_quiz = $lastIdQuiz[$tmpNo];
-            for ($j = 0; $j < count($questions); $j++) {
+            for ($j = 1; $j <= count($questions); $j++) {
                 $quiz = [
                     'ID_QUIZ'       => $id_quiz,
                     'ID_COURSE'     => $data['ID_COURSE'],
@@ -816,10 +827,12 @@ class CourseController extends Controller
         $file               = $req->file('materi_file');
         $materiFile         = $req->input('default_file');
         $linkMateri         = $req->input('materi_link');
+        $nomor = 0;
 
         $idQuiz = [];
         if (!empty($orderList)) {
             for ($i = 0; $i < count($orderList); $i++) {
+                $nomor++;
                 if ($categoryList[$i] == 1) {
                     $data_item = [
                         'ID_COURSE'     => $data['ID_COURSE'],
@@ -844,7 +857,8 @@ class CourseController extends Controller
                         'DESKRIPSI'     => null,
                         'ORDER_LIST'    => $orderList[$i],
                         'TYPE'          => $categoryList[$i],
-                        'LINK_MATERI'   => null
+                        'LINK_MATERI'   => null,
+                        'MIN_NILAI'     => $req->input('min_nilai_'.$nomor),
                     ];
 
                     $idQuiz[] = DB::table('item_course')->insertGetId($data_item);

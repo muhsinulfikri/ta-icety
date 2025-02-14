@@ -22,7 +22,7 @@
             <input type="hidden" name="default_file[]" value="<?= $item['FILE'] ?? null ?>">
             <div class="form-group row" id="fileInputGroup_{{ $no }}" @if(!$hasFile) style="display: none;" @endif>
                 <label class="col-sm-2 col-form-label control-label">Chapter File</label>
-                <div class="col-md-5" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
+                <div class="col-md-10" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
                     <div class="custom-file">
                         <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
                             class="custom-file-input file_materi">
@@ -32,7 +32,7 @@
 
             <div class="form-group row" id="linkInputGroup_{{ $no }}" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
                 <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
-                <div class="col-md-5" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
+                <div class="col-md-10" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
                     <input id="materi_link_{{ $no }}" type="<?php echo $hasLink ? 'text' : 'hidden'; ?>" class="form-control" name="materi_link[]"
                     value="{{ $item['LINK_MATERI'] ?? '' }}">
                 </div>
@@ -47,14 +47,14 @@
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Youtube Link</label>
-                <div class="col-md-5">
+                <div class="col-md-10">
                     <input type="text" class="form-control" name="materi_link_yt[]" value="<?= $item['LINK_YT'] ?>"
                         required>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Chapter Description</label>
-                <div class="col-md-5">
+                <div class="col-md-10">
                     <textarea name="desc_materi[]" id="mytextarea_<?= $no ?>" required>
                     {{ $item['DESKRIPSI'] }}</textarea>
                 </div>
