@@ -28,6 +28,7 @@ class Course extends Model
                 LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
             WHERE
                 activity.TYPE_ACTIVITY = 1
+                AND activity.IS_PUBLIC = 1
             ORDER BY
                 activity.LOG_TIME DESC
                 LIMIT 4");

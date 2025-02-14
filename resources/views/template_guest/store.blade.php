@@ -124,13 +124,29 @@
         <div class="d-grid gap-4 course-grid-template course-container">
 
         </div>
+        <div class="row btn-more-kursus">
+            <div class="col-12 text-center mt-3">
+                <a href="{{ url('course') }}" class="btn btn-secondary">Lihat Semua Kursus</a>
+            </div>
+        </div>
+
         <div class="d-grid gap-4 course-grid-template ebook-container" style="display: none !important;">
 
         </div>
+        <div class="row btn-more-ebook" hidden>
+            <div class="col-12 text-center mt-3">
+                <a href="{{ url('ebooks') }}" class="btn btn-secondary">Lihat Semua Ebook</a>
+            </div>
+        </div>
+
         <div class="d-grid gap-4 course-grid-template event-container" style="display: none !important;">
 
         </div>
-
+        <div class="row btn-more-event" hidden>
+            <div class="col-12 text-center mt-3">
+                <a href="{{ url('event') }}" class="btn btn-secondary">Lihat Semua Event</a>
+            </div>
+        </div>
 
     </div>
 </section>
@@ -258,6 +274,9 @@
         $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
         $('.event-container')[0].style.setProperty('display', 'none', 'important')
         $('.course-container').show()
+        $('.btn-more-ebook').attr("hidden", "hidden");
+        $('.btn-more-event').attr("hidden", "hidden");
+        $('.btn-more-kursus').removeAttr("hidden");
     });
 
     $(document).on('click','.btn-ebook', function() {
@@ -267,6 +286,9 @@
         $('.ebook-container').show()
         $('.course-container')[0].style.setProperty('display', 'none', 'important')
         $('.event-container')[0].style.setProperty('display', 'none', 'important')
+        $('.btn-more-ebook').removeAttr("hidden");
+        $('.btn-more-event').attr("hidden", "hidden");
+        $('.btn-more-kursus').attr("hidden", "hidden");
     });
 
     $(document).on('click', '.btn-event', function() {
@@ -276,6 +298,9 @@
         $('.event-container').show()
         $('.course-container')[0].style.setProperty('display', 'none', 'important')
         $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
+        $('.btn-more-ebook').attr("hidden", "hidden");
+        $(".btn-more-event").removeAttr("hidden");
+        $('.btn-more-kursus').attr("hidden", "hidden");
     });
 </script>
 
