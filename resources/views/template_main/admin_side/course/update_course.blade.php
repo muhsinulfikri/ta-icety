@@ -227,7 +227,6 @@
     $('input[name="ID_ACTIVITY"]').val(id_act);
     $('input[name="ID_COURSE"]').val(data.ID_COURSE);
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
-    console.log($('input[name="alias_course"]').val(data.ALIAS));
 
     $('input[name="alias_course"]').val(data.ALIAS)
     if (price == 0) {
@@ -258,7 +257,7 @@
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
     $('input[name="certif_code"]').val(data.SERTIF_CODE);
-    $('select[name="is_public"]').val(data.STATUS ? '1' : '0');
+    $('select[name="is_public"]').val(data.IS_PUBLIC);
     $('select[name="category"]').val(data.ID_KATEGORI);
     $('input[name="status"]').prop('checked', data.STATUS);
 

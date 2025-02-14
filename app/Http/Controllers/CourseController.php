@@ -236,6 +236,7 @@ class CourseController extends Controller
                 a.DATE_START ,
                 a.DATE_END ,
                 a.STATUS ,
+                a.IS_PUBLIC ,
                 a.SERTIF_IMAGE ,
                 c.ID_COURSE ,
                 c.ALIAS,
