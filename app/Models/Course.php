@@ -29,6 +29,7 @@ class Course extends Model
             WHERE
                 activity.TYPE_ACTIVITY = 1
                 AND activity.IS_PUBLIC = 1
+                AND course.ID_COURSE NOT LIKE 'FNL_%'
             ORDER BY
                 activity.LOG_TIME DESC
                 LIMIT 4");
@@ -163,6 +164,7 @@ class Course extends Model
         course.DESKRIPSI_COURSE,
         course.DESKRIPSI_COURSE_ITEM,
         course.SUMMARY,
+        course.FINAL_EXAM,
         user.NAME,
         user.FOTO_PROFILE,
         kategori.KATEGORI,
@@ -190,25 +192,6 @@ class Course extends Model
     }
     public function get_course_by_id($keyword, $type)
     {
-        //     $query = DB::select("
-        // SELECT
-        //     act.*,
-        //     (SELECT
-        //         COUNT(*)
-        //     FROM
-        //         `order` o
-        //     LEFT JOIN `transaction` t ON
-        //         t.ID_USER = o.ID_USER
-        //     WHERE
-        //         o.ID_USER = '" . session()->get('ID_USER') . "'
-        //         AND o.ID_PRODUCT = act.ID_ACTIVITY
-        //         AND t.STAT_BAYAR = 3 ) as DATA_CHECKING
-        // FROM
-        //     activity act
-        // WHERE
-        //     act.TYPE_ACTIVITY = '$type'"
-        // );
-
         $query = DB::table('activity AS act')
             ->select('act.*')
             ->selectSub(function ($query) {
@@ -385,31 +368,33 @@ class Course extends Model
 			WHERE
 				c.ID_ACTIVITY = "' . $id_activity . '"
 		');
-
-        if ($dataNewMapping[0]->ID_ITEM != $dataOldMapping[0]->ID_ITEM) {
-            $oldIDMapping = [];
-            foreach ($dataNewMapping as $key => $newItem) {
-                if (!empty($dataOldMapping[$key])) {
-                    $oldIDMapping[] = $dataOldMapping[$key]->ID_MAPPING;
-                    $oldData = $dataOldMapping[$key];
-                    $newDataMapping = [
-                        'ID_USER' => session('user')[0]->get('ID_USER'),
-                        'ID_ACTIVITY' => $oldData->ID_ACTIVITY,
-                        'STATUS' => $oldData->STATUS,
-                        'ID_ITEM' => $newItem->ID_ITEM
-                    ];
-                } else {
-                    $newDataMapping = [
-                        'ID_USER' => session('user')[0]->get('ID_USER'),
-                        'ID_ACTIVITY' => $oldData->ID_ACTIVITY,
-                        'STATUS' => 0,
-                        'ID_ITEM' => $newItem->ID_ITEM
-                    ];
+            
+        if ($dataOldMapping != null) {
+            if ($dataNewMapping[0]->ID_ITEM != $dataOldMapping[0]->ID_ITEM) {
+                $oldIDMapping = [];
+                foreach ($dataNewMapping as $key => $newItem) {
+                    if (!empty($dataOldMapping[$key])) {
+                        $oldIDMapping[] = $dataOldMapping[$key]->ID_MAPPING;
+                        $oldData = $dataOldMapping[$key];
+                        $newDataMapping = [
+                            'ID_USER' => session('user')[0]->get('ID_USER'),
+                            'ID_ACTIVITY' => $oldData->ID_ACTIVITY,
+                            'STATUS' => $oldData->STATUS,
+                            'ID_ITEM' => $newItem->ID_ITEM
+                        ];
+                    } else {
+                        $newDataMapping = [
+                            'ID_USER' => session('user')[0]->get('ID_USER'),
+                            'ID_ACTIVITY' => $oldData->ID_ACTIVITY,
+                            'STATUS' => 0,
+                            'ID_ITEM' => $newItem->ID_ITEM
+                        ];
+                    }
+                    DB::table('mapping_course')->insert($newDataMapping);
                 }
-                DB::table('mapping_course')->insert($newDataMapping);
-            }
 
-            DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
+                DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
+            }
         }
 
         // $mapping = $this->db->get_where('mapping_course', ['ID_USER' => session('user')[0]->get('ID_USER'), 'ID_ACTIVITY' => $id_activity])->result_array();

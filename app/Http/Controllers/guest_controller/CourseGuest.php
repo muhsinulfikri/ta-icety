@@ -186,6 +186,19 @@ class CourseGuest extends Controller
 			->orderBy('LOG_TIME', 'DESC')
 			->first();
 		
+		//Final Exam
+		if ($data['course']->FINAL_EXAM != null) {
+			$data['final_exam'] = DB::selectOne("
+				SELECT 
+					CODE_EXAM
+				FROM 
+					tb_final_exam 
+				WHERE 
+					ID_ACTIVITY = ?
+					AND ID_USER = ?
+					AND IS_USED = 0
+			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
+		}
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
@@ -472,8 +485,7 @@ class CourseGuest extends Controller
 
 	public function getFilterByKat(Request $req)
 	{
-		// $condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND course.KATEGORI = '" . $_POST['category'] . "'" : "WHERE activity.TYPE_ACTIVITY = 1";
-		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "'" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1";
+		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "' AND course.ID_COURSE NOT LIKE 'FNL_%'" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.ID_COURSE NOT LIKE 'FNL_%'";
 		$id_user = (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		if ($_POST['category'] == 999) {
 			$data_id = DB::select("
@@ -618,5 +630,168 @@ class CourseGuest extends Controller
 		$sixDigitID = strtoupper(substr($hash, 0, 6));
 		$generatedID = $first . '_' . $sixDigitID;
 		return $generatedID;
+	}
+
+	public function finalExam(Request $request) {
+		$data['title'] = 'Final Exam';
+		$data['id_activity'] = $request->id;
+		$data['code'] = $request->code;
+		$is_used = DB::selectOne("
+			SELECT 
+				id_nilai_final_exam
+			FROM 
+				tb_nilai_final_exam 
+			WHERE 
+				CODE_EXAM = ?
+		", [$data['code']]);
+		
+		if (!empty($is_used)) {
+			$id_activity_parent = DB::selectOne("
+			SELECT 
+				ID_ACTIVITY 
+			FROM 
+				course 
+			WHERE 
+				FINAL_EXAM = ?;
+		", [$data['id_activity']])->ID_ACTIVITY;
+			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code has been used');
+		}
+		$data['id_course'] = DB::selectOne("
+			SELECT 
+				ID_COURSE 
+			FROM 
+				course 
+			WHERE 
+				ID_ACTIVITY = ?
+		", [$request->id])->ID_COURSE;
+		$idItems = DB::select("
+			SELECT 
+				ID_ITEM 
+			FROM 
+				item_course 
+			WHERE 
+				ID_COURSE = ?
+		", [$data['id_course']]);
+
+		$data['nilai_final_exam'] = DB::selectOne("
+			SELECT 
+				NILAI 
+			FROM 
+				tb_nilai_final_exam 
+			WHERE 
+				ID_USER = ? 
+				AND ID_ACTIVITY = ?
+				AND CODE_EXAM = ?
+			ORDER BY 
+				created_at DESC
+		", [session('user')[0]->get('ID_USER'), $request->id, $data['code']]);
+
+		$idItemArray = array_map(fn($item) => $item->ID_ITEM, $idItems);
+		if (empty($idItemArray)) {
+			$data['data'] = [];
+		} else {
+			$idItemString = implode(',', array_map('intval', $idItemArray));
+			$data['data'] = DB::select("
+				SELECT
+					tc.ID_ITEM,
+					tc.TITLE,
+					tc.FILE,
+					tc.LINK_YT,
+					tc.DESKRIPSI,
+					tc.`TYPE`,
+					tc.MIN_NILAI,
+					dq.ID_DETAIL,
+					dq.ID_QUIZ,
+					dq.SOAL,
+					dq.PIL_JWB,
+					dq.ORDER_LIST,
+					dq.KUNCI
+				FROM
+					item_course tc
+				LEFT JOIN detail_quiz dq ON
+					dq.ID_QUIZ = tc.ID_ITEM
+				WHERE
+					tc.ID_ITEM IN ($idItemString)
+				ORDER BY RAND()
+			");
+		}
+
+		$data['quiz_grade'] = null;
+
+		return view('template.header', $data) .
+			view('template_guest.course.final_exam', $data) .
+			view('template.footer', $data);
+	}
+
+	public function FinalExamEvaliation()
+	{
+		$id_quiz = $_POST['id_quiz'];
+		$id_detail = $_POST['id_detail'];
+		$pilih_jwbn = $_POST['pilih_jwbn'];
+		$id_user = session('user')[0]->get('ID_USER');
+		$jml_jwbn_benar = 0;
+		for ($i = 0; $i < count($id_detail); $i++) {
+			$data_sum = DB::selectOne("
+			SELECT
+				COUNT(ID_DETAIL) AS TOT
+			FROM
+				detail_quiz
+			WHERE
+				ID_DETAIL = " . $id_detail[$i] . "
+				AND KUNCI = '" . $pilih_jwbn[$i] . "'
+			");
+			$jml_jwbn_benar += $data_sum->TOT;
+		}
+		$nilai = ($jml_jwbn_benar / count($id_detail)) * 100;
+
+		$data_nilai = [
+			"ID_ACTIVITY" 	=> $_POST['id_activity'],
+			"ID_QUIZ" 		=> $id_quiz,
+			"ID_USER" 		=> $id_user,
+			"CODE_EXAM" 	=> $_POST['code_exam'],
+			"NILAI" 		=> $nilai,
+			"created_at" 	=> date('Y-m-d H:i:s'),
+		];
+
+		$id_activity_parent = DB::selectOne("
+			SELECT 
+				ID_ACTIVITY 
+			FROM 
+				course 
+			WHERE 
+				FINAL_EXAM = ?;
+		", [$_POST['id_activity']])->ID_ACTIVITY;
+
+		DB::table('tb_nilai_final_exam')->insert($data_nilai);
+		return response()->json([
+			'nilai' => $nilai,
+			'id_activiti_parent' => $id_activity_parent
+		]);
+	}
+
+	public function ValidasiCode(Request $request) {
+		$code = $request->code;
+		$id_activity = $request->id_activity;
+
+		$finalExamCode = DB::selectOne("
+			SELECT 
+				ID_FINAL_EXAM 
+			FROM 
+				tb_final_exam 
+			WHERE 
+				CODE_EXAM = ?
+				AND IS_USED = 0
+		", [$code]);
+		if (empty($finalExamCode)) {
+			return response()->json([
+				'status' => 'error',
+				'message' => 'Code not found'
+			]);
+		}
+
+		return response()->json([
+			'status' => 'success',
+			'message' => 'Code Valid'
+		]);
 	}
 }

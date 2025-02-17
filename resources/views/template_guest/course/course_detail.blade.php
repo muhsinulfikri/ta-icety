@@ -216,6 +216,13 @@
                                             onclick="ShowCertificateCode(this)" data-type="5">
                                             Show Certificate Code
                                         </button>
+                                        @if ($course->FINAL_EXAM != null)
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowFinalExam(this)" data-type="6">
+                                            Final Exam
+                                        </button>
+                                        @endif
                                     <?php } ?>
                                 </div>
                                 <div class="col bg-white shadow rounded" id="detail-item">
@@ -320,6 +327,27 @@
     </div>
 </section>
 
+<!-- Modal Final Exam -->
+<div class="modal fade" id="redeemModal" tabindex="-1" aria-labelledby="redeemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="redeemModalLabel">Enter The Code</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="form-redeem" action="" method="post">
+                <div class="modal-body">
+                    <input type="text" class="form-control mb-3" name="trial_code" id="trial_code" required>
+                    <div class="alert-code"></div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="useFinalCode()">Apply Code</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <style>
     .blurred-image {
@@ -406,6 +434,29 @@
                     <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
                     Your Certificate Code :
                     <h6><?= $course->SERTIF_CODE ?></h6>
+                </div>
+            </div>`);
+    }
+
+    function ShowFinalExam(e) {
+        <?php foreach ($item_course as $item) :  ?>
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+        <?php endforeach; ?>
+        $(e).removeClass('btn-main-outline')
+        $(e).addClass('btn-primary')
+        $("#detail-item").html(
+            '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
+        );
+        $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
+                <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
+                    <h6>Code Final Exam : <?= $final_exam->CODE_EXAM?></h6>
+                    <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
+                    Klick Here For Final Exam
+                    <br>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                        Final Exam
+                    </button>
                 </div>
             </div>`);
     }
@@ -550,22 +601,49 @@
     readmoreText.style.height = defaultHeight;
     readmoreBtn.addEventListener('click', toggleExpandedState);
 
-    // document.addEventListener('contextmenu', event => event.preventDefault());
-    // document.onkeydown = (e) => {
-    //     if (e.key == 123) {
-    //         return false;
-    //     }
-    //     if (e.ctrlKey && e.shiftKey && e.key == 'I') {
-    //         return false;
-    //     }
-    //     if (e.ctrlKey && e.shiftKey && e.key == 'C') {
-    //         return false;
-    //     }
-    //     if (e.ctrlKey && e.shiftKey && e.key == 'J') {
-    //         return false;
-    //     }
-    //     if (e.ctrlKey && e.key == 'u') {
-    //         return false;
-    //     }
-    // }
+    function useFinalCode() {
+        var code = $('#trial_code').val();
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+
+        $.ajax({
+            url: '<?= Request::segment(0) ?>/course/final-exam/validasi-code',
+            type: "POST",
+            data: {
+                code: code,
+                id_activity: "<?= $id_activity ?>"
+            },
+            success: function(data) {
+                if (data.status == 'success') {
+                    Swal.fire({
+                        title: 'Success',
+                        text: data.message,
+                        icon: 'success',
+                        confirmButtonText: 'Continue'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "{{ url('course/final-exam/'.$course->FINAL_EXAM.'/'.$final_exam->CODE_EXAM) }}";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message,
+                        icon: 'error',
+                        confirmButtonText: 'Close'
+                    })
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("AJAX Error: ", textStatus, errorThrown);
+                console.error("Response Text: ", jqXHR.responseText);
+                showAlertModal('Error', jqXHR.responseText, 'error')
+            }
+        });
+    }
 </script>

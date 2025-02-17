@@ -38,9 +38,9 @@
                 </div>
                 <div class="col-md-6 d-flex justify-content-md-end justify-content-end align-items-center">
                     <div class="mt-3 mt-md-0">
-                        <a href="courses/add" style="color: white"><button type="button" class="btn btn-primary">
-                                <i class="mdi mdi-plus me-1"></i>
-                                Add Course</button></a>
+                        <a data-toggle="modal" data-target="#modalAddCourse" style="color: white"><button type="button" class="btn btn-primary">
+                            <i class="mdi mdi-plus me-1"></i>
+                            Add Course</button></a>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,10 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <form action="courses/edit" method="POST">
+                                    @php
+                                        $link = $item->TYPE_ACTIVITY == 3 ? 'courses/add-final/edit' : 'courses/edit';
+                                    @endphp
+                                    <form action="{{$link}}" method="POST">
                                         @csrf
                                         <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
                                         <button type="submit" class="btn btn-dark btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important; margin: 5px 0px;">
@@ -132,6 +135,34 @@
     </div>
 </div>
 {{-- End Modal Delete --}}
+
+{{-- Start Modal Add Course --}}
+<div class="modal fade" style="z-index: 1060;" id="modalAddCourse" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add Course Or Final Exam ?</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <div class="col-md-12 text-center d-flex justify-content-around">
+                    <a href="{{ url("courses/add")}}"
+                        class="btn btn-success col-md-5 py-5 h-100">
+                        <h1><i class="anticon anticon-book text-white"></i></h1> COURSE
+                    </a>
+                    <a href="{{ url("courses/add-final")}}" id="add_quiz"
+                        class="btn btn-danger col-md-5 py-5 h-100">
+                        <h1><i class="anticon anticon-trophy text-white"></i></h1> FINAL EXAM
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- End Modal Add Course --}}
 
 <script>
     $('#dtTable').DataTable()
