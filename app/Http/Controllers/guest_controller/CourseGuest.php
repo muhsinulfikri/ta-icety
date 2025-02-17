@@ -185,7 +185,7 @@ class CourseGuest extends Controller
 		$orderData = Checkout::where(["ID_PRODUCT" => $data['id_activity'], "ID_USER" => session('user')[0]->get('ID_USER')])
 			->orderBy('LOG_TIME', 'DESC')
 			->first();
-			
+		
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
