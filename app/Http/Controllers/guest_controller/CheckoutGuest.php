@@ -62,7 +62,7 @@ class CheckoutGuest extends Controller
 			LEFT JOIN promo p ON
 				cp.ID_PROMO = p.ID_PROMO
 			WHERE
-				cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
+				cp.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 		");
 		return view('template.header', $data) .
 			view('template_guest.checkout', $data) .
@@ -72,7 +72,7 @@ class CheckoutGuest extends Controller
 	public function purchase()
 	{
 		(session('user')[0] == null) ? redirect('login') : "";
-        $currentTime = date('Y-m-d H:i:s');
+		$currentTime = date('Y-m-d H:i:s');
 		$data['title'] = 'Purchase';
 		$data['id_trans'] = $this->GenerateUniqID_Transaction(time());
 
@@ -86,7 +86,7 @@ class CheckoutGuest extends Controller
 
 			$id_product = $data['order'][0][0]->ID_PRODUCT;
 			if (substr($id_product, 0, 3) == "EBK") {
-                $data['promo'] = DB::Select("
+				$data['promo'] = DB::Select("
                     SELECT
                         p.*
                     FROM
@@ -118,13 +118,13 @@ class CheckoutGuest extends Controller
 					LEFT JOIN promo p ON
 				        cp.ID_PROMO = p.ID_PROMO
 					WHERE
-				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
+				        cp.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 					AND
 						p.PROMO_FOR = '0'
                     OR
 						p.PROMO_FOR = '" . $cek->TYPE_ACTIVITY . "'
                     AND
-                        p.EXP_DATE > '". $currentTime ."'
+                        p.EXP_DATE > '" . $currentTime . "'
 				");
 			}
 		} else {
@@ -141,9 +141,9 @@ class CheckoutGuest extends Controller
 					LEFT JOIN promo p ON
 				        cp.ID_PROMO = p.ID_PROMO
 					WHERE
-				        cp.ID_USER = '".session('user')[0]->get('ID_USER')."'
+				        cp.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
                     AND
-                        p.EXP_DATE > '". $currentTime ."'
+                        p.EXP_DATE > '" . $currentTime . "'
 			");
 		}
 		return 	view('template.header', $data) .
@@ -321,7 +321,7 @@ class CheckoutGuest extends Controller
 				'payer_email' => $data_trans->EMAIL,
 				'amount' => (int) $PRICE,
 				'invoice_duration' => 7200,
-				"success_redirect_url" => url('check_payment_status/payment?id_pay='.$ID_PAY.''),
+				"success_redirect_url" => url('check_payment_status/payment?id_pay=' . $ID_PAY . ''),
 				"failure_redirect_url" => url('purchase'),
 			]);
 
@@ -350,8 +350,8 @@ class CheckoutGuest extends Controller
 					"ID_PAY" => $ID_PAY,
 					"LOG_TIME" => date("Y-m-d H:i:s"),
 					"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
-				];				
-				
+				];
+
 				DB::table('order')
 					->where('ID_ORDER', $_response->ID_ORDER)
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
@@ -408,40 +408,47 @@ class CheckoutGuest extends Controller
 				ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
 		");
 
-        DB::beginTransaction();
+		DB::beginTransaction();
 
-        try {
-            if ((int)$_POST['tot_bayar'] == 0) {
-                $ID_PAY = $this->GenerateUniqIDPay('CI3-checkout-' . date('Y-m-d H:i:s'));
-                $data_payment = array(
-                    "ID_PAY" => $ID_PAY,
-                    "XENDIT_ID" => NULL,
-                    "KODE_USER" => session('user')[0]->get('ID_USER'),
-                    "DATE_CREATED" => date("Y-m-d H:i:s"),
-                    "DATE_PAY" => date("Y-m-d H:i:s")
-                );
-                DB::table("payment")->insert($data_payment);
+		try {
+			if ((int)$_POST['tot_bayar'] == 0) {
+				$ID_PAY = $this->GenerateUniqIDPay('CI3-checkout-' . date('Y-m-d H:i:s'));
+				$data_payment = array(
+					"ID_PAY" => $ID_PAY,
+					"XENDIT_ID" => NULL,
+					"KODE_USER" => session('user')[0]->get('ID_USER'),
+					"DATE_CREATED" => date("Y-m-d H:i:s"),
+					"DATE_PAY" => date("Y-m-d H:i:s")
+				);
+				DB::table("payment")->insert($data_payment);
 
-                foreach ($id_item as $item) {
-                    $data_order = array(
-                        "ID_PAY" => $ID_PAY,
-                        "LOG_TIME" => date("Y-m-d H:i:s")
-                    );
-                    DB::table("order")
-                        ->where('ID_PRODUCT', $item)
-                        ->where('ID_USER', session('user')[0]->get('ID_USER'))
-                        ->update($data_order);
-                    $id_item = DB::selectOne("
-                        SELECT
-                            TYPE_ACTIVITY
-                        FROM
-                            activity
-                        WHERE
-                            ID_ACTIVITY = '" . $item . "'
-                    ");
-                    if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
-                        $this->InsertDataMapping($item);
-                    }
+				foreach ($id_item as $item) {
+					$_response = $this->checkoutModel->get_detail_order("", $item);
+					
+					$data_order = [
+						"ID_PAY" => $ID_PAY,
+						"LOG_TIME" => date("Y-m-d H:i:s"),
+						"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+					];
+
+					DB::table('order')
+						->where('ID_ORDER', $_response->ID_ORDER)
+						->where('ID_PRODUCT', $_response->ID_PRODUCT)
+						->where('ID_USER', session('user')[0]['ID_USER'])
+						->update($data_order);
+
+					$id_item = DB::selectOne("
+                SELECT
+                    TYPE_ACTIVITY
+                FROM
+                    activity
+                WHERE
+                    ID_ACTIVITY = '" . $item . "'
+          ");
+          
+          if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
+              $this->InsertDataMapping($item);
+          }
 					//Final Exam
 					$final_exam = DB::selectOne("
 						SELECT
@@ -461,9 +468,9 @@ class CheckoutGuest extends Controller
 						];
 						DB::table('tb_final_exam')->insert($data_final_exam);
 					}
-                }
+        }
 
-                session()->flash('msg', "<script>
+				session()->flash('msg', "<script>
                     const Toast = Swal.mixin({
                         toast: true,
                         position: 'top-end',
@@ -482,29 +489,41 @@ class CheckoutGuest extends Controller
                     </script>
                 ");
 
-                DB::commit();
-                return redirect('checkouts');
-            }
-        } catch (Exception $e){
-            DB::rollBack();
-        	dd($e);
-        }
+				DB::commit();
+				return redirect('checkouts');
+			}
+		} catch (Exception $e) {
+			DB::rollBack();
+			dd($e);
+		}
 	}
 
-	public function check_payment_status(Request $req) 
+	public function check_payment_status(Request $req)
 	{
 		$id_item = [];
 		$data_trans = DB::selectOne("
 			SELECT
 				p.XENDIT_ID as xendit_id,
+				o.ID_ORDER,
 				o.ID_PRODUCT as id_product
 			FROM
 				payment p
 			LEFT JOIN `order` o ON
 				o.ID_PAY = p.ID_PAY
 			WHERE
-				p.ID_PAY = '".$req->id_pay."'
+				p.ID_PAY = '" . $req->id_pay . "'
 		");
+
+		$data_order = [
+			"LOG_TIME" => date("Y-m-d H:i:s"),
+			"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+		];
+		DB::table('order')
+			->where('ID_ORDER', $data_trans->ID_ORDER)
+			->where('ID_PRODUCT', $data_trans->id_product)
+			->where('ID_USER', session('user')[0]['ID_USER'])
+			->update($data_order);
+
 		$id_item[] = $data_trans->id_product;
 		$type_acticity = DB::selectOne("
 			SELECT
@@ -547,12 +566,12 @@ class CheckoutGuest extends Controller
 			WHERE
 				pm.STATUS = 'SETTLED'
 			AND
-				p.KODE_USER = '".session('user')[0]->get('ID_USER')."'
+				p.KODE_USER = '" . session('user')[0]->get('ID_USER') . "'
 			AND
-				pm.ID_PAY = '".$req->id_pay."'
+				pm.ID_PAY = '" . $req->id_pay . "'
 		");
 
-		if($check_use_promo->pay_count == 1){
+		if ($check_use_promo->pay_count == 1) {
 			DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
 		}
 
@@ -588,9 +607,16 @@ class CheckoutGuest extends Controller
 		$data_course = $this->courseModel->get_course($item);
 		$condition = "item_course.ID_COURSE = '" . $data_course->ID_COURSE . "'";
 		$data_itemCourse = $this->courseModel->get_item_course($condition);
-		$existMapping = DB::table('mapping_course')->where(['ID_ACTIVITY' => $data_course->ID_ACTIVITY])->get();
+		$mappingData = DB::select("
+			SELECT
+				mc.*
+			FROM
+				mapping_course mc
+			WHERE
+				mc.ID_ACTIVITY = '" . $data_course->ID_COURSE . "'
+		");
 
-		if (empty($existMapping)) {
+		if (empty($mappingData)) {
 			for ($i = 0; $i < count($data_itemCourse); $i++) {
 				if ($i == 0) {
 					$data_mapping = array(
@@ -632,7 +658,7 @@ class CheckoutGuest extends Controller
 		$uniqid = strtoupper($begin);
 		return "TRAN_" . $uniqid . substr(md5(time()), 0, 6);
 	}
-	
+
 	public function GenerateUniqIDPay($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
