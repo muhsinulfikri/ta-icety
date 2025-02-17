@@ -35,6 +35,7 @@ class CourseController extends Controller
                 a.ID_ACTIVITY = c.ID_ACTIVITY
             WHERE
                 a.TYPE_ACTIVITY = 1
+                OR a.TYPE_ACTIVITY = 3
             ");
         } else {
             $data['course'] = DB::select("
@@ -94,6 +95,16 @@ class CourseController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
+        $data['final_exam'] = DB::Select("
+            SELECT
+                a.ID_ACTIVITY,
+                a.TITLE_ACTIVITY
+            FROM
+                activity a
+            WHERE
+                a.TYPE_ACTIVITY = 3
+        ");
+
         return
             view('template_main.admin_side.etc.header', $data) .
             view('template_main.admin_side.etc.sidebar', $data) .
@@ -138,6 +149,9 @@ class CourseController extends Controller
 
             if ($req->input('req')) {
                 $course['REQUIREMENT']  = $req->input('req');
+            }
+            if ($req->input('final_exam')) {
+                $course['FINAL_EXAM']  = $req->input('final_exam');
             }
 
             DB::table('activity')->insert($activity);
@@ -227,6 +241,16 @@ class CourseController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
+        $data['final_exam'] = DB::Select("
+            SELECT
+                a.ID_ACTIVITY,
+                a.TITLE_ACTIVITY
+            FROM
+                activity a
+            WHERE
+                a.TYPE_ACTIVITY = 3
+        ");
+
         $data_course = DB::Select("
             SELECT
                 a.ID_ACTIVITY ,
@@ -244,6 +268,7 @@ class CourseController extends Controller
                 c.PENGUMUMAN ,
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
+                c.FINAL_EXAM ,
                 a.SERTIF_CODE ,
                 k.ID_KATEGORI
             FROM
@@ -413,6 +438,9 @@ class CourseController extends Controller
 
             if ($req->input('req')) {
                 $course['REQUIREMENT']  = $req->input('req');
+            }
+            if ($req->input('final_exam')) {
+                $course['FINAL_EXAM']  = $req->input('final_exam');
             }
 
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);

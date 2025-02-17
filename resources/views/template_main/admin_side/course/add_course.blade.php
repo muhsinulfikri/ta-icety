@@ -80,6 +80,18 @@
                     </div>
                     <div id="requirement-container"></div>
                     <div class="form-group row">
+                            <label class="col-sm-2 col-form-label control-label"></label>
+                            <div class="d-flex align-items-center mt-2">
+                            No Final Exam
+                            <div class="switch m-r-10" style="margin-left: 7px;">
+                                <input type="checkbox" id="final-toggle">
+                                <label for="final-toggle"></label>
+                            </div>
+                            Need Final Exam
+                        </div>
+                    </div>
+                    <div id="final-exam-container"></div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Date <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
@@ -414,6 +426,31 @@
                 });
             } else {
                 $('#requirement-container').empty();
+            }
+        });
+
+        $('#final-toggle').change(function() {
+            if ($(this).is(':checked')) {
+                $('#final-exam-container').html(`
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Final Exam</label>
+                        <div class="col-md-5">
+                            <select name="final_exam" id="finalExamSelect" class="select2" placeholder="Select Final Exam ...">
+                                @foreach ($final_exam as $item)
+                                    <option value="{{ $item->ID_ACTIVITY }}">{{ $item->TITLE_ACTIVITY }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                `);
+
+                $('#finalExamSelect').select2({
+                    placeholder: "Select Final Exam ...",
+                    allowClear: true,
+                    width: '100%'
+                });
+            } else {
+                $('#final-exam-container').empty();
             }
         });
     });

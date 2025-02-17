@@ -145,6 +145,12 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('course/item', 'guest_controller\CourseGuest@getDetailItemCourse');
     Route::post('course/quiz/evaluation', 'guest_controller\CourseGuest@QuizEvaluation');
     //END COURSE
+    
+    //FINAL EXAM
+    Route::get('course/final-exam/{id}/{code}', 'guest_controller\CourseGuest@finalExam');
+    Route::post('/course/final-exam/evaluation/', 'guest_controller\CourseGuest@FinalExamEvaliation');
+    Route::post('/course/final-exam/validasi-code', 'guest_controller\CourseGuest@ValidasiCode');
+    //END FINAL EXAM
 
     // PROFILE
     Route::get('profile', [ProfileGuest::class, 'profile']);
@@ -212,6 +218,16 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/invite', 'CourseController@invite');
     Route::post('courses/invite_individu', 'CourseController@invite_individu');
     Route::post('courses/invite_batch', 'CourseController@invite_batch');
+    
+    //Final Exam
+    Route::get('courses/add-final', 'FinalExamController@index');
+    Route::post('courses/add-final/store', 'FinalExamController@store');
+    Route::post('courses/add-final/edit', 'FinalExamController@update_course');
+    Route::post('courses/add-final/update', 'FinalExamController@update');
+    Route::get('courses/add-final/add_quiz/{id}/{no_quiz}', 'FinalExamController@add_quiz');
+    Route::get('courses/add-final/add_question/{id}/{index}', 'CourseController@add_question');
+    Route::get('courses/add-final/get_course_item/{id}', 'FinalExamController@get_course_item'); // get materi / quiz
+    Route::post('courses/add-final/get_quiz', 'CourseController@send_question'); //send to another page
 
     Route::get('events', 'EventController@index');
     Route::get('events/get/{id}', 'EventController@deskripsi_get');

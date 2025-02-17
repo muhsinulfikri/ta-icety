@@ -357,6 +357,26 @@ class CheckoutGuest extends Controller
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
 					->where('ID_USER', session('user')[0]['ID_USER'])
 					->update($data_order);
+				
+				//Final Exam
+				$final_exam = DB::selectOne("
+					SELECT
+						FINAL_EXAM
+					FROM
+						course
+					WHERE
+						ID_ACTIVITY = '" . $item . "'
+				")->FINAL_EXAM;
+				if ($final_exam != null) {
+					$data_final_exam = [
+						"ID_ACTIVITY"	=> $final_exam,
+						"ID_USER"		=> session('user')[0]->get('ID_USER'),
+						"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+						"IS_USED"		=> 0,
+						"CREATED_AT"	=> date("Y-m-d H:i:s")
+					];
+					DB::table('tb_final_exam')->insert($data_final_exam);
+				}
 			}
 
 			return response([
@@ -422,6 +442,25 @@ class CheckoutGuest extends Controller
                     if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
                         $this->InsertDataMapping($item);
                     }
+					//Final Exam
+					$final_exam = DB::selectOne("
+						SELECT
+							FINAL_EXAM
+						FROM
+							course
+						WHERE
+							ID_ACTIVITY = '" . $item . "'
+					")->FINAL_EXAM;
+					if ($final_exam != null) {
+						$data_final_exam = [
+							"ID_ACTIVITY"	=> $final_exam,
+							"ID_USER"		=> session('user')[0]->get('ID_USER'),
+							"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+							"IS_USED"		=> 0,
+							"CREATED_AT"	=> date("Y-m-d H:i:s")
+						];
+						DB::table('tb_final_exam')->insert($data_final_exam);
+					}
                 }
 
                 session()->flash('msg', "<script>
@@ -603,4 +642,25 @@ class CheckoutGuest extends Controller
 		$uniqid = strtoupper($begin);
 		return "PAY_ICETY_" . $uniqid . substr(md5(microtime()), 0, 7);
 	}
+	public function GenerateCodeExam($var)
+	{
+		$string = preg_replace('/[^a-z]/i', '', $var);
+		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
+		$begin  = strtoupper(substr($scrap, 0, 3));	
+		do {
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code_check = DB::selectOne("
+				SELECT 
+					CODE_EXAM 
+				FROM 
+					tb_final_exam 
+				WHERE 
+					CODE_EXAM = ?
+				", [$code]
+			);	
+		} while (!empty($code_check));
+	
+		return $code;
+	}
+	
 }
