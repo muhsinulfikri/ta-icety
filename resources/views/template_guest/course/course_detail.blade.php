@@ -358,11 +358,11 @@
             <div class="modal-body px-4">
                 <form id="buy-code-exam" action="" method="post">
                     <div class="mb-3">
-                        <label class="fw-bold">Nama:</label>
+                        <label class="fw-bold">Nama :</label>
                         <p class="text-muted mb-0">Final Exam</p>
                     </div>
                     <div class="mb-3">
-                        <label class="fw-bold">Price:</label>
+                        <label class="fw-bold">Price :</label>
                         <p class="text-muted mb-0">Rp 10,923</p>
                     </div>
                 </form>
