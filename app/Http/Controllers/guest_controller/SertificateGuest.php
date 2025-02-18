@@ -1,21 +1,89 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+namespace App\Http\Controllers\guest_controller;
+use App\Http\Controllers\Controller;
+use App\Models\PDFGenerator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\URL;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\FileUpload;
+use Illuminate\Support\Facades\Crypt;
 
-use Aws\S3\S3Client;
-
-class SertificateGuest extends Middleware
+class SertificateGuest extends Controller
 {
-	public $session_data;
-	function __construct()
-	{
-		parent::__construct();
-		$this->load->model(['Event', 'Course', 'Checkout']);
-        $this->load->library('pdfgenerator');
-        $this->load->library('S3Upload', NULL, 'S3');
-		// error_reporting(0);
-	}
+    public function generate()
+    {
+        $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'/verifikasi/sertifikat?ID_SERTIFIKAT=100'));
 
-    public function generate($namaUser, $activity_name, $sertificate_no)
+        $file_pdf = strtoupper("Tamarin Hamaji" . "_CERTIFICATE_" . "Fotografi Dalam 5 Menit") . ".pdf";
+        $paper = 'A4';
+        $orientation = 'landscape';
+
+        $path = 'assets/images/certificate_template.jpg';
+
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $getImage = file_get_contents($path);
+        $data['IMAGE'] = 'data:image/' . $type . ';base64,' . base64_encode($getImage);
+
+        // Set certificate details
+        $data['NAME'] = "Tamarin Hamaji";
+        $data['ROLES'] = "PESERTA"; //PESERTA
+        $data['JUDUL'] = "Fotografi Dalam 5 Menit"; //Fotografi Dalam 5 Menit
+        $data['TGL_ACARA'] = "25 Oktober 2024"; //25 Oktober 2024
+        $data['TGL_TTD'] = "25 OKTOBER 2024"; //MALANG, 25 OKTOBER 2024
+
+        // Render the HTML template for the certificate
+        $html = view('pdf_template.sertifikat', $data)->render();
+
+        // Generate the PDF
+        $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
+        $new_path = FileUpload::UploadFileBlob($file_pdf, $resPdf, 'certificate');
+        return $new_path;
+        // Stream the PDF inline in the browser
+        // return Response::stream(
+        //     function () use ($resPdf) {
+        //         echo $resPdf;
+        //     },
+        //     200,
+        //     [
+        //         'Content-Type' => 'application/pdf',
+        //         'Content-Disposition' => 'inline; filename="' . $file_pdf . '"'
+        //     ]
+        // );
+    }
+
+    public function verifSertif(Request $request) {
+        $data['title'] = 'Verifikasi Sertifikat';
+        $id_sertif = Crypt::decryptString($request->id);
+        // dd($id_sertif);
+
+        $data['sertifikat'] = DB::selectOne("
+            SELECT
+                sa.FILE_SERTIFIKAT,
+                u.NAME,
+                a.TITLE_ACTIVITY
+            FROM
+                sertifikat_activity sa
+            LEFT JOIN user u ON
+                sa.ID_USER = u.ID_USER
+            LEFT JOIN activity a ON
+                sa.ID_ACTIVITY = a.ID_ACTIVITY
+            WHERE
+                ID_SERTIFIKAT = '$id_sertif'
+            ");
+
+        if ($data['sertifikat'] == null) {
+            return redirect('/')->with('error', 'Sertifikat tidak ditemukan');
+        }
+
+        return
+        view('template.header', $data) .
+        view('template_guest.validasi_sertifikat', $data) .
+        view('template.footer', $data);
+    }
+
+    public function generate_old($namaUser, $activity_name, $sertificate_no)
     {
         $file_pdf = $namaUser . "_SERTIFIKAT.pdf";
 
@@ -25,7 +93,7 @@ class SertificateGuest extends Middleware
         $path = base_url('assets/images/certificate_template.jpg');
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $getImage = file_get_contents($path);
-        $data['IMAGE'] = 'data:image/' . $type . ';base64,' . base64_encode($getImage); 
+        $data['IMAGE'] = 'data:image/' . $type . ';base64,' . base64_encode($getImage);
 
         $data['NO_SERTIF'] = $namaUser;
         $data['NAME'] = $namaUser;

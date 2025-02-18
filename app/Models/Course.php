@@ -310,6 +310,19 @@ class Course extends Model
     {
         return $this->db->get_where('detail_quiz', ['ID_COURSE' => $id_materi])->result_array();
     }
+    public function get_title_materi($id_course){
+        $data = DB::select("
+            SELECT
+                TITLE
+            FROM
+                item_course
+            WHERE
+                ID_COURSE = '".$id_course."'
+            AND
+                TYPE = 1
+        ");
+        return $data;
+    }
 
     // QUERY INSERT DATA
     public function InsertActivity($data)
@@ -368,7 +381,7 @@ class Course extends Model
 			WHERE
 				c.ID_ACTIVITY = "' . $id_activity . '"
 		');
-            
+
         if ($dataOldMapping != null) {
             if ($dataNewMapping[0]->ID_ITEM != $dataOldMapping[0]->ID_ITEM) {
                 $oldIDMapping = [];
@@ -395,7 +408,11 @@ class Course extends Model
 
                 DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
             }
+                DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
+            }
         }
+    }
+
 
         // $mapping = $this->db->get_where('mapping_course', ['ID_USER' => session('user')[0]->get('ID_USER'), 'ID_ACTIVITY' => $id_activity])->result_array();
         $mapping = DB::select('
@@ -456,7 +473,7 @@ class Course extends Model
                 }
             }
         }
-    }
+
     public function UpdateActivity($data, $id_activity)
     {
         $this->db->where('ID_ACTIVITY', $id_activity);
@@ -532,4 +549,3 @@ class Course extends Model
         ");
         return $data;
     }
-}

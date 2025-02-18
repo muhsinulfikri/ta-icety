@@ -123,6 +123,7 @@ class CourseController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price_course'),
                 'IMAGE_ACTIVITY'        => FileUpload::S3($req->file('image_activity'), 'IMAGE_ACTIVITY', 'Image-Activity-' . strtotime(now())),
                 'TYPE_ACTIVITY'         => 1,
+                'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
                 'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
@@ -145,6 +146,7 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE'      => $req->input('desc_course'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
                 'KATEGORI'              => $req->input('category'),
+                'DURATION'              => $req->input('duration')
             ];
 
             if ($req->input('req')) {
@@ -262,7 +264,9 @@ class CourseController extends Controller
                 a.STATUS ,
                 a.IS_PUBLIC ,
                 a.SERTIF_IMAGE ,
-                c.ID_COURSE ,
+                a.SUMMARY_CERTIFICATE,
+                c.ID_COURSE,
+                c.DURATION ,
                 c.ALIAS,
                 c.REQUIREMENT ,
                 c.PENGUMUMAN ,
@@ -405,6 +409,7 @@ class CourseController extends Controller
             $activity = [
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
+                'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
@@ -433,7 +438,8 @@ class CourseController extends Controller
                 'PENGUMUMAN'            => $req->input('announcement'),
                 'DESKRIPSI_COURSE'      => $req->input('desc'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
-                'KATEGORI'              => $req->input('category')
+                'KATEGORI'              => $req->input('category'),
+                'DURATION'              => $req->input('duration')
             ];
 
             if ($req->input('req')) {
