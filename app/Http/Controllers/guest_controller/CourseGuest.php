@@ -72,10 +72,10 @@ class CourseGuest extends Controller
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 		$data['item_course'] = $this->courseModel->get_item_course($condition);
-        // $info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
-        // $info_titles = array_map(function($item) {
-        //     return $item->TITLE;
-        // }, $info_sertif);
+        $info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
+        $info_titles = array_map(function($item) {
+            return $item->TITLE;
+        }, $info_sertif);
         // dd($info_titles);
 		$data['last_item'] = DB::select('
 			SELECT
@@ -201,11 +201,11 @@ class CourseGuest extends Controller
 		//Final Exam
 		if ($data['course']->FINAL_EXAM != null) {
 			$data['final_exam'] = DB::selectOne("
-				SELECT 
+				SELECT
 					CODE_EXAM
-				FROM 
-					tb_final_exam 
-				WHERE 
+				FROM
+					tb_final_exam
+				WHERE
 					ID_ACTIVITY = ?
 					AND ID_USER = ?
 					AND IS_USED = 0
