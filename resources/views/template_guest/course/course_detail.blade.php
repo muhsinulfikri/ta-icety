@@ -369,7 +369,7 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary px-4 py-2 rounded-3" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4 py-2 rounded-3">Purchase Now</button>
+                <button type="button" class="btn btn-primary px-4 py-2 rounded-3" onclick="buyNow()">Purchase Now</button>
             </div>
         </div>
     </div>
@@ -682,6 +682,18 @@
                 console.error("AJAX Error: ", textStatus, errorThrown);
                 console.error("Response Text: ", jqXHR.responseText);
                 showAlertModal('Error', jqXHR.responseText, 'error')
+            }
+        });
+    }
+    function buyNow() {
+        Swal.fire({
+            title: 'Processing...',
+            text: 'Please wait while we process your request.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
             }
         });
     }
