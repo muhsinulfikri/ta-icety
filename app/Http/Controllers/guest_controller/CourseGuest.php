@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\guest_controller;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Course;
 use App\Models\Checkout;
 use App\Models\Event;
@@ -23,6 +24,7 @@ class CourseGuest extends Controller
 	protected $checkoutModel;
 	protected $categoryModel;
 	protected $certificateModel;
+    protected $activityModel;
 
 	public function __construct()
 	{
@@ -32,6 +34,7 @@ class CourseGuest extends Controller
 		$this->checkoutModel = new Checkout();
 		$this->categoryModel = new Category();
 		$this->certificateModel = new Certificate();
+        $this->activityModel = new Activity();
 	}
 
 	public function index()
@@ -64,11 +67,16 @@ class CourseGuest extends Controller
 
 		$data['id_activity'] = $_GET['id_activity'];
 		$data['course'] = $this->courseModel->get_course($data['id_activity']);
-
+        $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
 		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 		$data['item_course'] = $this->courseModel->get_item_course($condition);
+        $info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
+        $info_titles = array_map(function($item) {
+            return $item->TITLE;
+        }, $info_sertif);
+        // dd($info_titles);
 		$data['last_item'] = DB::select('
 			SELECT
 				*
@@ -141,15 +149,19 @@ class CourseGuest extends Controller
 				->where('ID_ACTIVITY', $data['id_activity'])
 				->count() + 1;
 			$sertif_number = $countSertif . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE);
+			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION);
 			$data_sertif = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
 				"NO_SERTIFIKAT" => $sertif_number,
 				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
 				"FILE_SERTIFIKAT" => $sertif_path,
+                "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                "INFO_CERTIFICATE" => json_encode($info_titles),
+                "DURATION" => $data['course']->DURATION,
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
+
 			DB::table('sertifikat_activity')->insert($data_sertif);
 			$data['sertif'] = (object) $data_sertif;
 		} else {
@@ -185,20 +197,7 @@ class CourseGuest extends Controller
 		$orderData = Checkout::where(["ID_PRODUCT" => $data['id_activity'], "ID_USER" => session('user')[0]->get('ID_USER')])
 			->orderBy('LOG_TIME', 'DESC')
 			->first();
-		
-		//Final Exam
-		if ($data['course']->FINAL_EXAM != null) {
-			$data['final_exam'] = DB::selectOne("
-				SELECT 
-					CODE_EXAM
-				FROM 
-					tb_final_exam 
-				WHERE 
-					ID_ACTIVITY = ?
-					AND ID_USER = ?
-					AND IS_USED = 0
-			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
-		}
+
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
@@ -315,7 +314,7 @@ class CourseGuest extends Controller
 				ic.ID_ITEM = dq.ID_QUIZ
 			WHERE
 				nq.ID_USER = "' . session('user')[0]->get('ID_USER') . '"
-			AND 
+			AND
 				nq.ID_QUIZ = ' . $data['id_item'] . '
 		');
 		return view('template_guest.course.ajax.detail_item', $data);
@@ -582,18 +581,18 @@ class CourseGuest extends Controller
 		$idAct = $req->input('id_activity');
 
 		$dataOrder = DB::selectOne("
-			SELECT 
+			SELECT
 				o.* ,
-				a.TITLE_ACTIVITY 
-			FROM 
-				`order` o 
+				a.TITLE_ACTIVITY
+			FROM
+				`order` o
 			LEFT JOIN activity a ON
-				a.ID_ACTIVITY = o.ID_PRODUCT 
-			WHERE 
+				a.ID_ACTIVITY = o.ID_PRODUCT
+			WHERE
 				o.ID_PRODUCT = ?
-				AND 
+				AND
 				o.ID_USER = ?
-			ORDER BY 
+			ORDER BY
 				o.LOG_TIME DESC
 		", [$idAct, Session::get('user')[0]->get('ID_USER')]);
 
@@ -637,52 +636,52 @@ class CourseGuest extends Controller
 		$data['id_activity'] = $request->id;
 		$data['code'] = $request->code;
 		$is_used = DB::selectOne("
-			SELECT 
+			SELECT
 				id_nilai_final_exam
-			FROM 
-				tb_nilai_final_exam 
-			WHERE 
+			FROM
+				tb_nilai_final_exam
+			WHERE
 				CODE_EXAM = ?
 		", [$data['code']]);
-		
+
 		if (!empty($is_used)) {
 			$id_activity_parent = DB::selectOne("
-			SELECT 
-				ID_ACTIVITY 
-			FROM 
-				course 
-			WHERE 
+			SELECT
+				ID_ACTIVITY
+			FROM
+				course
+			WHERE
 				FINAL_EXAM = ?;
 		", [$data['id_activity']])->ID_ACTIVITY;
 			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code has been used');
 		}
 		$data['id_course'] = DB::selectOne("
-			SELECT 
-				ID_COURSE 
-			FROM 
-				course 
-			WHERE 
+			SELECT
+				ID_COURSE
+			FROM
+				course
+			WHERE
 				ID_ACTIVITY = ?
 		", [$request->id])->ID_COURSE;
 		$idItems = DB::select("
-			SELECT 
-				ID_ITEM 
-			FROM 
-				item_course 
-			WHERE 
+			SELECT
+				ID_ITEM
+			FROM
+				item_course
+			WHERE
 				ID_COURSE = ?
 		", [$data['id_course']]);
 
 		$data['nilai_final_exam'] = DB::selectOne("
-			SELECT 
-				NILAI 
-			FROM 
-				tb_nilai_final_exam 
-			WHERE 
-				ID_USER = ? 
+			SELECT
+				NILAI
+			FROM
+				tb_nilai_final_exam
+			WHERE
+				ID_USER = ?
 				AND ID_ACTIVITY = ?
 				AND CODE_EXAM = ?
-			ORDER BY 
+			ORDER BY
 				created_at DESC
 		", [session('user')[0]->get('ID_USER'), $request->id, $data['code']]);
 
@@ -754,11 +753,11 @@ class CourseGuest extends Controller
 		];
 
 		$id_activity_parent = DB::selectOne("
-			SELECT 
-				ID_ACTIVITY 
-			FROM 
-				course 
-			WHERE 
+			SELECT
+				ID_ACTIVITY
+			FROM
+				course
+			WHERE
 				FINAL_EXAM = ?;
 		", [$_POST['id_activity']])->ID_ACTIVITY;
 
@@ -774,11 +773,11 @@ class CourseGuest extends Controller
 		$id_activity = $request->id_activity;
 
 		$finalExamCode = DB::selectOne("
-			SELECT 
-				ID_FINAL_EXAM 
-			FROM 
-				tb_final_exam 
-			WHERE 
+			SELECT
+				ID_FINAL_EXAM
+			FROM
+				tb_final_exam
+			WHERE
 				CODE_EXAM = ?
 				AND IS_USED = 0
 		", [$code]);

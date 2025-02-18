@@ -87,6 +87,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Durasi <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control" name="duration" required>
+                            <small class="text-danger">* Input number only</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Announcement<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
@@ -116,6 +124,13 @@
                                     accept=".jpg" data-allowed-file-extensions="jpg">
                                 <small class="text-danger">* Input JPG only file</small>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Summary Certificate<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-10">
+                            <textarea name="summary_certificate" id="summary_certificate" required></textarea>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -240,8 +255,8 @@
     $('input[name="ID_ACTIVITY"]').val(id_act);
     $('input[name="ID_COURSE"]').val(data.ID_COURSE);
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
-
-    $('input[name="alias_course"]').val(data.ALIAS)
+    $('input[name="alias_course"]').val(data.ALIAS);
+    $('#summary_certificate').summernote('code', data.SUMMARY_CERTIFICATE);
     if (price == 0) {
         $('#setFree').prop('checked', true);
         $('input[name="price"]').val(0);
@@ -288,6 +303,7 @@
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
+    $('input[name="duration"]').val(data.DURATION);
     $('input[name="certif_code"]').val(data.SERTIF_CODE);
     $('select[name="is_public"]').val(data.IS_PUBLIC);
     $('select[name="category"]').val(data.ID_KATEGORI);
@@ -348,6 +364,35 @@
 
     $(document).ready(function() {
         var $editor = $('#desc_item');
+        $editor.summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    $summernote.summernote('insertNode', imgNode);
+                }
+            },
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['height', ['height']],
+                ['operation', ['undo', 'redo']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['object', ['link']]
+            ]
+        });
+
+        $('#insert-btn').click(() => {
+            $editor.summernote('insertParagraph');
+        });
+
+        $('#bold-btn').click(() => {
+            $editor.summernote('bold');
+        });
+    });
+
+    $(document).ready(function() {
+        var $editor = $('#summary_certificate');
         $editor.summernote({
             height: 200,
             callbacks: {

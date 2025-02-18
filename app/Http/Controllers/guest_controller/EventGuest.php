@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\guest_controller;
 
-use App\Http\Controllers\Controller;
-use App\Models\Course;
-use App\Models\Checkout;
 use App\Models\Event;
+use App\Models\Course;
+use App\Models\Activity;
+use App\Models\Checkout;
 use App\Models\Certificate;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
 
 
 class EventGuest extends Controller
@@ -20,12 +21,14 @@ class EventGuest extends Controller
     protected $checkoutModel;
     protected $categoryModel;
     protected $certificateModel;
+    protected $activityModel;
 	public function __construct()
     {
         $this->eventModel = new Event();
         $this->courseModel = new Course();
         $this->checkoutModel = new Checkout();
         $this->certificateModel = new Certificate();
+        $this->activityModel = new Activity();
     }
 
 	// EVENT CONTROLLER
@@ -87,6 +90,7 @@ class EventGuest extends Controller
 		$data['title'] = 'Event';
 		$data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		$id_activity = $_GET['id_activity'];
+        $data['summary_sertif'] = $this->activityModel->get_summary_sert_activity($data['id_activity']);
 		$data['event'] = $this->eventModel->get_event($id_activity);
 		$data['other_event'] = $this->eventModel->get_other_event($id_activity);
 		if (empty($data['event']->DATA_CHECKING)){
@@ -108,13 +112,14 @@ class EventGuest extends Controller
 		if (!empty($data['event']->DATA_CHECKING) && empty($sertifCheck)) {
 			$bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 			$sertif_number = $data['event']->ID_EVENT . '/' . (($data['event']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/TBH/' . $bln[(date('m', strtotime($data['event']->DATE_START)) - 1)] . '/' . date('Y');
-			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['event']->TITLE_ACTIVITY, $sertif_number, $data['event']->SERTIF_IMAGE);
+			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['event']->TITLE_ACTIVITY, $sertif_number, $data['event']->SERTIF_IMAGE, $data['summary_sertif']);
 			$data_sertif = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $id_activity,
 				"NO_SERTIFIKAT" => $sertif_number,
 				"JENIS_SERTIFIKAT" => $data['event']->TYPE_ACTIVITY,
 				"FILE_SERTIFIKAT" => $sertif_path,
+                "SUMMARY_CERTIFICATE" => $data['summary_sertif'],
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
 			DB::table('sertifikat_activity')->insert($data_sertif);

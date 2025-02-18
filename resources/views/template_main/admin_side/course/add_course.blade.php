@@ -105,6 +105,15 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Duration <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="duration" placeholder="Duration Complete Course in Month"
+                                required>
+                            <small class="text-danger">* Input number only</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Announcement <span
                         class="text-danger">*</span></label>
                         <div class="col-md-5">
@@ -134,6 +143,14 @@
                                     accept=".jpg" data-allowed-file-extensions="jpg">
                                 <small class="text-danger">Input JPG only file, Jika tidak input maka akan menggunakan sertifikat template</small>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Summary Certificate<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <textarea name="summary_certificate" id="summary_certificate" rows=11 cols=50 maxlength=250 required></textarea>
+                            <small class="text-danger">* Summary Certificate for display in Certificate</small>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -300,6 +317,39 @@
 
     $(document).ready(function() {
         var $editor = $('#desc_what_to_learn');
+        $editor.summernote({
+            height: 200,
+            callbacks: {
+                onPaste: function(e) {
+                    console.log('Called event paste', e);
+                },
+                onImageUpload: function(files) {
+                    console.log(files);
+                    $summernote.summernote('insertNode', imgNode);
+                }
+            },
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['height', ['height']],
+                ['operation', ['undo', 'redo']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['object', ['link']]
+            ]
+        });
+
+        $('#insert-btn').click(() => {
+            $editor.summernote('insertParagraph');
+        });
+
+        $('#bold-btn').click(() => {
+            $editor.summernote('bold');
+        });
+    });
+
+    $(document).ready(function() {
+        var $editor = $('#summary_certificate');
         $editor.summernote({
             height: 200,
             callbacks: {
