@@ -685,7 +685,6 @@
             }
         });
     }
-
     function buyNow() {
         Swal.fire({
             title: 'Processing...',
@@ -698,5 +697,4 @@
             }
         });
     }
-
 </script>

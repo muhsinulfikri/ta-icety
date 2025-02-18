@@ -91,6 +91,11 @@
                             <?= $NO_SERTIF ?>
                         </div>
                     </th>
+                    <th class="text-align-center">
+                        <div class="text duration">
+                            <p>Approximately <?= $DURATION ?> month to complete</p>
+                        </div>
+                    </th>
                 </tr>
             </table>
         </div>
@@ -121,6 +126,24 @@
                     <th class="text-align-center">
                         <div class="text detail-description">
                             <?= $ACTIVITY ?>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-align-center">
+                        <div class="text summary">
+                            <?= $SUMMARY ?>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-align-center">
+                        <div class="text info-sertif">
+                            <ol>
+                                @foreach($INFO_SERTIF as $title)
+                                    <li>{{ $title }}</li>
+                                @endforeach
+                            </ol>
                         </div>
                     </th>
                 </tr>

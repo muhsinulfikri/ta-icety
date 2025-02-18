@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\guest_controller;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\FileUpload;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileGuest extends Controller
 {
@@ -285,6 +286,7 @@ class ProfileGuest extends Controller
 
         $data['sertif'] = DB::select("
             SELECT
+                s.ID_SERTIFIKAT,
                 s.FILE_SERTIFIKAT,
                 a.TITLE_ACTIVITY,
                 a.TYPE_ACTIVITY
@@ -303,6 +305,7 @@ class ProfileGuest extends Controller
             LEFT JOIN instructor_req ON instructor_req.ID_USER = user_data.ID_USER
             WHERE user_data.ID_USER = '" . session('user')[0]['ID_USER'] . "';
         ");
+        $data['id'] = Crypt::encryptString($data['sertif'][0]->ID_SERTIFIKAT);
         return
             view('template.header', $data) .
             view('template_guest/profile/mysertificate', $data) .

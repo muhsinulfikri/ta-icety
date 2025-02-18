@@ -8,18 +8,22 @@
                 <tr class="fw-normal text-black">
                     <td scope="col" class="fw-semibold fs-5" width="60%">Course/Event</td>
                     <td scope="col" class="fw-semibold fs-5" width="20%">Type</td>
+                    <td scope="col" class="fw-semibold fs-5" width="20%">Verifikasi</td>
                 </tr>
             </thead>
             <tbody class="table-group-divider text-black" style="border-color:#C8C8C8; border-top-width: 2px !important">
                 <?php foreach ($sertif as $item) : ?>
-                    <tr onclick="window.open('<?= url($item->FILE_SERTIFIKAT) ?>', '_blank')" style="cursor:pointer">
-                        <td class="py-3">
+                    <tr  style="cursor:pointer">
+                        <td class="py-3" onclick="window.open('<?= url($item->FILE_SERTIFIKAT) ?>', '_blank')">
                             <div class="d-flex align-items-center" style="width: max-content;">
                                 <span class="ms-2"><?= $item->TITLE_ACTIVITY ?></span>
                             </div>
                         </td>
-                        <td class="py-3">
+                        <td class="py-3" onclick="window.open('<?= url($item->FILE_SERTIFIKAT) ?>', '_blank')">
                             <?= $item->TYPE_ACTIVITY == 2 ? '<span class="badge bg-success">Event</span>' : '<span class="badge bg-danger">Course</span>' ?>
+                        </td>
+                        <td class="py-3">
+                            <button type="button" class="btn btn-primary col-md-12 my-3"><a href="/verifikasi/{{ $id }}">Verifikasi Sertifikat</a></button>
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -68,6 +68,9 @@ Route::post('resetPassword', 'AuthController@resetPassword');
 //VERIFICATION ACCOUNT
 Route::get('verification/confirm', 'AuthController@verifAccount');
 
+//VERIFICATION SERTIF
+Route::get('verifikasi/{id}', 'guest_controller\SertificateGuest@verifSertif');
+
 // 1 Admin
 Route::middleware(['usersession:1'])->group(function () {
 
@@ -172,7 +175,7 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     // VOUCHER
     Route::get('vouchers', 'guest_controller\PromoGuest@index');
     Route::post('voucher/store', 'guest_controller\PromoGuest@claimedVoucher');
-    
+
     Route::post('voucher/trial-code', 'RedeemCodeController@redeem_course_using_code');
 
 
