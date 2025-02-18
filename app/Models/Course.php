@@ -164,6 +164,7 @@ class Course extends Model
         course.DESKRIPSI_COURSE,
         course.DESKRIPSI_COURSE_ITEM,
         course.SUMMARY,
+        course.DURATION,
         course.FINAL_EXAM,
         user.NAME,
         user.FOTO_PROFILE,
@@ -354,6 +355,20 @@ class Course extends Model
     {
         $this->db->insert('detail_quiz', $data);
         return $this->db->affected_rows();
+    }
+
+    public function get_title_materi($id_course){
+        $data = DB::select("
+            SELECT
+                TITLE
+            FROM
+                item_course
+            WHERE
+                ID_COURSE = '".$id_course."'
+            AND
+                TYPE = 1
+        ");
+        return $data;
     }
 
     // QUERY UPDATE DATA
