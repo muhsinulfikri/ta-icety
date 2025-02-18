@@ -201,11 +201,11 @@ class CourseGuest extends Controller
 		//Final Exam
 		if ($data['course']->FINAL_EXAM != null) {
 			$data['final_exam'] = DB::selectOne("
-				SELECT 
+				SELECT
 					CODE_EXAM
-				FROM 
-					tb_final_exam 
-				WHERE 
+				FROM
+					tb_final_exam
+				WHERE
 					ID_ACTIVITY = ?
 					AND ID_USER = ?
 					AND IS_USED = 0

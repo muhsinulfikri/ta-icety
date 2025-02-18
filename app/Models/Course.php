@@ -191,6 +191,19 @@ class Course extends Model
         ');
         return $sql;
     }
+    public function get_title_materi($id_course){
+        $data = DB::select("
+            SELECT
+                TITLE
+            FROM
+                item_course
+            WHERE
+                ID_COURSE = '".$id_course."'
+            AND
+                TYPE = 1
+        ");
+        return $data;
+    }
     public function get_course_by_id($keyword, $type)
     {
         $query = DB::table('activity AS act')
@@ -383,7 +396,7 @@ class Course extends Model
 			WHERE
 				c.ID_ACTIVITY = "' . $id_activity . '"
 		');
-            
+
         if ($dataOldMapping != null) {
             if ($dataNewMapping[0]->ID_ITEM != $dataOldMapping[0]->ID_ITEM) {
                 $oldIDMapping = [];
