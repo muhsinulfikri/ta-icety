@@ -477,6 +477,7 @@
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
                 <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
+                @if ($course->FINAL_EXAM != null)
                     @if ($final_exam != null)
                     <h6 class="mt-2">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
                     @endif
@@ -493,6 +494,7 @@
                     <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#redeemModal">
                     Final Exam
                     </button>
+                @endif
                 </div>
             </div>`);
     }
@@ -640,6 +642,7 @@
     function useFinalCode() {
         var code = $('#trial_code').val();
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : '#') : '#' ?>";
 
         $.ajaxSetup({
             headers: {
@@ -663,7 +666,7 @@
                         confirmButtonText: 'Continue'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "{{ url('course/final-exam/'.$course->FINAL_EXAM.'/'. ($final_exam != null ? $final_exam->CODE_EXAM : '#')) }}";
+                            window.location.href = "{{ url('course/final-exam/'.$course->FINAL_EXAM.'/' ) }}";
                         }
                     });
                 } else {
