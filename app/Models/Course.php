@@ -357,19 +357,6 @@ class Course extends Model
         return $this->db->affected_rows();
     }
 
-    public function get_title_materi($id_course){
-        $data = DB::select("
-            SELECT
-                TITLE
-            FROM
-                item_course
-            WHERE
-                ID_COURSE = '".$id_course."'
-            AND
-                TYPE = 1
-        ");
-        return $data;
-    }
 
     // QUERY UPDATE DATA
     public function updateMappingIndex($id_course, $id_activity)
