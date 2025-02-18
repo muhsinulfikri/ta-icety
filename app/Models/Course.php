@@ -474,78 +474,78 @@ class Course extends Model
             }
         }
 
-    public function UpdateActivity($data, $id_activity)
-    {
-        $this->db->where('ID_ACTIVITY', $id_activity);
-        $this->db->update('activity', $data);
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function UpdateCourse($data, $id_activity)
-    {
-        $this->db->where('ID_ACTIVITY', $id_activity);
-        $this->db->update('course', $data);
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function UpdateMapping($data, $condtion)
-    {
-        $this->db->where($condtion);
-        $this->db->update('mapping_course', $data);
-    }
+    // public function UpdateActivity($data, $id_activity)
+    // {
+    //     $this->db->where('ID_ACTIVITY', $id_activity);
+    //     $this->db->update('activity', $data);
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function UpdateCourse($data, $id_activity)
+    // {
+    //     $this->db->where('ID_ACTIVITY', $id_activity);
+    //     $this->db->update('course', $data);
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function UpdateMapping($data, $condtion)
+    // {
+    //     $this->db->where($condtion);
+    //     $this->db->update('mapping_course', $data);
+    // }
 
-    // QUERY DELETE DATA
-    public function DeleteItem($id_course)
-    {
-        $this->db->where('item_course.ID_COURSE', $id_course);
-        $this->db->delete('item_course');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteActivity($id_activity)
-    {
-        $this->db->where('ID_ACTIVITY', $id_activity);
-        $this->db->delete('activity');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteEvent($id_activity)
-    {
-        $this->db->where('ID_ACTIVITY', $id_activity);
-        $this->db->delete('course');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteQuiz($id_course)
-    {
-        $this->db->where('quiz.ID_COURSE', $id_course);
-        $this->db->delete('quiz');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteMateri($id_course)
-    {
-        $this->db->where('course.ID_COURSE', $id_course);
-        $this->db->delete('course');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteDetailQuiz($id_course)
-    {
-        $this->db->where('detail_quiz.ID_COURSE', $id_course);
-        $this->db->delete('detail_quiz');
-        return $this->db->query("SET foreign_key_checks = 1;");
-    }
-    public function DeleteQuizPenilaian($condtion)
-    {
-        $this->db->where($condtion);
-        $this->db->delete('nilai_quiz');
-    }
-    public function get_counttask($condition)
-    {
-        $data = DB::select("
-            SELECT
-                o.MAPPING_COUNT ,
-                o.COURSE_COMPLETED
-            FROM
-                `order` o
-            WHERE
-                o.ID_PRODUCT = '$condition'
-                AND
-                o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-        ");
-        return $data;
-    }
+    // // QUERY DELETE DATA
+    // public function DeleteItem($id_course)
+    // {
+    //     $this->db->where('item_course.ID_COURSE', $id_course);
+    //     $this->db->delete('item_course');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteActivity($id_activity)
+    // {
+    //     $this->db->where('ID_ACTIVITY', $id_activity);
+    //     $this->db->delete('activity');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteEvent($id_activity)
+    // {
+    //     $this->db->where('ID_ACTIVITY', $id_activity);
+    //     $this->db->delete('course');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteQuiz($id_course)
+    // {
+    //     $this->db->where('quiz.ID_COURSE', $id_course);
+    //     $this->db->delete('quiz');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteMateri($id_course)
+    // {
+    //     $this->db->where('course.ID_COURSE', $id_course);
+    //     $this->db->delete('course');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteDetailQuiz($id_course)
+    // {
+    //     $this->db->where('detail_quiz.ID_COURSE', $id_course);
+    //     $this->db->delete('detail_quiz');
+    //     return $this->db->query("SET foreign_key_checks = 1;");
+    // }
+    // public function DeleteQuizPenilaian($condtion)
+    // {
+    //     $this->db->where($condtion);
+    //     $this->db->delete('nilai_quiz');
+    // }
+    // public function get_counttask($condition)
+    // {
+    //     $data = DB::select("
+    //         SELECT
+    //             o.MAPPING_COUNT ,
+    //             o.COURSE_COMPLETED
+    //         FROM
+    //             `order` o
+    //         WHERE
+    //             o.ID_PRODUCT = '$condition'
+    //             AND
+    //             o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+    //     ");
+    //     return $data;
+    // }
