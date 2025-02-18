@@ -198,6 +198,20 @@ class CourseGuest extends Controller
 			->orderBy('LOG_TIME', 'DESC')
 			->first();
 
+		//Final Exam
+		if ($data['course']->FINAL_EXAM != null) {
+			$data['final_exam'] = DB::selectOne("
+				SELECT 
+					CODE_EXAM
+				FROM 
+					tb_final_exam 
+				WHERE 
+					ID_ACTIVITY = ?
+					AND ID_USER = ?
+					AND IS_USED = 0
+			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
+		}
+
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
