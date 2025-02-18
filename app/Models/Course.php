@@ -411,6 +411,8 @@ class Course extends Model
                 DB::table('mapping_course')->whereIn('ID_MAPPING', $oldIDMapping)->delete();
             }
         }
+    }
+
 
         // $mapping = $this->db->get_where('mapping_course', ['ID_USER' => session('user')[0]->get('ID_USER'), 'ID_ACTIVITY' => $id_activity])->result_array();
         $mapping = DB::select('
@@ -471,7 +473,7 @@ class Course extends Model
                 }
             }
         }
-    }
+
     public function UpdateActivity($data, $id_activity)
     {
         $this->db->where('ID_ACTIVITY', $id_activity);
@@ -547,4 +549,3 @@ class Course extends Model
         ");
         return $data;
     }
-}
