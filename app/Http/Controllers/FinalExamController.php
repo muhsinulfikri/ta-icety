@@ -396,9 +396,6 @@ class FinalExamController extends Controller
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
 
-            DB::table('item_course')->WHERE(['ID_COURSE' => $req->input('ID_COURSE')])->delete();
-            DB::table('detail_quiz')->WHERE(['ID_COURSE' => $req->input('ID_COURSE')])->delete();
-
             $data['ID_COURSE'] = $req->input('ID_COURSE');
             $this->update_item_materi($data, $req);
             DB::commit();
@@ -415,6 +412,8 @@ class FinalExamController extends Controller
 
     public function update_item_materi($data, $req)
     {
+        DB::table('item_course')->WHERE(['ID_COURSE' => $req->input('ID_COURSE')])->delete();
+
         $orderList          = $req->input('order_list');
         $categoryList       = $req->input('type');
         $materiTitleList    = $req->input('materi_title');
@@ -469,6 +468,8 @@ class FinalExamController extends Controller
 
     public function update_item_quiz($data, $req, $lastIdQuiz)
     {
+        DB::table('detail_quiz')->WHERE(['ID_COURSE' => $req->input('ID_COURSE')])->delete();
+
         if (!empty($req->input('ID_QUIZ'))) {
             $id_quiz_in = implode(',', $req->input('ID_QUIZ'));
 
