@@ -141,7 +141,7 @@
                         </div>
                         @endif
                         <div class="wc-proceed-to-checkout">
-                            <button type="button" class="checkout-button btn btn-secondary" style="padding: 0.718047em 1.41575em;" id="pay">
+                            <button type="button" class="checkout-button w-100 btn btn-secondary" style="padding: 0.718047em 1.41575em;" id="pay">
                                 {{ $TotalBayar == 0 ? 'Add Now' : 'Purchase Now' }}
                             </button>
                         </div>
@@ -224,7 +224,7 @@
             },
             dataType: 'json',
             success: function(response) {
-                console.log(response.invoice.id);
+                console.log(response);
                 getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
             },
             error: function(xhr, status, error) {

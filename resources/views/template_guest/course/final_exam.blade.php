@@ -77,6 +77,7 @@
                 var id_activity = @json($id_activity);
 
                 $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<div class="d-flex justify-content-center align-items-center h-100 mt-4"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>');
+                $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('');
                 jQuery.ajax({
                     url: "<?= Request::segment(0) ?>/course/final-exam/evaluation/",
                     type: "POST",
@@ -89,10 +90,11 @@
                         "pilih_jwbn": pilih_jwbn 
                     },
                     success: function(data) {
-                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
+                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + Math.ceil(data.nilai) + '</h6>');
+                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
                         $(e).hide();
                         $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {
-                            window.redirect("<?= Request::segment(0) ?>/course/final-exam/<?= $code ?>");
+                            window.location.href = "<?= Request::root() ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
                         });
                     }
                 });

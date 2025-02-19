@@ -359,17 +359,17 @@
                 <form id="buy-code-exam" action="" method="post">
                     <div class="mb-3">
                         <label class="fw-bold">Nama :</label>
-                        <p class="text-muted mb-0">Final Exam</p>
+                        <p class="text-muted mb-0">{{ $data_final_exam->TITLE_ACTIVITY }}</p>
                     </div>
                     <div class="mb-3">
                         <label class="fw-bold">Price :</label>
-                        <p class="text-muted mb-0">Rp 10,923</p>
+                        <p class="text-muted mb-0">{{ $data_final_exam->PRICE_ACTIVITY == 0 ? 'Free' : 'Rp ' . number_format($data_final_exam->PRICE_ACTIVITY, 0, ',', '.') }}</p>
                     </div>
                 </form>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-secondary px-4 py-2 rounded-3" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary px-4 py-2 rounded-3" onclick="buyNow()">Purchase Now</button>
+                <button type="button" class="btn btn-secondary px-4 py-2 rounded-3" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary px-4 py-2 rounded-3" onclick="AddToCart()">Purchase Now</button>
             </div>
         </div>
     </div>
@@ -395,7 +395,6 @@
 
 <script>
     $('#refreshPageBtn').click(function() {
-        // Reload the page
         location.reload();
     });
     const Toast = Swal.mixin({
@@ -477,23 +476,48 @@
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
                 <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
+                @if ($history_nilai_final_exam != null)
+                    <h4 class="mb-4 mt-4">History Exam</h4>
+                    <table class="table mt-4 mb-4">
+                        <thead class="table">
+                            <tr>
+                                <th>No</th>
+                                <th>Nilai</th>
+                                <th>Tanggal Exam</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($history_nilai_final_exam as $index => $value)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $value->NILAI }}</td>
+                                <td>{{ $value->created_at }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>                
+                @endif
                 @if ($course->FINAL_EXAM != null)
-                    @if ($final_exam != null)
-                    <h6 class="mt-2">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
+                    @if ($final_min_nilai->MIN_NILAI <= $nilai_final_exam->NILAI)
+                        <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
+                    @else
+                        @if ($final_exam != null)
+                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
+                        @endif
+                        @if ($final_exam == null)
+                            <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
+                                Buy Code Exam
+                            </button>
+                        @endif
+                            <br>
+                            <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
+                                Klick Here For Final Exam
+                            <br>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                                Final Exam
+                            </button>
                     @endif
-                    @if ($final_exam == null)
-                    <h6 class="mt-2">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
-                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
-                        Buy Code Exam
-                    </button>
-                    @endif
-                    <br>
-                    <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
-                    Klick Here For Final Exam
-                    <br>
-                    <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#redeemModal">
-                    Final Exam
-                    </button>
                 @endif
                 </div>
             </div>`);
@@ -651,7 +675,7 @@
         });
 
         $.ajax({
-            url: '<?= Request::segment(0) ?>/course/final-exam/validasi-code',
+            url: "<?= url('course/final-exam/validasi-code') ?>",
             type: "POST",
             data: {
                 code: code,
@@ -666,7 +690,7 @@
                         confirmButtonText: 'Continue'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "{{ url('course/final-exam/'.$course->FINAL_EXAM.'/' ) }}";
+                            window.location.href = "<?= url('course/final-exam/'.$course->FINAL_EXAM) ?>/" + codeExam;
                         }
                     });
                 } else {
@@ -675,26 +699,52 @@
                         text: data.message,
                         icon: 'error',
                         confirmButtonText: 'Close'
-                    })
+                    });
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 console.error("AJAX Error: ", textStatus, errorThrown);
                 console.error("Response Text: ", jqXHR.responseText);
-                showAlertModal('Error', jqXHR.responseText, 'error')
+                showAlertModal('Error', jqXHR.responseText, 'error');
             }
         });
     }
-    function buyNow() {
-        Swal.fire({
-            title: 'Processing...',
-            text: 'Please wait while we process your request.',
-            allowOutsideClick: false,
-            allowEscapeKey: false,
+
+    function AddToCart() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
             showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
-        });
+        })
+        <?php if (!empty(session('user'))) { ?>
+            $.ajax({
+                url: '<?= Request::segment(0) ?>/add/order',
+                type: "GET",
+                data: {
+                    id_activity: "<?= $course->FINAL_EXAM ?>",
+                    type: 3
+                },
+                dataType: 'json',
+                success: function(data) {
+                    Toast.fire({
+                        icon: (data.Status) ? 'success' : 'error',
+                        title: data.Message
+                    })
+                }
+            });
+        <?php } else { ?>
+            Toast.fire({
+                icon: 'error',
+                title: 'Please login first!'
+            })
+        <?php } ?>
     }
+
+
 </script>

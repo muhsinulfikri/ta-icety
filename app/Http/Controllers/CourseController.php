@@ -103,6 +103,9 @@ class CourseController extends Controller
                 activity a
             WHERE
                 a.TYPE_ACTIVITY = 3
+                AND a.ID_ACTIVITY NOT IN (
+                    SELECT FINAL_EXAM FROM course WHERE FINAL_EXAM IS NOT NULL
+                )
         ");
 
         return
