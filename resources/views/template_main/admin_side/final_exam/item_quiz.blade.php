@@ -46,6 +46,36 @@
                     <i class="anticon anticon-loading m-r-5"></i>
                     <span class="col-md-12">Add New Question</span>
                 </div>
+                <div id="import_soal_{{ $no }}{{ $id_quiz }}"
+                    class="btn btn-success rounded col-md-4 float-end mx-2" style="cursor: pointer;">
+                    <span class="col-md-12 text-white">Import Soal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" style="z-index: 1060;" id="insert_soal_{{ $no }}{{ $id_quiz }}" data-bs-backdrop="static"
+    data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalCenterTitle">Import Soal</h4>
+                <button type="button" class="btn px-2 py-0" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" class="fs-3">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body row">
+                <p>Masukkan File Excel Sesuai Template yang disediakan</p>
+                <a href="https://expo-dev.is3.cloudhost.id/CAROUSEL/Image1729761040-1729761040.xlsx" class="btn btn-success rounded text-white" download> Download Template</a>
+                <div class="col-md-12 text-center d-flex justify-content-around py-2">
+                    <input type="file" name="excel" id="excelFile_{{ $no }}{{ $id_quiz }}" class="custom-file-input dropify"
+                    accept=".xlsx" data-allowed-file-extensions="xlsx">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark rounded text-white" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success rounded text-white" id="submitFile_{{ $no }}{{ $id_quiz }}">Submit</button>
             </div>
         </div>
     </div>
@@ -73,6 +103,100 @@
             }
         });
     })
+
+    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {  
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Harap Tunggu.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+            Swal.showLoading();
+            }
+        });
+        $('#insert_soal_{{ $no }}{{ $id_quiz }}').modal('hide');
+        $('#excelFile_{{ $no }}{{ $id_quiz }}').dropify('clear');
+        const fileInput = document.getElementById('excelFile_{{ $no }}{{ $id_quiz }}');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Please select a file first.');
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+
+            // Get the first sheet
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+
+            // Convert the sheet to JSON format
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+            function mapData(data) {
+                return data.map(row => ({
+                    questionNumber: row['No'],
+                    question: row['Soal'],    
+                    optionA: row['Pilihan A'],
+                    optionB: row['Pilihan B'],
+                    optionC: row['Pilihan C'],
+                    optionD: row['Pilihan D'],
+                    answer: row['Jawaban (Abjad Saja gunakan huruf kecil)']
+                }));
+            }
+
+            const mappedData = mapData(jsonData);
+            // Create a function that returns a Promise for the AJAX call
+            const addQuestion = (row) => {
+                return new Promise((resolve, reject) => {
+                    $('#add_new_batch_soal_{{ $no }}').toggleClass("is-loading");
+                    $('#add_new_soal_{{ $no }}').toggleClass("is-loading");
+
+                    $.ajax({
+                        url: 'add_question/{{ $no }}/' + no_quiz,
+                        success: function(html) {
+                            $(".soal_form_{{ $no }}").append(html);
+                            $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
+                            $('#add_new_soal_{{ $no }}').removeClass("is-loading");
+
+                            callback(row, {{ $no }}, no_quiz);                        
+                            no_quiz++;
+                            resolve(); // Resolve the promise when the AJAX call is successful
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error adding question:', error);
+                            console.log(xhr.responseText);
+                            reject(error); // Reject the promise on error
+                        }
+                    });
+                });
+            };
+
+            // Use reduce to chain the promises
+            mappedData.reduce((promise, row) => {
+                return promise.then(() => {
+                    return addQuestion(row);
+                });
+            }, Promise.resolve()) // Start with a resolved promise
+            .then(() => {
+                Swal.close();
+            })
+            .catch((error) => {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error during processing',
+                    icon: 'error'
+                });
+                console.log("Error during processing:", error);
+            });
+        };
+
+        reader.readAsArrayBuffer(file);
+    });
 
     $(".soal_form_{{ $no }}").sortable({
         cursor: "grabbing",
