@@ -23,28 +23,28 @@
                 <div class="row">
                     <input id="radio1{{ $no }}{{ $index }}" name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio" value="a" checked="">
                     <label for="radio1{{ $no }}{{ $index }}" class="mr-1">A. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_a[]">
+                    <input type="text" class="form-control col-md-10" id="jawaban_a{{ $no }}{{ $index }}" name="jawaban_a[]">
                 </div>
             </div>
             <div class="radio col-md-12 mb-2">
                 <div class="row">
                     <input id="radio2{{ $no }}{{ $index }}" name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio" value="b">
                     <label for="radio2{{ $no }}{{ $index }}" class="mr-1">B. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_b[]">
+                    <input type="text" class="form-control col-md-10" id="jawaban_b{{ $no }}{{ $index }}" name="jawaban_b[]">
                 </div>
             </div>
             <div class="radio col-md-12 mb-2">
                 <div class="row">
                     <input id="radio3{{ $no }}{{ $index }}" name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio" value="c">
                     <label for="radio3{{ $no }}{{ $index }}" class="mr-1">C. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_c[]">
+                    <input type="text" class="form-control col-md-10" id="jawaban_c{{ $no }}{{ $index }}" name="jawaban_c[]">
                 </div>
             </div>
             <div class="radio col-md-12 mb-2">
                 <div class="row">
                     <input id="radio4{{ $no }}{{ $index }}" name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio" value="d">
                     <label for="radio4{{ $no }}{{ $index }}" class="mr-1">D. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_d[]">
+                    <input type="text" class="form-control col-md-10" id="jawaban_d{{ $no }}{{ $index }}" name="jawaban_d[]">
                 </div>
             </div>
         </div>

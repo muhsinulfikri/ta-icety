@@ -28,7 +28,7 @@
                         name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio"
                         value="a" <?= $item['KUNCI'] == 'a' ? 'checked' : '' ?>>
                     <label for="radio1{{ $no }}{{ $index }}" class="mr-1">A. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_a[]"
+                    <input type="text" class="form-control col-md-10" id="jawaban_a{{ $no }}{{ $index }}" name="jawaban_a[]"
                         value="<?= $item['PIL_A'] ?>">
                 </div>
             </div>
@@ -38,7 +38,7 @@
                         name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio"
                         value="b" <?= $item['KUNCI'] == 'b' ? 'checked' : '' ?>>
                     <label for="radio2{{ $no }}{{ $index }}" class="mr-1">B. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_b[]"
+                    <input type="text" class="form-control col-md-10" id="jawaban_b{{ $no }}{{ $index }}" name="jawaban_b[]"
                         value="<?= $item['PIL_B'] ?>">
                 </div>
             </div>
@@ -48,7 +48,7 @@
                         name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio"
                         value="c" <?= $item['KUNCI'] == 'c' ? 'checked' : '' ?>>
                     <label for="radio3{{ $no }}{{ $index }}" class="mr-1">C. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_c[]"
+                    <input type="text" class="form-control col-md-10" id="jawaban_c{{ $no }}{{ $index }}" name="jawaban_c[]"
                         value="<?= $item['PIL_C'] ?>">
                 </div>
             </div>
@@ -58,7 +58,7 @@
                         name="kunci_soal[{{ $no }}][{{ $index }}]" type="radio"
                         value="d" <?= $item['KUNCI'] == 'd' ? 'checked' : '' ?>>
                     <label for="radio4{{ $no }}{{ $index }}" class="mr-1">D. </label>
-                    <input type="text" class="form-control col-md-10" name="jawaban_d[]"
+                    <input type="text" class="form-control col-md-10" id="jawaban_d{{ $no }}{{ $index }}" name="jawaban_d[]"
                         value="<?= $item['PIL_D'] ?>">
                 </div>
             </div>
