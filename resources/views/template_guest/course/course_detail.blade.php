@@ -675,7 +675,7 @@
         });
 
         $.ajax({
-            url: "<?= url('course/final-exam/validasi-code') ?>",
+            url: "<?= Request::segment(0) ?>/course/final-exam/validasi-code",
             type: "POST",
             data: {
                 code: code,
