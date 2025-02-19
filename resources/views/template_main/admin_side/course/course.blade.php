@@ -52,6 +52,7 @@
                             <th>Nama Course</th>
                             <th>Status</th>
                             <th>Status Private</th>
+                            <th>Tipe</th>
                             <th width="15%">Course Price</th>
                             <th>Date Start</th>
                             <th>Date End</th>
@@ -68,6 +69,7 @@
                                 <td width="300"><?= $item->TITLE_ACTIVITY ?></td>
                                 <td><?= $item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>'?> </td>
                                 <td><?= $item->IS_PUBLIC == 1 ? '<span class="badge badge-success">Public</span>' : '<span class="badge badge-danger">Private</span>' ?></td>
+                                <td><?= $item->TYPE_ACTIVITY == 3 ? '<span class="badge badge-danger">Final Exam</span>' : '<span class="badge badge-success">Kursus Biasa</span>' ?></td>
                                 <td><?= $item->PRICE_ACTIVITY == 0 ? '<span class="badge badge-success">Free</span>' : 'Rp ' . number_format($item->PRICE_ACTIVITY, 0, '.', '.') ?>
                                 </td>
                                 <td><?= date_format(date_create($item->DATE_START), 'j F Y H:i:s') ?></td>
@@ -76,14 +78,12 @@
                                     <button type="button" onclick="location.href='courses/lihat_peserta?ID_ACTIVITY={{$item->ID_ACTIVITY}}'" class="btn btn-warning mb-1 btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 160px !important;">
                                         <i class="bx bxs-user-detail font-size-16 align-middle"></i> See Participant
                                     </button>
-                                    @if ($item->IS_PUBLIC == 0)
-                                        <form action="courses/invite" method="GET">
-                                            <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
-                                            <button type="submit" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
-                                                <i class="bx bx-send font-size-16 align-middle"></i> Invite User
-                                            </button>
-                                        </form>
-                                    @endif
+                                    <form action="courses/invite" method="GET">
+                                        <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
+                                        <button type="submit" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
+                                            <i class="bx bx-send font-size-16 align-middle"></i> Invite User
+                                        </button>
+                                    </form>
                                     @php
                                         $link = $item->TYPE_ACTIVITY == 3 ? 'courses/add-final/edit' : 'courses/edit';
                                     @endphp

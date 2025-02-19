@@ -94,7 +94,7 @@
                         $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
                         $(e).hide();
                         $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {
-                            window.location.href = "<?= Request::root() ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
+                            window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
                         });
                     }
                 });
