@@ -120,7 +120,7 @@
                 <tr>
                     <th class="text-align-center">
                         <div class="text description">
-                            Congratulations on joining the <?= ($TYPE == "CRS") ? "course" : "event"; ?> entitled
+                            Congratulations on joining the <?= ($TYPE == "CRS") ? "course" : "Final Exam"; ?> entitled
                         </div>
                     </th>
                 </tr>

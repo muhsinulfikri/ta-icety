@@ -117,7 +117,7 @@
                         <label class="col-sm-2 col-form-label control-label">Duration in Hours<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
-                            <input type="number" class="form-control" name="duration_hours" placeholder="Duration Complete Course in Hours"
+                            <input type="number" class="form-control" name="duration_hour" placeholder="Duration Complete Course in Hours"
                                 required>
                             <small class="text-danger">* Input number only</small>
                         </div>
@@ -162,15 +162,7 @@
                             <small class="text-danger">* Summary Certificate for display in Certificate</small>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Certificate Code <span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-5">
-                            <input type="text" class="form-control" name="certif_code" placeholder="Certificate Code"
-                                style="text-transform: uppercase" required>
-                            <small class="text-danger">* Use Only uppercase and no spacebar/whitespace</small>
-                        </div>
-                    </div>
+
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
                                 class="text-danger">*</span></label>

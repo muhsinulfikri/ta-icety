@@ -26,6 +26,7 @@ class CourseGuest extends Controller
 	protected $categoryModel;
 	protected $certificateModel;
     protected $activityModel;
+    protected $finalExamModel;
 
 	public function __construct()
 	{
@@ -36,6 +37,7 @@ class CourseGuest extends Controller
 		$this->categoryModel = new Category();
 		$this->certificateModel = new Certificate();
         $this->activityModel = new Activity();
+        $this->finalExamModel = new FinalExam();
 	}
 
 	public function index()
@@ -146,17 +148,17 @@ class CourseGuest extends Controller
 		");
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
 			$bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-			$countSertif = DB::table('sertifikat_activity')
+			$countSertifCourse = DB::table('sertifikat_activity')
 				->where('ID_ACTIVITY', $data['id_activity'])
 				->count() + 1;
-			$sertif_number = $countSertif . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
-			$data_sertif = array(
+			$sertif_number_course = $countSertifCourse . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
+			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
+			$data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
-				"NO_SERTIFIKAT" => $sertif_number,
+				"NO_SERTIFIKAT" => $sertif_number_course,
 				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-				"FILE_SERTIFIKAT" => $sertif_path,
+				"FILE_SERTIFIKAT" => $sertif_path_course,
                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
                 "INFO_CERTIFICATE" => json_encode($info_titles),
                 "DURATION" => $data['course']->DURATION,
@@ -164,10 +166,10 @@ class CourseGuest extends Controller
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
 
-			DB::table('sertifikat_activity')->insert($data_sertif);
-			$data['sertif'] = (object) $data_sertif;
+			DB::table('sertifikat_activity')->insert($data_sertif_course);
+			$data['sertif_course'] = (object) $data_sertif_course;
 		} else {
-			$data['sertif'] = $sertifCheck;
+			$data['sertif_course'] = $sertifCheck;
 		}
 
 		//get nilai
@@ -214,9 +216,9 @@ class CourseGuest extends Controller
 			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
 
 			$data['final_min_nilai'] = DB::selectOne("
-				SELECT 
+				SELECT
 					ic.MIN_NILAI
-				FROM 
+				FROM
 					item_course ic
 				LEFT JOIN course c ON
 					c.ID_COURSE = ic.ID_COURSE
@@ -251,6 +253,31 @@ class CourseGuest extends Controller
 			$finalExamModel = new FinalExam();
 			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
 			$data['nilai_final_exam'] = $data['nilai_final_exam'] ? $data['nilai_final_exam'] : (object) ['NILAI' => 0];
+            // dd($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI);
+            if(!empty($data['nilai_final_exam']->NILAI) >= !empty($data['final_min_nilai']->MIN_NILAI)){
+                $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+                $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+                $countSertifExam = DB::table('sertifikat_activity')
+                    ->where('ID_ACTIVITY', $data['course']->FINAL_EXAM)
+                    ->count() + 1;
+                $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
+                $data_sertif_exam = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $data['id_activity'],
+                    "NO_SERTIFIKAT" => $sertif_number_exam,
+                    "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+                    "FILE_SERTIFIKAT" => $sertif_path_exam,
+                    "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                    "INFO_CERTIFICATE" => json_encode($info_titles),
+                    "DURATION" => $data['course']->DURATION,
+                    "HOURS" => $data['course']->HOURS,
+                    "LOG_TIME" => date('Y-m-d H:i:s')
+                );
+                DB::table('sertifikat_activity')->insert($data_sertif_exam);
+			    $data['sertif_exam'] = (object) $data_sertif_exam;
+
+            }
 		}
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
@@ -806,7 +833,7 @@ class CourseGuest extends Controller
 			"NILAI" 		=> $nilai,
 			"created_at" 	=> date('Y-m-d H:i:s'),
 		];
-		
+
 		$id_activity_parent = DB::selectOne("
 			SELECT
 				ID_ACTIVITY

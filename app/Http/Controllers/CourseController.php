@@ -128,7 +128,6 @@ class CourseController extends Controller
                 'IMAGE_ACTIVITY'        => FileUpload::S3($req->file('image_activity'), 'IMAGE_ACTIVITY', 'Image-Activity-' . strtotime(now())),
                 'TYPE_ACTIVITY'         => 1,
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
-                'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),
@@ -151,7 +150,7 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
                 'KATEGORI'              => $req->input('category'),
                 'DURATION'              => $req->input('duration_month'),
-                'HOURS'                 => $req->input('duration_hours')
+                'HOURS'                 => $req->input('duration_hour')
             ];
 
             if ($req->input('req')) {
@@ -279,7 +278,6 @@ class CourseController extends Controller
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
                 c.FINAL_EXAM ,
-                a.SERTIF_CODE ,
                 k.ID_KATEGORI
             FROM
                 activity a
@@ -417,7 +415,6 @@ class CourseController extends Controller
                 'ID_USER'               => session('user')[0]['ID_USER'],
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
                 'PRICE_ACTIVITY'        => $req->input('price'),
-                'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),
@@ -445,7 +442,8 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE'      => $req->input('desc'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
                 'KATEGORI'              => $req->input('category'),
-                'DURATION'              => $req->input('duration')
+                'DURATION'              => $req->input('duration_months'),
+                'HOURS'                 => $req->input('duration_hours')
             ];
 
             if ($req->input('req')) {
@@ -621,7 +619,7 @@ class CourseController extends Controller
             DB::beginTransaction();
             $id_user = $req->input('id_user');
             $id_activity = $req->input('id_activity');
-    
+
             $cek_data = DB::SelectOne("
                 SELECT
                     *
@@ -632,7 +630,7 @@ class CourseController extends Controller
                 AND
                     ID_ACTIVITY = '" . $id_activity . "'
             ");
-    
+
             if (!empty($cek_data)) {
                 return redirect('courses/invite?id_activity=' . $id_activity)->with(['err_msg' => 'User Already Invited', 'location' => 'courses/invite?id_activity=' . $id_activity]);
             } else {
@@ -671,7 +669,7 @@ class CourseController extends Controller
                     'KODE_USER'     => $id_user,
                     'DATE_PAY'      => date('Y-m-d H:i:s'),
                     'DATE_CREATED'  => date('Y-m-d H:i:s'),
-                ]; 
+                ];
                 DB::table('payment')->insert($data_payment);
                 DB::commit();
                 return redirect('courses/invite?id_activity=' . $id_activity)->with(['succ_msg' => 'Successfully Invite User', 'courses/invite?id_activity=' . $id_activity]);
@@ -735,7 +733,7 @@ class CourseController extends Controller
                     'ID_ACTIVITY'   => $id_activity
                 ];
                 DB::table('tb_invited')->insert($invited);
-            
+
                 $order = [
                     'ID_ORDER'      => $this->GenerateUniqID_Order($data['course']->TITLE_ACTIVITY),
                     'ID_USER'       => $id_user,
@@ -754,7 +752,7 @@ class CourseController extends Controller
                     'KODE_USER'     => $id_user,
                     'DATE_PAY'      => date('Y-m-d H:i:s'),
                     'DATE_CREATED'  => date('Y-m-d H:i:s'),
-                ]; 
+                ];
                 DB::table('payment')->insert($data_payment);
             }
         }

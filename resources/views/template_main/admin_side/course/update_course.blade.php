@@ -142,15 +142,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Certificate Code<span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="certif_code" placeholder="Certificate Code"
-                                style="text-transform: uppercase" required>
-                            <small class="text-danger">* Use Only uppercase and no spacebar/whitespace</small>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
@@ -313,7 +304,6 @@
     $('input[name="date_end"]').val(data.DATE_END);
     $('input[name="duration_months"]').val(data.DURATION);
     $('input[name="duration_hours"]').val(data.HOURS);
-    $('input[name="certif_code"]').val(data.SERTIF_CODE);
     $('select[name="is_public"]').val(data.IS_PUBLIC);
     $('select[name="category"]').val(data.ID_KATEGORI);
     $('input[name="status"]').prop('checked', data.STATUS);

@@ -30,4 +30,23 @@ class FinalExam extends Model
         ');
         return $sql;
     }
+    public function get_nilai_for_sertif($id_activity, $id_user){
+        $sql = DB::selectOne('
+            SELECT
+           	tnfe.NILAI
+        FROM
+            tb_final_exam tfe
+        LEFT JOIN
+            activity a ON a.ID_ACTIVITY = tfe.ID_ACTIVITY
+        LEFT JOIN
+        	tb_nilai_final_exam tnfe ON tnfe.ID_ACTIVITY = tfe.ID_ACTIVITY
+        WHERE
+            a.ID_ACTIVITY = "'.$id_activity.'"
+        AND
+        	a.TYPE_ACTIVITY = 3
+       	AND
+       		tfe.ID_USER = "'.$id_user.'"
+        ');
+        return $sql;
+    }
 }

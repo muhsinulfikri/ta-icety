@@ -71,15 +71,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Certificate Code <span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-5">
-                            <input type="text" class="form-control" name="certif_code" placeholder="Certificate Code"
-                                style="text-transform: uppercase" required>
-                            <small class="text-danger">* Use Only uppercase and no spacebar/whitespace</small>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Status</label>
                         <div class="col-md-5 row">
                             Not Active
