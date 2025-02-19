@@ -5,10 +5,14 @@
         <section id="doc-course">
             <div class="d-flex justify-content-center align-items-center" id="document-frame">
                 <div class="d-flex align-items-center justify-content-center" style="width:600px; height:300px;">
+                    @if ($detail_item_course->LINK_MATERI === '-')
+                        <p>Materi tidak tersedia untuk chapter ini</p>
+                    @else
                     <button class="btn bg-white px-3 py-2 rounded-3 shadow fw-semibold" onclick="ShowDocument(this)">
                         <i class="bi bi-file-text me-2" style="font-size: 1.1rem;-webkit-text-stroke: 0.2px;"></i>
                         Show Document
                     </button>
+                    @endif
                 </div>
             </div>
             <script>
@@ -19,6 +23,7 @@
                     var pptxRegex = /^https?:\/\/[\w.-]+\/[\w\/.-]+\.pptx(\?.*)?$/;
                     const fliphtmlRegex = /fliphtml5\.com/;
                     const googleDriveRegex = /^https?:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+
                     if (!file && !materiLink) {
                         $('#document-frame').html('<p>Dokumen Tidak ditemukan hubungi Instruktur</p>');
                     } else if (pptxRegex.test(file)) {
@@ -72,6 +77,7 @@
                 <button type="button" class="btn btn-secondary rounded w-100" data-bs-toggle="modal" data-bs-target="#YTModal">
                     Open Video
                 </button>
+            <?php } elseif ($url == "-"){ ?>
             <?php } else { ?>
                 <h6>Video cannot be opened. Contact the instructor for more information.</h6>
             <?php } ?>
@@ -173,7 +179,7 @@
                         <img class="nav-link rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 40%;height:50%;background-size:cover"></img>
                     </div>
                     <div class="d-flex justify-content-center pt-4">
-                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai {{$quiz_grade->NILAI}}</h6>
+                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai {{round($quiz_grade->NILAI)}}</h6>
                     </div>
                 </div>
             </div>
@@ -189,7 +195,7 @@
                         <img src="https://img.freepik.com/free-vector/hr-management-hiring-employees-people-cv_107791-11222.jpg" alt="Loader.gif" style="max-width: 50%;">
                     </div>
                     <div class="d-flex justify-content-center pt-4">
-                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai : <?= $quiz_grade->NILAI ?></h6>
+                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai : <?= round($quiz_grade->NILAI) ?></h6>
                     </div>
                 </div>
             </div>

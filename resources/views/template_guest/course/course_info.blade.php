@@ -272,7 +272,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <a href="course/info/${data.TITLE_ACTIVITY.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_ACTIVITY}" class="card-link">Find out more</a>
+                                    <a href="${data.TITLE_ACTIVITY.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_ACTIVITY}" class="card-link">Find out more</a>
                                 </div>
                             </div>
                         </div>

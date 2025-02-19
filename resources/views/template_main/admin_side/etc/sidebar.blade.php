@@ -28,9 +28,9 @@
                     <li>
                         <a href="<?= url('courses') ?>">Course</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a href="<?= url('events') ?>">Event</a>
-                    </li>
+                    </li> --}}
                 </ul>
             </li>
             <?php if ((session('user')[0]['ID_ROLE']) == 1) { ?>

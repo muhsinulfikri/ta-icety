@@ -117,7 +117,7 @@
         <div class="d-flex gap-4 mt-5 mb-4">
             <button class="btn btn-tertiary btn-course active">Course</button>
             <button class="btn btn-tertiary btn-ebook">E-Book</button>
-            <button class="btn btn-tertiary btn-event">Event</button>
+            {{-- <button class="btn btn-tertiary btn-event">Event</button> --}}
         </div>
 
 
@@ -142,11 +142,11 @@
         <div class="d-grid gap-4 course-grid-template event-container" style="display: none !important;">
 
         </div>
-        <div class="row btn-more-event" hidden>
+        {{-- <div class="row btn-more-event" hidden>
             <div class="col-12 text-center mt-3">
                 <a href="{{ url('event') }}" class="btn btn-secondary">Lihat Semua Event</a>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 </section>
