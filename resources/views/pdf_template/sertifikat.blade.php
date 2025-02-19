@@ -91,11 +91,6 @@
                             <?= $NO_SERTIF ?>
                         </div>
                     </th>
-                    <th class="text-align-center">
-                        <div class="text duration">
-                            <p>Approximately <?= $DURATION ?> month to complete</p>
-                        </div>
-                    </th>
                 </tr>
             </table>
         </div>
@@ -115,6 +110,13 @@
 
         <div class="box">
             <table class="valign-middle">
+                <tr>
+                    <th class="text-align-center">
+                        <div class="text duration">
+                            <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete</p>
+                        </div>
+                    </th>
+                </tr>
                 <tr>
                     <th class="text-align-center">
                         <div class="text description">

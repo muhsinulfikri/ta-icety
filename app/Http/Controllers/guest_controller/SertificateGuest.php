@@ -55,11 +55,11 @@ class SertificateGuest extends Controller
 
     public function verifSertif(Request $request) {
         $data['title'] = 'Verifikasi Sertifikat';
-        $id_sertif = Crypt::decryptString($request->id);
-        // dd($id_sertif);
+        $data['id'] = Crypt::decryptString($request->id);
 
         $data['sertifikat'] = DB::selectOne("
             SELECT
+                sa.ID_SERTIFIKAT,
                 sa.FILE_SERTIFIKAT,
                 u.NAME,
                 a.TITLE_ACTIVITY
@@ -70,7 +70,7 @@ class SertificateGuest extends Controller
             LEFT JOIN activity a ON
                 sa.ID_ACTIVITY = a.ID_ACTIVITY
             WHERE
-                ID_SERTIFIKAT = '$id_sertif'
+                ID_SERTIFIKAT = '".$data['id']."'
             ");
 
         if ($data['sertifikat'] == null) {

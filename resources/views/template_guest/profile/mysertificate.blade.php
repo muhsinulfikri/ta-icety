@@ -23,7 +23,7 @@
                             <?= $item->TYPE_ACTIVITY == 2 ? '<span class="badge bg-success">Event</span>' : '<span class="badge bg-danger">Course</span>' ?>
                         </td>
                         <td class="py-3">
-                            <button type="button" class="btn btn-primary col-md-12 my-3"><a href="/verifikasi/{{ $id }}">Verifikasi Sertifikat</a></button>
+                            <a href="/verifikasi/{{ Crypt::encryptString($item->ID_SERTIFIKAT) }}"><button type="button" class="btn btn-primary col-md-12 my-3">Verifikasi Sertifikat</button></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

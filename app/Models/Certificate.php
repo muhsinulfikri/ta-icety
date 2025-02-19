@@ -25,7 +25,7 @@ class Certificate extends Model
         return $this->db->affected_rows();
     }
 
-    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration)
+    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours)
     {
         set_time_limit(120);
         try {
@@ -48,6 +48,7 @@ class Certificate extends Model
             $data['SUMMARY'] = $summary;
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
+            $data['HOURS'] = $hours;
 
             $html = view('pdf_template.sertifikat', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
