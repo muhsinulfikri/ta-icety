@@ -547,7 +547,7 @@
         <div class="d-flex gap-4 mt-5 mb-4">
             <button class="btn btn-tertiary btn-course active">Course</button>
             <button class="btn btn-tertiary btn-ebook">E-Book</button>
-            <button class="btn btn-tertiary btn-event">Event</button>
+            {{-- <button class="btn btn-tertiary btn-event">Event</button> --}}
         </div>
 
 

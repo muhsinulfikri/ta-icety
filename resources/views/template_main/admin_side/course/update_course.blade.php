@@ -90,7 +90,7 @@
                         <label class="col-sm-2 col-form-label control-label">Durasi per Months<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
-                            <input type="number" class="form-control" name="duration_month" required>
+                            <input type="number" class="form-control" name="duration_months" required>
                             <small class="text-danger">* Input number only</small>
                         </div>
                     </div>
@@ -311,7 +311,7 @@
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
-    $('input[name="duration_month"]').val(data.DURATION);
+    $('input[name="duration_months"]').val(data.DURATION);
     $('input[name="duration_hours"]').val(data.HOURS);
     $('input[name="certif_code"]').val(data.SERTIF_CODE);
     $('select[name="is_public"]').val(data.IS_PUBLIC);
