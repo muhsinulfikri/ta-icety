@@ -64,15 +64,6 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Certificate Code<span
-                                class="text-danger">*</span></label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="certif_code" placeholder="Certificate Code"
-                                style="text-transform: uppercase" required>
-                            <small class="text-danger">* Use Only uppercase and no spacebar/whitespace</small>
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Status</label>
                         <div class="col-md-5 column">
                             <div class="switch m-r-10">
@@ -156,7 +147,6 @@
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
-    $('input[name="certif_code"]').val(data.SERTIF_CODE);
     $('input[name="status"]').prop('checked', data.STATUS);
 
     $('#setFree').change(function() {

@@ -48,10 +48,10 @@
             <?php
             $date_start_format = new DateTime($kursus->DATE_START);
             $date_end_format = new DateTime($kursus->DATE_END);
-            
+
             $date_start = $date_start_format->format('d M Y');
             $date_end = $date_end_format->format('d M Y');
-            
+
             $date_start_time = $date_start_format->format('H.i');
             $date_end_time = $date_end_format->format('H.i');
             ?>
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="col-md-12 mt-5">
-                <a href="/events" class="btn btn-sm btn-danger">
+                <a href="/courses" class="btn btn-sm btn-danger">
                     <i class="fas fa-chevron-left"></i> KEMBALI</a>
                 <?php if(!empty($list_peserta)) { ?>
                 <button id="exportButton"

@@ -72,7 +72,6 @@ class FinalExamController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price_course'),
                 'IMAGE_ACTIVITY'        => null,
                 'TYPE_ACTIVITY'         => 3,
-                'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),

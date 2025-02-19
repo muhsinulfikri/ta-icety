@@ -167,8 +167,8 @@
                                 href="#nav-announcement" role="tab" aria-controls="nav-announcement-tab"
                                 aria-selected="false">Announcement</a>
                             <?php if ($tot_proggress == 100) { ?>
-                                <a class="nav-item nav-link" id="nav-sertif-tab" data-bs-toggle="tab" href="#nav-sertif"
-                                    role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a>
+                                {{-- <a class="nav-item nav-link" id="nav-sertif-tab" data-bs-toggle="tab" href="#nav-sertif"
+                                    role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a> --}}
                                 <a class="nav-item nav-link" id="nav-komen-tab" data-bs-toggle="tab" href="#nav-komen"
                                     role="tab" aria-controls="nav-komen-tab" aria-selected="false">Komentar</a>
                             <?php } ?>
@@ -214,7 +214,7 @@
                                         <button
                                             class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                             onclick="ShowCertificateCode(this)" data-type="5">
-                                            Show Certificate Code
+                                            Show Certificate Course
                                         </button>
                                         @if ($course->FINAL_EXAM != null)
                                         <button
@@ -223,7 +223,15 @@
                                             Final Exam
                                         </button>
                                         @endif
+                                        @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI)
+                                        <button
+                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                onclick="ShowCertificateFinal(this)" data-type="5">
+                                                Show Certificate Final Exam
+                                            </button>
+                                        @endif
                                     <?php } ?>
+
                                 </div>
                                 <div class="col bg-white shadow rounded" id="detail-item">
                                     <div class="py-5">
@@ -246,27 +254,18 @@
                         </div>
                         <?php
                         if ($tot_proggress == 100) { ?>
-                            <div class="tab-pane fade" id="nav-sertif" role="tabpanel" aria-labelledby="nav-sertif-tab"
+                            {{-- <div class="tab-pane fade" id="nav-sertif" role="tabpanel" aria-labelledby="nav-sertif-tab"
                                 tabindex="0">
                                 <div class="d-flex justify-content-center">
-                                    <div class="blurred-image" style="pointer-events: none">
-                                        <embed class="overlay" style="width:600px; height:500px; pointer-events: none;"
-                                            src="<?= $sertif->FILE_SERTIFIKAT ?>#toolbar=0&navpanes=0&scrollbar=0&statusbar=0&messages=0&scrollbar=0"
-                                            type="text/plain"></emb>
-                                    </div>
                                     <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
                                         <div class="mx-4 py-3 bg-white">
-                                            <label>Sertificate Code</label>
-                                            <form action="javascript:void(0)">
-                                                <input type="text" class="form-control mb-4" name=""
-                                                    id="input-code">
+                                            <label>Download Sertificate</label>
                                                 <button type="button" class="btn btn-primary col-md-12 my-3"
                                                     onclick="DownloadPdf(this)">Download PDF</button>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="tab-pane fade" id="nav-komen" role="tabpanel" aria-labelledby="nav-komen-tab"
                                 tabindex="0">
                                 <div style="display: flex; justify-content: center; width: 100%;">
@@ -355,6 +354,7 @@
                 <h5 class="modal-title" id="buyCodeModalLabel">Buy Code Exam</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            @if (!empty($data_final_exam))
             <div class="modal-body px-4">
                 <form id="buy-code-exam" action="" method="post">
                     <div class="mb-3">
@@ -367,6 +367,7 @@
                     </div>
                 </form>
             </div>
+            @endif
             <div class="modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary px-4 py-2 rounded-3" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary px-4 py-2 rounded-3" onclick="AddToCart()">Purchase Now</button>
@@ -414,8 +415,8 @@
     <?php if ($tot_proggress == 100) { ?>
 
         function DownloadPdf(e) {
-            if ($('#input-code').val() == '<?= $course->SERTIF_CODE ?>') {
-                var file = '<?= empty($sertif->FILE_SERTIFIKAT) ? null : $sertif->FILE_SERTIFIKAT ?>'
+
+                var file = '<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>'
 
                 $.ajax({
                     url: '<?= Request::segment(0) ?>/update-sertif',
@@ -431,12 +432,6 @@
                         console.error("Response Text: ", jqXHR.responseText);
                     }
                 });
-            } else {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Wrong Code!'
-                })
-            }
         }
 
         function filename(path) {
@@ -456,12 +451,67 @@
             '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
-                <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
-                    <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
-                    Your Certificate Code :
-                    <h6><?= $course->SERTIF_CODE ?></h6>
-                </div>
-            </div>`);
+                                    <div class="d-flex justify-content-center">
+                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+                                            <div class="mx-4 py-3 bg-white">
+                                                <label>Download Sertificate Course</label>
+                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                        onclick="DownloadPdf(this)">Download PDF</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
+    }
+
+    <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
+
+        function DownloadPdfExam(e) {
+
+                var file = '<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>'
+
+                $.ajax({
+                    url: '<?= Request::segment(0) ?>/update-sertif',
+                    type: "POST",
+                    data: {
+                        id_activity: "<?= $course->FINAL_EXAM ?>",
+                    },
+                    success: function(data) {
+                        window.open(file, '_blank');
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error("AJAX Error: ", textStatus, errorThrown);
+                        console.error("Response Text: ", jqXHR.responseText);
+                    }
+                });
+        }
+
+        function filename(path) {
+            path = path.substring(path.lastIndexOf("/") + 1);
+            return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
+        }
+    <?php } ?>
+
+    function ShowCertificateFinal(e) {
+        <?php foreach ($item_course as $item) :  ?>
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+        <?php endforeach; ?>
+        $(e).removeClass('btn-main-outline')
+        $(e).addClass('btn-primary')
+        $("#detail-item").html(
+            '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
+        );
+        $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+                                            <div class="mx-4 py-3 bg-white">
+                                                <label>Download Sertificate Final Exam</label>
+                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                        onclick="DownloadPdfExam(this)">Download PDF</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
     }
 
     function ShowFinalExam(e) {
@@ -476,7 +526,7 @@
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
                 <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
-                @if ($history_nilai_final_exam != null)
+                @if (!empty($history_nilai_final_exam) != null)
                     <h4 class="mb-4 mt-4">History Exam</h4>
                     <table class="table mt-4 mb-4">
                         <thead class="table">
@@ -495,10 +545,10 @@
                             </tr>
                         @endforeach
                         </tbody>
-                    </table>                
+                    </table>
                 @endif
                 @if ($course->FINAL_EXAM != null)
-                    @if ($final_min_nilai->MIN_NILAI <= $nilai_final_exam->NILAI)
+                    @if (!empty($final_min_nilai->MIN_NILAI) <=!empty($nilai_final_exam->NILAI))
                         <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
                     @else
                         @if ($final_exam != null)
