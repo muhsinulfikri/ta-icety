@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
+use DateTime;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -616,29 +617,68 @@ class CourseController extends Controller
 
     public function invite_individu(Request $req)
     {
-        $id_user = $req->input('id_user');
-        $id_activity = $req->input('id_activity');
-
-        $cek_data = DB::SelectOne("
-            SELECT
-                *
-            FROM
-                tb_invited
-            WHERE
-                ID_USER = '" . $id_user . "'
-            AND
-                ID_ACTIVITY = '" . $id_activity . "'
-        ");
-
-        if (!empty($cek_data)) {
-            return redirect('courses/invite?id_activity=' . $id_activity)->with(['err_msg' => 'User Already Invited', 'location' => 'courses/invite?id_activity=' . $id_activity]);
-        } else {
-            $invited = [
-                'ID_USER'       => $id_user,
-                'ID_ACTIVITY'   => $id_activity
-            ];
-            DB::table('tb_invited')->insert($invited);
-            return redirect('courses/invite?id_activity=' . $id_activity)->with(['succ_msg' => 'Successfully Invite User', 'courses/invite?id_activity=' . $id_activity]);
+        try {
+            DB::beginTransaction();
+            $id_user = $req->input('id_user');
+            $id_activity = $req->input('id_activity');
+    
+            $cek_data = DB::SelectOne("
+                SELECT
+                    *
+                FROM
+                    tb_invited
+                WHERE
+                    ID_USER = '" . $id_user . "'
+                AND
+                    ID_ACTIVITY = '" . $id_activity . "'
+            ");
+    
+            if (!empty($cek_data)) {
+                return redirect('courses/invite?id_activity=' . $id_activity)->with(['err_msg' => 'User Already Invited', 'location' => 'courses/invite?id_activity=' . $id_activity]);
+            } else {
+                $invited = [
+                    'ID_USER'       => $id_user,
+                    'ID_ACTIVITY'   => $id_activity
+                ];
+                DB::table('tb_invited')->insert($invited);
+                $data['course'] = DB::SelectOne("
+                    SELECT
+                        a.* ,
+                        c.*
+                    FROM
+                        activity a
+                    LEFT JOIN course c ON
+                        c.ID_ACTIVITY = a.ID_ACTIVITY
+                    WHERE
+                        a.TYPE_ACTIVITY = 1
+                        AND a.ID_ACTIVITY = '" . $id_activity . "'
+                ");
+                $duration = $data['course']->DURATION ?? 2;
+                $order = [
+                    'ID_ORDER'      => $this->GenerateUniqID_Order($data['course']->TITLE_ACTIVITY),
+                    'ID_USER'       => $id_user,
+                    'ID_PRODUCT'    => $id_activity,
+                    'ID_PAY'        => $this->GenerateUniqIDPay($data['course']->TITLE_ACTIVITY),
+                    'PRICE_ORDER'   => 0,
+                    'MAPPING_COUNT' => 0,
+                    'DATE_COMPLETE' => null,
+                    'EXPIRED_DATE'  => (new DateTime())->modify('+' . $duration . ' months')->format('Y-m-d H:i:s'),
+                    'LOG_TIME'      => date('Y-m-d H:i:s')
+                ];
+                DB::table('order')->insert($order);
+                $data_payment = [
+                    'ID_PAY'        => $order['ID_PAY'],
+                    'KODE_USER'     => $id_user,
+                    'DATE_PAY'      => date('Y-m-d H:i:s'),
+                    'DATE_CREATED'  => date('Y-m-d H:i:s'),
+                ]; 
+                DB::table('payment')->insert($data_payment);
+                DB::commit();
+                return redirect('courses/invite?id_activity=' . $id_activity)->with(['succ_msg' => 'Successfully Invite User', 'courses/invite?id_activity=' . $id_activity]);
+            }
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
         }
     }
 
@@ -662,6 +702,19 @@ class CourseController extends Controller
             return redirect('courses/invite?id_activity=' . $id_activity)->with(['err_msg' => 'Choose at least one user', 'location' => 'courses/invite?id_activity=' . $id_activity]);
         }
 
+        $data['course'] = DB::SelectOne("
+            SELECT
+                a.* ,
+                c.*
+            FROM
+                activity a
+            LEFT JOIN course c ON
+                c.ID_ACTIVITY = a.ID_ACTIVITY
+            WHERE
+                a.TYPE_ACTIVITY = 1
+                AND a.ID_ACTIVITY = '" . $id_activity . "'
+        ");
+
         foreach ($id_users as $id_user) {
             $cek_data = DB::SelectOne("
                 SELECT
@@ -682,6 +735,27 @@ class CourseController extends Controller
                     'ID_ACTIVITY'   => $id_activity
                 ];
                 DB::table('tb_invited')->insert($invited);
+            
+                $order = [
+                    'ID_ORDER'      => $this->GenerateUniqID_Order($data['course']->TITLE_ACTIVITY),
+                    'ID_USER'       => $id_user,
+                    'ID_PRODUCT'    => $id_activity,
+                    'ID_PAY'        => $this->GenerateUniqIDPay($data['course']->TITLE_ACTIVITY),
+                    'PRICE_ORDER'   => 0,
+                    'MAPPING_COUNT' => 0,
+                    'DATE_COMPLETE' => null,
+                    'EXPIRED_DATE'  => date('Y-m-d H:i:s', strtotime('+'.$data['course']->DURATION.' month')),
+                    'LOG_TIME'      => date('Y-m-d H:i:s')
+                ];
+                DB::table('order')->insert($order);
+
+                $data_payment = [
+                    'ID_PAY'        => $order['ID_PAY'],
+                    'KODE_USER'     => $id_user,
+                    'DATE_PAY'      => date('Y-m-d H:i:s'),
+                    'DATE_CREATED'  => date('Y-m-d H:i:s'),
+                ]; 
+                DB::table('payment')->insert($data_payment);
             }
         }
         return redirect('courses/invite?id_activity=' . $id_activity)->with(['succ_msg' => 'Successfully Invite User', 'courses/invite?id_activity=' . $id_activity]);
@@ -696,6 +770,26 @@ class CourseController extends Controller
         $uniqid = strtoupper($begin);
         return $prefix . "_" . $uniqid . substr(md5(time()), 0, 3);
     }
+
+    public function GenerateUniqID_Order($var)
+	{
+		$string = preg_replace('/[^a-z]/i', '', $var);
+		$vocal  = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", " ");
+		$scrap  = str_replace($vocal, "", $string);
+		$begin  = substr($scrap, 0, 6);
+		$uniqid = strtoupper($begin);
+		return "ORD_" . $uniqid . substr(md5(microtime()), 0, 6);
+	}
+
+    public function GenerateUniqIDPay($var)
+	{
+		$string = preg_replace('/[^a-z]/i', '', $var);
+		$vocal  = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", " ");
+		$scrap  = str_replace($vocal, "", $string);
+		$begin  = substr($scrap, 0, 4);
+		$uniqid = strtoupper($begin);
+		return "INV_PAY_ICETY_" . $uniqid . substr(md5(microtime()), 0, 7);
+	}
 
     public function index_lihat_peserta(Request $req)
     {

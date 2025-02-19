@@ -356,7 +356,7 @@
                                         </table>
                                     <?php } ?>
                                     <p>If you didn't request this, you can safely ignore this email.
-                                    <p>Thanks,<br>TBH Team</p>
+                                    <p>Thanks,<br>Icety Team</p>
                                 </td>
                             </tr>
                         <?php } else { ?>
