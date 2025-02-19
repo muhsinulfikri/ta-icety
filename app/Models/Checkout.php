@@ -116,6 +116,59 @@ class Checkout extends Model
 
         return !empty($id_activity) ? (count($queryResult) > 0 ? $queryResult[0] : null) : $queryResult;
     }
+    public function get_detail_order_final_exam($id_order, $id_activity)
+    {
+        $userId = !empty(session('user')[0]['ID_USER']) ? session('user')[0]['ID_USER'] : null;
+
+        $OrderIDCheck = "";
+        $ProductIDCheck = "";
+        if (!empty($id_order)) {
+            if (is_array($id_order)) {
+                $id_order_array = array_map(function ($id) {
+                    return "'" . addslashes($id) . "'";
+                }, $id_order);
+                $cnvrtOrderID = implode(",", $id_order_array);
+                $OrderIDCheck = "AND `order`.ID_ORDER IN ($cnvrtOrderID)";
+            } else {
+                $OrderIDCheck = "AND `order`.ID_ORDER = '$id_order'";
+            }
+        }
+        if (!empty($id_activity)) {
+            if (is_array($id_activity)) {
+                $id_act_array = array_map(function ($id) {
+                    return "'" . addslashes($id) . "'";
+                }, $id_activity);
+                $cnvrtActID = implode(",", $id_act_array);
+                $ProductIDCheck = "AND `order`.ID_PRODUCT IN ($cnvrtActID)";
+            } else {
+                $ProductIDCheck = "AND `order`.ID_PRODUCT = '$id_activity'";
+            }
+        }
+
+        $sql = "
+            SELECT
+                `order`.*,
+                activity.TITLE_ACTIVITY,
+                activity.IMAGE_ACTIVITY,
+                ebook.JUDUL,
+                ebook.IMAGE_EBOOK
+            FROM
+                `order`
+            LEFT JOIN
+                activity ON activity.ID_ACTIVITY = `order`.ID_PRODUCT
+            LEFT JOIN
+                ebook ON ebook.ID_BUKU = `order`.ID_PRODUCT
+            WHERE
+                `order`.ID_USER = '$userId'
+                AND `order`.ID_PAY IS NULL
+                " . $OrderIDCheck . "
+                " . $ProductIDCheck . "
+        ";
+
+        $queryResult = DB::select($sql);
+
+        return !empty($id_activity) ? (count($queryResult) > 0 ? $queryResult[0] : null) : $queryResult;
+    }
 
     // INSERT FUNCTION
     public function insert_payment($data)

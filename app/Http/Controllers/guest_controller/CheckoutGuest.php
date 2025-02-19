@@ -4,6 +4,7 @@ namespace App\Http\Controllers\guest_controller;
 
 use App\Models\Ebook;
 use App\Models\Event;
+use App\Models\FinalExam;
 use App\Models\Promo;
 use App\Models\Course;
 use App\Models\Checkout;
@@ -23,6 +24,7 @@ class CheckoutGuest extends Controller
 	public $serverKeyMidtrans = '';
 	public $clientKeyMidtrans = '';
 	protected $eventModel;
+	protected $FinalExam;
 	protected $courseModel;
 	protected $checkoutModel;
 	protected $categoryModel;
@@ -34,6 +36,7 @@ class CheckoutGuest extends Controller
 	function __construct()
 	{
 		$this->eventModel = new Event();
+		$this->FinalExam = new FinalExam();
 		$this->courseModel = new Course();
 		$this->checkoutModel = new Checkout();
 		$this->certificateModel = new Certificate();
@@ -157,6 +160,7 @@ class CheckoutGuest extends Controller
 		$type = $_GET['type'];
 
 		$checking_order = $this->checkoutModel->get_detail_order("", $id_activity);
+		$checking_order_final_exam = $this->checkoutModel->get_detail_order_final_exam("", $id_activity);
 
 		$msg = "";
 
@@ -236,6 +240,34 @@ class CheckoutGuest extends Controller
 						"ID_PRODUCT" => $id_activity,
 						"ID_USER" => session('user')[0]->get('ID_USER'),
 						"PRICE_ORDER" => $event->PRICE_ACTIVITY,
+						"LOG_TIME" => date("Y-m-d H:i:s")
+					);
+					// $this->checkoutModel->insert_order($data_order);
+					DB::table("order")->insert($data_order);
+					$msg = "Successfully Added Product to Cart!";
+				}
+			} else if (!empty($id_activity) && !empty(session('user')[0]->get('ID_USER')) && $type == 3) { //FINAL EXAM
+				$final = $this->FinalExam->get_final_exam($id_activity);
+				if (!empty($checking_order_final_exam)) {
+					$data_order = array(
+						"ID_ORDER" => $checking_order_final_exam->ID_ORDER,
+						"ID_PRODUCT" => $id_activity,
+						"ID_USER" => session('user')[0]->get('ID_USER'),
+						"PRICE_ORDER" => $final->PRICE_ACTIVITY,
+						"LOG_TIME" => date("Y-m-d H:i:s")
+					);
+					DB::table("order")
+						->where('ID_PRODUCT', $id_activity)
+						->where('ID_ORDER', $checking_order_final_exam->ID_ORDER)
+						->where('ID_USER', session('user')[0]->get('ID_USER'))
+						->update($data_order);
+					$msg = "Your Product is Already in Cart!";
+				} else {
+					$data_order = array(
+						"ID_ORDER" => $this->GenerateUniqID_Order(time()),
+						"ID_PRODUCT" => $id_activity,
+						"ID_USER" => session('user')[0]->get('ID_USER'),
+						"PRICE_ORDER" => $final->PRICE_ACTIVITY,
 						"LOG_TIME" => date("Y-m-d H:i:s")
 					);
 					// $this->checkoutModel->insert_order($data_order);
@@ -366,10 +398,10 @@ class CheckoutGuest extends Controller
 						course
 					WHERE
 						ID_ACTIVITY = '" . $item . "'
-				")->FINAL_EXAM;
+				");
 				if ($final_exam != null) {
 					$data_final_exam = [
-						"ID_ACTIVITY"	=> $final_exam,
+						"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
 						"ID_USER"		=> session('user')[0]->get('ID_USER'),
 						"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
 						"IS_USED"		=> 0,
@@ -384,9 +416,10 @@ class CheckoutGuest extends Controller
 				'invoice'           => $invoice,
 			], 200);
 		} else {
+			$invoice['id'] = $checking_trans[0]->XENDIT_ID;
 			echo json_encode([
 				'status' => 200,
-				'xendit_id' => $checking_trans[0]->XENDIT_ID
+				'invoice' => $invoice
 			]);
 		}
 	}
@@ -423,7 +456,19 @@ class CheckoutGuest extends Controller
 				DB::table("payment")->insert($data_payment);
 
 				foreach ($id_item as $item) {
-					$_response = $this->checkoutModel->get_detail_order("", $item);
+					$id_item = DB::selectOne("
+						SELECT
+							TYPE_ACTIVITY
+						FROM
+							activity
+						WHERE
+							ID_ACTIVITY = '" . $item . "'
+					");
+					if ($id_item->TYPE_ACTIVITY != 3) {
+						$_response = $this->checkoutModel->get_detail_order("", $item);
+					} else {
+						$_response = $this->checkoutModel->get_detail_order_final_exam("", $item);
+					}
 					
 					$data_order = [
 						"ID_PAY" => $ID_PAY,
@@ -436,19 +481,21 @@ class CheckoutGuest extends Controller
 						->where('ID_PRODUCT', $_response->ID_PRODUCT)
 						->where('ID_USER', session('user')[0]['ID_USER'])
 						->update($data_order);
-
-					$id_item = DB::selectOne("
-                SELECT
-                    TYPE_ACTIVITY
-                FROM
-                    activity
-                WHERE
-                    ID_ACTIVITY = '" . $item . "'
-          ");
           
-          if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
-              $this->InsertDataMapping($item);
-          }
+					if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
+						$this->InsertDataMapping($item);
+					}
+
+					if ($id_item->TYPE_ACTIVITY == 3) {
+						$data_final_exam = [
+							"ID_ACTIVITY"	=> $item,
+							"ID_USER"		=> session('user')[0]->get('ID_USER'),
+							"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+							"IS_USED"		=> 0,
+							"CREATED_AT"	=> date("Y-m-d H:i:s")
+						];
+						DB::table('tb_final_exam')->insert($data_final_exam);
+					}
 					//Final Exam
 					$final_exam = DB::selectOne("
 						SELECT
@@ -468,7 +515,7 @@ class CheckoutGuest extends Controller
 						];
 						DB::table('tb_final_exam')->insert($data_final_exam);
 					}
-        }
+				}
 
 				session()->flash('msg', "<script>
                     const Toast = Swal.mixin({
@@ -500,82 +547,122 @@ class CheckoutGuest extends Controller
 
 	public function check_payment_status(Request $req)
 	{
-		$id_item = [];
-		$data_trans = DB::selectOne("
-			SELECT
-				p.XENDIT_ID as xendit_id,
-				o.ID_ORDER,
-				o.ID_PRODUCT as id_product
-			FROM
-				payment p
-			LEFT JOIN `order` o ON
-				o.ID_PAY = p.ID_PAY
-			WHERE
-				p.ID_PAY = '" . $req->id_pay . "'
-		");
+		try {
+			DB::beginTransaction();
+			$id_item = [];
+			$data_trans = DB::selectOne("
+				SELECT
+					p.XENDIT_ID as xendit_id,
+					o.ID_ORDER,
+					o.ID_PRODUCT as id_product
+				FROM
+					payment p
+				LEFT JOIN `order` o ON
+					o.ID_PAY = p.ID_PAY
+				WHERE
+					p.ID_PAY = '" . $req->id_pay . "'
+			");
 
-		$data_order = [
-			"LOG_TIME" => date("Y-m-d H:i:s"),
-			"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
-		];
-		DB::table('order')
-			->where('ID_ORDER', $data_trans->ID_ORDER)
-			->where('ID_PRODUCT', $data_trans->id_product)
-			->where('ID_USER', session('user')[0]['ID_USER'])
-			->update($data_order);
+			$data_order = [
+				"LOG_TIME" => date("Y-m-d H:i:s"),
+				"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+			];
+			DB::table('order')
+				->where('ID_ORDER', $data_trans->ID_ORDER)
+				->where('ID_PRODUCT', $data_trans->id_product)
+				->where('ID_USER', session('user')[0]['ID_USER'])
+				->update($data_order);
 
-		$id_item[] = $data_trans->id_product;
-		$type_acticity = DB::selectOne("
-			SELECT
-				TYPE_ACTIVITY
-			FROM
-				activity
-			WHERE
-				ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
-		");
-		$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
+			$id_item[] = $data_trans->id_product;
+			$type_acticity = DB::select("
+				SELECT
+					TYPE_ACTIVITY,
+					ID_ACTIVITY
+				FROM
+					activity
+				WHERE
+					ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
+			");
+			$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
 
-		$data_payment = [
-			"DATE_PAY" => $check_xendit['updated'],
-		];
-		DB::table("payment")->where('ID_PAY', $req->id_pay)->update($data_payment);
+			$data_payment = [
+				"DATE_PAY" => $check_xendit['updated'],
+			];
+			DB::table("payment")->where('ID_PAY', $req->id_pay)->update($data_payment);
 
-		$data_payment_method = [
-			"STATUS" => $check_xendit['status'],
-			"PAY_METHOD" => $check_xendit['payment_method'],
-			"EXP_DATE" => $check_xendit['expiry_date'],
-		];
-		DB::table('payment_method')->where('ID_PAY', $req->id_pay)->update($data_payment_method);
+			$data_payment_method = [
+				"STATUS" => $check_xendit['status'],
+				"PAY_METHOD" => $check_xendit['payment_method'],
+				"EXP_DATE" => $check_xendit['expiry_date'],
+			];
+			DB::table('payment_method')->where('ID_PAY', $req->id_pay)->update($data_payment_method);
 
-		if (!empty($type_acticity) && $type_acticity->TYPE_ACTIVITY == 1) {
-			foreach ($id_item as $item) {
-				$this->InsertDataMapping($item);
+			foreach ($type_acticity as $item_activity) {
+				if ($item_activity->TYPE_ACTIVITY == 1) {
+					foreach ($id_item as $item) {
+						$this->InsertDataMapping($item);
+						//Final Exam
+						$final_exam = DB::selectOne("
+							SELECT
+								FINAL_EXAM
+							FROM
+								course
+							WHERE
+								ID_ACTIVITY = '" . $item . "'
+						");
+						if ($final_exam != null) {
+							$data_final_exam = [
+								"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
+								"ID_USER"		=> session('user')[0]->get('ID_USER'),
+								"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+								"IS_USED"		=> 0,
+								"CREATED_AT"	=> date("Y-m-d H:i:s")
+							];
+							DB::table('tb_final_exam')->insert($data_final_exam);
+						}
+					}
+				}
+
+				if ($item_activity->TYPE_ACTIVITY == 3) {
+					$data_final_exam = [
+						"ID_ACTIVITY"	=> $item_activity->ID_ACTIVITY,
+						"ID_USER"		=> session('user')[0]->get('ID_USER'),
+						"CODE_EXAM"		=> $this->GenerateCodeExam($item_activity->ID_ACTIVITY . date('Y-m-d H:i:s')),
+						"IS_USED"		=> 0,
+						"CREATED_AT"	=> date("Y-m-d H:i:s")
+					];
+					DB::table('tb_final_exam')->insert($data_final_exam);
+				}
 			}
+			DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+			$check_use_promo = DB::selectOne("
+				SELECT
+					count(p.ID_PAY) as pay_count,
+					cp.ID_CLAIM
+				FROM
+					payment p
+				LEFT JOIN payment_method pm ON
+					pm.ID_PAY = p.ID_PAY
+				LEFT JOIN claimed_promo cp ON
+					p.KODE_USER = cp.ID_USER
+				WHERE
+					pm.STATUS = 'SETTLED'
+				AND
+					p.KODE_USER = '" . session('user')[0]->get('ID_USER') . "'
+				AND
+					pm.ID_PAY = '" . $req->id_pay . "'
+			");
+
+			if ($check_use_promo->pay_count == 1) {
+				DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
+			}
+			DB::commit();
+			return redirect('checkouts');
+		} catch (\Throwable $th) {
+			DB::rollBack();
+			dd($th);
 		}
-
-		$check_use_promo = DB::selectOne("
-			SELECT
-				count(p.ID_PAY) as pay_count,
-				cp.ID_CLAIM
-			FROM
-				payment p
-			LEFT JOIN payment_method pm ON
-				pm.ID_PAY = p.ID_PAY
-			LEFT JOIN claimed_promo cp ON
-				p.KODE_USER = cp.ID_USER
-			WHERE
-				pm.STATUS = 'SETTLED'
-			AND
-				p.KODE_USER = '" . session('user')[0]->get('ID_USER') . "'
-			AND
-				pm.ID_PAY = '" . $req->id_pay . "'
-		");
-
-		if ($check_use_promo->pay_count == 1) {
-			DB::table('claimed_promo')->where(['ID_CLAIM' => $check_use_promo->ID_CLAIM])->update(['STATUS' => 2]);
-		}
-
-		return redirect('checkouts');
+		
 	}
 
 	public function DeleteTrans(Request $req)

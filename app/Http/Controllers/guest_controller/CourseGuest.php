@@ -5,6 +5,7 @@ namespace App\Http\Controllers\guest_controller;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Course;
+use App\Models\FinalExam;
 use App\Models\Checkout;
 use App\Models\Event;
 use App\Models\Category;
@@ -211,8 +212,46 @@ class CourseGuest extends Controller
 					AND ID_USER = ?
 					AND IS_USED = 0
 			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
-		}
 
+			$data['final_min_nilai'] = DB::selectOne("
+				SELECT 
+					ic.MIN_NILAI
+				FROM 
+					item_course ic
+				LEFT JOIN course c ON
+					c.ID_COURSE = ic.ID_COURSE
+				WHERE
+					c.ID_ACTIVITY =	?
+			", [$data['course']->FINAL_EXAM]);
+
+			$data['nilai_final_exam'] = DB::selectOne("
+				SELECT
+					NILAI
+				FROM
+					tb_nilai_final_exam
+				WHERE
+					ID_USER = ?
+					AND ID_ACTIVITY = ?
+				ORDER BY
+					NILAI DESC
+			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
+
+			$data['history_nilai_final_exam'] = DB::select("
+				SELECT
+					NILAI,
+					created_at
+				FROM
+					tb_nilai_final_exam
+				WHERE
+					ID_USER = ?
+					AND ID_ACTIVITY = ?
+				ORDER BY
+					created_at ASC
+			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
+			$finalExamModel = new FinalExam();
+			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+			$data['nilai_final_exam'] = $data['nilai_final_exam'] ? $data['nilai_final_exam'] : (object) ['NILAI' => 0];
+		}
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
@@ -659,8 +698,7 @@ class CourseGuest extends Controller
 				CODE_EXAM = ?
 		", [$data['code']]);
 
-		if (!empty($is_used)) {
-			$id_activity_parent = DB::selectOne("
+		$id_activity_parent = DB::selectOne("
 			SELECT
 				ID_ACTIVITY
 			FROM
@@ -668,6 +706,8 @@ class CourseGuest extends Controller
 			WHERE
 				FINAL_EXAM = ?;
 		", [$data['id_activity']])->ID_ACTIVITY;
+		$data['id_activity_parent'] = $id_activity_parent;
+		if (!empty($is_used)) {
 			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code has been used');
 		}
 		$data['id_course'] = DB::selectOne("
@@ -766,7 +806,7 @@ class CourseGuest extends Controller
 			"NILAI" 		=> $nilai,
 			"created_at" 	=> date('Y-m-d H:i:s'),
 		];
-
+		
 		$id_activity_parent = DB::selectOne("
 			SELECT
 				ID_ACTIVITY
@@ -776,10 +816,11 @@ class CourseGuest extends Controller
 				FINAL_EXAM = ?;
 		", [$_POST['id_activity']])->ID_ACTIVITY;
 
+		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
 		return response()->json([
 			'nilai' => $nilai,
-			'id_activiti_parent' => $id_activity_parent
+			'id_activity_parent' => $id_activity_parent
 		]);
 	}
 
