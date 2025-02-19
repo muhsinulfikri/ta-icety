@@ -146,7 +146,8 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE'      => $req->input('desc_course'),
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_what_to_learn'),
                 'KATEGORI'              => $req->input('category'),
-                'DURATION'              => $req->input('duration')
+                'DURATION'              => $req->input('duration_month'),
+                'HOURS'                 => $req->input('duration_hours')
             ];
 
             if ($req->input('req')) {
@@ -267,6 +268,7 @@ class CourseController extends Controller
                 a.SUMMARY_CERTIFICATE,
                 c.ID_COURSE,
                 c.DURATION ,
+                c.HOURS,
                 c.ALIAS,
                 c.REQUIREMENT ,
                 c.PENGUMUMAN ,

@@ -149,7 +149,7 @@ class CourseGuest extends Controller
 				->where('ID_ACTIVITY', $data['id_activity'])
 				->count() + 1;
 			$sertif_number = $countSertif . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION);
+			$sertif_path = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
 			$data_sertif = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
@@ -159,6 +159,7 @@ class CourseGuest extends Controller
                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
                 "INFO_CERTIFICATE" => json_encode($info_titles),
                 "DURATION" => $data['course']->DURATION,
+                "HOURS" => $data['course']->HOURS,
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
 

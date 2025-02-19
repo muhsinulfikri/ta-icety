@@ -165,6 +165,7 @@ class Course extends Model
         course.DESKRIPSI_COURSE_ITEM,
         course.SUMMARY,
         course.DURATION,
+        course.HOURS,
         course.FINAL_EXAM,
         user.NAME,
         user.FOTO_PROFILE,

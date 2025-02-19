@@ -105,10 +105,19 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Duration <span
+                        <label class="col-sm-2 col-form-label control-label">Duration in Month<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
-                            <input type="number" class="form-control" name="duration" placeholder="Duration Complete Course in Month"
+                            <input type="number" class="form-control" name="duration_month" placeholder="Duration Complete Course in Month"
+                                required>
+                            <small class="text-danger">* Input number only</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Duration in Hours<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="duration_hours" placeholder="Duration Complete Course in Hours"
                                 required>
                             <small class="text-danger">* Input number only</small>
                         </div>
