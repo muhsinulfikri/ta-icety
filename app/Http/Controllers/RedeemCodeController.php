@@ -233,11 +233,14 @@ class RedeemCodeController extends Controller
                 trc.KODE ,
                 trc.IS_REDEEM ,
                 a.TITLE_ACTIVITY ,
-                a.PRICE_ACTIVITY 
+                a.PRICE_ACTIVITY ,
+                COALESCE(c.DURATION, 0) AS DURATION
             FROM
                 tb_redeem_code trc 
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = trc.ID_ACTIVITY
+            LEFT JOIN course c ON
+                c.ID_ACTIVITY = a.ID_ACTIVITY
             WHERE
                 trc.KODE = '" . $trialCode . "'
         ");
@@ -257,7 +260,7 @@ class RedeemCodeController extends Controller
                 'msg' => 'Failed to use code, error: Code not found'
             ], 200);
         }
-        
+
         if ($dataCode->ID_CATEGORY_USER !== 1 && $userData->ID_CATEGORY_USER !== $dataCode->ID_CATEGORY_USER) {
             return response([
                 'status' => false,
@@ -301,7 +304,7 @@ class RedeemCodeController extends Controller
             WHERE
                 a.ID_ACTIVITY = '" . $dataCode->ID_ACTIVITY . "'
         ");
-        
+
         if (empty($dataAct)) {
             return response([
                 'status' => false,
@@ -336,6 +339,7 @@ class RedeemCodeController extends Controller
                 "ID_PAY" => $dataCode->ID_REDEEM,
                 "ID_USER" => session('user')[0]->get('ID_USER'),
                 "PRICE_ORDER" => $dataCode->PRICE_ACTIVITY,
+                "EXPIRED_DATE"  => date('Y-m-d H:i:s', strtotime('+' . $dataCode->DURATION . ' month')),
                 "LOG_TIME" => date("Y-m-d H:i:s")
             );
             $data_where = [
