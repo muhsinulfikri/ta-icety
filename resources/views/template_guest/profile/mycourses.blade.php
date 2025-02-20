@@ -80,7 +80,7 @@
 
         if (isValid) {
             $.ajax({
-                url: `<?= url('voucher/trial-code') ?>`,
+                url: `<?= Request::segment(0); ?>/voucher/trial-code`,
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '<?= csrf_token() ?>'
