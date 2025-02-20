@@ -93,7 +93,7 @@ class Certificate extends Model
 
             return $new_path;
         } catch (Exception $e){
-            dd($e->getMessage());
+            dd($e);
         }
     }
 }

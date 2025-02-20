@@ -8,7 +8,7 @@
             </div>
             <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-md-4 flex-column justify-content-center h-100">
-                    <h4 class="ps-1 fw-semibold">Register as User</h4>
+                    <h4 class="ps-1 fw-semibold mt-5">Register as User</h4>
                     <form class="fw-normal" action="<?= url('register/store') ?>" method="POST">
                         @csrf
                         <div id="form-1">
