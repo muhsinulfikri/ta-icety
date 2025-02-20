@@ -9,20 +9,22 @@
             <div class="bg-white my-3 p-4 rounded-3 shadow fw-semibold w-75">
                 <?= $item->SOAL ?>
             </div>
-            <div class="my-4 d-flex flex-wrap justify-content-center gap-3 w-75">
+            <div class="my-4 d-flex flex-wrap flex-column gap-3 w-75">
                 <?php
                 $pilihan = ['a', 'b', 'c', 'd'];
                 $no = 0;
+                $no_pilihan = 0;
                 foreach ($soal as $soal_item) :
                     if (!empty(trim($soal_item))) {
                 ?>
-                        <button class="btn btn-outline-dark py-2 px-3 rounded-3 shadow fw-semibold"
-                            data-value="<?= $pilihan[$no] ?>"
-                            id="jwbn_<?= $item->ID_DETAIL . '' . ++$no ?>"
-                            onclick="SelectJwbn<?= $item->ID_DETAIL . '' . $item->ORDER_LIST ?>(this)">
-                            <?= $soal_item ?>
-                        </button>
-                <?php
+                <button class="btn btn-outline-dark py-2 px-3 rounded-3 shadow fw-semibold"
+                    data-value="<?= $pilihan[$no] ?>"
+                    id="jwbn_<?= $item->ID_DETAIL . '' . ++$no ?>"
+                    onclick="SelectJwbn<?= $item->ID_DETAIL . '' . $item->ORDER_LIST ?>(this)">
+                    <?= $pilihan[$no_pilihan].'. '.$soal_item ?>
+                </button>
+                <?php                    
+                    $no_pilihan++;
                     }
                 endforeach;
                 ?>
