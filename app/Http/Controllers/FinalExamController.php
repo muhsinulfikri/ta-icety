@@ -363,7 +363,6 @@ class FinalExamController extends Controller
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
                 'PRICE_ACTIVITY'        => $req->input('price'),
-                'SERTIF_CODE'           => $req->input('certif_code'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'LOG_TIME'              => date('Y-m-d H:i:s')

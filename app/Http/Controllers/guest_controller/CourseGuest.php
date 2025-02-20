@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\Category;
 use App\Models\Certificate;
 use App\Models\Ebook;
+use Carbon\Traits\ToStringFormat;
 use Exception;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -71,14 +72,28 @@ class CourseGuest extends Controller
 		$data['id_activity'] = $_GET['id_activity'];
 		$data['course'] = $this->courseModel->get_course($data['id_activity']);
         $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
-		
+
 		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
-		
+
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
-		
+
 		$data['item_course'] = $this->courseModel->get_item_course($condition);
-        
+
+        $data['date_sertif_course'] = DB::select("
+            SELECT
+                o.DATE_COMPLETED
+            FROM
+                `order` o
+            LEFT JOIN
+                activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
+            LEFT JOIN
+                user u ON u.ID_USER = o.ID_USER
+            WHERE
+                a.ID_ACTIVITY = '".$data['id_activity']."'
+            AND
+                u.ID_USER = '".session('user')[0]->get('ID_USER')."'
+        ");
 		$info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
         $info_titles = array_map(function($item) {
             return $item->TITLE;
@@ -133,11 +148,11 @@ class CourseGuest extends Controller
 		");
 
 		$cek_item_course = DB::selectOne("
-			SELECT 
-				* 
-			FROM 
-				item_course 
-			WHERE 
+			SELECT
+				*
+			FROM
+				item_course
+			WHERE
 				ID_ITEM = " . $data['last_item'][0]->ID_ITEM . "
 		");
 
@@ -182,6 +197,7 @@ class CourseGuest extends Controller
                 "INFO_CERTIFICATE" => json_encode($info_titles),
                 "DURATION" => $data['course']->DURATION,
                 "HOURS" => $data['course']->HOURS,
+                // "DATE_COMPLETED" => isset($data['date_sertif_course'][0]->DATE_COMPLETED),
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
 
@@ -327,14 +343,14 @@ class CourseGuest extends Controller
 			$data['data_final_exam'] = null;
 
 			$data['data_final_exam'] = $data['data_final_exam'] !== null ? $data['data_final_exam'] : (object) [
-				'TITLE_ACTIVITY' => 0, 
+				'TITLE_ACTIVITY' => 0,
 				'PRICE_ACTIVITY' => 0
 			];
 
 			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
 				'NILAI' => 0
 			];
-			
+
 			$data['final_min_nilai'] = $data['final_min_nilai'] !== null ? $data['final_min_nilai'] : (object) [
 				'MIN_NILAI' => 0
 			];
@@ -415,7 +431,7 @@ class CourseGuest extends Controller
 						nilai_quiz
 					WHERE
 						ID_USER = "' . session('user')[0]->get('ID_USER') . '"
-						AND 
+						AND
 						ID_QUIZ = ' . $data['data_all_mapping'][0]->ID_ITEM . '
 				');
 			}
