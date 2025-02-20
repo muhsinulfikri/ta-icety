@@ -246,7 +246,7 @@ class RedeemCodeController extends Controller
                 u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
         ");
 
-        $dataAct = DB::selectOne("
+        $dataOrd = DB::selectOne("
             SELECT
                 o.ID_PRODUCT ,
                 o.ID_PAY
@@ -260,14 +260,23 @@ class RedeemCodeController extends Controller
                 o.ID_PAY IS NOT NULL
         ");
 
+        $dataAct = DB::selectOne("
+            SELECT
+                a.*
+            FROM
+                `activity` a
+            WHERE
+                a.ID_ACTIVITY = '" . $dataCode->ID_ACTIVITY . "'
+        ");
+
         if (empty($dataCode)) {
             return response([
                 'status' => false,
                 'msg' => 'Failed to use code, error: Code not found'
             ], 200);
         }
-
-        if ($userData->ID_CATEGORY_USER !== $dataCode->ID_CATEGORY_USER) {
+        
+        if ($dataCode->ID_CATEGORY_USER !== 1 && $userData->ID_CATEGORY_USER !== $dataCode->ID_CATEGORY_USER) {
             return response([
                 'status' => false,
                 'msg' => 'Failed to use code, error: Code cannot used in your category'
@@ -287,8 +296,15 @@ class RedeemCodeController extends Controller
                 'msg' => 'Failed to use code, error: Code has been expired'
             ], 200);
         }
+        
+        if (empty($dataAct)) {
+            return response([
+                'status' => false,
+                'msg' => 'Course atau aktivitas tidak ditemukan, pastikan course atau aktivitas masih berlaku!'
+            ], 200);
+        }
 
-        if (!empty($dataAct)) {
+        if (!empty($dataOrd)) {
             return response([
                 'status' => false,
                 'msg' => 'Failed to use code, error: You already have claim course "' . $dataCode->TITLE_ACTIVITY . '"'
