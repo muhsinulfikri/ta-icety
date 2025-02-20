@@ -172,7 +172,7 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
-			
+
 			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
@@ -323,7 +323,7 @@ class CourseGuest extends Controller
 				'NILAI' => 0
 			];
 
-			if(($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100)){
+			if(($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
                 $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
                 $countSertifExam = DB::table('sertifikat_activity')
@@ -345,27 +345,9 @@ class CourseGuest extends Controller
                 );
                 DB::table('sertifikat_activity')->insert($data_sertif_exam);
 			    $data['sertif_exam'] = (object) $data_sertif_exam;
-
-				//Set Date Completed
-				$data['id_pay_final_exam'] = DB::selectOne("
-					SELECT
-						ID_PAY,
-						DATE_COMPLETED
-					FROM
-						`order`
-					WHERE
-						ID_USER = ?
-						AND ID_PRODUCT = ?
-					ORDER BY
-						LOG_TIME DESC
-				", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
-				if ($data['id_pay_final_exam']->DATE_COMPLETED == null) {
-					DB::table('order')
-						->where('ID_USER', session('user')[0]->get('ID_USER'))
-						->where('ID_PRODUCT', $data['course']->FINAL_EXAM)
-						->where('ID_PAY', $data['id_pay_final_exam']->ID_PAY)
-						->update(['DATE_COMPLETED' => date('Y-m-d H:i:s')]);
-				}
+            }
+            else {
+                $data['sertif_exam'] = $sertifCheck;
             }
 		} else {
 			$data['final_exam'] = null;
@@ -711,7 +693,7 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $dataActivity->ID_ACTIVITY)
 				->update($count);
-			
+
 			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $id_final_exam->FINAL_EXAM,
@@ -1053,20 +1035,20 @@ class CourseGuest extends Controller
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
 		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
-		$begin  = strtoupper(substr($scrap, 0, 3));	
+		$begin  = strtoupper(substr($scrap, 0, 3));
 		do {
-			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));
 			$code_check = DB::selectOne("
-				SELECT 
-					CODE_EXAM 
-				FROM 
-					tb_final_exam 
-				WHERE 
+				SELECT
+					CODE_EXAM
+				FROM
+					tb_final_exam
+				WHERE
 					CODE_EXAM = ?
 				", [$code]
-			);	
+			);
 		} while (!empty($code_check));
-	
+
 		return $code;
 	}
 }

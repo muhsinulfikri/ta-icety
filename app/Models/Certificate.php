@@ -86,7 +86,7 @@ class Certificate extends Model
             $data['DURATION'] = $duration;
             $data['HOURS'] = $hours;
 
-            $html = view('pdf_template.sertifikat', $data)->render();
+            $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
             $new_path = FileUpload::UploadFileBlob($file_pdf, $resPdf, 'certificate');
 
