@@ -271,11 +271,8 @@ class CourseGuest extends Controller
 			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
 			$finalExamModel = new FinalExam();
 			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
-			$data['data_final_exam'] = $data['nilai_final_exam'] ? $data['nilai_final_exam'] : (object) ['TITLE_ACTIVITY ' => 0];
-			$data['data_final_exam'] = $data['nilai_final_exam'] ? $data['nilai_final_exam'] : (object) ['PRICE_ACTIVITY ' => 0];
-			$data['nilai_final_exam'] = $data['nilai_final_exam'] ? $data['nilai_final_exam'] : (object) ['NILAI' => 0];
-            // dd($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI);
-            if(!empty($data['nilai_final_exam']->NILAI) >= !empty($data['final_min_nilai']->MIN_NILAI)){
+
+			if(!empty($data['nilai_final_exam']->NILAI) >= !empty($data['final_min_nilai']->MIN_NILAI)){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
                 $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
                 $countSertifExam = DB::table('sertifikat_activity')
@@ -299,7 +296,27 @@ class CourseGuest extends Controller
 			    $data['sertif_exam'] = (object) $data_sertif_exam;
 
             }
+		} else {
+			$data['final_exam'] = null;
+			$data['final_min_nilai'] = null;
+			$data['history_nilai_final_exam'] = null;
+			$data['nilai_final_exam'] = null;
+			$data['data_final_exam'] = null;
+
+			$data['data_final_exam'] = $data['data_final_exam'] !== null ? $data['data_final_exam'] : (object) [
+				'TITLE_ACTIVITY' => 0, 
+				'PRICE_ACTIVITY' => 0
+			];
+
+			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
+				'NILAI' => 0
+			];
+			
+			$data['final_min_nilai'] = $data['final_min_nilai'] !== null ? $data['final_min_nilai'] : (object) [
+				'MIN_NILAI' => 0
+			];
 		}
+
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
@@ -571,7 +588,8 @@ class CourseGuest extends Controller
 
 		$dataActivity = DB::selectOne("
 			SELECT
-				c.ID_ACTIVITY
+				c.ID_ACTIVITY,
+				ic.MIN_NILAI
 			FROM
 				item_course ic
 			LEFT JOIN course c ON
