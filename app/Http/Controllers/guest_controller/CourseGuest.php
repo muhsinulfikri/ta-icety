@@ -758,7 +758,8 @@ class CourseGuest extends Controller
 		$dataOrder = DB::selectOne("
 			SELECT
 				o.* ,
-				a.TITLE_ACTIVITY
+				a.TITLE_ACTIVITY ,
+				a.PRICE_ACTIVITY
 			FROM
 				`order` o
 			LEFT JOIN activity a ON
@@ -773,13 +774,12 @@ class CourseGuest extends Controller
 
 		$slug = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $dataOrder->TITLE_ACTIVITY));
 		try {
-			// Check Order Exist or Not, If Exist it will update, If Not it will Insert
 			$data_order = array(
 				"ID_ORDER" => $this->GenerateUniqChild('ORD', uniqid()),
 				"ID_PRODUCT" => $dataOrder->ID_PRODUCT,
 				"ID_USER" => $dataOrder->ID_USER,
 				"ID_PAY" => NULL,
-				"PRICE_ORDER" => $dataOrder->PRICE_ORDER,
+				"PRICE_ORDER" => $dataOrder->PRICE_ACTIVITY,
 				"MAPPING_COUNT" => $dataOrder->MAPPING_COUNT,
 				"COURSE_COMPLETED" => $dataOrder->COURSE_COMPLETED,
 				"LOG_TIME" => date("Y-m-d H:i:s"),
