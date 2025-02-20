@@ -285,7 +285,8 @@ class RedeemCodeController extends Controller
         $dataOrd = DB::selectOne("
             SELECT
                 o.ID_PRODUCT ,
-                o.ID_PAY
+                o.ID_PAY ,
+                o.EXPIRED_DATE
             FROM
                 `order` o
             WHERE
@@ -295,7 +296,7 @@ class RedeemCodeController extends Controller
                 AND
                 o.ID_PAY IS NOT NULL
         ");
-
+        
         $dataAct = DB::selectOne("
             SELECT
                 a.*
@@ -312,10 +313,10 @@ class RedeemCodeController extends Controller
             ], 200);
         }
 
-        if (!empty($dataOrd)) {
+        if (!empty($dataOrd) && strtotime($dataOrd->EXPIRED_DATE . ' 00:00:00') > strtotime(date('Y-m-d H:i:s'))) {
             return response([
                 'status' => false,
-                'msg' => 'Failed to use code, error: You already have claim course "' . $dataCode->TITLE_ACTIVITY . '"'
+                'msg' => 'Failed to use code, error: You already have claim course "' . $dataCode->TITLE_ACTIVITY . '", which expired on ' . $dataOrd->EXPIRED_DATE
             ], 200);
         }
 
@@ -343,6 +344,7 @@ class RedeemCodeController extends Controller
                 "LOG_TIME" => date("Y-m-d H:i:s")
             );
             $data_where = [
+                'ID_ORDER' => 'ORD_' . $dataCode->KODE ,
                 'ID_PRODUCT' => $dataCode->ID_ACTIVITY,
                 'ID_USER' => session('user')[0]->get('ID_USER')
             ];
