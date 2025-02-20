@@ -222,13 +222,13 @@
                                             onclick="ShowFinalExam(this)" data-type="6">
                                             Final Exam
                                         </button>
-                                        @endif
-                                        @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI)
-                                        <button
-                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                onclick="ShowCertificateFinal(this)" data-type="5">
-                                                Show Certificate Final Exam
-                                            </button>
+                                            @if(!empty($nilai_final_exam->NILAI) >= !empty($final_min_nilai->MIN_NILAI))
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowCertificateFinal(this)" data-type="5">
+                                                    Show Certificate Final Exam
+                                                </button>
+                                            @endif
                                         @endif
                                     <?php } ?>
 
