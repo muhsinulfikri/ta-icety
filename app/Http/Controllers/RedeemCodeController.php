@@ -22,22 +22,27 @@ class RedeemCodeController extends Controller
                 trc.ID_REDEEM ,
                 trc.EXPIRED_DATE ,
                 trc.LIST_KODE ,
-                trc.TOTAL_CODE
+                trc.TOTAL_CODE,
+                trc.CAT
             FROM 
                 activity a
             RIGHT JOIN 
                 (
                     SELECT 
                         trc.ID_ACTIVITY ,
+                        MAX(mcu.NAME_CATEGORY_USER) AS CAT ,
                         COUNT(trc.ID_REDEEM) AS TOTAL_CODE ,
                         MAX(trc.EXPIRED_DATE) AS EXPIRED_DATE ,
                         GROUP_CONCAT(trc.ID_REDEEM SEPARATOR ';') AS ID_REDEEM ,
                         GROUP_CONCAT(trc.KODE SEPARATOR ', ') AS LIST_KODE
                     FROM 
                         tb_redeem_code trc 
+                    LEFT JOIN md_category_user mcu ON 
+                        mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER 
                     GROUP BY 
                         trc.ID_ACTIVITY ,
-			            trc.LOG_TIME
+                        trc.ID_CATEGORY_USER,
+                        trc.LOG_TIME
                 ) trc ON 
                     trc.ID_ACTIVITY = a.ID_ACTIVITY
         ");
@@ -246,29 +251,6 @@ class RedeemCodeController extends Controller
                 u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
         ");
 
-        $dataOrd = DB::selectOne("
-            SELECT
-                o.ID_PRODUCT ,
-                o.ID_PAY
-            FROM
-                `order` o
-            WHERE
-                o.ID_PRODUCT = '" . $dataCode->ID_ACTIVITY . "'
-                AND
-                o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-                AND
-                o.ID_PAY IS NOT NULL
-        ");
-
-        $dataAct = DB::selectOne("
-            SELECT
-                a.*
-            FROM
-                `activity` a
-            WHERE
-                a.ID_ACTIVITY = '" . $dataCode->ID_ACTIVITY . "'
-        ");
-
         if (empty($dataCode)) {
             return response([
                 'status' => false,
@@ -296,6 +278,29 @@ class RedeemCodeController extends Controller
                 'msg' => 'Failed to use code, error: Code has been expired'
             ], 200);
         }
+
+        $dataOrd = DB::selectOne("
+            SELECT
+                o.ID_PRODUCT ,
+                o.ID_PAY
+            FROM
+                `order` o
+            WHERE
+                o.ID_PRODUCT = '" . $dataCode->ID_ACTIVITY . "'
+                AND
+                o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+                AND
+                o.ID_PAY IS NOT NULL
+        ");
+
+        $dataAct = DB::selectOne("
+            SELECT
+                a.*
+            FROM
+                `activity` a
+            WHERE
+                a.ID_ACTIVITY = '" . $dataCode->ID_ACTIVITY . "'
+        ");
         
         if (empty($dataAct)) {
             return response([

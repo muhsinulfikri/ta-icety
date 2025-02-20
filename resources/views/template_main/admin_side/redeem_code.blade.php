@@ -51,6 +51,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama Aktivitas</th>
+                            <th>Kategori</th>
                             <th>Kode</th>
                             <th>Jumlah Kode</th>
                             <th>Kedaluwarsa</th>
@@ -64,6 +65,7 @@
                         <tr>
                             <td><?= $number ?></td>
                             <td><?= $item->TITLE_ACTIVITY ?></td>
+                            <td><?= $item->CAT ?></td>
                             <td><?= $item->LIST_KODE ?></td>
                             <td><?= $item->TOTAL_CODE ?></td>
                             <td><?= $item->EXPIRED_DATE ?></td>
