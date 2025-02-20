@@ -118,14 +118,14 @@
       </div>
 
       <div class="text-container">
-        <div class="date">12 April 2024</div>
+        <div class="date">{{ date('d F Y',strtotime($DATE)) }}</div>
         <div class="name">{{ $NAME }}</div>
         <div class="course-title">{{ $ACTIVITY }}</div>
         <div class="description">
           {{ $SUMMARY }}
         </div>
         <div class="duration-info">
-            <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete</p>
+            <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete this course</p>
           </div>
       </div>
     </div>

@@ -25,7 +25,7 @@ class Certificate extends Model
         return $this->db->affected_rows();
     }
 
-    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours)
+    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours, $date)
     {
         set_time_limit(120);
         try {
@@ -49,7 +49,7 @@ class Certificate extends Model
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
             $data['HOURS'] = $hours;
-            // $data['DATE'] = $date;
+            $data['DATE'] = $date;
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
@@ -61,7 +61,7 @@ class Certificate extends Model
         }
     }
 
-    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours)
+    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours, $date)
     {
         set_time_limit(120);
         try {
@@ -85,6 +85,7 @@ class Certificate extends Model
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
             $data['HOURS'] = $hours;
+            $data['DATE'] = $date;
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
