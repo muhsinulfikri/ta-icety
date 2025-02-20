@@ -122,7 +122,7 @@
         <div class="name">{{ $NAME }}</div>
         <div class="course-title">{{ $ACTIVITY }}</div>
         <div class="description">
-          {{ $SUMMARY }}
+          {{ strip_tags($SUMMARY) }}
         </div>
         <div class="duration-info">
             <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete this course</p>
