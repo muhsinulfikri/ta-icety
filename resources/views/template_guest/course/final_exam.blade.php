@@ -90,7 +90,7 @@
                         "pilih_jwbn": pilih_jwbn 
                     },
                     success: function(data) {
-                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + Math.ceil(data.nilai) + '</h6>');
+                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
                         $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
                         $(e).hide();
                         $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {

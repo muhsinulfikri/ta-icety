@@ -298,6 +298,26 @@ class CourseGuest extends Controller
                 DB::table('sertifikat_activity')->insert($data_sertif_exam);
 			    $data['sertif_exam'] = (object) $data_sertif_exam;
 
+				//Set Date Completed
+				$data['id_pay_final_exam'] = DB::selectOne("
+					SELECT
+						ID_PAY,
+						DATE_COMPLETED
+					FROM
+						`order`
+					WHERE
+						ID_USER = ?
+						AND ID_PRODUCT = ?
+					ORDER BY
+						LOG_TIME DESC
+				", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
+				if ($data['id_pay_final_exam']->DATE_COMPLETED == null) {
+					DB::table('order')
+						->where('ID_USER', session('user')[0]->get('ID_USER'))
+						->where('ID_PRODUCT', $data['course']->FINAL_EXAM)
+						->where('ID_PAY', $data['id_pay_final_exam']->ID_PAY)
+						->update(['DATE_COMPLETED' => date('Y-m-d H:i:s')]);
+				}
             }
 		} else {
 			$data['final_exam'] = null;
@@ -562,7 +582,8 @@ class CourseGuest extends Controller
 			");
 			$jml_jwbn_benar += $data_sum->TOT;
 		}
-		$nilai = ($jml_jwbn_benar / count($id_detail)) * 100;
+		$nilai = round(($jml_jwbn_benar / count($id_detail)) * 100);
+
 		$data['total_data'] = DB::select("
 			SELECT
 				ID_QUIZ
