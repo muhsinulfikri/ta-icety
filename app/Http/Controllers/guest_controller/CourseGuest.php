@@ -94,6 +94,7 @@ class CourseGuest extends Controller
             AND
                 u.ID_USER = '".session('user')[0]->get('ID_USER')."'
         ");
+        // dd($data['date_sertif_course'][0]->DATE_COMPLETED);
 		$info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
         $info_titles = array_map(function($item) {
             return $item->TITLE;
@@ -218,7 +219,7 @@ class CourseGuest extends Controller
 				->where('ID_ACTIVITY', $data['id_activity'])
 				->count() + 1;
 			$sertif_number_course = $countSertifCourse . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
+			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS, $data['date_sertif_course'][0]->DATE_COMPLETED);
 			$data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
@@ -229,7 +230,7 @@ class CourseGuest extends Controller
                 "INFO_CERTIFICATE" => json_encode($info_titles),
                 "DURATION" => $data['course']->DURATION,
                 "HOURS" => $data['course']->HOURS,
-                // "DATE_COMPLETED" => isset($data['date_sertif_course'][0]->DATE_COMPLETED),
+                "DATE_COMPLETED" => date('d F y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
 
@@ -295,7 +296,8 @@ class CourseGuest extends Controller
 
 			$data['nilai_final_exam'] = DB::selectOne("
 				SELECT
-					NILAI
+					NILAI,
+                    created_at
 				FROM
 					tb_nilai_final_exam
 				WHERE
@@ -330,10 +332,10 @@ class CourseGuest extends Controller
                     ->where('ID_ACTIVITY', $data['course']->FINAL_EXAM)
                     ->count() + 1;
                 $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS);
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $data['course']->DURATION, $data['course']->HOURS, $data['nilai_final_exam']->created_at);
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
-                    "ID_ACTIVITY" => $data['id_activity'],
+                    "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
                     "NO_SERTIFIKAT" => $sertif_number_exam,
                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
                     "FILE_SERTIFIKAT" => $sertif_path_exam,
@@ -341,6 +343,7 @@ class CourseGuest extends Controller
                     "INFO_CERTIFICATE" => json_encode($info_titles),
                     "DURATION" => $data['course']->DURATION,
                     "HOURS" => $data['course']->HOURS,
+                    "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
                 DB::table('sertifikat_activity')->insert($data_sertif_exam);
