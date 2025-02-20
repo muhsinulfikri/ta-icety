@@ -222,7 +222,7 @@
                                             onclick="ShowFinalExam(this)" data-type="6">
                                             Final Exam
                                         </button>
-                                            @if(!empty($nilai_final_exam->NILAI) >= !empty($final_min_nilai->MIN_NILAI))
+                                            @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
                                                 <button
                                                     class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                     onclick="ShowCertificateFinal(this)" data-type="5">
@@ -525,7 +525,39 @@
             '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
-                <div class="bg-white px-3 py-2 rounded-3 shadow fw-semibold text-center">
+                <div class="bg-white px-3 py-2 rounded-3 fw-semibold text-center">
+
+                @if ($course->FINAL_EXAM != null)
+                    @if (($final_min_nilai->MIN_NILAI < $nilai_final_exam->NILAI) || ($nilai_final_exam->NILAI == 100))
+                        <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
+
+                        <div class="py-5">
+                            <div class="d-flex justify-content-center">
+                                <img class="nav-link rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 40%;height:50%;background-size:cover"></img>
+                            </div>
+                            <div class="d-flex justify-content-center pt-4">
+                                <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai {{round($nilai_final_exam->NILAI)}}</h6>
+                            </div>
+                        </div>
+                    @else
+                        @if ($final_exam != null)
+                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
+                        @endif
+                        @if ($final_exam == null)
+                            <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
+                                Buy Code Exam
+                            </button>
+                        @endif
+                            <br>
+                            <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
+                                Klick Here For Final Exam
+                            <br>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                                Final Exam
+                            </button>
+                    @endif
+                @endif
                 @if (!empty($history_nilai_final_exam) != null)
                     <h4 class="mb-4 mt-4">History Exam</h4>
                     <table class="table mt-4 mb-4">
@@ -546,28 +578,6 @@
                         @endforeach
                         </tbody>
                     </table>
-                @endif
-                @if ($course->FINAL_EXAM != null)
-                    @if (($final_min_nilai->MIN_NILAI < $nilai_final_exam->NILAI) || ($nilai_final_exam->NILAI == 100))
-                        <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
-                    @else
-                        @if ($final_exam != null)
-                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
-                        @endif
-                        @if ($final_exam == null)
-                            <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
-                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
-                                Buy Code Exam
-                            </button>
-                        @endif
-                            <br>
-                            <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
-                                Klick Here For Final Exam
-                            <br>
-                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
-                                Final Exam
-                            </button>
-                    @endif
                 @endif
                 </div>
             </div>`);
