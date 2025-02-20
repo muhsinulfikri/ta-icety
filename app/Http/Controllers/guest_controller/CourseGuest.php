@@ -271,6 +271,9 @@ class CourseGuest extends Controller
 			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
 			$finalExamModel = new FinalExam();
 			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
+				'NILAI' => 0
+			];
 
 			if(!empty($data['nilai_final_exam']->NILAI) >= !empty($data['final_min_nilai']->MIN_NILAI)){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
