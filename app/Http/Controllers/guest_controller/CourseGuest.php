@@ -156,12 +156,33 @@ class CourseGuest extends Controller
 				ID_ITEM = " . $data['last_item'][0]->ID_ITEM . "
 		");
 
+		$check_history_final_exam = DB::selectOne("
+			SELECT
+				*
+			FROM
+				tb_final_exam
+			WHERE
+				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+				AND ID_ACTIVITY = '" . $data['course']->FINAL_EXAM . "'"
+		);
+
 		if (count($data['last_item']) == count($data['data_all_mapping']) && (!empty($cek_nilai->NILAI) ? $cek_nilai->NILAI >= $cek_item_course->MIN_NILAI : false)) {
 			$data['tot_proggress'] = 100;
 			DB::table('order')
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
+			
+			if ($check_history_final_exam == null) {
+				$data_final_exam = [
+					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+					"ID_USER"		=> session('user')[0]->get('ID_USER'),
+					"CODE_EXAM"		=> $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s')),
+					"IS_USED"		=> 0,
+					"CREATED_AT"	=> date("Y-m-d H:i:s")
+				];
+				DB::table('tb_final_exam')->insert($data_final_exam);
+			}
 		}
 		if (count($data['last_item']) == count($data['data_all_mapping']) && ($cek_item_course->TYPE == 1)) {
 			$data['tot_proggress'] = 100;
@@ -169,6 +190,17 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
+
+			if ($check_history_final_exam == null) {
+				$data_final_exam = [
+					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+					"ID_USER"		=> session('user')[0]->get('ID_USER'),
+					"CODE_EXAM"		=> $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s')),
+					"IS_USED"		=> 0,
+					"CREATED_AT"	=> date("Y-m-d H:i:s")
+				];
+				DB::table('tb_final_exam')->insert($data_final_exam);
+			}
 		}
 
 		$sertifCheck = DB::selectOne("
@@ -649,6 +681,25 @@ class CourseGuest extends Controller
 				AND ID_ACTIVITY = '" . $dataActivity->ID_ACTIVITY . "'"
 		);
 
+		$id_final_exam = DB::selectOne("
+			SELECT
+				FINAL_EXAM
+			FROM
+				course
+			WHERE
+				ID_ACTIVITY = '" . $dataActivity->ID_ACTIVITY . "'
+		");
+
+		$check_history_final_exam = DB::selectOne("
+			SELECT
+				*
+			FROM
+				tb_final_exam
+			WHERE
+				ID_USER = '" . $id_user . "'
+				AND ID_ACTIVITY = '" . $id_final_exam->FINAL_EXAM . "'"
+		);
+
 		$data_all_mapping = $this->courseModel->get_counttask($dataActivity->ID_ACTIVITY);
 		$count = [
 			'MAPPING_COUNT' => ((int) $data_all_mapping[0]->MAPPING_COUNT) + 1,
@@ -660,6 +711,17 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $dataActivity->ID_ACTIVITY)
 				->update($count);
+			
+			if ($check_history_final_exam == null) {
+				$data_final_exam = [
+					"ID_ACTIVITY"	=> $id_final_exam->FINAL_EXAM,
+					"ID_USER"		=> session('user')[0]->get('ID_USER'),
+					"CODE_EXAM"		=> $this->GenerateCodeExam($id_final_exam->FINAL_EXAM . date('Y-m-d H:i:s')),
+					"IS_USED"		=> 0,
+					"CREATED_AT"	=> date("Y-m-d H:i:s")
+				];
+				DB::table('tb_final_exam')->insert($data_final_exam);
+			}
 		}
 
 		echo $nilai;
@@ -985,5 +1047,26 @@ class CourseGuest extends Controller
 			'status' => 'success',
 			'message' => 'Code Valid'
 		]);
+	}
+
+	public function GenerateCodeExam($var)
+	{
+		$string = preg_replace('/[^a-z]/i', '', $var);
+		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
+		$begin  = strtoupper(substr($scrap, 0, 3));	
+		do {
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code_check = DB::selectOne("
+				SELECT 
+					CODE_EXAM 
+				FROM 
+					tb_final_exam 
+				WHERE 
+					CODE_EXAM = ?
+				", [$code]
+			);	
+		} while (!empty($code_check));
+	
+		return $code;
 	}
 }

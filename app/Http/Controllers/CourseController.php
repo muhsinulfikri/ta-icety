@@ -790,6 +790,27 @@ class CourseController extends Controller
 		return "INV_PAY_ICETY_" . $uniqid . substr(md5(microtime()), 0, 7);
 	}
 
+    public function GenerateCodeExam($var)
+	{
+		$string = preg_replace('/[^a-z]/i', '', $var);
+		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
+		$begin  = strtoupper(substr($scrap, 0, 3));	
+		do {
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code_check = DB::selectOne("
+				SELECT 
+					CODE_EXAM 
+				FROM 
+					tb_final_exam 
+				WHERE 
+					CODE_EXAM = ?
+				", [$code]
+			);	
+		} while (!empty($code_check));
+	
+		return $code;
+	}
+
     public function index_lihat_peserta(Request $req)
     {
         $data['title'] = "Peserta Kursus";
