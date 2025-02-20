@@ -5,100 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sertifikat</title>
     <style>
+        @page {
+        size: A4 landscape;
+        margin: 0;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        margin: 0;
+        padding: 0;
         }
+
         .certificate {
-            width: 800px;
-            background: white;
-            display: flex;
-            border: 2px solid #ccc;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        width: 1122px;
+        height: 793px;
+        background: url({{ $IMAGE }}) no-repeat center center;
+        background-size: cover;
         }
-        .left {
-            width: 30%;
-            color: white;
-            padding: 20px;
-            text-align: center;
+        .certificate-number {
+        position: absolute;
+        top: 5%;
+        right: 5%;
+        font-size: 16px;
+        font-weight: bold;
         }
-        .left h2 {
-            font-size: 24px;
-            margin: 20px 0;
+
+        .text-container {
+        position: absolute;
+        width: 70%;
+        left: 32.5%;
+        top: 20%;
+        right: 10%;
         }
-        .left .modules {
-            font-size: 14px;
-            text-align: left;
-            margin-top: 20px;
+
+        .date {
+        font-size: 16px;
+        font-style: italic;
+        margin-top: 40px;
         }
-        .left .modules ul {
-            padding: 0;
-            list-style-type: none;
+
+        .name {
+        font-size: 32px;
+        font-weight: bold;
         }
-        .left .modules li {
-            margin: 10px 0;
+
+        .description {
+        font-size: 18px;
+        margin-top: 30px;
+        max-width: 80%;
         }
-        .right {
-            width: 70%;
-            padding: 30px;
+
+        .course-title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-top: 100px;
         }
-        .right h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
+
+        .modules {
+        position: absolute;
+        left: 5%;
+        top: 55%;
+        width: 250px;
+        color: white;
+        font-size: 16px;
+        text-align: left;
         }
-        .right h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
+
+        .modules ul {
+        list-style-type: none;
+        padding: 0;
+        margin-left: 10px;
         }
-        .right p {
-            font-size: 16px;
-            line-height: 1.5;
+
+        .modules li {
+        margin-bottom: 10px;
         }
+
         .signature {
-            margin-top: 30px;
-            text-align: right;
-            font-size: 14px;
+        position: absolute;
+        bottom: 10%;
+        right: 10%;
+        font-size: 14px;
+        text-align: center;
+        }
+
+        .signature .name {
+        font-weight: bold;
+        }
+
+        .signature .title {
+        font-style: italic;
+        }
+        .duration-info {
+        font-size: 16px;
+        font-style: italic;
+        margin-top: 10px;
+        color: #333; /* Warna lebih netral */
         }
     </style>
 </head>
 <body>
-    <div class="wrapper-page">
-        <div class="box">
-            <div class="image">
-                <img src="<?= $IMAGE ?>">
-            </div>
+    <div class="certificate">
+      <div class="certificate-number">{{ $NO_SERTIF }}</div>
+      <div class="modules">
+        <ul>
+          @foreach ($INFO_SERTIF as $info)
+            <li>{{ $info }}</li>
+          @endforeach
+        </ul>
+      </div>
+
+      <div class="text-container">
+        <div class="date">12 April 2024</div>
+        <div class="name">{{ $NAME }}</div>
+        <div class="course-title">{{ $ACTIVITY }}</div>
+        <div class="description">
+          {{ $SUMMARY }}
         </div>
-        <div class="certificate">
-            <div class="left">
-                <h2>Certificate of Completion</h2>
-                <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete</p>
-                <div class="modules">
-                    <h3>Modules Completed</h3>
-                    <ol>
-                        @foreach($INFO_SERTIF as $title)
-                            <li>{{ $title }}</li>
-                        @endforeach
-                    </ol>
-                </div>
-            </div>
-            <div class="right">
-                <p><strong>12 April 2024</strong></p>
-                <h1>{{ $NAME }}</h1>
-                <p>has successfully completed all required modules of the online learning program on Icety.</p>
-                <h2><?= $ACTIVITY ?></h2>
-                <p><?= $SUMMARY ?></p>
-                <div class="signature">
-                    <p><strong>Dr. Eva Handriyantini, S.Kom., M.MT</strong></p>
-                    <p>Director of Learning & Innovation</p>
-                </div>
-            </div>
-        </div>
+        <div class="duration-info">
+            <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete</p>
+          </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

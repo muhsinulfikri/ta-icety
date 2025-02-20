@@ -562,7 +562,7 @@
         </div>
 
         <div class="text-center text-sm-start">
-            <a href=" store" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
+            <a href="/course" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
 
         </div>
 
