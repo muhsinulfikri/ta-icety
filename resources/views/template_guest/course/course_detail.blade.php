@@ -548,7 +548,7 @@
                     </table>
                 @endif
                 @if ($course->FINAL_EXAM != null)
-                    @if (!empty($final_min_nilai->MIN_NILAI) <=!empty($nilai_final_exam->NILAI))
+                    @if (!empty($final_min_nilai->MIN_NILAI) <= !empty($nilai_final_exam->NILAI))
                         <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
                     @else
                         @if ($final_exam != null)

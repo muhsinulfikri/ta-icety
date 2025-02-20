@@ -103,7 +103,7 @@
                             ?>
                             <div id="loading-message" class="rounded-5 p-3 pb-4 h-auto d-flex flex-column">
                                 <div class="d-flex justify-content-center">
-                                    <img src="https://assets.materialup.com/uploads/b68f4460-aaa9-4e19-99d8-232dfea1c537/preview.gif" alt="Loader.gif" style="max-width: 50%;" />
+                                    <img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" style="max-width: 50%;" />
                                 </div>
                             </div>
                         </div>
