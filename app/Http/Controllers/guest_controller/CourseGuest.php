@@ -236,7 +236,7 @@ class CourseGuest extends Controller
 
 			$data['final_min_nilai'] = DB::selectOne("
 				SELECT
-					ic.MIN_NILAI
+					COALESCE(ic.MIN_NILAI, '80') AS MIN_NILAI
 				FROM
 					item_course ic
 				LEFT JOIN course c ON
@@ -271,8 +271,11 @@ class CourseGuest extends Controller
 			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
 			$finalExamModel = new FinalExam();
 			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
+				'NILAI' => 0
+			];
 
-			if(!empty($data['nilai_final_exam']->NILAI) >= !empty($data['final_min_nilai']->MIN_NILAI)){
+			if(($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100)){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
                 $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
                 $countSertifExam = DB::table('sertifikat_activity')
