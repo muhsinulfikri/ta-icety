@@ -173,7 +173,7 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
 			
-			if ($check_history_final_exam == null) {
+			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -191,7 +191,7 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
 
-			if ($check_history_final_exam == null) {
+			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -712,7 +712,7 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $dataActivity->ID_ACTIVITY)
 				->update($count);
 			
-			if ($check_history_final_exam == null) {
+			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $id_final_exam->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),
