@@ -391,24 +391,24 @@ class CheckoutGuest extends Controller
 					->update($data_order);
 				
 				//Final Exam
-				$final_exam = DB::selectOne("
-					SELECT
-						FINAL_EXAM
-					FROM
-						course
-					WHERE
-						ID_ACTIVITY = '" . $item . "'
-				");
-				if ($final_exam != null) {
-					$data_final_exam = [
-						"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
-						"ID_USER"		=> session('user')[0]->get('ID_USER'),
-						"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
-						"IS_USED"		=> 0,
-						"CREATED_AT"	=> date("Y-m-d H:i:s")
-					];
-					DB::table('tb_final_exam')->insert($data_final_exam);
-				}
+				// $final_exam = DB::selectOne("
+				// 	SELECT
+				// 		FINAL_EXAM
+				// 	FROM
+				// 		course
+				// 	WHERE
+				// 		ID_ACTIVITY = '" . $item . "'
+				// ");
+				// if ($final_exam != null) {
+				// 	$data_final_exam = [
+				// 		"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
+				// 		"ID_USER"		=> session('user')[0]->get('ID_USER'),
+				// 		"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+				// 		"IS_USED"		=> 0,
+				// 		"CREATED_AT"	=> date("Y-m-d H:i:s")
+				// 	];
+				// 	DB::table('tb_final_exam')->insert($data_final_exam);
+				// }
 			}
 
 			return response([
@@ -497,24 +497,24 @@ class CheckoutGuest extends Controller
 						DB::table('tb_final_exam')->insert($data_final_exam);
 					}
 					//Final Exam
-					$final_exam = DB::selectOne("
-						SELECT
-							FINAL_EXAM
-						FROM
-							course
-						WHERE
-							ID_ACTIVITY = '" . $item . "'
-					")->FINAL_EXAM;
-					if ($final_exam != null) {
-						$data_final_exam = [
-							"ID_ACTIVITY"	=> $final_exam,
-							"ID_USER"		=> session('user')[0]->get('ID_USER'),
-							"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
-							"IS_USED"		=> 0,
-							"CREATED_AT"	=> date("Y-m-d H:i:s")
-						];
-						DB::table('tb_final_exam')->insert($data_final_exam);
-					}
+					// $final_exam = DB::selectOne("
+					// 	SELECT
+					// 		FINAL_EXAM
+					// 	FROM
+					// 		course
+					// 	WHERE
+					// 		ID_ACTIVITY = '" . $item . "'
+					// ")->FINAL_EXAM;
+					// if ($final_exam != null) {
+					// 	$data_final_exam = [
+					// 		"ID_ACTIVITY"	=> $final_exam,
+					// 		"ID_USER"		=> session('user')[0]->get('ID_USER'),
+					// 		"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+					// 		"IS_USED"		=> 0,
+					// 		"CREATED_AT"	=> date("Y-m-d H:i:s")
+					// 	];
+					// 	DB::table('tb_final_exam')->insert($data_final_exam);
+					// }
 				}
 
 				session()->flash('msg', "<script>
@@ -601,25 +601,25 @@ class CheckoutGuest extends Controller
 				if ($item_activity->TYPE_ACTIVITY == 1) {
 					foreach ($id_item as $item) {
 						$this->InsertDataMapping($item);
-						//Final Exam
-						$final_exam = DB::selectOne("
-							SELECT
-								FINAL_EXAM
-							FROM
-								course
-							WHERE
-								ID_ACTIVITY = '" . $item . "'
-						");
-						if ($final_exam != null) {
-							$data_final_exam = [
-								"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
-								"ID_USER"		=> session('user')[0]->get('ID_USER'),
-								"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
-								"IS_USED"		=> 0,
-								"CREATED_AT"	=> date("Y-m-d H:i:s")
-							];
-							DB::table('tb_final_exam')->insert($data_final_exam);
-						}
+						// //Final Exam
+						// $final_exam = DB::selectOne("
+						// 	SELECT
+						// 		FINAL_EXAM
+						// 	FROM
+						// 		course
+						// 	WHERE
+						// 		ID_ACTIVITY = '" . $item . "'
+						// ");
+						// if ($final_exam != null) {
+						// 	$data_final_exam = [
+						// 		"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
+						// 		"ID_USER"		=> session('user')[0]->get('ID_USER'),
+						// 		"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+						// 		"IS_USED"		=> 0,
+						// 		"CREATED_AT"	=> date("Y-m-d H:i:s")
+						// 	];
+						// 	DB::table('tb_final_exam')->insert($data_final_exam);
+						// }
 					}
 				}
 
