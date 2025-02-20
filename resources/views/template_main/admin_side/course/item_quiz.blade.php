@@ -30,6 +30,7 @@
     <input type="hidden" name="materi_title[]">
     <input type="hidden" name="materi_link[]">
     <input type="hidden" name="desc_materi[]">
+    <input type="hidden" name="materi_link_yt[]">
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="form-group ps-3 pe-3 row mt-3">
             <label class="col mt-3">Minimum Nilai Lulus<span class="text-danger">*</span></label>
