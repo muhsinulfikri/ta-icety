@@ -14,7 +14,7 @@
 </style>
 
 <!-- Header -->
-<section class="py-5 py-md-7" style="background-color: #B90C0B;">
+<section class="py-5 py-md-7 mb-4" style="background-color: #B90C0B;">
     <div class="container">
         <h1 class="font text-center" style="color: white !important">PROFILE</h1>
         <div class="justify-content-center mt-3 d-flex">
@@ -160,7 +160,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="bg-white shadow rounded-2 overflow-hidden p-3 mt-3" style="height:max-content">
+                        <!-- <div class="bg-white shadow rounded-2 overflow-hidden p-3 mt-3" style="height:max-content">
                             <div class="d-flex flex-column align-items-center align-items-sm-start">
                                 <?php
                                 $array = (array) $document;
@@ -201,7 +201,7 @@
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

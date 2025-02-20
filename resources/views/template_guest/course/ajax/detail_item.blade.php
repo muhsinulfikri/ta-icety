@@ -50,68 +50,36 @@
                     }else {
                         const link_file = file ? file : materiLink;
                         $('#document-frame').html(
-                            `<iframe src="${link_file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
+                            `<iframe src="${link_file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0" allowfullscreen="true"></iframe>`
                         );
                     }
                 }
             </script>
         </section>
-        <hr>
+        @if ($detail_item_course->LINK_YT != "-")        
+        <hr id="video-course-line">
         <section id="video-course">
             <?php
             $youtubePattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
             $googleDrivePattern = '/drive\.google\.com\/file\/d\/([^\/]+)\//i';
             $url = $detail_item_course->LINK_YT;
+            ?>
 
-            if (preg_match($googleDrivePattern, $url, $matches)) {
-                $fileId = $matches[1];
-                ?>
-                <h6 class="fw-semibold pb-3">File Kursus :</h6>
-                <button type="button" class="btn btn-secondary rounded w-100" data-bs-toggle="modal" data-bs-target="#YTModal">
-                    Open File
-                </button>
-            <?php } elseif (preg_match($youtubePattern, $url, $matches)) {
-                $videoId = $matches[1];
-                ?>
-                <h6 class="fw-semibold pb-3">Video Kursus :</h6>
-                <button type="button" class="btn btn-secondary rounded w-100" data-bs-toggle="modal" data-bs-target="#YTModal">
-                    Open Video
-                </button>
-            <?php } elseif ($url == "-"){ ?>
-            <?php } else { ?>
-                <h6>Video cannot be opened. Contact the instructor for more information.</h6>
-            <?php } ?>
-
-            <div class="modal fade" id="YTModal">
-                <div class="modal-dialog modal-lg modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title"><?= $detail_item_course->TITLE ?></h5>
-                            <button type="button" class="btn btn-secondary" id="btn-modal-close" data-bs-dismiss="modal">
-                                <i class="bi bi-x"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <?php
-                            if (!empty($fileId)) {
-                                echo '<iframe id="video-frame" src="https://drive.google.com/file/d/' . $fileId . '/preview" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
-                            } elseif (!empty($videoId)) {
-                                echo '<iframe id="video-frame" src="https://www.youtube.com/embed/' . $videoId . '" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>';
-                            } else {
-                                echo '<h6>Video cannot be opened. Contact the instructor for more information.</h6>';
-                            }
-                            ?>
-                            <div id="loading-message" class="rounded-5 p-3 pb-4 h-auto d-flex flex-column">
-                                <div class="d-flex justify-content-center">
-                                    <img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" style="max-width: 50%;" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="d-flex justify-content-center align-items-center mt-4 mb-4" id="video-frame">
+                @if (preg_match($googleDrivePattern, $url, $matches))
+                    <?php $fileId = $matches[1]; ?>
+                    <iframe src="https://drive.google.com/file/d/{{ $fileId }}/preview" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>
+                @elseif(preg_match($youtubePattern, $url, $matches))
+                    <?php $videoId = $matches[1]; ?>
+                    <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen style="width:700px; height:400px;"></iframe>
+                @elseif($url == "-")
+                @else
+                    <h6>Video cannot be opened. Contact the instructor for more information.</h6>
+                @endif
             </div>
         </section>
-        <hr>
+        @endif
+        <hr id="desc-course">
         <section id="desc-course">
             <h6 class="fw-semibold">Course Description :</h6>
             <p class="text-muted">
@@ -288,6 +256,10 @@
     // videoFrame.addEventListener("error", function() {
     //     console.log("error")
     // });
+
+    function openVideo() {
+        
+    }
 
     var initialSrc = $('#video-frame').attr('src');
     $('#YTModal').on('hidden.bs.modal', function() {

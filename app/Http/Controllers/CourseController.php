@@ -659,7 +659,7 @@ class CourseController extends Controller
                     'ID_PAY'        => $this->GenerateUniqIDPay($data['course']->TITLE_ACTIVITY),
                     'PRICE_ORDER'   => 0,
                     'MAPPING_COUNT' => 0,
-                    'DATE_COMPLETE' => null,
+                    'DATE_COMPLETED' => null,
                     'EXPIRED_DATE'  => (new DateTime())->modify('+' . $duration . ' months')->format('Y-m-d H:i:s'),
                     'LOG_TIME'      => date('Y-m-d H:i:s')
                 ];
@@ -741,7 +741,7 @@ class CourseController extends Controller
                     'ID_PAY'        => $this->GenerateUniqIDPay($data['course']->TITLE_ACTIVITY),
                     'PRICE_ORDER'   => 0,
                     'MAPPING_COUNT' => 0,
-                    'DATE_COMPLETE' => null,
+                    'DATE_COMPLETED' => null,
                     'EXPIRED_DATE'  => date('Y-m-d H:i:s', strtotime('+'.$data['course']->DURATION.' month')),
                     'LOG_TIME'      => date('Y-m-d H:i:s')
                 ];
