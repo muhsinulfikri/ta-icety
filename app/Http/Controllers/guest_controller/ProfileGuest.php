@@ -305,7 +305,9 @@ class ProfileGuest extends Controller
             LEFT JOIN instructor_req ON instructor_req.ID_USER = user_data.ID_USER
             WHERE user_data.ID_USER = '" . session('user')[0]['ID_USER'] . "';
         ");
-        $data['id'] = Crypt::encryptString($data['sertif'][0]->ID_SERTIFIKAT);
+        if(!empty($data['sertif'])){
+            $data['id'] = Crypt::encryptString($data['sertif'][0]->ID_SERTIFIKAT);
+        }
         return
             view('template.header', $data) .
             view('template_guest/profile/mysertificate', $data) .
