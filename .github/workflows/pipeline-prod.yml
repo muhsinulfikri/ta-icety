@@ -1,4 +1,4 @@
-name : Deploy tbh-v3 to testing
+name : Deploy tbh-v3 to prod
 on:
   push:
     branches: [ main ]
