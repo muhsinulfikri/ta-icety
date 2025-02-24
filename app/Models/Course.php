@@ -205,6 +205,27 @@ class Course extends Model
         ");
         return $data;
     }
+    public function get_completed_course($id_user, $id_activity){
+        $data = DB::select('
+            SELECT
+                o.ID_ORDER ,
+                u.ID_USER ,
+                a.ID_ACTIVITY ,
+                o.LOG_TIME ,
+                o.DATE_COMPLETED ,
+                DATEDIFF(o.DATE_COMPLETED , o.LOG_TIME ) AS days_difference
+            FROM `order` o
+            JOIN `user` u ON o.ID_USER  = u.ID_USER
+            JOIN `activity` a ON o.ID_PRODUCT  = a.ID_ACTIVITY
+            WHERE
+                o.ID_USER = "'. $id_user .'"
+            AND
+                o.ID_PRODUCT = "'. $id_activity .'"
+            AND
+                o.DATE_COMPLETED  IS NOT NULL
+        ');
+        return $data;
+    }
     public function get_course_by_id($keyword, $type)
     {
         $query = DB::table('activity AS act')

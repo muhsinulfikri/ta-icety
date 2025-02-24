@@ -34,7 +34,7 @@
                                 </select>
                             </div>
                             <div class="my-4 float-label-control">
-                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="Agency" name="agency" aria-describedby="" required>
+                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="Name of your Perusahaan/Instansi" name="agency" aria-describedby="" required>
                             </div>
                             <div class="my-4 float-label-control">
                                 <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Phone Number" name="telp" aria-describedby="" required>
