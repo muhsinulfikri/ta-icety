@@ -1,5 +1,7 @@
 @if ($nilai_final_exam == null)
 <div class="container d-flex justify-content-center align-items-center flex-column my-4">
+    <input type="hidden" name="id_activity_final_quest" value="{{ $id_activity }}">
+    <input type="hidden" name="code_exam" value="{{ $code }}">
     <h6 class="fw-semibold mt-5 w-100 text-start">Final Exam :</h6>
     <?php if (is_null($quiz_grade)) {
         $no_soal = 0;
@@ -63,7 +65,7 @@
                 <div class="modal-content px-3 py-3 text-center">
                     <div class="modal-body">
                         <img class="img-fluid rounded-circle" src="<?= url('assets/images/modal-img.svg') ?>" style="width: 80%;">
-                        <h5 class="fw-semibold mt-3">Apakah Anda Yakin Ingin Mengumpulkan Kuis?</h5>
+                        <h5 class="fw-semibold mt-3">Apakah Anda Yakin Ingin Mengumpulkan Final Exam?</h5>
                     </div>
                     <div class="modal-footer d-flex justify-content-center gap-2">
                         <button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>
@@ -92,12 +94,25 @@
                         "pilih_jwbn": pilih_jwbn 
                     },
                     success: function(data) {
-                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
-                        $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
-                        $(e).hide();
-                        $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {
+                        if (data.status == 'error') {
+                            $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>").modal('hide');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data.message,
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                            });
                             window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
-                        });
+                        }else {
+                            $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
+                            $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
+                            $(e).hide();
+                            $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {
+                                window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
+                            });
+                        }
+
                     }
                 });
             }

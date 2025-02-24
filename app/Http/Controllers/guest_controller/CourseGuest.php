@@ -324,7 +324,7 @@ class CourseGuest extends Controller
 			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
 				'NILAI' => 0
 			];
-            // dd($data['nilai_final_exam']->NILAI, $data['final_min_nilai']->MIN_NILAI);
+
 			if(($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
                 $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
@@ -873,15 +873,8 @@ class CourseGuest extends Controller
 		$data['title'] = 'Final Exam';
 		$data['id_activity'] = $request->id;
 		$data['code'] = $request->code;
-		$is_used = DB::selectOne("
-			SELECT
-				id_nilai_final_exam
-			FROM
-				tb_nilai_final_exam
-			WHERE
-				CODE_EXAM = ?
-		", [$data['code']]);
-
+		
+		$is_code_verif = $this->isCodeVerif($data['code']);
 		$id_activity_parent = DB::selectOne("
 			SELECT
 				ID_ACTIVITY
@@ -891,9 +884,10 @@ class CourseGuest extends Controller
 				FINAL_EXAM = ?;
 		", [$data['id_activity']])->ID_ACTIVITY;
 		$data['id_activity_parent'] = $id_activity_parent;
-		if (!empty($is_used)) {
-			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code has been used');
+		if ($is_code_verif == false) {
+			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
 		}
+		
 		$data['id_course'] = DB::selectOne("
 			SELECT
 				ID_COURSE
@@ -961,12 +955,31 @@ class CourseGuest extends Controller
 			view('template.footer', $data);
 	}
 
-	public function FinalExamEvaliation()
+	public function FinalExamEvaliation(Request $request)
 	{
 		$id_quiz = $_POST['id_quiz'];
 		$id_detail = $_POST['id_detail'];
 		$pilih_jwbn = $_POST['pilih_jwbn'];
 		$id_user = session('user')[0]->get('ID_USER');
+		$code_exam = $request->code_exam;
+
+		$is_code_verif = $this->isCodeVerif($code_exam);
+		$id_activity_parent = DB::selectOne("
+			SELECT
+				ID_ACTIVITY
+			FROM
+				course
+			WHERE
+				FINAL_EXAM = ?;
+		", [$request->id_activity])->ID_ACTIVITY;
+		if ($is_code_verif == false) {
+			return response()->json([
+				'status' => 'error',
+				'message' => 'Code not valid',
+				'url' => 'course/detail/courses?id_activity=' . $id_activity_parent
+			]);
+		}
+
 		$jml_jwbn_benar = 0;
 		for ($i = 0; $i < count($id_detail); $i++) {
 			$data_sum = DB::selectOne("
@@ -1003,6 +1016,7 @@ class CourseGuest extends Controller
 		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
 		return response()->json([
+			'status' => 'success',
 			'nilai' => $nilai,
 			'id_activity_parent' => $id_activity_parent
 		]);
@@ -1053,5 +1067,24 @@ class CourseGuest extends Controller
 		} while (!empty($code_check));
 
 		return $code;
+	}
+
+	public function isCodeVerif($code)
+	{
+		$finalExamCode = DB::selectOne("
+			SELECT
+				ID_FINAL_EXAM
+			FROM
+				tb_final_exam
+			WHERE
+				CODE_EXAM = ?
+				AND IS_USED = 0
+		", [$code]);
+		if (empty($finalExamCode)) {
+			return false;
+		}
+
+		return true;
+
 	}
 }

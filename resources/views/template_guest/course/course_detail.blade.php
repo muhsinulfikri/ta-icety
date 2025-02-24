@@ -747,7 +747,8 @@
                         title: 'Success',
                         text: data.message,
                         icon: 'success',
-                        confirmButtonText: 'Continue'
+                        confirmButtonColor: '#ad0b0b',
+                        confirmButtonText: 'Continue',
                     }).then((result) => {
                         if (result.isConfirmed) {
                             window.location.href = "<?= url('course/final-exam/'.$course->FINAL_EXAM) ?>/" + codeExam;
@@ -758,7 +759,8 @@
                         title: 'Error',
                         text: data.message,
                         icon: 'error',
-                        confirmButtonText: 'Close'
+                        confirmButtonText: 'Close',
+                        confirmButtonColor: '#ad0b0b',
                     });
                 }
             },
@@ -805,6 +807,16 @@
             })
         <?php } ?>
     }
-
-
 </script>
+
+@if (session('err_msg'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            confirmButtonColor: '#ad0b0b',
+            text: '{{ session('err_msg') }}',
+        });
+    </script>
+@endif
+
