@@ -28,7 +28,8 @@
                         <div class="col-md-5">
                             <input type="text" class="form-control" name="alias_course" placeholder="Alias Course"
                                 required pattern="[A-Z\s]+" title="Only uppercase letters are allowed" oninput="this.value = this.value.toUpperCase()">
-                        </div>
+                                <small id="alias-feedback"></small>
+                            </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">
@@ -199,5 +200,32 @@
             remove: 'Delete',
             error: 'error'
         }
+    });
+    $(document).ready(function () {
+        // $.ajaxSetup({
+        //     headers: {
+        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //     }
+        // });
+        $('input[name="alias_course"]').on('input', function () {
+            let alias = $(this).val();
+
+            if (alias.length > 0) {
+                $.ajax({
+                    url: '/check-alias',
+                    type: 'GET',
+                    data: { alias: alias },
+                    success: function (response) {
+                        if (response.exists) {
+                            $('#alias-feedback').text('Alias sudah digunakan, silahkan pilih yang lain!').css('color', 'red');
+                        } else {
+                            $('#alias-feedback').text('Alias tersedia').css('color', 'green');
+                        }
+                    }
+                });
+            } else {
+                $('#alias-feedback').text('');
+            }
+        });
     });
 </script>

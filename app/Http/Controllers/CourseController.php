@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Throwable;
+use App\Models\Course;
 use App\Models\Laporan;
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use function PHPUnit\Framework\isEmpty;
+
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
-use DateTime;
-
-use function PHPUnit\Framework\isEmpty;
 
 class CourseController extends Controller
 {
@@ -794,20 +795,20 @@ class CourseController extends Controller
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
 		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
-		$begin  = strtoupper(substr($scrap, 0, 3));	
+		$begin  = strtoupper(substr($scrap, 0, 3));
 		do {
-			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));
 			$code_check = DB::selectOne("
-				SELECT 
-					CODE_EXAM 
-				FROM 
-					tb_final_exam 
-				WHERE 
+				SELECT
+					CODE_EXAM
+				FROM
+					tb_final_exam
+				WHERE
 					CODE_EXAM = ?
 				", [$code]
-			);	
+			);
 		} while (!empty($code_check));
-	
+
 		return $code;
 	}
 
@@ -1024,4 +1025,13 @@ class CourseController extends Controller
             $this->update_item_quiz($data, $req, $idQuiz);
         }
     }
+
+    public function get_alias(Request $req) {
+        $alias = $req->query('alias');
+
+        $exists = DB::table('course')->where('ALIAS', $alias)->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
+
 }

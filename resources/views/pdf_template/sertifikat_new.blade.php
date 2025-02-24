@@ -125,7 +125,7 @@
           {{ strip_tags($SUMMARY) }}
         </div>
         <div class="duration-info">
-            <p>Approximately <?= $DURATION ?> months <?= $HOURS ?> hours to complete this course</p>
+            <p>Has been completed this course in <?= $DURATION ?> days.</p>
           </div>
       </div>
     </div>
