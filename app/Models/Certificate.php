@@ -25,7 +25,7 @@ class Certificate extends Model
         return $this->db->affected_rows();
     }
 
-    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours, $date)
+    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date)
     {
         set_time_limit(120);
         try {
@@ -48,7 +48,6 @@ class Certificate extends Model
             $data['SUMMARY'] = $summary;
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
-            $data['HOURS'] = $hours;
             $data['DATE'] = $date;
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
@@ -61,7 +60,7 @@ class Certificate extends Model
         }
     }
 
-    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $hours, $date)
+    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date)
     {
         set_time_limit(120);
         try {
@@ -84,7 +83,6 @@ class Certificate extends Model
             $data['SUMMARY'] = $summary;
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
-            $data['HOURS'] = $hours;
             $data['DATE'] = $date;
 
             $html = view('pdf_template.sertifikat_new', $data)->render();

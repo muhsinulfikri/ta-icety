@@ -1,11 +1,11 @@
 @extends('template_guest.profile.profile_template')
 @section('content')
 <div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
-    <h3 class="fw-bold pb-4" style="color:#AD0B0B">My Events</h3>
+    <h3 class="fw-bold pb-4" style="color:#AD0B0B">My Ebooks</h3>
     <table class="table" style="color: #8A8A8E">
         <thead>
             <tr class="fw-normal text-black">
-                <td scope="col" class="fw-bold fs-5" width="70%">Event</td>
+                <td scope="col" class="fw-bold fs-5" width="70%">Ebooks</td>
                 <td scope="col" class="fw-bold fs-5" width="30%">Author</td>
             </tr>
         </thead>
@@ -27,7 +27,7 @@
                             <?= $item->AUTHOR ?>
                         </span>
                     </div>
-                    
+
                 </td>
             </tr>
             <?php endforeach; ?>

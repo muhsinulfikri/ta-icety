@@ -148,7 +148,7 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('course/item', 'guest_controller\CourseGuest@getDetailItemCourse');
     Route::post('course/quiz/evaluation', 'guest_controller\CourseGuest@QuizEvaluation');
     //END COURSE
-    
+
     //FINAL EXAM
     Route::get('course/final-exam/{id}/{code}', 'guest_controller\CourseGuest@finalExam');
     Route::post('/course/final-exam/evaluation/', 'guest_controller\CourseGuest@FinalExamEvaliation');
@@ -195,6 +195,9 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::get('check_payment_status/{any}', 'guest_controller\CheckoutGuest@check_payment_status');
 
     Route::get('/buyback', 'guest_controller\CourseGuest@buyBack');
+
+    //get alias
+    Route::get('/check-alias', 'CourseController@get_alias');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {
@@ -221,7 +224,7 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/invite', 'CourseController@invite');
     Route::post('courses/invite_individu', 'CourseController@invite_individu');
     Route::post('courses/invite_batch', 'CourseController@invite_batch');
-    
+
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');
     Route::post('courses/add-final/store', 'FinalExamController@store');

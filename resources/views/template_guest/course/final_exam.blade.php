@@ -2,6 +2,7 @@
 <div class="container d-flex justify-content-center align-items-center flex-column my-4">
     <input type="hidden" name="id_activity_final_quest" value="{{ $id_activity }}">
     <input type="hidden" name="code_exam" value="{{ $code }}">
+    <h5><span class="text-danger">*</span>Nilai minimal lulus final exam : {{ $data[0]->MIN_NILAI }}</h5>
     <h6 class="fw-semibold mt-5 w-100 text-start">Final Exam :</h6>
     <?php if (is_null($quiz_grade)) {
         $no_soal = 0;
@@ -25,7 +26,7 @@
                     onclick="SelectJwbn<?= $item->ID_DETAIL . '' . $item->ORDER_LIST ?>(this)">
                     <?= $pilihan[$no_pilihan].'. '.$soal_item ?>
                 </button>
-                <?php                    
+                <?php
                     $no_pilihan++;
                     }
                 endforeach;
@@ -85,13 +86,13 @@
                 jQuery.ajax({
                     url: "<?= Request::segment(0) ?>/course/final-exam/evaluation/",
                     type: "POST",
-                    data: { 
-                        "_token": "{{ csrf_token() }}", 
-                        "id_quiz": $('input[name="id_quiz"]').val(), 
-                        "id_detail": id_detail, 
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        "id_quiz": $('input[name="id_quiz"]').val(),
+                        "id_detail": id_detail,
                         "code_exam": "<?= $code ?>",
-                        "id_activity": id_activity, 
-                        "pilih_jwbn": pilih_jwbn 
+                        "id_activity": id_activity,
+                        "pilih_jwbn": pilih_jwbn
                     },
                     success: function(data) {
                         if (data.status == 'error') {
