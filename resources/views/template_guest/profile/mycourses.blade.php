@@ -69,6 +69,12 @@
         $('#redeemModal').modal('show')
     }
 
+    $('#form-redeem').on("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+        }
+    });
+
     function useTrialVoucher() {
         var isValid = true;
         var form = $('#form-redeem');
