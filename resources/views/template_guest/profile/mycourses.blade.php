@@ -58,7 +58,7 @@
                 </div>
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="useTrialVoucher()">Apply Code</button>
+                <button type="button" class="btn btn-primary btn-submit" onclick="useTrialVoucher()">Apply Code</button>
             </div>
         </div>
     </div>
@@ -72,6 +72,7 @@
     $('#form-redeem').on("keydown", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();
+            $('.btn-submit').trigger('click')
         }
     });
 
