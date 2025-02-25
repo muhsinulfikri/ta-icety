@@ -53,7 +53,7 @@ class Certificate extends Model
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
             $data['DATE'] = $date;
-            $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'verifikasi/'.$encryptedId));
+            $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'/verifikasi/'.$encryptedId));
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
