@@ -98,11 +98,11 @@
                         <div>
                             <div class="font fw-bold">Event categories</div>
                             @if ($event->CATEGORY_EVENT == 0)
-                                <div class="font" style="font-size: 0.9rem;margin-top: -4px">Hybrid</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Hybrid</div>
                             @elseif ($event->CATEGORY_EVENT == 1)
-                                <div class="font" style="font-size: 0.9rem;margin-top: -4px">Online</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Online</div>
                             @else
-                                <div class="font" style="font-size: 0.9rem;margin-top: -4px">Offline</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Offline</div>
                             @endif
                         </div>
                     </div>
@@ -178,21 +178,11 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-            $.ajax({
-                url: '<?= Request::segment(0) ?>/add/order',
-                type: "GET",
-                data: {
-                    id_activity: $(e).data("id-activity"),
-                    type: 1
-                },
-                dataType: 'json',
-                success: function(data) {
-                    Toast.fire({
-                        icon: (data.Status) ? 'success' : 'error',
-                        title: data.Message
-                    })
-                }
-            });
+            let bodyParam = {
+                id_activity: $(e).data("id-activity"),
+                type: 1
+            }
+            addCart(bodyParam)
         <?php } else { ?>
             Toast.fire({
                 icon: 'error',
@@ -256,7 +246,6 @@
         $('.event-container').append(createCardEvent(data));
     });
     $('.ebook-container').show()
-
 </script>
 
 

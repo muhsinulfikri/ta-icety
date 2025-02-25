@@ -205,21 +205,11 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-            $.ajax({
-                url: '<?= Request::segment(0) ?>/add/order',
-                type: "GET",
-                data: {
-                    id_activity: $(e).data("id-activity"),
-                    type: 1
-                },
-                dataType: 'json',
-                success: function(data) {
-                    Toast.fire({
-                        icon: (data.Status) ? 'success' : 'error',
-                        title: data.Message
-                    })
-                }
-            });
+            let bodyParam = {
+                id_activity: $(e).data("id-activity"),
+                type: 1
+            }
+            addCart(bodyParam)
         <?php } else { ?>
             Toast.fire({
                 icon: 'error',

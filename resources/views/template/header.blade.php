@@ -227,6 +227,7 @@
             text-overflow: ellipsis;
         }
     </style>
+
     <header class="header-style-1">
         <div class="header-topbar topbar-style-1" style="background-color: white;">
             <div class="container">
@@ -302,7 +303,7 @@
                                     <a href="{{ url('vouchers') }}" class=" a-header fw-normal">Voucher</a>
                                 </li>
                                 <li class="me-4">
-                                    <a href="#"
+                                    <a id="_carts" href="#"
                                         class="nav-link w-100 h-100 d-flex align-items-center position-relative rounded-circle text-white"
                                         style="padding-left:12px;padding-right:12px;right:0;margin-right:1px"
                                         onclick="$('#form_checkout').submit()">
@@ -313,32 +314,32 @@
                                                 style="top: 0px; right: -5px;">
                                                 <?= count($checkout) ?>
                                             </span>
-                                        <?php    } ?>
+                                        <?php } ?>
                                     </a>
                                     <?php if ($title != 'Checkout') { ?>
                                         <ul class="submenu rounded mt-2" style="left: initial;right:0;width: max-content;">
                                             <h6 class="title mx-3 fs-5 my-3">Cart</h6>
                                             <hr class="dropdown-divider">
-                                            <ul class="p-0 m-2 overflow-auto" style="max-height:300px">
+                                            <ul id="_itemCart" class="p-0 m-2 overflow-auto" style="max-height:300px">
                                                 <?php if (!empty($checkout)) { ?>
                                                     <?php foreach ($checkout as $item): ?>
-                                                        <li class="dropdown-item" style="pointer-events: none;">
-                                                            <div class="d-flex dropdown-item align-items-center">
-                                                                <div class="img col-2">
-                                                                    <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
-                                                                        alt="Image" class="img-fluid"
-                                                                        style="width:50px;height:50px" />
-                                                                </div>
-                                                                <div class="col-7 ms-2" style="white-space:normal">
+                                                        <li class="dropdown-item d-flex align-items-center py-2">
+                                                            <div class="flex-shrink-0">
+                                                                <img src="<?= !empty($item->IMAGE_ACTIVITY) ? $item->IMAGE_ACTIVITY : $item->IMAGE_EBOOK ?>"
+                                                                    alt="Image" class="img-fluid rounded"
+                                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </div>
+                                                            <div class="ms-3 flex-grow-1 me-3">
+                                                                <span class="d-block text-truncate fw-medium" style="max-width: 220px; margin-bottom: 5px;">
                                                                     <?= !empty($item->TITLE_ACTIVITY) ? $item->TITLE_ACTIVITY : $item->JUDUL ?>
-                                                                </div>
-                                                                <div class="col-3 ms-2" style="white-space:normal">
-                                                                    <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 2, ',', '.') : 'Free' ?>
-                                                                </div>
+                                                                </span>
+                                                                <small class="d-block fw-bold">
+                                                                    <?= $item->PRICE_ORDER != 0 ? 'Rp ' . number_format($item->PRICE_ORDER, 0, ',', '.') : 'Free' ?>
+                                                                </small>
                                                             </div>
                                                         </li>
                                                     <?php endforeach; ?>
-                                                <?php        } else { ?>
+                                                <?php } else { ?>
                                                     <tr>
                                                         <td colspan="5">
                                                             <div class="d-flex justify-content-center">
@@ -348,7 +349,7 @@
                                                             <p class="text-center">No Product</p>
                                                         </td>
                                                     </tr>
-                                                <?php        } ?>
+                                                <?php } ?>
                                             </ul>
                                             <hr class="dropdown-divider">
                                             <p class="text-center m-0 p-0 mt-2"><a href="#"
@@ -356,7 +357,7 @@
                                             </p>
 
                                         </ul>
-                                    <?php    } ?>
+                                    <?php } ?>
                                 </li>
                                 <li>
                                     <a href="#" class="a-header fw-normal">
@@ -388,7 +389,7 @@
                                 </li>
                             </ul>
                         </nav>
-                    <?php  } else { ?>
+                    <?php } else { ?>
                         <div class="header-btn d-none d-xl-block">
                             <a href="{{ url('login') }}" class="fw-normal a-header">Login</a>
                         </div>

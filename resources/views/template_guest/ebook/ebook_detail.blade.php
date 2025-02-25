@@ -80,12 +80,12 @@
                                 Item
                             </button>
                         </a>
-                    <?php } else {?>
+                    <?php } else { ?>
                         <button data-id-ebook="<?= $ebook->ID_BUKU ?>" onclick="AddToCart(this)"
                             class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                             Add to cart
                         </button>
-                        <?php } ?>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col-12 col-md-3 ms-0 ms-md-4 mt-4 mt-md-0 rounded-3 overflow-hidden h-100" style="background-color: #E3E3E3;">
@@ -147,7 +147,7 @@
                                     Item
                                 </button>
                             </a>
-                        <?php } else {?>
+                        <?php } else { ?>
                             <button data-id-ebook="<?= $ebook->ID_BUKU ?>" onclick="AddToCart(this)"
                                 class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                 Add to cart
@@ -165,45 +165,34 @@
 
 <script>
     function AddToCart(e) {
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        },
-        didDestroy: (toast) => {
-            location.reload();
-        }
-    });
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            didDestroy: (toast) => {
+                location.reload();
+            }
+        });
 
-    <?php if (!empty(session('user'))) { ?>
-    $.ajax({
-        url: '<?= Request::segment(0) ?>/add/order',
-        type: "GET",
-        data: {
-            id_ebook: $(e).data("id-ebook"),
-            type: 2
-        },
-        dataType: 'json',
-        success: function(data) {
+        <?php if (!empty(session('user'))) { ?>
+            let bodyParam = {
+                id_ebook: $(e).data("id-ebook"),
+                type: 2
+            }
+            addCart(bodyParam)
+        <?php } else { ?>
             Toast.fire({
-                icon: (data.Status) ? 'success' : 'error',
-                title: data.Message
+                icon: 'error',
+                title: 'Please Login First!'
             });
-        }
-    });
-    <?php } else { ?>
-    Toast.fire({
-        icon: 'error',
-        title: 'Please Login First!'
-    });
-    <?php } ?>
-}
-
+        <?php } ?>
+    }
 </script>
 
 <!-- Another Course -->
@@ -260,7 +249,6 @@
         $('.ebook-container').append(createCardEbook(data));
     });
     $('.ebook-container').show()
-
 </script>
 
 

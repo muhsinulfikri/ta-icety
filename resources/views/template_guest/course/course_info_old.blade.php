@@ -18,8 +18,8 @@
                             <a class="nav-item nav-link active" id="nav-home-tab" data-bs-toggle="tab" href="#nav-home"
                                 role="tab" aria-controls="nav-home-tab" aria-selected="true">Overview</a>
                             <?php if (!empty(session('user'))) : ?>
-                            <a class="nav-item nav-link" id="nav-topics-tab" data-bs-toggle="tab" href="#nav-topics"
-                                role="tab" aria-controls="nav-topics-tab" aria-selected="false">Curriculum</a>
+                                <a class="nav-item nav-link" id="nav-topics-tab" data-bs-toggle="tab" href="#nav-topics"
+                                    role="tab" aria-controls="nav-topics-tab" aria-selected="false">Curriculum</a>
                             <?php endif ?>
                             <a class="nav-item nav-link" id="nav-instructor-tab" data-bs-toggle="tab"
                                 href="#nav-instructor" role="tab" aria-controls="nav-instructor-tab"
@@ -52,19 +52,19 @@
                                         <li class="section">
                                             <ul class="section-content">
                                                 <?php if (!empty($item_course)) { ?>
-                                                <?php foreach ($item_course as $item) :  ?>
-                                                <li class="course-item has-status">
-                                                    <a class="section-item-link">
-                                                        <span class="item-name"> <?= $item->TITLE ?></span>
-                                                    </a>
-                                                </li>
-                                                <?php endforeach; ?>
+                                                    <?php foreach ($item_course as $item) :  ?>
+                                                        <li class="course-item has-status">
+                                                            <a class="section-item-link">
+                                                                <span class="item-name"> <?= $item->TITLE ?></span>
+                                                            </a>
+                                                        </li>
+                                                    <?php endforeach; ?>
                                                 <?php } else { ?>
-                                                <div class="d-flex flex-column align-items-center">
-                                                    <img src="{{ asset('assets_new') }}/images/empty.svg"
-                                                        width="350">
-                                                    <h4 class="font-sm text-center">Tidak ada bab</h4>
-                                                </div>
+                                                    <div class="d-flex flex-column align-items-center">
+                                                        <img src="{{ asset('assets_new') }}/images/empty.svg"
+                                                            width="350">
+                                                        <h4 class="font-sm text-center">Tidak ada bab</h4>
+                                                    </div>
                                                 <?php } ?>
                                             </ul>
                                         </li>
@@ -100,45 +100,45 @@
                                         <div class="col-lg-12 col-md-8">
                                             <div class="komentar-content">
                                                 @if ($komentar == null)
-                                                    <div class="d-flex flex-column align-items-center">
-                                                        <img src="{{ asset('assets_new') }}/images/empty.svg"
-                                                            width="350">
-                                                        <h4 class="font-sm text-center">Belum Ada Komentar</h4>
-                                                    </div>
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <img src="{{ asset('assets_new') }}/images/empty.svg"
+                                                        width="350">
+                                                    <h4 class="font-sm text-center">Belum Ada Komentar</h4>
+                                                </div>
                                                 @endif
                                                 @if ($komentar != null)
-                                                    <div class="container my-2 py-2">
-                                                        <div class="row d-flex justify-content-center">
-                                                            <div class="col-md-12 col-lg-10">
-                                                                <div class="card text-body">
-                                                                    @foreach ($komentar as $item)
-                                                                        <div class="card-body p-4">
-                                                                            <div class="d-flex flex-start">
-                                                                                <img class="rounded-circle shadow-1-strong me-3"
-                                                                                    src="<?= $item->FOTO_PROFILE == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973461_1280.png' : $item->FOTO_PROFILE ?>"
-                                                                                    alt="avatar" width="60"
-                                                                                    height="60" />
-                                                                                <div>
-                                                                                    <h6 class="fw-bold mb-1">
-                                                                                        <?= $item->NAME ?></h6>
-                                                                                    <div
-                                                                                        class="d-flex align-items-center mb-3">
-                                                                                        <p class="mb-0">
-                                                                                            <?= date('F d, Y', strtotime($item->LOG_TIME)) ?>
-                                                                                        </p>
-                                                                                    </div>
-                                                                                    <p class="mb-0">
-                                                                                        <?= $item->komentar ?>
-                                                                                    </p>
-                                                                                </div>
+                                                <div class="container my-2 py-2">
+                                                    <div class="row d-flex justify-content-center">
+                                                        <div class="col-md-12 col-lg-10">
+                                                            <div class="card text-body">
+                                                                @foreach ($komentar as $item)
+                                                                <div class="card-body p-4">
+                                                                    <div class="d-flex flex-start">
+                                                                        <img class="rounded-circle shadow-1-strong me-3"
+                                                                            src="<?= $item->FOTO_PROFILE == null ? 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973461_1280.png' : $item->FOTO_PROFILE ?>"
+                                                                            alt="avatar" width="60"
+                                                                            height="60" />
+                                                                        <div>
+                                                                            <h6 class="fw-bold mb-1">
+                                                                                <?= $item->NAME ?></h6>
+                                                                            <div
+                                                                                class="d-flex align-items-center mb-3">
+                                                                                <p class="mb-0">
+                                                                                    <?= date('F d, Y', strtotime($item->LOG_TIME)) ?>
+                                                                                </p>
                                                                             </div>
+                                                                            <p class="mb-0">
+                                                                                <?= $item->komentar ?>
+                                                                            </p>
                                                                         </div>
-                                                                        <hr class="my-0" />
-                                                                    @endforeach
+                                                                    </div>
                                                                 </div>
+                                                                <hr class="my-0" />
+                                                                @endforeach
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -239,26 +239,16 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
+            let bodyParam = {
                 id_activity: $(e).data("id-activity"),
                 type: 1
-            },
-            dataType: 'json',
-            success: function(data) {
-                Toast.fire({
-                    icon: (data.Status) ? 'success' : 'error',
-                    title: data.Message
-                })
             }
-        });
+            addCart(bodyParam)
         <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please login first!'
-        })
+            Toast.fire({
+                icon: 'error',
+                title: 'Please login first!'
+            })
         <?php } ?>
     }
 
@@ -275,54 +265,60 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-        <?php if (!empty($checking_trans)) { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'You have unfinished transactions!'
-        })
-        <?php } else { ?>
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
-                id_activity: '<?= $course->ID_ACTIVITY ?>',
-                type: 1
-            },
-            dataType: 'json',
-            success: function(data) {
-                let timerInterval
-                $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' +
-                    data.IdOrder + '" />')
-                Swal.fire({
-                    title: 'Create Order!',
-                    html: 'Please Wait ...',
-                    timer: 2000,
-                    timerProgressBar: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval)
-                    }
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        $("#FormBuyNow-info").submit();
-                    }
+            <?php if (!empty($checking_trans)) { ?>
+                Toast.fire({
+                    icon: 'error',
+                    title: 'You have unfinished transactions!'
                 })
-            }
-        });
-        <?php } ?>
+            <?php } else { ?>
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+                let bodyParam = {
+                    id_activity: '<?= $course->ID_ACTIVITY ?>',
+                    type: 1
+                }
+                addCart(bodyParam)
+
+                // $.ajax({
+                //     url: '<?= Request::segment(0) ?>/add/order',
+                //     type: "GET",
+                //     data: {
+                //         id_activity: '<?= $course->ID_ACTIVITY ?>',
+                //         type: 1
+                //     },
+                //     dataType: 'json',
+                //     success: function(data) {
+                //         let timerInterval
+                //         $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' +
+                //             data.IdOrder + '" />')
+                //         Swal.fire({
+                //             title: 'Create Order!',
+                //             html: 'Please Wait ...',
+                //             timer: 2000,
+                //             timerProgressBar: false,
+                //             didOpen: () => {
+                //                 Swal.showLoading()
+                //             },
+                //             willClose: () => {
+                //                 clearInterval(timerInterval)
+                //             }
+                //         }).then((result) => {
+                //             if (result.dismiss === Swal.DismissReason.timer) {
+                //                 $("#FormBuyNow-info").submit();
+                //             }
+                //         })
+                //     }
+                // });
+            <?php } ?>
         <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please login first!'
-        })
+            Toast.fire({
+                icon: 'error',
+                title: 'Please login first!'
+            })
         <?php } ?>
     }
 </script>

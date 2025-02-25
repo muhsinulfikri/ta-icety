@@ -23,21 +23,21 @@
                                     Share :<span class="fs-5"> <i class="fab fa-facebook mx-2" style="cursor: pointer"></i><i class="fab fa-twitter me-2" style="cursor: pointer"></i><i class="fab fa-instagram" style="cursor: pointer"></i></span>
                                 </div>
                                 <?php if ($event->DATA_CHECKING == 0 && $event->EXPIRED != 1) : ?>
-                                <div class="price-header mb-3">
-                                    <h2 class="course-price">
-                                        <?= ($event->PRICE_ACTIVITY == 0) ? "Free" : "Rp " . number_format($event->PRICE_ACTIVITY, 2, ',', '.') ?>
-                                    </h2>
-                                </div>
-                                <div class="">
-                                    <form class="" id="FormBuyNow-info" method="POST" action="<?= url('purchase') ?>">
-                                    @csrf
-                                        <div id="data-input-info"></div>
-                                        <div class="w-100 button button-enroll-course btn btn-main-2 rounded" onclick="BuyNow()">Buy Now</div>
-                                    </form>
-                                    <button data-id-activity="<?= $event->ID_ACTIVITY ?>" onclick="AddToCart(this)" class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                        Add to Cart
-                                    </button>
-                                </div>
+                                    <div class="price-header mb-3">
+                                        <h2 class="course-price">
+                                            <?= ($event->PRICE_ACTIVITY == 0) ? "Free" : "Rp " . number_format($event->PRICE_ACTIVITY, 2, ',', '.') ?>
+                                        </h2>
+                                    </div>
+                                    <div class="">
+                                        <form class="" id="FormBuyNow-info" method="POST" action="<?= url('purchase') ?>">
+                                            @csrf
+                                            <div id="data-input-info"></div>
+                                            <div class="w-100 button button-enroll-course btn btn-main-2 rounded" onclick="BuyNow()">Buy Now</div>
+                                        </form>
+                                        <button data-id-activity="<?= $event->ID_ACTIVITY ?>" onclick="AddToCart(this)" class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                            Add to Cart
+                                        </button>
+                                    </div>
                                 <?php endif ?>
                             </div>
 
@@ -239,21 +239,11 @@
                     location.reload();
                 }
             })
-            $.ajax({
-                url: '<?= Request::segment(0) ?>/add/order',
-                type: "GET",
-                data: {
-                    id_activity: $(e).data("id-activity"),
-                    type: 2
-                },
-                dataType: 'json',
-                success: function(data) {
-                    Toast.fire({
-                        icon: (data.Status) ? 'success' : 'error',
-                        title: data.Message
-                    })
-                }
-            });
+            let bodyParam = {
+                id_activity: $(e).data("id-activity"),
+                type: 2
+            }
+            addCart(bodyParam)
         <?php } else { ?>
             Toast.fire({
                 icon: 'error',
@@ -321,35 +311,40 @@
                         'X-CSRF-TOKEN': csrfToken
                     }
                 });
-                $.ajax({
-                    url: '<?= Request::segment(0) ?>/add/order',
-                    type: "GET",
-                    data: {
-                        id_activity: '<?= $event->ID_ACTIVITY ?>',
-                        type: 2
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        let timerInterval
-                        $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' + data.IdOrder + '" />')
-                        Swal.fire({
-                            title: 'Create Order!',
-                            html: 'Please Wait ...',
-                            timer: 2000,
-                            timerProgressBar: false,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then((result) => {
-                            if (result.dismiss === Swal.DismissReason.timer) {
-                                $("#FormBuyNow-info").submit();
-                            }
-                        })
-                    }
-                });
+                let bodyParam = {
+                    id_activity: $(e).data("id-activity"),
+                    type: 2
+                }
+                addCart(bodyParam)
+                // $.ajax({
+                //     url: '<?= Request::segment(0) ?>/add/order',
+                //     type: "GET",
+                //     data: {
+                //         id_activity: '<?= $event->ID_ACTIVITY ?>',
+                //         type: 2
+                //     },
+                //     dataType: 'json',
+                //     success: function(data) {
+                //         let timerInterval
+                //         $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' + data.IdOrder + '" />')
+                //         Swal.fire({
+                //             title: 'Create Order!',
+                //             html: 'Please Wait ...',
+                //             timer: 2000,
+                //             timerProgressBar: false,
+                //             didOpen: () => {
+                //                 Swal.showLoading()
+                //             },
+                //             willClose: () => {
+                //                 clearInterval(timerInterval)
+                //             }
+                //         }).then((result) => {
+                //             if (result.dismiss === Swal.DismissReason.timer) {
+                //                 $("#FormBuyNow-info").submit();
+                //             }
+                //         })
+                //     }
+                // });
             <?php } ?>
         <?php } else { ?>
             Toast.fire({
@@ -366,10 +361,11 @@
             return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
         }
     <?php } ?>
-    @if(session()->has('succ_msg'))
-        Swal.fire({
-            icon: 'success',
-            title: '{{ session('succ_msg') }}'
-        })
+    @if(session() - > has('succ_msg'))
+    Swal.fire({
+        icon: 'success',
+        title: '{{ session('
+        succ_msg ') }}'
+    })
     @endif
 </script>
