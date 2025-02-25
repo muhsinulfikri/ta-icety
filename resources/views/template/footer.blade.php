@@ -1,3 +1,8 @@
+<?php
+
+use Illuminate\Support\Facades\Request;
+?>
+
 <style>
     .footer {
         font-family: "Noto Sans", serif !important;
@@ -6,10 +11,6 @@
     .footer-logo {
         tbh-footer: left;
     }
-
-
-
-
 
     @media (max-width: 768px) {
 
@@ -51,6 +52,7 @@
         }
     }
 </style>
+
 <section class="footer" style="background-color: #680706 !important">
     <div class=" footer-mid pb-4 pb-lg-7">
         <div class="container">
@@ -170,6 +172,99 @@
 
 <script src="{{ asset('assets_new') }}/js/script.js"></script>
 
+<script>
+    function addCart(bodyParam) {
+        let Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        $.ajax({
+            url: '<?= Request::segment(0) ?>/add/order',
+            type: "GET",
+            data: bodyParam,
+            dataType: 'json',
+            beforeSend: function() {
+                Swal.fire({
+                    title: 'System still processing your item',
+                    text: 'Please wait...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            },
+            success: function(data) {
+                Swal.close();
+                $('#_itemCart').html('')
+
+                let totOrder = 0
+                $.each(data.dataOrder, function(index, data) {
+                    let imageProduct = (data.IMAGE_ACTIVITY) ? data.IMAGE_ACTIVITY : data.IMAGE_EBOOK
+                    let titleProd = (data.TITLE_ACTIVITY) ? data.TITLE_ACTIVITY : data.JUDUL
+                    let priceProd = (data.PRICE_ORDER) ?
+                        'Rp ' + parseFloat(data.PRICE_ORDER).toLocaleString('id-ID', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }) :
+                        'Free';
+
+                    $('#_itemCart').append(`
+                        <li class="dropdown-item d-flex align-items-center py-2">
+                            <div class="flex-shrink-0">
+                                <img src="${imageProduct}"
+                                    alt="Image" class="img-fluid rounded"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+                            </div>
+                            <div class="ms-3 flex-grow-1 me-3">
+                                <span class="d-block text-truncate fw-medium" style="max-width: 220px; margin-bottom: 5px;">
+                                    ${titleProd}
+                                </span>
+                                <small class="d-block fw-bold">
+                                    ${priceProd}
+                                </small>
+                            </div>
+                        </li>
+                    `)
+                    totOrder++
+                })
+
+                if (totOrder) {
+                    $('#_carts').html(`
+                        <i class="far fa-shopping-cart text-white" style="-webkit-text-stroke: 0.1px;"></i>
+                        <span class="badge bg-danger rounded-circle position-absolute"
+                            style="top: -10px; right: -5px;">
+                            ${totOrder}
+                        </span>
+                    `)
+                } else {
+                    $('#_carts').html(`
+                        <i class="far fa-shopping-cart text-white" style="-webkit-text-stroke: 0.1px;"></i>
+                    `)
+                }
+                Toast.fire({
+                    icon: (data.Status) ? 'success' : 'error',
+                    title: data.Message
+                })
+            },
+            error: function() {
+                Swal.close();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan saat menambahkan produk ke cart.'
+                });
+            }
+        });
+    }
+</script>
 
 </body>
 

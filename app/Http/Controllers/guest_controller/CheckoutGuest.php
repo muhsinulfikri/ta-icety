@@ -277,8 +277,11 @@ class CheckoutGuest extends Controller
 			}
 		}
 
+		$data['checkout'] = $this->checkoutModel->get_all_order(session('user')[0]->get('ID_USER'));
+
 		echo json_encode(array(
 			'IdOrder' => (!empty($data_order['ID_ORDER']) ? $data_order['ID_ORDER'] : ""),
+			'dataOrder' => (!empty($data['checkout']) ? $data['checkout'] : ""),
 			'Status' => (!empty($id_activity) && !empty(session('user')[0]->get('ID_USER'))),
 			'Message' => (!empty(session('user')[0]->get('ID_USER'))) ? $msg : 'Please login first!'
 		));
@@ -755,6 +758,7 @@ class CheckoutGuest extends Controller
 		$uniqid = strtoupper($begin);
 		return "PAY_ICETY_" . $uniqid . substr(md5(microtime()), 0, 7);
 	}
+
 	public function GenerateCodeExam($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);

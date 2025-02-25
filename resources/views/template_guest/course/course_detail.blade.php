@@ -222,13 +222,13 @@
                                             onclick="ShowFinalExam(this)" data-type="6">
                                             Final Exam
                                         </button>
-                                            @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
-                                                <button
-                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                    onclick="ShowCertificateFinal(this)" data-type="5">
-                                                    Show Certificate Final Exam
-                                                </button>
-                                            @endif
+                                        @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowCertificateFinal(this)" data-type="5">
+                                            Show Certificate Final Exam
+                                        </button>
+                                        @endif
                                         @endif
                                     <?php } ?>
 
@@ -416,22 +416,22 @@
 
         function DownloadPdf(e) {
 
-                var file = '<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>'
+            var file = '<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>'
 
-                $.ajax({
-                    url: '<?= Request::segment(0) ?>/update-sertif',
-                    type: "POST",
-                    data: {
-                        id_activity: "<?= $course->ID_ACTIVITY ?>",
-                    },
-                    success: function(data) {
-                        window.open(file, '_blank');
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("AJAX Error: ", textStatus, errorThrown);
-                        console.error("Response Text: ", jqXHR.responseText);
-                    }
-                });
+            $.ajax({
+                url: '<?= Request::segment(0) ?>/update-sertif',
+                type: "POST",
+                data: {
+                    id_activity: "<?= $course->ID_ACTIVITY ?>",
+                },
+                success: function(data) {
+                    window.open(file, '_blank');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error: ", textStatus, errorThrown);
+                    console.error("Response Text: ", jqXHR.responseText);
+                }
+            });
         }
 
         function filename(path) {
@@ -467,22 +467,22 @@
 
         function DownloadPdfExam(e) {
 
-                var file = '<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>'
+            var file = '<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>'
 
-                $.ajax({
-                    url: '<?= Request::segment(0) ?>/update-sertif',
-                    type: "POST",
-                    data: {
-                        id_activity: "<?= $course->FINAL_EXAM ?>",
-                    },
-                    success: function(data) {
-                        window.open(file, '_blank');
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.error("AJAX Error: ", textStatus, errorThrown);
-                        console.error("Response Text: ", jqXHR.responseText);
-                    }
-                });
+            $.ajax({
+                url: '<?= Request::segment(0) ?>/update-sertif',
+                type: "POST",
+                data: {
+                    id_activity: "<?= $course->FINAL_EXAM ?>",
+                },
+                success: function(data) {
+                    window.open(file, '_blank');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error: ", textStatus, errorThrown);
+                    console.error("Response Text: ", jqXHR.responseText);
+                }
+            });
         }
 
         function filename(path) {
@@ -541,7 +541,7 @@
                         </div>
                     @else
                         @if ($final_exam != null)
-                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif'?></h6>
+                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif' ?></h6>
                         @endif
                         @if ($final_exam == null)
                             <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
@@ -751,7 +751,7 @@
                         confirmButtonText: 'Continue',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "<?= url('course/final-exam/'.$course->FINAL_EXAM) ?>/" + codeExam;
+                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam;
                         }
                     });
                 } else {
@@ -785,21 +785,11 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-            $.ajax({
-                url: '<?= Request::segment(0) ?>/add/order',
-                type: "GET",
-                data: {
-                    id_activity: "<?= $course->FINAL_EXAM ?>",
-                    type: 3
-                },
-                dataType: 'json',
-                success: function(data) {
-                    Toast.fire({
-                        icon: (data.Status) ? 'success' : 'error',
-                        title: data.Message
-                    })
-                }
-            });
+            let bodyParam = {
+                id_activity: "<?= $course->FINAL_EXAM ?>",
+                type: 3
+            }
+            addCart(bodyParam)
         <?php } else { ?>
             Toast.fire({
                 icon: 'error',
@@ -810,13 +800,13 @@
 </script>
 
 @if (session('err_msg'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            confirmButtonColor: '#ad0b0b',
-            text: '{{ session('err_msg') }}',
-        });
-    </script>
+<script>
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        confirmButtonColor: '#ad0b0b',
+        text: '{{ session('
+        err_msg ') }}',
+    });
+</script>
 @endif
-

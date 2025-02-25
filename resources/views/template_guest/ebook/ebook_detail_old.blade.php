@@ -35,10 +35,10 @@
                                 </button>
                                 @else
                                 <a
-                                        href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
-                                            class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
-                                            Item
-                                        </button></a>
+                                    href="{{ url('ebooks/view/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $detail->JUDUL))) . '?id_book=' . $detail->ID_BUKU }}"><button
+                                        class="mt-2 w-100 button button-enroll-course btn btn-secondary btn-sm rounded">See
+                                        Item
+                                    </button></a>
 
                                 @endif
                                 <!-- <php endif ?> -->
@@ -163,40 +163,30 @@
 
     function AddToCart(e) {
         <?php if (!empty(session('user'))) { ?>
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer)
-                toast.addEventListener('mouseleave', Swal.resumeTimer)
-            },
-            didDestroy: (toast) => {
-                location.reload();
-            }
-        })
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                },
+                didDestroy: (toast) => {
+                    location.reload();
+                }
+            })
+            let bodyParam = {
                 id_activity: $(e).data("id-ebook"),
                 type: 2
-            },
-            dataType: 'json',
-            success: function(data) {
-                Toast.fire({
-                    icon: (data.Status) ? 'success' : 'error',
-                    title: data.Message
-                })
             }
-        });
+            addCart(bodyParam)
         <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please Login First!'
-        })
+            Toast.fire({
+                icon: 'error',
+                title: 'Please Login First!'
+            })
         <?php } ?>
     }
 
@@ -213,56 +203,56 @@
             }
         })
         <?php if (!empty(session('user'))) { ?>
-        <?php if (!empty($checking_trans)) { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'You have unfinished transactions!'
-        })
-        <?php } else { ?>
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            }
-        });
-        $.ajax({
-            url: '<?= Request::segment(0) ?>/add/order',
-            type: "GET",
-            data: {
-                id_activity: '<?= $detail->ID_BUKU ?>',
-                type: 3
-            },
-            dataType: 'json',
-            success: function(data) {
-                console.log(data);
-
-                let timerInterval
-                $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' +
-                    data.IdOrder + '" />')
-                Swal.fire({
-                    title: 'Create Order!',
-                    html: 'Please Wait ...',
-                    timer: 2000,
-                    timerProgressBar: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                    willClose: () => {
-                        clearInterval(timerInterval)
-                    }
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        $("#FormBuyNow-info").submit();
-                    }
+            <?php if (!empty($checking_trans)) { ?>
+                Toast.fire({
+                    icon: 'error',
+                    title: 'You have unfinished transactions!'
                 })
-            }
-        });
-        <?php } ?>
+            <?php } else { ?>
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    }
+                });
+                // $.ajax({
+                //     url: '<?= Request::segment(0) ?>/add/order',
+                //     type: "GET",
+                //     data: {
+                //         id_activity: '<?= $detail->ID_BUKU ?>',
+                //         type: 3
+                //     },
+                //     dataType: 'json',
+                //     success: function(data) {
+                //         console.log(data);
+
+                //         let timerInterval
+                //         $('#data-input-info').append('<input type="hidden" name="id_order_purchase[0]" value="' +
+                //             data.IdOrder + '" />')
+                //         Swal.fire({
+                //             title: 'Create Order!',
+                //             html: 'Please Wait ...',
+                //             timer: 2000,
+                //             timerProgressBar: false,
+                //             didOpen: () => {
+                //                 Swal.showLoading()
+                //             },
+                //             willClose: () => {
+                //                 clearInterval(timerInterval)
+                //             }
+                //         }).then((result) => {
+                //             if (result.dismiss === Swal.DismissReason.timer) {
+                //                 $("#FormBuyNow-info").submit();
+                //             }
+                //         })
+                //     }
+                // });
+            <?php } ?>
         <?php } else { ?>
-        Toast.fire({
-            icon: 'error',
-            title: 'Please Login First!'
-        })
+            Toast.fire({
+                icon: 'error',
+                title: 'Please Login First!'
+            })
         <?php } ?>
     }
     // <php if (!empty(session('user')) && $event->DATA_CHECKING <> 0) { ?>
