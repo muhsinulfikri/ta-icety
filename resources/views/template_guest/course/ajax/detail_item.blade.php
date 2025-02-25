@@ -97,13 +97,12 @@
     <?php } ?>
 <?php } else { ?>
     <div class="mx-4 my-4">
+        <h5><span class="text-danger">*</span>Nilai minimal lulus quiz : {{ $detail_item_course[0]->MIN_NILAI }}</h5>
         <?php if ($quiz_grade == NULL) {
             $no_soal = 0;
             foreach ($detail_item_course as $item) {
                 $soal = explode(";", $item->PIL_JWB);
         ?>
-                <?php if ($item->MIN_NILAI != NULL) ?>
-                    <h5><span class="text-danger">*</span>Nilai minimal lulus quiz : {{ $item->MIN_NILAI }}</h5>
                 <h6 class="fw-semibold mt-5">Kuis :</h6>
                 <div class="d-flex bg-white my-3 p-4 rounded-3 shadow fw-semibold">
                     <?= $item->SOAL ?>
