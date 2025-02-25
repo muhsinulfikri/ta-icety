@@ -1,10 +1,13 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use App\Models\FileUpload;
 use Exception;
+use App\Models\FileUpload;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Database\Eloquent\Model;
 
 class Certificate extends Model
 {
@@ -25,10 +28,11 @@ class Certificate extends Model
         return $this->db->affected_rows();
     }
 
-    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date)
+    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif)
     {
         set_time_limit(120);
         try {
+            $encryptedId = Crypt::encryptString($id_sertif);
             $file_pdf = strtoupper($namaUser . "_CERTIFICATE_" . $activity_name) . ".pdf";
             $paper = 'A4';
             $orientation = 'landscape';
@@ -49,6 +53,7 @@ class Certificate extends Model
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
             $data['DATE'] = $date;
+            $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'verifikasi/'.$encryptedId));
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
@@ -60,10 +65,11 @@ class Certificate extends Model
         }
     }
 
-    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date)
+    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif)
     {
         set_time_limit(120);
         try {
+            $encryptedId = Crypt::encryptString($id_sertif);
             $file_pdf = strtoupper($namaUser . "_CERTIFICATE_" . $activity_name) . ".pdf";
             $paper = 'A4';
             $orientation = 'landscape';
@@ -84,6 +90,7 @@ class Certificate extends Model
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
             $data['DATE'] = $date;
+            $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'/verifikasi/'.$encryptedId));
 
             $html = view('pdf_template.sertifikat_new', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
