@@ -55,6 +55,7 @@ class SertificateGuest extends Controller
 
     public function verifSertif(Request $request) {
         $data['title'] = 'Verifikasi Sertifikat';
+        $data['id_user'] = session('user')[0]->get('ID_USER');
         $data['id'] = Crypt::decryptString($request->id);
         $data['all_sertif'] = DB::select("
             SELECT
@@ -70,7 +71,7 @@ class SertificateGuest extends Controller
             ON
                 sa.ID_USER = u.ID_USER
             WHERE
-                sa.ID_USER = '".$request->id."'
+                sa.ID_USER = '".$data['id_user']."'
             ORDER BY
                 sa.DATE_COMPLETED DESC
             LIMIT 5

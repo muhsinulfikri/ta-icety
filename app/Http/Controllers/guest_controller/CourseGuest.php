@@ -370,7 +370,7 @@ class CourseGuest extends Controller
                     "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
-                DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_exam);
+                DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif_exam)->update($data_sertif_exam);
 			    $data['sertif_exam'] = (object) $data_sertif_exam;
             }
             else {
