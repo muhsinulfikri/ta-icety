@@ -139,8 +139,9 @@
         <div class="duration-info">
             @if ($DURATION == 0)
             <p>Has been completed this course in 1 days.</p>
-            @endif
+            @else
             <p>Has been completed this course in <?= $DURATION ?> days.</p>
+            @endif
         </div>
       </div>
     <div class="qr-container">

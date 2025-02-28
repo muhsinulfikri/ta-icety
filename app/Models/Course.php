@@ -202,6 +202,7 @@ class Course extends Model
                 ID_COURSE = '".$id_course."'
             AND
                 TYPE = 1
+            LIMIT 5
         ");
         return $data;
     }
