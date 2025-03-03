@@ -1,12 +1,12 @@
 <!-- Content Wrapper START -->
 <div class="main-content">
     <div class="page-header">
-        <h2 class="header-title">Trial Code</h2>
+        <h2 class="header-title">Private Code</h2>
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="<?= url('dashboard') ?>" class="breadcrumb-item"><i
                         class="anticon anticon-home m-r-5"></i>Home</a>
-                <span class="breadcrumb-item active">Trial Code</span>
+                <span class="breadcrumb-item active">Private Code</span>
             </nav>
         </div>
     </div>
@@ -34,7 +34,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <label class="card-title" style="font-size: 20px">Trial Code</label>
+                    <label class="card-title" style="font-size: 20px">Private Code</label>
                 </div>
                 <div class="col-md-6 d-flex justify-content-md-end justify-content-end align-items-center">
                     <div class="mt-3 mt-md-0">
@@ -70,7 +70,7 @@
                             <td><?= $item->TOTAL_CODE ?></td>
                             <td><?= $item->EXPIRED_DATE ?></td>
                             <td>
-                                <button type="button" class="btn btn-success" onclick="generateExcell(`<?= url('redeem-code/excell') ?>/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
+                                <button type="button" class="btn btn-success" onclick="generateExcell(`<?= Request::segment(0) ?>/redeem-code/excell/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
                                     <i class="far fa-file-excel font-size-16 align-middle"></i>
                                 </button>
                             </td>
@@ -89,7 +89,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Promo</h5>
+                <h5 class="modal-title">Add Code</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -107,9 +107,9 @@
                         </select>
                     </div>
                     <div class="form-group mb-3">
-                        <label>Trial For<span class="text-danger">*</span></label>
+                        <label>Private For<span class="text-danger">*</span></label>
                         <select name="trial_for" id="trial_for" class="form-control" required>
-                            <option value="">-- Choose Trial For --</option>
+                            <option value="">-- Choose Private For --</option>
                             @foreach($trial_for as $item)
                             <option value="<?= $item->ID_CATEGORY_USER ?>"><?= $item->NAME_CATEGORY_USER ?></option>
                             @endforeach
