@@ -137,11 +137,49 @@
                         <label>publication Year <span class="text-danger">*</span></label>
                         <input placeholder="20xx" type="number" name="tahun" class="form-control" required>
                     </div>
+                    <span class="text-danger">* Select pdf or link for ebook</span>
                     <div class="form-group mb-3">
+                        <div class="col-md-5">
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input ebook-option"
+                                    id="optionFile"
+                                    value="file"
+                                    name="ebook_option">
+                                <label class="form-check-label" for="optionFile">Upload File</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input ebook-option"
+                                    id="optionLink"
+                                    value="link"
+                                    name="ebook_option">
+                                <label class="form-check-label" for="optionLink">Enter Link</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3" id="fileInputGroup" hidden>
+                        <label class="col-form-label control-label">File Ebook</label>
+                            <div class="custom-file">
+                                <input id="ebook_file"
+                                    type="file"
+                                    name="ebook_file"
+                                    data-allowed-file-extensions="pdf"
+                                    accept=".pdf"
+                                    data-max-file-size="10M"
+                                    class="custom-file-input dropify file_ebook">
+                            </div>
+                    </div>
+                    <div class="form-group mb-3" id="linkInputGroup" hidden>
+                        <label class="col-form-label control-label" required>Link Ebook</label>
+                            <input id="ebook_link"
+                                type="text"
+                                class="form-control"
+                                name="ebook_link">
+                    </div>
+                    {{-- <div class="form-group mb-3">
                         <label>Ebook File <span class="text-danger">*</span></label>
                         <input type="file" name="ebook" class="custom-file-input dropify"
                             data-allowed-file-extensions="pdf" accept=".pdf" data-max-file-size="10M" data-default-file="">
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -303,6 +341,28 @@
     function addModal() {
         $('#addModal').modal('show')
     }
+
+    $(document).ready(function () {
+    // Pastikan setiap kali modal dibuka, event listener aktif
+        $('#addModal').on('shown.bs.modal', function () {
+            $('.ebook-option').on('change', function () {
+                let selectedOption = $(this).val();
+
+                // Sembunyikan semua input dulu
+                $('#fileInputGroup, #linkInputGroup').attr('hidden', true);
+                $('#ebook_file, #ebook_link').val('');
+
+                // Tampilkan input yang dipilih
+                if (selectedOption === 'file') {
+                    $('#fileInputGroup').removeAttr('hidden').css('display', 'block');
+                } else if (selectedOption === 'link') {
+                    console.log('link');
+                    $('#linkInputGroup').removeAttr('hidden').css('display', 'block');
+                }
+            });
+        });
+    });
+
 
     document.getElementById("frame_ebook").removeAttribute("src");
 
