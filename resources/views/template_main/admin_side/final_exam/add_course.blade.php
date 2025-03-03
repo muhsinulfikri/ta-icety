@@ -37,7 +37,7 @@
                         </label>
                         <div class="col-md-5">
                             <input type="number" class="form-control CurrencyInput" name="price_course"
-                                placeholder="0">
+                                placeholder="0" required>
                             <span class="d-flex align-items-center mt-2">
                                 <div class="switch m-r-10">
                                     <input type="checkbox" id="setFree">

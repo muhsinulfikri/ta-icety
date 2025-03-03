@@ -53,7 +53,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
-<section class=" banner-image banner-style-4 banner-padding p-0 bg-white">
+<section class=" banner-image banner-padding p-0 bg-white">
     <div class="container py-5">
         <div class="d-flex flex-column flex-md-row gap-4">
             <img src="{{ asset('icety_assets') }}/banner.svg" class="img-fluid img-banner">

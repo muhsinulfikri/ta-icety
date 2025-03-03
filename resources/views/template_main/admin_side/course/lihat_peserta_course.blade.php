@@ -97,6 +97,9 @@
                         <th>Email</th>
                         <th>Nomor HP</th>
                         <th>Alamat</th>
+                        <th>Progres Kursus</th>
+                        <th>Status Final Exam</th>
+                        <th>Nilai Tertinggi Final Exam</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,6 +113,9 @@
                             <td><?= $item->EMAIL ?></td>
                             <td><?= $item->TELP ?></td>
                             <td><?= $item->ALAMAT ?></td>
+                            <td><?= $item->PROGRESS == null ? '-' : $item->PROGRESS.'%' ?></td>
+                            <td><?= $item->STATUS_FINAL_EXAM ?></td>
+                            <td><?= $item->NILAI_TERTINGGI_FINAL_EXAM ?? 'Belum Mengerjakan' ?></td>
                         </tr>
                     @endforeach
                 </tbody>
