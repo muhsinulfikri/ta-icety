@@ -148,23 +148,30 @@ class RedeemCodeController extends Controller
         return $styleContent;
     }
 
-    public function gen_excell($id_activity)
+    public function gen_excell($data)
     {
-        $id_activity = base64_decode($id_activity);
+        $id_activity = explode(';', base64_decode($data))[0];
+        $cat = explode(';', base64_decode($data))[1];
         $redeemCode = DB::select("
-            SELECT 
+            SELECT
                 a.TITLE_ACTIVITY ,
                 trc.KODE ,
                 trc.EXPIRED_DATE ,
-                mcu.NAME_CATEGORY_USER 
-            FROM 
-                tb_redeem_code trc 
-            LEFT JOIN md_category_user mcu ON 
-                mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER 
-            LEFT JOIN activity a ON 
-                a.ID_ACTIVITY = trc.ID_ACTIVITY 
+                mcu.NAME_CATEGORY_USER ,
+                u.NAME ,
+                trc.TGL_REDEEM 
+            FROM
+                tb_redeem_code trc
+            LEFT JOIN md_category_user mcu ON
+                mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER
+            LEFT JOIN activity a ON
+                a.ID_ACTIVITY = trc.ID_ACTIVITY
+            LEFT JOIN `user` u ON 
+                u.ID_USER = trc.ID_USER 
             WHERE 
                 trc.ID_ACTIVITY = '$id_activity'
+                AND
+                mcu.NAME_CATEGORY_USER = '$cat'
             ORDER BY 
                 trc.ID_CATEGORY_USER ASC
         ");
@@ -174,21 +181,21 @@ class RedeemCodeController extends Controller
         $ObjSheet = $spreadsheet->getActiveSheet();
         $ObjSheet->setTitle("Sheet 1");
 
-        $ObjSheet->getColumnDimension('B')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('C')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('D')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('E')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('F')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('G')->setAutoSize(true);
-        $ObjSheet->getColumnDimension('H')->setAutoSize(true);
+        foreach (range('B', 'H') as $col) {
+            $ObjSheet->getColumnDimension($col)->setAutoSize(true);
+        }
 
-        $ObjSheet->mergeCells('B2:F2')->setCellValue('B2', "List Kode Trial Course")->getStyle('B2:F2')->applyFromArray($this->styling_title_template('ff948a54', 'ffffffff'))->getFont()->setSize(14)->setUnderline(\PhpOffice\PhpSpreadsheet\Style\Font::UNDERLINE_SINGLE);
+        $ObjSheet->mergeCells('B2:H2')->setCellValue('B2', "List Kode Trial Course")->getStyle('B2:H2')->applyFromArray($this->styling_title_template('ff948a54', 'ffffffff'))->getFont()->setSize(14)->setUnderline(\PhpOffice\PhpSpreadsheet\Style\Font::UNDERLINE_SINGLE);
 
-        $ObjSheet->setCellValue('B3', 'No')->getStyle('B3')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
-        $ObjSheet->setCellValue('C3', 'Course')->getStyle('C3')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
-        $ObjSheet->setCellValue('D3', 'Kode')->getStyle('D3')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
-        $ObjSheet->setCellValue('E3', 'Tipe Kode')->getStyle('E3')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
-        $ObjSheet->setCellValue('F3', 'Expired')->getStyle('F3')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
+        // Header row
+        $headers = ['No', 'Course', 'Kode', 'Tipe Kode', 'Expired', 'Digunakan', 'Digunakan'];
+        $colIndex = 'B';
+        foreach ($headers as $header) {
+            $ObjSheet->setCellValue($colIndex . '3', $header)
+                ->getStyle($colIndex . '3')
+                ->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
+            $colIndex++;
+        }
 
         $rowStart = 4;
         foreach ($redeemCode as $key => $item) {
@@ -197,9 +204,13 @@ class RedeemCodeController extends Controller
             $ObjSheet->setCellValue('D' . $rowStart, $item->KODE)->getStyle('D' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('E' . $rowStart, $item->NAME_CATEGORY_USER)->getStyle('E' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('F' . $rowStart, $item->EXPIRED_DATE)->getStyle('F' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
+            $ObjSheet->setCellValue('G' . $rowStart, $item->NAME ?? '-')->getStyle('G' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
+            $ObjSheet->setCellValue('H' . $rowStart, $item->TGL_REDEEM ?? '-')->getStyle('H' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
 
             $rowStart++;
         }
+
+        $ObjSheet->setAutoFilter('B3:H' . $rowStart);
 
         $spreadsheet->setActiveSheetIndex(0);
 
@@ -296,7 +307,7 @@ class RedeemCodeController extends Controller
                 AND
                 o.ID_PAY IS NOT NULL
         ");
-        
+
         $dataAct = DB::selectOne("
             SELECT
                 a.*
@@ -344,7 +355,7 @@ class RedeemCodeController extends Controller
                 "LOG_TIME" => date("Y-m-d H:i:s")
             );
             $data_where = [
-                'ID_ORDER' => 'ORD_' . $dataCode->KODE ,
+                'ID_ORDER' => 'ORD_' . $dataCode->KODE,
                 'ID_PRODUCT' => $dataCode->ID_ACTIVITY,
                 'ID_USER' => session('user')[0]->get('ID_USER')
             ];
