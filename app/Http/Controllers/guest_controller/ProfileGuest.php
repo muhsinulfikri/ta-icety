@@ -155,7 +155,6 @@ class ProfileGuest extends Controller
     {
         $data['title'] = "My Courses";
         $user = new User();
-        // dd($data);
         $data['course'] = [];
         $mycourse = $user->get_my_product();
         foreach ($mycourse as $item) {

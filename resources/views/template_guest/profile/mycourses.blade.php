@@ -12,7 +12,8 @@
             <tr class="fw-normal text-black">
                 <td scope="col" class="fw-semibold fs-5" width="60%">Courses</td>
                 <td scope="col" class="fw-semibold fs-5" width="20%">Category</td>
-                <td scope="col" class="fw-semibold fs-5" width="20%">Status</td>
+                <td scope="col" class="fw-semibold fs-5" width="20%">Status Course</td>
+                <td scope="col" class="fw-semibold fs-5" width="20%">Status Final Exam</td>
             </tr>
         </thead>
         <tbody class="table-group-divider text-black" style="border-color:#C8C8C8; border-top-width: 2px !important">
@@ -32,6 +33,15 @@
                         <?php } else { ?>
                             <?= ceil($item->PROGRESS) ?>%
                         <?php } ?>
+                    </td>
+                    <td class="py-3">
+                        @if ($item->STATUS_FINAL_EXAM != null || $item->STATUS_FINAL_EXAM != '')
+                        <span class="badge bg-<?= $item->STATUS_FINAL_EXAM == 'Lulus' ? 'success' : 'danger' ?>">
+                            <?= htmlspecialchars($item->STATUS_FINAL_EXAM) ?>
+                        </span>
+                        @else
+                        -
+                        @endif
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -6,10 +6,6 @@
         background-size: cover !important;
     }
 
-    .banner-style-4 {
-        background: white;
-    }
-
     .course-grid-template {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -45,7 +41,7 @@
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
-<section class=" banner-image banner-style-4 banner-padding p-0">
+<section class=" banner-image banner-padding p-0">
     <div class="container">
         <div class="row flex-column-reverse flex-lg-row align-items-center justify-content-center">
             <div class="col-md-12 col-xl-6 col-lg-6 ps-0 ps-lg-5 mb-7 mb-lg-0">

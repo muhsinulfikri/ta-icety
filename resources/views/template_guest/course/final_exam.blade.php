@@ -49,7 +49,7 @@
         <div class="text-center py-5 w-75">
             <img class="img-fluid rounded-circle" src="<?= $quiz_grade->NILAI == 100 ? 'https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg' : 'https://img.freepik.com/free-vector/hr-management-hiring-employees-people-cv_107791-11222.jpg' ?>" style="max-width: 50%;">
             <h6 class="fw-semibold pt-4">
-                Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai: <?= $quiz_grade->NILAI ?>
+                Anda Sudah Menyelesaikan Final Exam dan Mendapatkan Nilai: <?= $quiz_grade->NILAI ?>
             </h6>
         </div>
         <?php if (!empty($data_all_mapping) && $last_item[0]->ID_ITEM == $id_item) { ?>
@@ -59,7 +59,7 @@
 
     <?php if (is_null($quiz_grade)) { ?>
         <button class="btn btn-secondary px-4 py-2 mt-2 rounded-3 shadow fw-semibold w-75" data-bs-toggle="modal" data-bs-target="#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>">
-            Kumpulkan Kuis
+            Kumpulkan Final Exam
         </button>
         <div class="modal fade" id="ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-md">
