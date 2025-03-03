@@ -73,7 +73,7 @@
                             <a href="<?= url('promo') ?>">Discount Code</a>
                         </li>
                         <li>
-                            <a href="<?= url('redeem-code') ?>">Trial Code</a>
+                            <a href="<?= url('redeem-code') ?>">Private Code</a>
                         </li>
                     </ul>
                 </li>

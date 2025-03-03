@@ -70,7 +70,7 @@
                             <td><?= $item->TOTAL_CODE ?></td>
                             <td><?= $item->EXPIRED_DATE ?></td>
                             <td>
-                                <button type="button" class="btn btn-success" onclick="generateExcell(`<?= url('redeem-code/excell') ?>/${btoa('<?= $item->ID_ACTIVITY ?>')}`)">
+                                <button type="button" class="btn btn-success" onclick="generateExcell(`<?= url('redeem-code/excell') ?>/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
                                     <i class="far fa-file-excel font-size-16 align-middle"></i>
                                 </button>
                             </td>
