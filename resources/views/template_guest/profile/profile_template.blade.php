@@ -17,11 +17,6 @@
 <section class="py-5 py-md-7 mb-4" style="background-color: #B90C0B;">
     <div class="container">
         <h1 class="font text-center" style="color: white !important">PROFILE</h1>
-        <div class="justify-content-center mt-3 d-flex">
-            <a href="/" class="font" style="color: white !important;text-decoration: underline;text-decoration-color: white;">Home</a>
-            <div class="ms-2 me-1" style="border-left: 2px solid white;height: 27px">&nbsp;</div>
-            <div class="font" style="color: white !important;">Profile</div>
-        </div>
     </div>
 </section>
 
