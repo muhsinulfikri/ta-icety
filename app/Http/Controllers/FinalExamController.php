@@ -169,17 +169,19 @@ class FinalExamController extends Controller
         $order_list_quiz        = $req->input('order_list_question');
         $question               = $req->input('question');
         $kunci_soal             = $req->input('kunci_soal');
-
+        
         $tmpNo = 0;
         foreach ($question as $i => $questions) {
+            $reindexedQuestions = array_combine(range(1, count($questions)), array_values($questions));
+            $reindexed_kunci_soal[$i] = array_combine(range(1, count($kunci_soal[$i])), array_values($kunci_soal[$i]));
             $id_quiz = $lastIdQuiz[$tmpNo];
-            for ($j = 1; $j <= count($questions); $j++) {
+            for ($j = 1; $j <= count($reindexedQuestions); $j++) {
                 $quiz = [
                     'ID_QUIZ'       => $id_quiz,
                     'ID_COURSE'     => $data['ID_COURSE'],
-                    'SOAL'          => $questions[$j],
+                    'SOAL'          => $reindexedQuestions[$j],
                     'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
-                    'KUNCI'         => $kunci_soal[$i][$j],
+                    'KUNCI'         => $reindexed_kunci_soal[$i][$j],
                     'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                 ];
                 DB::table('detail_quiz')->insert($quiz);

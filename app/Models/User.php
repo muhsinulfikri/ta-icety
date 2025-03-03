@@ -28,11 +28,32 @@ class User extends Model
         return $sql;
     }
     public function get_my_product(){
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
         $sql = DB::select('
         SELECT 
-            `activity`.*, 
-            `kategori`.`KATEGORI`, 
-            `course`.`DESKRIPSI_COURSE`, 
+            activity.*, 
+            kategori.KATEGORI, 
+            course.DESKRIPSI_COURSE, 
+            (
+                SELECT
+                    CASE
+                        WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN "Lulus"
+                        WHEN MAX(tnfe.NILAI) < ic.MIN_NILAI THEN "Belum Lulus"
+                        ELSE ""
+                    END AS STATUS_FINAL_EXAM
+                FROM 
+                    tb_nilai_final_exam tnfe
+                LEFT JOIN activity a2 ON 
+                    course.FINAL_EXAM = a2.ID_ACTIVITY
+                LEFT JOIN course c2 ON
+                    c2.ID_ACTIVITY = a2.ID_ACTIVITY
+                LEFT JOIN item_course ic ON 
+                    ic.ID_COURSE = c2.ID_COURSE
+                WHERE 
+                    tnfe.ID_ACTIVITY = course.FINAL_EXAM
+                    AND tnfe.ID_USER = "' . session('user')[0]['ID_USER'] . '"
+                    AND ic.ID_COURSE = c2.ID_COURSE
+            )AS STATUS_FINAL_EXAM,
             (
                 SELECT 
                     COUNT(*) 
@@ -67,11 +88,11 @@ class User extends Model
                 )
             ) AS PROGRESS
         FROM 
-            `activity` 
-            LEFT JOIN `course` ON `course`.`ID_ACTIVITY` = `activity`.`ID_ACTIVITY` 
-            LEFT JOIN `kategori` ON `kategori`.`ID_KATEGORI` = `course`.`KATEGORI` 
+            activity
+            LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY 
+            LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
         WHERE 
-            `activity`.`TYPE_ACTIVITY` = 1
+            activity.TYPE_ACTIVITY = 1
         ');
         return $sql;
     }

@@ -39,10 +39,14 @@ class EbookController extends Controller
             'AUTHOR'        => $req->input('author'),
             'TAHUN'         => $req->input('tahun'),
             'PRICE'         => $req->input('harga'),
-            'LINK_EBOOK'    => FileUpload::S3($req->file('ebook'), 'EBOOK', 'Ebook-' . strtotime(now())),
+            'LINK_EBOOK'    => $req->hasFile('ebook_file')
+                                ? FileUpload::S3($req->file('ebook_file'), 'EBOOK', 'Ebook-' . strtotime(now()))
+                                : $req->input('ebook_link'),
             'LOG_TIME'      => date('Y-m-d H:i:s'),
             'ID_USER'       => session('user')[0]['ID_USER']
         ];
+
+        // dd($data);
 
         DB::table('ebook')->insert($data);
 
@@ -50,7 +54,7 @@ class EbookController extends Controller
     }
 
     public function update(Request $req)
-    {   
+    {
         $data = [
             'JUDUL'         => $req->input('up_judul'),
             'DESC'          => $req->input('up_desc'),

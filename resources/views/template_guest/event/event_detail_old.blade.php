@@ -361,7 +361,7 @@
             return (path.match(/[^.]+(\.[^?#]+)?/) || [])[0];
         }
     <?php } ?>
-    @if(session() - > has('succ_msg'))
+    @if(session() -> has('succ_msg'))
     Swal.fire({
         icon: 'success',
         title: '{{ session('

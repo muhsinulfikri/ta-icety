@@ -560,14 +560,16 @@ class CourseController extends Controller
 
         $tmpNo = 0;
         foreach ($question as $i => $questions) {
+            $reindexedQuestions = array_combine(range(1, count($questions)), array_values($questions));
+            $reindexed_kunci_soal[$i] = array_combine(range(1, count($kunci_soal[$i])), array_values($kunci_soal[$i]));
             $id_quiz = $lastIdQuiz[$tmpNo];
             for ($j = 1; $j <= count($questions); $j++) {
                 $quiz = [
                     'ID_QUIZ'       => $id_quiz,
                     'ID_COURSE'     => $data['ID_COURSE'],
-                    'SOAL'          => $questions[$j],
+                    'SOAL'          => $reindexedQuestions[$j],
                     'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
-                    'KUNCI'         => $kunci_soal[$i][$j],
+                    'KUNCI'         => $reindexed_kunci_soal[$i][$j],
                     'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                 ];
                 DB::table('detail_quiz')->insert($quiz);
@@ -768,7 +770,23 @@ class CourseController extends Controller
         $scrap  = str_replace($vocal, "", $string);
         $begin  = substr($scrap, 0, 4);
         $uniqid = strtoupper($begin);
-        return $prefix . "_" . $uniqid . substr(md5(time()), 0, 3);
+        
+        do{
+            $code = $prefix . "_" . $uniqid . substr(md5(microtime()), 0, 3);
+            $code_check = DB::selectOne("
+				SELECT
+					activity.ID_ACTIVITY
+				FROM
+					activity
+                LEFT JOIN course ON
+                    course.ID_ACTIVITY = activity.ID_ACTIVITY
+				WHERE
+					activity.ID_ACTIVITY = ?
+                    OR course.ID_COURSE = ?
+            ", [$code, $code]);
+        }while(!empty($code_check));
+        
+        return $code; 
     }
 
     public function GenerateUniqID_Order($var)
@@ -816,16 +834,7 @@ class CourseController extends Controller
     {
         $data['title'] = "Peserta Kursus";
 
-        $data['list_peserta'] = DB::select("
-            SELECT
-                u.*
-            FROM
-                user u
-            LEFT JOIN `order` o ON
-                o.ID_USER = u.ID_USER
-            WHERE
-                ID_PRODUCT = '" . $req->input('ID_ACTIVITY') . "'
-        ");
+        $data['list_peserta'] = $this->get_progress($req->input('ID_ACTIVITY'));
 
         $data['kursus'] = DB::selectOne("
             SELECT
@@ -847,81 +856,9 @@ class CourseController extends Controller
 
     public function laporan_course(Request $req)
     {
-        $event = DB::select("
-            SELECT
-                u.EMAIL,
-                u.ID_USER ,
-                u.NAME,
-                u.TELP,
-                u.JK ,
-                u.ALAMAT,
-                o.LOG_TIME,
-                a.TITLE_ACTIVITY,
-                (
-                    CEIL(
-                        (
-                            SELECT
-                                MAX(o.MAPPING_COUNT)
-                            FROM
-                                `order` o
-                            WHERE
-                                o.ID_USER  = u.ID_USER
-                                AND o.ID_PRODUCT = a.ID_ACTIVITY
-                        ) /
-                        (
-                            SELECT
-                                COUNT(*)
-                            FROM
-                                mapping_course
-                            WHERE
-                                mapping_course.ID_USER = u.ID_USER
-                                AND mapping_course.ID_ACTIVITY = a.ID_ACTIVITY
-                        ) * 100
-                    )
-                ) AS PROGRESS,
-                (
-                    CEIL
-                    (
-                    (
-                        SELECT
-                            SUM(nq.NILAI)
-                        FROM
-                            nilai_quiz nq
-                        LEFT JOIN detail_quiz dq ON
-                            dq.ID_QUIZ = nq.ID_QUIZ
-                        LEFT JOIN course c ON
-                            c.ID_COURSE = dq.ID_COURSE
-                        WHERE
-                            nq.ID_USER = u.ID_USER
-                            AND c.ID_ACTIVITY = o.ID_PRODUCT
-                    ) / (
-                        SELECT
-                            COUNT(nq2.NILAI)
-                        FROM
-                            nilai_quiz nq2
-                        LEFT JOIN detail_quiz dq ON
-                            dq.ID_QUIZ = nq2.ID_QUIZ
-                        LEFT JOIN course c ON
-                            c.ID_COURSE = dq.ID_COURSE
-                        WHERE
-                            nq2.ID_USER = u.ID_USER
-                            AND c.ID_ACTIVITY = o.ID_PRODUCT
-                    )
-                    )
-                ) AS Rata_Nilai
-            FROM
-                user u
-            LEFT JOIN user_data ud ON
-                ud.ID_USER = u.ID_USER
-            LEFT JOIN `order` o ON
-                o.ID_USER = u.ID_USER
-            LEFT JOIN activity a  ON
-                o.ID_PRODUCT  = a.ID_ACTIVITY
-            WHERE
-                o.ID_PRODUCT  = '" . $req->input('ID_ACTIVITY') . "'
-        ");
+        $data = $this->get_progress($req->input('ID_ACTIVITY'));
 
-        app(Laporan::class)->laporan_course($event);
+        app(Laporan::class)->laporan_course($data);
     }
 
     public function update_item_quiz($data, $req, $lastIdQuiz)
@@ -1032,6 +969,125 @@ class CourseController extends Controller
         $exists = DB::table('course')->where('ALIAS', $alias)->exists();
 
         return response()->json(['exists' => $exists]);
+    }
+
+    public function get_progress($id_activity) {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        $data = DB::select("
+            SELECT
+                u.EMAIL,
+                u.ID_USER,
+                u.NAME,
+                u.TELP,
+                u.JK ,
+                u.ALAMAT,
+                o.LOG_TIME,
+                a.TITLE_ACTIVITY,
+                c.FINAL_EXAM,
+                (
+                    SELECT
+                        CASE
+                            WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN 'Lulus'
+                            ELSE 'Belum Lulus'
+                        END AS STATUS_FINAL_EXAM
+                    FROM 
+                        tb_nilai_final_exam tnfe
+                    LEFT JOIN activity a2 ON 
+                        c.FINAL_EXAM = a2.ID_ACTIVITY
+                    LEFT JOIN course c2 ON
+                        c2.ID_ACTIVITY = a2.ID_ACTIVITY
+                    LEFT JOIN item_course ic ON 
+                        ic.ID_COURSE = c2.ID_COURSE
+                    WHERE 
+                        tnfe.ID_ACTIVITY = c.FINAL_EXAM
+                        AND tnfe.ID_USER = u.ID_USER
+                        AND ic.ID_COURSE = c2.ID_COURSE
+                )AS STATUS_FINAL_EXAM,
+                (
+                    SELECT
+                        MAX(tnfe.NILAI)
+                    FROM 
+                        tb_nilai_final_exam tnfe
+                    LEFT JOIN activity a2 ON 
+                        c.FINAL_EXAM = a2.ID_ACTIVITY
+                    LEFT JOIN course c2 ON
+                        c2.ID_ACTIVITY = a2.ID_ACTIVITY
+                    LEFT JOIN item_course ic ON 
+                        ic.ID_COURSE = c2.ID_COURSE
+                    WHERE 
+                        tnfe.ID_ACTIVITY = c.FINAL_EXAM
+                        AND tnfe.ID_USER = u.ID_USER
+                        AND ic.ID_COURSE = c2.ID_COURSE
+                )AS NILAI_TERTINGGI_FINAL_EXAM,
+                (
+                    CEIL(
+                        (
+                            SELECT
+                                MAX(o.MAPPING_COUNT)
+                            FROM
+                                `order` o
+                            WHERE
+                                o.ID_USER  = u.ID_USER
+                                AND o.ID_PRODUCT = a.ID_ACTIVITY
+                        ) /
+                        (
+                            SELECT
+                                COUNT(*)
+                            FROM
+                                mapping_course
+                            WHERE
+                                mapping_course.ID_USER = u.ID_USER
+                                AND mapping_course.ID_ACTIVITY = a.ID_ACTIVITY
+                        ) * 100
+                    )
+                ) AS PROGRESS,
+                (
+                    CEIL
+                    (
+                    (
+                        SELECT
+                            SUM(nq.NILAI)
+                        FROM
+                            nilai_quiz nq
+                        LEFT JOIN detail_quiz dq ON
+                            dq.ID_QUIZ = nq.ID_QUIZ
+                        LEFT JOIN course c ON
+                            c.ID_COURSE = dq.ID_COURSE
+                        WHERE
+                            nq.ID_USER = u.ID_USER
+                            AND c.ID_ACTIVITY = o.ID_PRODUCT
+                    ) / (
+                        SELECT
+                            COUNT(nq2.NILAI)
+                        FROM
+                            nilai_quiz nq2
+                        LEFT JOIN detail_quiz dq ON
+                            dq.ID_QUIZ = nq2.ID_QUIZ
+                        LEFT JOIN course c ON
+                            c.ID_COURSE = dq.ID_COURSE
+                        WHERE
+                            nq2.ID_USER = u.ID_USER
+                            AND c.ID_ACTIVITY = o.ID_PRODUCT
+                    )
+                    )
+                ) AS Rata_Nilai
+            FROM
+                user u
+            LEFT JOIN user_data ud ON
+                ud.ID_USER = u.ID_USER
+            LEFT JOIN `order` o ON
+                o.ID_USER = u.ID_USER
+            LEFT JOIN activity a  ON
+                o.ID_PRODUCT  = a.ID_ACTIVITY
+            LEFT JOIN course c  ON
+                c.ID_ACTIVITY  = a.ID_ACTIVITY
+            LEFT JOIN tb_final_exam tfe  ON
+                c.ID_ACTIVITY  = a.ID_ACTIVITY
+            WHERE
+                o.ID_PRODUCT = '" . $id_activity . "'
+            GROUP BY u.ID_USER 
+        ");
+        return $data;
     }
 
 }

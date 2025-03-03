@@ -699,29 +699,39 @@
         });
     }
 
-    const readmoreText = document.querySelector('.readmore-text');
-    const readmoreBtn = document.querySelector('.readmore-btn');
-    const icon = document.getElementById('icon-btn');
-    const textContent = document.querySelector('.text-btn-content');
-    let isExpanded = false;
-    const realHeight = readmoreText.clientHeight;
-    const defaultHeight = '200px';
+    document.addEventListener('keydown', function (event) {
+        const modal = document.getElementById('redeemModal');
+        const isModalOpen = modal.classList.contains('show'); // Check if the modal is open
 
-    const toggleExpandedState = () => {
-        isExpanded = !isExpanded;
-        const newHeight = isExpanded ? `${realHeight + 30}px` : defaultHeight;
-        const newText = isExpanded ? 'Less Info' : 'More Info';
-        const upClass = 'bi-chevron-up';
-        const downClass = 'bi-chevron-down';
+        if (isModalOpen && event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission
+            useFinalCode(); // Call the function
+        }
+    });
 
-        readmoreText.style.height = newHeight;
-        textContent.innerHTML = newText;
-        icon.classList.remove(isExpanded ? downClass : upClass);
-        icon.classList.add(isExpanded ? upClass : downClass);
-    };
+    // const readmoreText = document.querySelector('.readmore-text');
+    // const readmoreBtn = document.querySelector('.readmore-btn');
+    // const icon = document.getElementById('icon-btn');
+    // const textContent = document.querySelector('.text-btn-content');
+    // let isExpanded = false;
+    // const realHeight = readmoreText.clientHeight;
+    // const defaultHeight = '200px';
 
-    readmoreText.style.height = defaultHeight;
-    readmoreBtn.addEventListener('click', toggleExpandedState);
+    // const toggleExpandedState = () => {
+    //     isExpanded = !isExpanded;
+    //     const newHeight = isExpanded ? `${realHeight + 30}px` : defaultHeight;
+    //     const newText = isExpanded ? 'Less Info' : 'More Info';
+    //     const upClass = 'bi-chevron-up';
+    //     const downClass = 'bi-chevron-down';
+
+    //     readmoreText.style.height = newHeight;
+    //     textContent.innerHTML = newText;
+    //     icon.classList.remove(isExpanded ? downClass : upClass);
+    //     icon.classList.add(isExpanded ? upClass : downClass);
+    // };
+
+    // readmoreText.style.height = defaultHeight;
+    // readmoreBtn.addEventListener('click', toggleExpandedState);
 
     function useFinalCode() {
         var code = $('#trial_code').val();

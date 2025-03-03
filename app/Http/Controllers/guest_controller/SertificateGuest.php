@@ -55,12 +55,33 @@ class SertificateGuest extends Controller
 
     public function verifSertif(Request $request) {
         $data['title'] = 'Verifikasi Sertifikat';
+        $data['id_user'] = session('user')[0]->get('ID_USER');
         $data['id'] = Crypt::decryptString($request->id);
+        $data['all_sertif'] = DB::select("
+            SELECT
+                a.TITLE_ACTIVITY
+            FROM
+                `sertifikat_activity` sa
+            LEFT JOIN
+                activity a
+            ON
+                sa.ID_ACTIVITY = a.ID_ACTIVITY
+            LEFT JOIN
+                user u
+            ON
+                sa.ID_USER = u.ID_USER
+            WHERE
+                sa.ID_USER = '".$data['id_user']."'
+            ORDER BY
+                sa.DATE_COMPLETED DESC
+            LIMIT 5
+        ");
 
         $data['sertifikat'] = DB::selectOne("
             SELECT
                 sa.ID_SERTIFIKAT,
                 sa.FILE_SERTIFIKAT,
+                sa.DATE_COMPLETED,
                 u.NAME,
                 a.TITLE_ACTIVITY
             FROM
@@ -83,28 +104,4 @@ class SertificateGuest extends Controller
         view('template.footer', $data);
     }
 
-    public function generate_old($namaUser, $activity_name, $sertificate_no)
-    {
-        $file_pdf = $namaUser . "_SERTIFIKAT.pdf";
-
-        $paper = 'A4';
-        $orientation = 'landscape';
-
-        $path = base_url('assets/images/certificate_template.jpg');
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $getImage = file_get_contents($path);
-        $data['IMAGE'] = 'data:image/' . $type . ';base64,' . base64_encode($getImage);
-
-        $data['NO_SERTIF'] = $namaUser;
-        $data['NAME'] = $namaUser;
-        $data['ACTIVITY'] = $namaUser;
-
-        $html = $this->load->view("pdf_template/sertifikat", $data, true);
-
-        $resPdf = $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
-
-        $new_path = $this->S3->UploadFileBlob($file_pdf, $resPdf, 'certificate');
-
-        echo $new_path;
-    }
 }

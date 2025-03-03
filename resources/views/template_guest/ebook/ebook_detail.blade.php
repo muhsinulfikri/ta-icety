@@ -232,7 +232,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <a href="${data.JUDUL.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_activity=${data.ID_BUKU}" class="card-link">Find out more</a>
+                                    <a href="${data.JUDUL.replace(/ /g, '-').replace(/[^A-Za-z0-9\-]/g, '')}?id_book=${data.ID_BUKU}" class="card-link">Find out more</a>
                                 </div>
                             </div>
                         </div>

@@ -104,6 +104,18 @@
         margin-top: 10px;
         color: #333; /* Warna lebih netral */
         }
+        .qr-container {
+            position: absolute;
+            bottom: 50px;
+            left:120px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .qr-container img {
+            width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
@@ -125,9 +137,16 @@
           {{ strip_tags($SUMMARY) }}
         </div>
         <div class="duration-info">
+            @if ($DURATION == 0)
+            <p>Has been completed this course in 1 days.</p>
+            @else
             <p>Has been completed this course in <?= $DURATION ?> days.</p>
-          </div>
+            @endif
+        </div>
       </div>
+    <div class="qr-container">
+        <img src="data:image/svg+xml;base64,<?= $QR ?>" alt="QR Code">
+    </div>
     </div>
   </body>
 </html>
