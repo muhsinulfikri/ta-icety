@@ -557,8 +557,12 @@
 
         </div>
 
-        <div class="text-center text-sm-start">
+        <div class="text-center text-sm-start show-all-course">
             <a href="/course" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
+
+        </div>
+        <div class="text-center text-sm-start show-all-ebook">
+            <a href="/ebooks" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
 
         </div>
 
@@ -678,10 +682,16 @@
         $('.event-container').append(createCardEvent(data));
     });
 
+    $(document).ready(function() {
+        $('.show-all-course').show();
+        $('.show-all-ebook').hide();
+    });
 
     $(document).on('click','.btn-course', function() {
         $('.btn-ebook').removeClass('active')
         $('.btn-event').removeClass('active')
+        $('.show-all-course').show();
+        $('.show-all-ebook').hide();
 
         $(this).addClass('active')
         $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
@@ -692,6 +702,8 @@
     $(document).on('click','.btn-ebook', function() {
         $('.btn-course').removeClass('active')
         $('.btn-event').removeClass('active')
+        $('.show-all-course').hide();
+        $('.show-all-ebook').show();
         $(this).addClass('active')
         $('.ebook-container').show()
         $('.course-container')[0].style.setProperty('display', 'none', 'important')

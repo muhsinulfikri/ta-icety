@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-5">
         <h3 class="fw-bold" style="color:#AD0B0B">My Courses</h3>
         <button type="button" class="btn btn-primary rounded-4 fw-semibold" onclick="openModalRedeem()">
-            Use Trial Code
+            Use Private Code
         </button>
     </div>
     <table class="table" style="color: #8A8A8E">

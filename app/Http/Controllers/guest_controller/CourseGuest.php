@@ -986,6 +986,7 @@ class CourseGuest extends Controller
 		$pilih_jwbn = $_POST['pilih_jwbn'];
 		$id_user = session('user')[0]->get('ID_USER');
 		$code_exam = $request->code_exam;
+		$min_nilai = $request->min_nilai;
 
 		$is_code_verif = $this->isCodeVerif($code_exam);
 		$id_activity_parent = DB::selectOne("
@@ -1017,7 +1018,7 @@ class CourseGuest extends Controller
 			");
 			$jml_jwbn_benar += $data_sum->TOT;
 		}
-		$nilai = ($jml_jwbn_benar / count($id_detail)) * 100;
+		$nilai = round(($jml_jwbn_benar / count($id_detail)) * 100);
 
 		$data_nilai = [
 			"ID_ACTIVITY" 	=> $_POST['id_activity'],
@@ -1039,10 +1040,17 @@ class CourseGuest extends Controller
 
 		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
+
+		$gambar = 'https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg';
+		if($min_nilai > $nilai) {
+			$gambar = 'https://img.freepik.com/free-vector/writers-block-concept-illustration_114360-8129.jpg';
+		}
+
 		return response()->json([
 			'status' => 'success',
 			'nilai' => $nilai,
-			'id_activity_parent' => $id_activity_parent
+			'id_activity_parent' => $id_activity_parent,
+			'gambar' => $gambar
 		]);
 	}
 

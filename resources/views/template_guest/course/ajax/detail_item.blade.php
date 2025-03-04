@@ -84,7 +84,7 @@
         @endif
         <hr id="desc-course">
         <section id="desc-course">
-            <h6 class="fw-semibold">Course Description :</h6>
+            <h6 class="fw-semibold">Chapter Description :</h6>
             <p class="text-muted">
                 <?= $detail_item_course->DESKRIPSI ?>
             </p>
@@ -167,7 +167,7 @@
                         <img src="https://img.freepik.com/free-vector/hr-management-hiring-employees-people-cv_107791-11222.jpg" alt="Loader.gif" style="max-width: 50%;">
                     </div>
                     <div class="d-flex justify-content-center pt-4">
-                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai : <?= round($quiz_grade->NILAI) ?></h6>
+                        <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai : <?= $quiz_grade->NILAI ?></h6>
                     </div>
                 </div>
             </div>
