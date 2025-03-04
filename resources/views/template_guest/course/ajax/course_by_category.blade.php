@@ -7,11 +7,9 @@
                     <div class="px-0 px-sm-3">
                         <div class="course-grid course-style-4 bg-white" style="padding: 30px 30px 10px 30px;">
                             <div class="course-header">
-                                <div class="course-thumb">
                                     <a href="<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY)) . '?id_activity=' . $item->ID_ACTIVITY) ?>">
                                         <img src="<?= $item->IMAGE_ACTIVITY ?>" alt="" style="width: 100%; height: 300px; object-fit: cover;">
                                     </a>
-                                </div>
                             </div>
 
                             <div class="course-content">
