@@ -1043,7 +1043,7 @@ class CourseGuest extends Controller
 
 		$gambar = 'https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg';
 		if($min_nilai > $nilai) {
-			$gambar = 'https://img.freepik.com/free-vector/writers-block-concept-illustration_114360-8129.jpg';
+			$gambar = 'https://tbh-v2.is3.cloudhost.id/IMAGE_ACTIVITY/Image-Activity-1741074077-1741074078.png';
 		}
 
 		return response()->json([
