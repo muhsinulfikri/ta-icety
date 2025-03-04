@@ -224,6 +224,9 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/invite', 'CourseController@invite');
     Route::post('courses/invite_individu', 'CourseController@invite_individu');
     Route::post('courses/invite_batch', 'CourseController@invite_batch');
+    //copy course
+    Route::post('courses/copy/{id}', 'CourseController@copyCourse');
+
 
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');

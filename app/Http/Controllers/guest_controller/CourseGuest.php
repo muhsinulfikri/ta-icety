@@ -95,10 +95,10 @@ class CourseGuest extends Controller
                 u.ID_USER = '".session('user')[0]->get('ID_USER')."'
         ");
 
-		$info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
-        $info_titles = array_map(function($item) {
-            return $item->TITLE;
-        }, $info_sertif);
+		// $info_sertif = $this->courseModel->get_title_materi($data['course']->ID_COURSE);
+        // $info_titles = array_map(function($item) {
+        //     return $item->TITLE;
+        // }, $info_sertif);
         $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $data['id_activity']);
 		$data['last_item'] = DB::select('
 			SELECT
@@ -213,11 +213,12 @@ class CourseGuest extends Controller
 			WHERE
 				$condition_all_mapping
 		");
+        // dd($summary_sertif[0]->MODULE_CERTIFICATE);
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
-			$bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+            $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 			$countSertifCourse = DB::table('sertifikat_activity')
-				->where('ID_ACTIVITY', $data['id_activity'])
-				->count() + 1;
+            ->where('ID_ACTIVITY', $data['id_activity'])
+            ->count() + 1;
 			$sertif_number_course = $countSertifCourse . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
             $data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
@@ -226,13 +227,13 @@ class CourseGuest extends Controller
 				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
 				"FILE_SERTIFIKAT" => null,
                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                "INFO_CERTIFICATE" => json_encode($info_titles),
+                "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
                 "DURATION" => $completed_course[0]->days_difference,
                 "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
             $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
-			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
+			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
 			$data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
@@ -240,7 +241,7 @@ class CourseGuest extends Controller
 				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
 				"FILE_SERTIFIKAT" => $sertif_path_course,
                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                "INFO_CERTIFICATE" => json_encode($info_titles),
+                "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
                 "DURATION" => $completed_course[0]->days_difference,
                 "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
 				"LOG_TIME" => date('Y-m-d H:i:s')
@@ -351,13 +352,13 @@ class CourseGuest extends Controller
                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
                     "FILE_SERTIFIKAT" => null,
                     "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                    "INFO_CERTIFICATE" => json_encode($info_titles),
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
                     "DURATION" => $completed_course[0]->days_difference,
                     "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
                 $id_sertif_exam = DB::table('sertifikat_activity')->insertGetId($data_sertif_exam);
-                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $info_titles, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
                     "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
@@ -365,7 +366,7 @@ class CourseGuest extends Controller
                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
                     "FILE_SERTIFIKAT" => $sertif_path_exam,
                     "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                    "INFO_CERTIFICATE" => json_encode($info_titles),
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
                     "DURATION" => $completed_course[0]->days_difference,
                     "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
                     "LOG_TIME" => date('Y-m-d H:i:s')

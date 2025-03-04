@@ -3,11 +3,11 @@
         opacity: 0.7;
         cursor: grabbing !important;
     }
-    .ui-state-highlight { 
-        height: 210px; 
-        line-height: 1.2em; 
-        background: #edf2f9; 
-        border-radius: .25rem; 
+    .ui-state-highlight {
+        height: 210px;
+        line-height: 1.2em;
+        background: #edf2f9;
+        border-radius: .25rem;
     }
 </style>
 
@@ -128,7 +128,7 @@
         $("#quiz_item_{{ $id_quiz }}").remove();
     });
 
-    $('#add_new_soal_{{ $no }}{{ $id_quiz }}').click(function() {        
+    $('#add_new_soal_{{ $no }}{{ $id_quiz }}').click(function() {
         $('#add_new_soal_{{ $no }}{{ $id_quiz }}').toggleClass("is-loading");
         $.ajax({
             url: 'add_question/' + {{ $no }} +'/'+ index,
@@ -140,7 +140,7 @@
         });
     })
 
-    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {  
+    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {
         Swal.fire({
             title: 'Loading...',
             text: 'Harap Tunggu.',
@@ -176,7 +176,7 @@
             function mapData(data) {
                 return data.map(row => ({
                     questionNumber: row['No'],
-                    question: row['Soal'],    
+                    question: row['Soal'],
                     optionA: row['Pilihan A'],
                     optionB: row['Pilihan B'],
                     optionC: row['Pilihan C'],
@@ -199,7 +199,7 @@
                             $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
                             $('#add_new_soal_{{ $no }}').removeClass("is-loading");
 
-                            callback(row, {{ $no }}, no_quiz);                        
+                            callback(row, {{ $no }}, no_quiz);
                             no_quiz++;
                             resolve(); // Resolve the promise when the AJAX call is successful
                         },

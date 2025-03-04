@@ -142,6 +142,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Modules for Certificate<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-10">
+                            <textarea name="modules_certificate" id="modules_certificate" rows=11 cols=50 maxlength=250 required></textarea>
+                            <small class="text-danger">* Modules Certificate for display in Certificate</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
@@ -256,6 +264,7 @@
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
     $('input[name="alias_course"]').val(data.ALIAS);
     $('#summary_certificate').summernote('code', data.SUMMARY_CERTIFICATE);
+    $('#modules_certificate').summernote('code', data.MODULE_CERTIFICATE);
     if (price == 0) {
         $('#setFree').prop('checked', true);
         $('input[name="price"]').val(0);
@@ -392,6 +401,35 @@
 
     $(document).ready(function() {
         var $editor = $('#summary_certificate');
+        $editor.summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    $summernote.summernote('insertNode', imgNode);
+                }
+            },
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['height', ['height']],
+                ['operation', ['undo', 'redo']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['object', ['link']]
+            ]
+        });
+
+        $('#insert-btn').click(() => {
+            $editor.summernote('insertParagraph');
+        });
+
+        $('#bold-btn').click(() => {
+            $editor.summernote('bold');
+        });
+    });
+
+    $(document).ready(function() {
+        var $editor = $('#modules_certificate');
         $editor.summernote({
             height: 200,
             callbacks: {
