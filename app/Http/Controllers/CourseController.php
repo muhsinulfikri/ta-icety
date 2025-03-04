@@ -129,6 +129,7 @@ class CourseController extends Controller
                 'IMAGE_ACTIVITY'        => FileUpload::S3($req->file('image_activity'), 'IMAGE_ACTIVITY', 'Image-Activity-' . strtotime(now())),
                 'TYPE_ACTIVITY'         => 1,
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
+                'MODULE_CERTIFICATE'   => $req->input('modules_certificate'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),
@@ -173,6 +174,82 @@ class CourseController extends Controller
             dd($e);
             Log::error($e->getMessage());
             return redirect()->back()->with('err_msg', 'Terjadi kesalahan, mohon coba lagi nanti.' . $e->getMessage());
+        }
+    }
+
+    public function copyCourse($id_activity, Request $req)
+    {
+        DB::beginTransaction();
+        try {
+            $existingCourse = DB::table('course')->where('ID_ACTIVITY', $id_activity)->first();
+            if (!$existingCourse) {
+                return redirect()->back()->with('err_msg', 'Course tidak ditemukan untuk activity ini.');
+            }
+
+            $existingActivity = DB::table('activity')->where('ID_ACTIVITY', $id_activity)->first();
+            if (!$existingActivity) {
+                return redirect()->back()->with('err_msg', 'Activity tidak ditemukan.');
+            }
+
+            $newActivityID = $this->GenerateUniqID('ACT', $existingActivity->TITLE_ACTIVITY);
+            $newCourseID = $this->GenerateUniqID('ACT', $existingCourse->PENGUMUMAN);
+
+            $newActivity = [
+                'ID_ACTIVITY'           => $newActivityID,
+                'TITLE_ACTIVITY'        => $req->input('title_copy'),
+                'ID_USER'               => session('user')[0]['ID_USER'],
+                'PRICE_ACTIVITY'        => $existingActivity->PRICE_ACTIVITY,
+                'IMAGE_ACTIVITY'        => $existingActivity->IMAGE_ACTIVITY,
+                'TYPE_ACTIVITY'         => $existingActivity->TYPE_ACTIVITY,
+                'SUMMARY_CERTIFICATE'   => $existingActivity->SUMMARY_CERTIFICATE,
+                'MODULE_CERTIFICATE'    => $existingActivity->MODULE_CERTIFICATE,
+                'DATE_START'            => $existingActivity->DATE_START,
+                'DATE_END'              => $existingActivity->DATE_END,
+                'IS_PUBLIC'             => $existingActivity->IS_PUBLIC,
+                'LOG_TIME'              => date('Y-m-d H:i:s'),
+                'SERTIF_IMAGE'          => $existingActivity->SERTIF_IMAGE,
+                'STATUS'                => $existingActivity->STATUS
+            ];
+
+            $newCourse = [
+                'ID_COURSE'             => $newCourseID,
+                'ID_ACTIVITY'           => $newActivityID,
+                'ALIAS'                 => $req->input('alias_copy'),
+                'PENGUMUMAN'            => $existingCourse->PENGUMUMAN,
+                'DESKRIPSI_COURSE'      => $existingCourse->DESKRIPSI_COURSE,
+                'DESKRIPSI_COURSE_ITEM' => $existingCourse->DESKRIPSI_COURSE_ITEM,
+                'KATEGORI'              => $existingCourse->KATEGORI,
+                'DURATION'              => $existingCourse->DURATION,
+                'HOURS'                 => $existingCourse->HOURS,
+                'REQUIREMENT'           => $existingCourse->REQUIREMENT ?? null,
+                'FINAL_EXAM'            => $existingCourse->FINAL_EXAM ?? null
+            ];
+
+            DB::table('activity')->insert($newActivity);
+            DB::table('course')->insert($newCourse);
+            $existingItems = DB::table('item_course')->where('ID_COURSE', $existingCourse->ID_COURSE)->get();
+            $materi = [
+                'order_list'     => $existingItems->pluck('ORDER_LIST')->toArray(),
+                'type'           => $existingItems->pluck('TYPE')->toArray(),
+                'materi_title'   => $existingItems->pluck('TITLE')->toArray(),
+                'desc_materi'    => $existingItems->pluck('DESKRIPSI')->toArray(),
+                'materi_file'    => $existingItems->pluck('FILE')->toArray(),
+                'materi_link'    => $existingItems->pluck('LINK_MATERI')->toArray(),
+                'materi_link_yt' => $existingItems->pluck('LINK_YT')->toArray(),
+
+            ];
+
+            $data = [
+                'ID_COURSE' => $newCourseID
+            ];
+            $this->item_materi_copy($data,$materi, $id_activity);
+
+            DB::commit();
+            return redirect('courses')->with(['succ_msg' => 'Successfully Copied Course', 'location' => 'courses']);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return redirect()->back()->with('err_msg', 'Terjadi kesalahan saat menyalin course. ' . $e->getMessage());
         }
     }
 
@@ -270,6 +347,7 @@ class CourseController extends Controller
                 a.IS_PUBLIC ,
                 a.SERTIF_IMAGE ,
                 a.SUMMARY_CERTIFICATE,
+                a.MODULE_CERTIFICATE,
                 c.ID_COURSE,
                 c.DURATION ,
                 c.HOURS,
@@ -359,6 +437,9 @@ class CourseController extends Controller
                 $data['quiz'] = [];
                 $data['no_index'] = 0;
 
+                $data['ID_ITEM'] = null;
+                $data['MIN_NILAI'] = null;
+
                 foreach ($dataquiz as $quiz) {
                     list($quiz->PIL_A, $quiz->PIL_B, $quiz->PIL_C, $quiz->PIL_D) = explode(";", $quiz->PIL_JWB);
                     $data['quiz'][$quiz->ID_QUIZ][] = [
@@ -375,6 +456,9 @@ class CourseController extends Controller
                         'ORDER_LIST' => $quiz->ORDER_LIST,
                         'NO'         => $data['no_index']
                     ];
+                    if (!isset($data['quiz'][$quiz->ID_QUIZ])) {
+                        $data['quiz'][$quiz->ID_QUIZ] = [];
+                    }
 
                     foreach ($data['quiz'][$quiz->ID_QUIZ] as $ID_ITEM) {
                         $data['ID_ITEM'] = $ID_ITEM['ID_QUIZ'];
@@ -415,6 +499,7 @@ class CourseController extends Controller
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
+                'MODULE_CERTIFICATE'    => $req->input('modules_certificate'),
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
@@ -548,6 +633,71 @@ class CourseController extends Controller
         }
     }
 
+    public function item_materi_copy($data, $req, $id)
+    {
+        set_time_limit(120);
+        $existingCourse = DB::table('course')->where('ID_ACTIVITY', $id)->first();
+
+        $orderList          = $req['order_list'];
+        $categoryList       = $req['type'];
+        $materiTitleList    = $req['materi_title'];
+        $descMateriList     = $req['desc_materi'];
+        $file               = $req['materi_file'];
+        $linkMateri         = $req['materi_link'];
+        $linkYT             = $req['materi_link_yt'];
+        $idQuiz             = [];
+        $nomor = 0;
+        if (!empty($orderList)) {
+            for ($i = 0; $i < count($orderList); $i++) {
+                $nomor++;
+                if ($categoryList[$i] == 1) {
+                    $data_item = [
+                        'ID_COURSE'     => $data['ID_COURSE'],
+                        'TITLE'         => $materiTitleList[$i],
+                        'FILE'          => !empty($file[$i]) ? FileUpload::S3($file[$i], 'MATERI_FILE', 'Materi-' . strtotime(now())) : null,
+                        'LINK_YT'       => $linkYT[$i],
+                        'DESKRIPSI'     => $descMateriList[$i],
+                        'ORDER_LIST'    => $orderList[$i],
+                        'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
+                    ];
+                    DB::table('item_course')->insert($data_item);
+                } else {
+                    $data_item = [
+                        'ID_COURSE'     => $data['ID_COURSE'],
+                        'TITLE'         => null,
+                        'FILE'          => null,
+                        'LINK_YT'       => null,
+                        'DESKRIPSI'     => null,
+                        'ORDER_LIST'    => $orderList[$i],
+                        'TYPE'          => $categoryList[$i],
+                        'LINK_MATERI'   => null,
+                        'MIN_NILAI'     => $req['min_nilai_'.$nomor] ?? null,
+                    ];
+                    $minNilaiKey = 'min_nilai_'.$nomor;
+                    $data_item['MIN_NILAI'] = array_key_exists($minNilaiKey, $req) ? $req[$minNilaiKey] : null;
+                    $idQuiz[] = DB::table('item_course')->insertGetId($data_item);
+                }
+            }
+        }
+        $existingQuiz = DB::table('detail_quiz')->where('ID_COURSE', $existingCourse->ID_COURSE)->get();
+        $quiz = [
+            'jawaban_a' => $existingQuiz->pluck('PIL_JWB')->toArray(),
+            'jawaban_b' => $existingQuiz->pluck('PIL_JWB')->toArray(),
+            'jawaban_c' => $existingQuiz->pluck('PIL_JWB')->toArray(),
+            'jawaban_d' => $existingQuiz->pluck('PIL_JWB')->toArray(),
+            'order_list_question' => $existingQuiz->pluck('ORDER_LIST')->toArray(),
+            'question' => $existingQuiz->pluck('SOAL')->toArray(),
+            'kunci_soal' => $existingQuiz->pluck('KUNCI')->toArray(),
+        ];
+        // dd($existingQuiz, $quiz);
+        if (!empty($quiz['question'])) {
+            $data['data_item'] = $data_item;
+            // dd($quiz, $existingQuiz);
+            $this->item_quiz_copy($data, $quiz, $idQuiz);
+        }
+    }
+
     public function item_quiz($data, $req, $lastIdQuiz)
     {
         $jawaban_a              = $req->input('jawaban_a');
@@ -573,6 +723,56 @@ class CourseController extends Controller
                     'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                 ];
                 DB::table('detail_quiz')->insert($quiz);
+            }
+            $tmpNo++;
+        }
+    }
+    public function item_quiz_copy($data, $req, $lastIdQuiz)
+    {
+        if (!isset($req['question']) || !is_array($req['question'])) {
+            dd("Error: 'question' tidak ditemukan atau bukan array", $req['question'] ?? null);
+        }
+
+        $jawaban_a       = $req['jawaban_a'];
+        $jawaban_b       = $req['jawaban_b'];
+        $jawaban_c       = $req['jawaban_c'];
+        $jawaban_d       = $req['jawaban_d'];
+        $order_list_quiz = $req['order_list_question'];
+        $kunci_soal      = $req['kunci_soal'];
+        $question        = $req['question'];
+
+        $tmpNo = 0;
+
+        foreach ($question as $i => $questions) {
+            $id_quiz = $lastIdQuiz[$tmpNo] ?? $lastIdQuiz[0];
+            if (!$id_quiz) {
+                dd("Error: lastIdQuiz tidak memiliki indeks yang sesuai", $lastIdQuiz);
+            }
+
+            if (!isset($jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo])) {
+                dd("Error: Salah satu jawaban tidak ditemukan untuk indeks $tmpNo", compact('jawaban_a', 'jawaban_b', 'jawaban_c', 'jawaban_d'));
+            }
+
+            if (!isset($kunci_soal[$i])) {
+                dd("Error: kunci soal tidak ditemukan untuk indeks $i", $kunci_soal);
+            }
+
+            if (!isset($order_list_quiz[$tmpNo])) {
+                dd("Error: order list quiz tidak ditemukan untuk indeks $tmpNo", $order_list_quiz);
+            }
+
+            $quiz = [
+                'ID_QUIZ'   => $id_quiz,
+                'ID_COURSE' => $data['ID_COURSE'],
+                'SOAL'      => $questions,
+                'PIL_JWB'   => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
+                'KUNCI'     => $kunci_soal[$i],
+                'ORDER_LIST' => $order_list_quiz[$tmpNo]
+            ];
+            try {
+                DB::table('detail_quiz')->insert($quiz);
+            } catch (\Exception $e) {
+                dd($e->getMessage());
             }
             $tmpNo++;
         }
@@ -770,7 +970,7 @@ class CourseController extends Controller
         $scrap  = str_replace($vocal, "", $string);
         $begin  = substr($scrap, 0, 4);
         $uniqid = strtoupper($begin);
-        
+
         do{
             $code = $prefix . "_" . $uniqid . substr(md5(microtime()), 0, 3);
             $code_check = DB::selectOne("
@@ -785,8 +985,8 @@ class CourseController extends Controller
                     OR course.ID_COURSE = ?
             ", [$code, $code]);
         }while(!empty($code_check));
-        
-        return $code; 
+
+        return $code;
     }
 
     public function GenerateUniqID_Order($var)
@@ -990,15 +1190,15 @@ class CourseController extends Controller
                             WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN 'Lulus'
                             ELSE 'Belum Lulus'
                         END AS STATUS_FINAL_EXAM
-                    FROM 
+                    FROM
                         tb_nilai_final_exam tnfe
-                    LEFT JOIN activity a2 ON 
+                    LEFT JOIN activity a2 ON
                         c.FINAL_EXAM = a2.ID_ACTIVITY
                     LEFT JOIN course c2 ON
                         c2.ID_ACTIVITY = a2.ID_ACTIVITY
-                    LEFT JOIN item_course ic ON 
+                    LEFT JOIN item_course ic ON
                         ic.ID_COURSE = c2.ID_COURSE
-                    WHERE 
+                    WHERE
                         tnfe.ID_ACTIVITY = c.FINAL_EXAM
                         AND tnfe.ID_USER = u.ID_USER
                         AND ic.ID_COURSE = c2.ID_COURSE
@@ -1006,15 +1206,15 @@ class CourseController extends Controller
                 (
                     SELECT
                         MAX(tnfe.NILAI)
-                    FROM 
+                    FROM
                         tb_nilai_final_exam tnfe
-                    LEFT JOIN activity a2 ON 
+                    LEFT JOIN activity a2 ON
                         c.FINAL_EXAM = a2.ID_ACTIVITY
                     LEFT JOIN course c2 ON
                         c2.ID_ACTIVITY = a2.ID_ACTIVITY
-                    LEFT JOIN item_course ic ON 
+                    LEFT JOIN item_course ic ON
                         ic.ID_COURSE = c2.ID_COURSE
-                    WHERE 
+                    WHERE
                         tnfe.ID_ACTIVITY = c.FINAL_EXAM
                         AND tnfe.ID_USER = u.ID_USER
                         AND ic.ID_COURSE = c2.ID_COURSE
@@ -1085,7 +1285,7 @@ class CourseController extends Controller
                 c.ID_ACTIVITY  = a.ID_ACTIVITY
             WHERE
                 o.ID_PRODUCT = '" . $id_activity . "'
-            GROUP BY u.ID_USER 
+            GROUP BY u.ID_USER
         ");
         return $data;
     }

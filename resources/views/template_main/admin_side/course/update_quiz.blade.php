@@ -3,11 +3,11 @@
         opacity: 0.7;
         cursor: grabbing !important;
     }
-    .ui-state-highlight { 
-        height: 210px; 
-        line-height: 1.2em; 
-        background: #edf2f9; 
-        border-radius: .25rem; 
+    .ui-state-highlight {
+        height: 210px;
+        line-height: 1.2em;
+        background: #edf2f9;
+        border-radius: .25rem;
     }
 </style>
 
@@ -18,7 +18,7 @@
                 <span class="col-md-11">Detail - Quiz</span>
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}">
                 <input type="hidden" class="form-control" name="type[]" value="2">
-                <input type="hidden" name="ID_ITEM[]" value="<?= $ID_ITEM ?>">
+                <input type="hidden" name="ID_ITEM[]" value="<?= $ID_ITEM ?? '' ?>">
                 <div id="delete_quiz_{{ $no }}"
                     class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <span><i class="anticon anticon-close"></i> </span>
@@ -33,7 +33,7 @@
     <input type="hidden" name="materi_link_yt[]">
     <input type="hidden" name="materi_link[]">
     <input type="hidden" name="desc_materi[]">
-    <input type="hidden" name="ID_QUIZ[]" value="<?= $ID_ITEM ?>">
+    <input type="hidden" name="ID_QUIZ[]" value="<?= $ID_ITEM ?? '' ?>">
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
         <div class="form-group ps-3 pe-3 row mt-3">
             <label class="col mt-3">Minimum Nilai Lulus<span class="text-danger">*</span></label>
@@ -143,7 +143,7 @@
         $("#quiz_item_{{ $id_quiz }}").remove();
     });
 
-    $('#add_new_soal_{{ $no }}{{ $id_quiz }}').click(function() {        
+    $('#add_new_soal_{{ $no }}{{ $id_quiz }}').click(function() {
         $('#add_new_soal_{{ $no }}{{ $id_quiz }}').toggleClass("is-loading");
         $.ajax({
             url: 'add_question/' + {{ $no }} +'/'+ index,
@@ -155,7 +155,7 @@
         });
     })
 
-    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {  
+    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {
 
         Swal.fire({
             title: 'Loading...',
@@ -193,7 +193,7 @@
             function mapData(data) {
                 return data.map(row => ({
                     questionNumber: row['No'],
-                    question: row['Soal'],    
+                    question: row['Soal'],
                     optionA: row['Pilihan A'],
                     optionB: row['Pilihan B'],
                     optionC: row['Pilihan C'],
@@ -216,7 +216,7 @@
                             $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
                             $('#add_new_soal_{{ $no }}').removeClass("is-loading");
 
-                            callback(row, {{ $no }}, index);                        
+                            callback(row, {{ $no }}, index);
                             index++;
                             resolve(); // Resolve the promise when the AJAX call is successful
                         },

@@ -94,6 +94,11 @@
                                             <i class="bx bx-edit-alt font-size-16 align-middle"></i> Edit Course
                                         </button>
                                     </form>
+                                    @if ($item->TYPE_ACTIVITY == 1)
+                                        <button type="button" onclick="opencopyModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important; margin: 5px 0px;">
+                                            <i class="bx bx-copy font-size-16 align-middle"></i> Copy Course
+                                        </button>
+                                    @endif
                                     <button type="button" onclick="opendeleteModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-danger btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
                                         <i class="bx bx-trash font-size-16 align-middle"></i> Delete Course
                                     </button>
@@ -108,13 +113,47 @@
 </div>
 <!-- Content Wrapper END -->
 
+{{-- Start Modal copy --}}
+<div class="modal" id="copyModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Copy Course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-user" action="" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label>Title<span class="text-danger">*</span></label>
+                        <input placeholder="Title" type="text" name="title_copy" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Alias<span class="text-danger">*</span></label>
+                        <input placeholder="Alias" type="text" name="alias_copy" class="form-control" pattern="[A-Z\s]+" title="Only uppercase letters are allowed"
+                        oninput="this.value = this.value.toUpperCase()" required>
+                        <small id="alias-feedback"></small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- End Modal copy --}}
+
 {{-- Start Modal Delete --}}
 <div class="modal fade" id="deleteModal" style="z-index: 1060;" id="exampleModalCenter" data-backdrop="static"
     data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Detail Materi</h5>
+                <h5 class="modal-title">Delete Course</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -167,12 +206,37 @@
 <script>
     $('#dtTable').DataTable()
 
+    function opencopyModal(idActivity) {
+        let form = document.getElementById('form-user');
+        form.action = `courses/copy/${idActivity}`;
+        $('#copyModal').modal('show')
+    }
+
     function opendeleteModal(Data) {
         console.log(Data);
-        // var data = JSON.parse(viewData)
-        
-
         $('input[name="id_activity"]').val(Data)
         $('#deleteModal').modal('show')
     }
+    $(document).ready(function () {
+        $('input[name="alias_copy"]').on('input', function () {
+            let alias = $(this).val();
+
+            if (alias.length > 0) {
+                $.ajax({
+                    url: '/check-alias',
+                    type: 'GET',
+                    data: { alias: alias },
+                    success: function (response) {
+                        if (response.exists) {
+                            $('#alias-feedback').text('Alias sudah digunakan, silahkan pilih yang lain!').css('color', 'red');
+                        } else {
+                            $('#alias-feedback').text('Alias tersedia').css('color', 'green');
+                        }
+                    }
+                });
+            } else {
+                $('#alias-feedback').text('');
+            }
+        });
+    });
 </script>

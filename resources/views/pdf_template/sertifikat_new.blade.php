@@ -106,8 +106,7 @@
         }
         .qr-container {
             position: absolute;
-            bottom: 50px;
-            left:120px;
+            margin-top: 30px;
             width: 100px;
             height: 100px;
         }
@@ -122,11 +121,7 @@
     <div class="certificate">
       <div class="certificate-number">{{ $NO_SERTIF }}</div>
       <div class="modules">
-        <ul>
-          @foreach ($INFO_SERTIF as $info)
-            <li>{{ $info }}</li>
-          @endforeach
-        </ul>
+        {!! $INFO_SERTIF !!}
       </div>
 
       <div class="text-container">
@@ -143,10 +138,10 @@
             <p>Has been completed this course in <?= $DURATION ?> days.</p>
             @endif
         </div>
+        <div class="qr-container">
+            <img src="data:image/svg+xml;base64,<?= $QR ?>" alt="QR Code">
+        </div>
       </div>
-    <div class="qr-container">
-        <img src="data:image/svg+xml;base64,<?= $QR ?>" alt="QR Code">
-    </div>
     </div>
   </body>
 </html>

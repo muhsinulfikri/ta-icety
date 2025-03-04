@@ -15,7 +15,7 @@ class Activity extends Model
     public function get_summary_sert_activity($id){
         $data = DB::select("
             SELECT
-                SUMMARY_CERTIFICATE
+                SUMMARY_CERTIFICATE, MODULE_CERTIFICATE
             FROM
                 activity
             WHERE
