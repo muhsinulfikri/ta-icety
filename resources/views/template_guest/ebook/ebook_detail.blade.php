@@ -182,7 +182,7 @@
 
         <?php if (!empty(session('user'))) { ?>
             let bodyParam = {
-                id_ebook: $(e).data("id-ebook"),
+                id_activity: $(e).data("id-ebook"),
                 type: 2
             }
             addCart(bodyParam)

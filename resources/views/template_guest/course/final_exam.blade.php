@@ -92,7 +92,8 @@
                         "id_detail": id_detail,
                         "code_exam": "<?= $code ?>",
                         "id_activity": id_activity,
-                        "pilih_jwbn": pilih_jwbn
+                        "pilih_jwbn": pilih_jwbn,
+                        "min_nilai": "<?= $data[0]->MIN_NILAI ?>"
                     },
                     success: function(data) {
                         if (data.status == 'error') {
@@ -106,7 +107,7 @@
                             });
                             window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
                         }else {
-                            $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
+                            $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-body").html('<img class="img-fluid rounded-circle" src="'+data.gambar+'" style="width: 80%;"><h6 class="fw-semibold text-center mt-3">Nilai Anda: ' + data.nilai + '</h6>');
                             $("#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?> .modal-footer").html('<button type="button" class="btn btn-danger w-50" data-bs-dismiss="modal">Close</button>');
                             $(e).hide();
                             $('#ShowConfirmSubmitKuis<?= $item->ID_ITEM ?>').on('hidden.bs.modal', function () {

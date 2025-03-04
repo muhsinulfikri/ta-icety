@@ -164,7 +164,7 @@ class CheckoutGuest extends Controller
 
 		$msg = "";
 
-		if (substr($id_activity, 0, 3) == "EBK") {
+		if (!empty($id_activity) && !empty(session('user')[0]->get('ID_USER')) && substr($id_activity, 0, 3) == "EBK") {
 			$ebook = $this->ebookModel->get_book_by_id($id_activity);
 			if (!empty($checking_order)) {
 				$data_order = array(
@@ -178,7 +178,7 @@ class CheckoutGuest extends Controller
 					->where('ID_PRODUCT', $id_activity)
 					->where('ID_USER', session('user')[0]->get('ID_USER'))
 					->update($data_order);
-				$msg = "Your Course is Already in Cart!";
+				$msg = "Your Ebook is Already in Cart!";
 			} else {
 				$data_order = array(
 					"ID_ORDER" => $this->GenerateUniqID_Order(time()),
@@ -188,7 +188,7 @@ class CheckoutGuest extends Controller
 					"LOG_TIME" => date("Y-m-d H:i:s")
 				);
 				DB::table("order")->insert($data_order);
-				$msg = "Successfully Added Course to Cart!";
+				$msg = "Successfully Added Ebook to Cart!";
 			}
 		} else {
 			if (!empty($id_activity) && !empty(session('user')[0]->get('ID_USER')) && $type == 1) { //COURSE
@@ -461,12 +461,17 @@ class CheckoutGuest extends Controller
 				foreach ($id_item as $item) {
 					$id_item = DB::selectOne("
 						SELECT
-							TYPE_ACTIVITY
+							COALESCE(TYPE_ACTIVITY, 0) AS TYPE_ACTIVITY 
 						FROM
 							activity
 						WHERE
 							ID_ACTIVITY = '" . $item . "'
 					");
+
+					if ($id_item == null) {
+						$id_item = (object) ['TYPE_ACTIVITY' => 0] ;
+					}
+
 					if ($id_item->TYPE_ACTIVITY != 3) {
 						$_response = $this->checkoutModel->get_detail_order("", $item);
 					} else {
