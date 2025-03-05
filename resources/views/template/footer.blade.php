@@ -118,9 +118,7 @@ use Illuminate\Support\Facades\Request;
                                 </li>
                                 <li>
                                     <h6 class="text-white">Location</h6><a href="#">
-                                        Wisma BCA - BSD City Wing A lt.1,
-                                        Jl. Kapten Soebijanto Djojohadikusumo No.1, Lengkong,
-                                        Serpong Sub-District, South Tangerang City, Banten 15322
+                                        Pergudangan Bizhub Serpong Blok GB No. 15 RT 000 RW 000, Pabuaran, Gunung Sindur, Kab. Bogor (16340)
                                 </li>
                             </ul>
                             <!-- <ul class="list-unstyled footer-links" style="flex:2"> -->
@@ -137,7 +135,7 @@ use Illuminate\Support\Facades\Request;
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-xl-6 col-sm-12 col-lg-6">
-                    <p class="mb-0 copyright text-center text-lg-start text-white" style="font-size: 0.8rem;">Copyright ©2022 All rights reserved | This template is made by ICETy.org</p>
+                    <p class="mb-0 copyright text-center text-lg-start text-white" style="font-size: 0.8rem;">Copyright ©2025 All rights reserved | This template is made by ICETy.org</p>
                 </div>
                 <div class="col-xl-6 col-sm-12 col-lg-6  d-none d-lg-block">
                     <div class="footer-btm-links text-start text-sm-center text-lg-end">
