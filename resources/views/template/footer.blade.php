@@ -111,10 +111,10 @@ use Illuminate\Support\Facades\Request;
                         <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
                                 <li>
-                                    <h6 class="text-white">Phone</h6><a href="#">0811-8878-333</a>
+                                    <h6 class="text-white">Phone</h6><a href="#">085117301678</a>
                                 </li>
                                 <li>
-                                    <h6 class="text-white">Email</h6><a href="#">customercare@iclean.co.id</a>
+                                    <h6 class="text-white">Email</h6><a href="#">info@icety.org</a>
                                 </li>
                                 <li>
                                     <h6 class="text-white">Location</h6><a href="#">
