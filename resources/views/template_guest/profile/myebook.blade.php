@@ -35,7 +35,7 @@
     </table>
     <?php
 if (empty($mybook)) {
-    echo "<div class='text-center fs-4 fw-semibold h-75 d-flex align-items-center justify-content-center'>No Event Available</div>";
+    echo "<div class='text-center fs-4 fw-semibold h-75 d-flex align-items-center justify-content-center'>No Ebook Available</div>";
 }
     ?>
 @endsection
