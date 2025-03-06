@@ -61,8 +61,9 @@ class PromoController extends Controller
     }
 
     public function delete(Request $req){
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('promo')->WHERE('ID_PROMO', '=', $req->input('id_promo'))->delete();
-
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
         return redirect('promo')->with('succ_msg','Successfully Delete Promo');
     }
 }
