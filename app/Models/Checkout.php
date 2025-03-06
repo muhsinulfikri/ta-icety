@@ -12,7 +12,7 @@ class Checkout extends Model
     protected $table = 'order';
     public $timestamps = false;
     protected $primaryKey = 'ID_ORDER';
-    
+
     public function get_all_order($id_user)
     {
         $sql = "
@@ -20,6 +20,7 @@ class Checkout extends Model
                 `order`.*,
                 activity.TITLE_ACTIVITY,
                 activity.IMAGE_ACTIVITY,
+                activity.IS_DELETED,
                 ebook.JUDUL,
                 ebook.IMAGE_EBOOK
             FROM
@@ -32,6 +33,8 @@ class Checkout extends Model
                 `order`.ID_USER = '" . $id_user . "'
                 AND
                 `order`.ID_PAY IS NULL
+                AND
+                `activity`.IS_DELETED IS NULL
         ";
 
         return DB::select($sql);

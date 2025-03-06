@@ -570,15 +570,15 @@ class CourseController extends Controller
                 ID_ACTIVITY = '" . $req->id_activity . "'
         ");
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        DB::table('activity')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
-        DB::table('course')->WHERE(['ID_COURSE' => $find_id_course->ID_COURSE])->delete();
-        DB::table('item_course')->WHERE(['ID_COURSE' => $find_id_course->ID_COURSE])->delete();
-        DB::table('mapping_course')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
-        DB::table('detail_quiz')->where('ID_COURSE', $find_id_course->ID_COURSE)->whereNotNull('ID_COURSE')->delete();
-        DB::table('tb_invited')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
-        DB::table('tb_redeem_code')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
-        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::table('activity')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->update(['IS_DELETED' => date('Y-m-d H:i:s')]);
+        // DB::table('course')->WHERE(['ID_COURSE' => $find_id_course->ID_COURSE])->delete();
+        // DB::table('item_course')->WHERE(['ID_COURSE' => $find_id_course->ID_COURSE])->delete();
+        // DB::table('mapping_course')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
+        // DB::table('detail_quiz')->where('ID_COURSE', $find_id_course->ID_COURSE)->whereNotNull('ID_COURSE')->delete();
+        // DB::table('tb_invited')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
+        // DB::table('tb_redeem_code')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->delete();
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         return redirect('courses')->with(['succ_msg' => 'Successfully Delete Course', 'location' => 'courses']);
     }
