@@ -22,13 +22,13 @@
             </div>
         </div>
         <div>
-            <img src="https://picsum.photos/584/377" />
+            <iframe style="width: 500px; height: 350px;" src="https://online.fliphtml5.com/bmnsj/rnci/" frameborder="0" scrolling="no" seamless="seamless" allowfullscreen="allowfullscreen"></iframe>
         </div>
     </div>
     <div class="d-flex flex-column flex-md-row gap-3 my-5">
 
         <div>
-            <img src="https://picsum.photos/584/377" />
+            <iframe style="width:500px;height:350px" src="https://online.fliphtml5.com/bmnsj/tulk/"  seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" ></iframe>
         </div>
         <div class="mt-3 mt-md-0">
             <h3 class="font">EDUCLEANING123</h3>
@@ -51,7 +51,11 @@
             </div>
         </div>
         <div>
-            <img src="https://picsum.photos/584/377" />
+            <iframe style="width:500px;height:350px"
+                src="https://www.youtube.com/embed/5swEX18jjmw"
+                frameborder="0"
+                allowfullscreen>
+            </iframe>
         </div>
     </div>
 </section>
