@@ -392,7 +392,7 @@ class CheckoutGuest extends Controller
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
 					->where('ID_USER', session('user')[0]['ID_USER'])
 					->update($data_order);
-				
+                
 				//Final Exam
 				// $final_exam = DB::selectOne("
 				// 	SELECT
@@ -461,7 +461,7 @@ class CheckoutGuest extends Controller
 				foreach ($id_item as $item) {
 					$id_item = DB::selectOne("
 						SELECT
-							COALESCE(TYPE_ACTIVITY, 0) AS TYPE_ACTIVITY 
+							COALESCE(TYPE_ACTIVITY, 0) AS TYPE_ACTIVITY
 						FROM
 							activity
 						WHERE
@@ -477,7 +477,7 @@ class CheckoutGuest extends Controller
 					} else {
 						$_response = $this->checkoutModel->get_detail_order_final_exam("", $item);
 					}
-					
+
 					$data_order = [
 						"ID_PAY" => $ID_PAY,
 						"LOG_TIME" => date("Y-m-d H:i:s"),
@@ -489,7 +489,7 @@ class CheckoutGuest extends Controller
 						->where('ID_PRODUCT', $_response->ID_PRODUCT)
 						->where('ID_USER', session('user')[0]['ID_USER'])
 						->update($data_order);
-          
+
 					if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
 						$this->InsertDataMapping($item);
 					}
@@ -670,7 +670,7 @@ class CheckoutGuest extends Controller
 			DB::rollBack();
 			dd($th);
 		}
-		
+
 	}
 
 	public function DeleteTrans(Request $req)
@@ -768,21 +768,21 @@ class CheckoutGuest extends Controller
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
 		$scrap  = str_ireplace(["a", "e", "i", "o", "u"], "", $string);
-		$begin  = strtoupper(substr($scrap, 0, 3));	
+		$begin  = strtoupper(substr($scrap, 0, 3));
 		do {
-			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));	
+			$code = $begin . strtoupper(substr(md5(microtime()), 0, 3));
 			$code_check = DB::selectOne("
-				SELECT 
-					CODE_EXAM 
-				FROM 
-					tb_final_exam 
-				WHERE 
+				SELECT
+					CODE_EXAM
+				FROM
+					tb_final_exam
+				WHERE
 					CODE_EXAM = ?
 				", [$code]
-			);	
+			);
 		} while (!empty($code_check));
-	
+
 		return $code;
 	}
-	
+
 }
