@@ -67,7 +67,7 @@
                             <tr>
                                 <td><?= $number ?></td>
                                 <td width="300"><?= $item->TITLE_ACTIVITY ?></td>
-                                <td><?= $item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>'?> </td>
+                                <td><?= $item->IS_DELETED !== null ? '<span class="badge badge-danger">Deleted</span>' : ($item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>')?> </td>
                                 <td><?= $item->IS_PUBLIC == 1 ? '<span class="badge badge-success">Public</span>' : '<span class="badge badge-danger">Private</span>' ?></td>
                                 <td><?= $item->TYPE_ACTIVITY == 3 ? '<span class="badge badge-danger">Final Exam</span>' : '<span class="badge badge-success">Kursus Biasa</span>' ?></td>
                                 <td><?= $item->PRICE_ACTIVITY == 0 ? '<span class="badge badge-success">Free</span>' : 'Rp ' . number_format($item->PRICE_ACTIVITY, 0, '.', '.') ?>
@@ -213,7 +213,6 @@
     }
 
     function opendeleteModal(Data) {
-        console.log(Data);
         $('input[name="id_activity"]').val(Data)
         $('#deleteModal').modal('show')
     }
