@@ -153,9 +153,9 @@ class AuthController extends Controller
                 $User->TELP = $req->input('telp');
 
                 // Save the user to the database
-                // $User->save();
-                // DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
-                //                                                 'UNIV' =>$req->input('agency')]);
+                $User->save();
+                DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
+                                                                'UNIV' =>$req->input('agency')]);
                 // Send email verification
                 $token_key = bin2hex(random_bytes(32));
                 $details = [
@@ -175,7 +175,7 @@ class AuthController extends Controller
                     'STATUS' => 0,
                     'LOG_TIME' => date('Y-m-d H:i:s'),
                 ];
-                // DB::table('token')->insert($formDataToken);
+                DB::table('token')->insert($formDataToken);
 
                 return redirect('login')->with('succ_msg', 'Your account is registered, Please verify your account in your email before login!');
             } catch(Exception $e){
