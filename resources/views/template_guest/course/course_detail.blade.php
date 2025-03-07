@@ -190,7 +190,6 @@
 
                                     foreach ($item_course as $item) {
                                         if ($item->TYPE <> 2) { ?>
-
                                             <button
                                                 class="button <?= $item->STATUS == 1 ? 'btn-main-outline' : 'btn-grey' ?> px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
                                                 id="show-detail-<?= $item->ID_ITEM ?>" data-status="<?= $item->STATUS ?>"
