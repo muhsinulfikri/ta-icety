@@ -20,36 +20,6 @@ class MailSender extends Mailable
     }
     public function build()
     {
-        return $this->from('no-reply@icety.org', 'ICETy')->view('template_file.another_mail_template');
-    }
-
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Mail Sender',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'template_file.another_mail_template',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this->from('dbi.icety.server@gmail.com', 'ICETy Official')->view('template_file.another_mail_template');
     }
 }

@@ -21,10 +21,10 @@ class AuthController extends Controller
             'transport' => 'smtp',
             'host' => 'smtp-relay.brevo.com',
             'port' => 587,
-            'from' => ['address' => 'noreply@icety.id', 'name' => 'Icety Official'],
+            'from' => ['address' => 'dbi.icety.server@gmail.com', 'name' => 'Icety Official'],
             'encryption' => 'tls',
-            'username' => 'dbi.malang.o@gmail.com',
-            'password' => '7YPLNq6KfpydDGBT',
+            'username' => '865459002@smtp-brevo.com',
+            'password' => 'r0OkS7nUhCETvafs',
         ];
         config(['mail.mailers.smtp' => $smtpConfig]);
     }
@@ -153,9 +153,9 @@ class AuthController extends Controller
                 $User->TELP = $req->input('telp');
 
                 // Save the user to the database
-                $User->save();
-                DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
-                                                                'UNIV' =>$req->input('agency')]);
+                // $User->save();
+                // DB::table('user_data')->insert(['ID_USER' => $KODE_USER,
+                //                                                 'UNIV' =>$req->input('agency')]);
                 // Send email verification
                 $token_key = bin2hex(random_bytes(32));
                 $details = [
@@ -166,7 +166,7 @@ class AuthController extends Controller
                 ];
 
                 $mail = new MailSender($details);
-                $mail->subject("Email Verification");
+                $mail->subject("Konfirmasi Registrasi Platform ICETy");
                 Mail::to($req->input('email'))->send($mail);
                 $formDataToken = [
                     'ID_USER' => $KODE_USER,
@@ -175,7 +175,7 @@ class AuthController extends Controller
                     'STATUS' => 0,
                     'LOG_TIME' => date('Y-m-d H:i:s'),
                 ];
-                DB::table('token')->insert($formDataToken);
+                // DB::table('token')->insert($formDataToken);
 
                 return redirect('login')->with('succ_msg', 'Your account is registered, Please verify your account in your email before login!');
             } catch(Exception $e){
