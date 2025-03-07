@@ -266,6 +266,8 @@ class Course extends Model
             mapping_course ON mapping_course.ID_ITEM = item_course.ID_ITEM
         WHERE
             ' . $condition . '
+        ORDER BY
+            ORDER_LIST ASC
         GROUP BY
             item_course.ID_ITEM
         ');
