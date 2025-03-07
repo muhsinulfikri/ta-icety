@@ -100,7 +100,7 @@ class GuestController extends Controller
 	public function courseCategories(Request $req)
 	{
 		$category = $req->input('category');
-		$condition = $category ? ['activity.TYPE_ACTIVITY = 1', 'course.KATEGORI = ' . $category] : ['activity.TYPE_ACTIVITY = 1'];
+		$condition = $category ? ['activity.TYPE_ACTIVITY = 1', 'course.KATEGORI = ' . $category] : ['activity.TYPE_ACTIVITY = 1'] . 'activity.IS_DELETED IS NULL';
 		$courseModel = new Course();
 		$data['course'] = $courseModel->get_home_course($condition);
 		return view('template_guest.home_course', $data);
