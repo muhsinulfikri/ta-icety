@@ -30,6 +30,7 @@ class Course extends Model
                 activity.TYPE_ACTIVITY = 1
                 AND activity.IS_PUBLIC = 1
                 AND course.ID_COURSE NOT LIKE 'FNL_%'
+                AND activity.IS_DELETED IS NULL
             ORDER BY
                 activity.LOG_TIME DESC
                 LIMIT 4");

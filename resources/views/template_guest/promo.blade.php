@@ -29,13 +29,6 @@
                     @else
                     <div class="fw-bold" style="font-size:2rem;margin-top: 30px;">Rp.{{ $item->AMMOUNT }}</div>
                     @endif
-                    @if ($item->PROMO_FOR === 0)
-                    <div class="fw-bold" style="font-size:1.5rem;margin-top: 10px;">For All Purchase</div>
-                    @elseif ($item->PROMO_FOR === 1)
-                    <div class="fw-bold" style="font-size:1.5rem;margin-top: 10px;">For Courses</div>
-                    @elseif ($item->PROMO_FOR === 2)
-                    <div class="fw-bold" style="font-size:1.5rem;margin-top: 10px;">For Books</div>
-                    @endif
                     <form action="voucher/store" method="POST" enctype="multipart/form-data" id="form_claim">
                         @csrf
                         <div class="d-flex align-items-center mt-4">

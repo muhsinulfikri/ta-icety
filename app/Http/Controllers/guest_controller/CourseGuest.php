@@ -747,7 +747,7 @@ class CourseGuest extends Controller
 
 	public function getFilterByKat(Request $req)
 	{
-		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "' AND course.ID_COURSE NOT LIKE 'FNL_%'" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.ID_COURSE NOT LIKE 'FNL_%'";
+		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "' AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL";
 		$id_user = (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		if ($_POST['category'] == 999) {
 			$data_id = DB::select("
@@ -763,7 +763,7 @@ class CourseGuest extends Controller
 				return $item->ID_ACTIVITY;
 			}, $data_id);
 			$placeholders = "'" . implode("','", $data_ids) . "'";
-			$condition = "WHERE activity.TYPE_ACTIVITY = 1 AND activity.ID_ACTIVITY IN (" . $placeholders . ")";
+			$condition = "WHERE activity.TYPE_ACTIVITY = 1 AND activity.ID_ACTIVITY IN (" . $placeholders . ") AND activity.IS_DELETED IS NULL";
 		}
 		if ($id_user != null) {
 			$data['course'] = DB::select('
