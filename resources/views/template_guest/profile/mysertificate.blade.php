@@ -32,7 +32,7 @@
     </div>
     <?php
     if (empty($sertif)) {
-        echo "<div class='text-center fs-4 fw-semibold h-75 d-flex align-items-center justify-content-center'>There No Downloaded Sertificate</div>";
+        echo "<div class='text-center fs-4 fw-semibold h-75 d-flex align-items-center justify-content-center'>There No Downloaded Certificate</div>";
     }
     ?>
 </div>

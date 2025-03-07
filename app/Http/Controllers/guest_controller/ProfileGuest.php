@@ -187,6 +187,8 @@ class ProfileGuest extends Controller
                 promo
             ON
                 claimed_promo.ID_PROMO = promo.ID_PROMO
+            WHERE
+                claimed_promo.ID_USER = '".session('user')[0]['ID_USER']."'
         ");
         $data['document'] = DB::selectOne("
             SELECT
