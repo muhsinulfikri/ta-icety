@@ -20,7 +20,7 @@ class MailSender extends Mailable
     }
     public function build()
     {
-        return $this->from('no-reply@icety.org', 'ICETy')->view('template_file.another_mail_template');
+        return $this->from('no-reply@icety.org', 'ICETy Official')->view('template_file.another_mail_template');
     }
 
     /**
@@ -29,7 +29,7 @@ class MailSender extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Mail Sender',
+            subject: 'Konfimasi Registrasi Platform ICETy',
         );
     }
 

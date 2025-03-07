@@ -21,63 +21,26 @@ class PromoGuest extends Controller
 	public function index()
 	{
         $data['title'] = 'Promo';
-        if(session('user')[0]['ID_ROLE'] == 2){
-            $data['promo'] = DB::select("
-                SELECT
-                    promo.*
-                FROM
-                    promo
-                LEFT JOIN
-                    claimed_promo
-                ON
-                    promo.ID_PROMO = claimed_promo.ID_PROMO
-                WHERE
-                    claimed_promo.ID_PROMO IS NULL
-                AND
-                    promo.KUOTA > 0
-                AND
-                    promo.CATEGORY_USER = 1
-            ");
-        } else if(session('user')[0]['ID_ROLE'] == 3){
-            $data['promo'] = DB::select("
-                SELECT
-                    promo.*
-                FROM
-                    promo
-                LEFT JOIN
-                    claimed_promo
-                ON
-                    promo.ID_PROMO = claimed_promo.ID_PROMO
-                WHERE
-                    claimed_promo.ID_PROMO IS NULL
-                AND
-                    promo.KUOTA > 0
-                AND
-                    promo.CATEGORY_USER = 2
-            ");
-        } else {
-            $data['promo'] = DB::select("
-                SELECT
-                    promo.*
-                FROM
-                    promo
-                LEFT JOIN
-                    claimed_promo
-                ON
-                    promo.ID_PROMO = claimed_promo.ID_PROMO
-                WHERE
-                    claimed_promo.ID_PROMO IS NULL
-                AND
-                    promo.KUOTA > 0
-                AND
-                    promo.CATEGORY_USER = 0
-            ");
-        }
+        $data['promo'] = DB::select("
+            SELECT
+                promo.*
+            FROM
+                promo
+            LEFT JOIN
+                claimed_promo
+            ON
+                promo.ID_PROMO = claimed_promo.ID_PROMO
+            WHERE
+                claimed_promo.ID_PROMO IS NULL
+            AND
+                promo.KUOTA > 0
+            AND
+                promo.CATEGORY_USER = 0
+        ");
 
-        // dd($data)
-        if($data == null){
 
-        }
+        // dd($data['promo']);
+
         return
             view('template.header', $data).
             view('template_guest.promo', $data).
