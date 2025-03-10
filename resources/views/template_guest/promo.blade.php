@@ -16,18 +16,18 @@
                 <h4 class="font-sm text-center">Belum Ada Voucher</h4>
             @endif
             @foreach ($promo as $item)
-            <div class="col d-flex justify-content-center align-items-center border border-4 rounded-3 border-primary"
-                style="background-color:#E9E9E9">
-                <div class="py-4" style="">
-                    <img src="<?= ('assets\images\promo-black.svg') ?>" style="color:black;height:80%" />
-                    <div class="fw-semibold" style="margin-top:20px; font-size:0.9rem">Valid Until : {{ $item->EXP_DATE }}</div>
+            <div class="col d-flex justify-content-center align-items-center border border-4 rounded-3 border-primary p-3"
+                style="background-color:#E9E9E9; max-width: 500px; min-width: 300px;">
+                <div class="py-3" style="">
+                    <img src="<?= ('assets\images\promo-black.svg') ?>" style="color:black;height:60px" />
+                    <div class="fw-semibold" style="margin-top:20px; font-size:0.8rem">Valid Until : {{ \Carbon\Carbon::parse($item->EXP_DATE)->format('Y-m-d') }}</div>
                 </div>
-                <div class="d-flex flex-column align-items-center border-start border-5 mx-4 ps-4 border-dark">
-                    <div class="fw-bold" style="font-size:5rem;margin-top: 30px;">{{ $item->PROMO_NAME }}</div>
+                <div class="d-flex flex-column align-items-center border-start border-3 mx-3 ps-3 border-dark text-center">
+                    <div class="fw-bold" style="font-size:clamp(1rem, 2vw, 2rem); max-width: 100%;">{{ $item->PROMO_NAME }}</div>
                     @if ($item->UNIT == 'persen')
-                    <div class="fw-bold" style="font-size:2rem;margin-top: 30px;">{{ $item->AMMOUNT }}%</div>
+                    <div class="fw-bold" style="font-size: 1.5rem; margin-top: 10px;">{{ $item->AMMOUNT }}%</div>
                     @else
-                    <div class="fw-bold" style="font-size:2rem;margin-top: 30px;">Rp.{{ $item->AMMOUNT }}</div>
+                    <div class="fw-bold" style="font-size: 1.5rem; margin-top: 10px;">Rp.{{ $item->AMMOUNT }}</div>
                     @endif
                     <form action="voucher/store" method="POST" enctype="multipart/form-data" id="form_claim">
                         @csrf
@@ -35,7 +35,7 @@
                             <input type="text" name="id_promo" value="{{ $item->ID_PROMO }}" hidden>
                             <input type="text" name="status" id="status_claim" value="1" hidden>
                             <button type="submit" id="btn_claim"
-                            class="h-auto d-flex align-items-center justify-content-center btn btn-primary rounded-1 fs-6 text-center fw-semibold text-white border-0"
+                            class="btn btn-primary rounded-1 fs-6 fw-semibold text-white border-0 px-3 py-1"
                             style="--bs-btn-padding-x: 2rem">Claim</button>
                         </div>
                     </form>
