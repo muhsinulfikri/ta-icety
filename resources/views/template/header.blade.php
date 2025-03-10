@@ -3,9 +3,9 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="description" content="Edumel- Education Html Template by dreambuzz">
+    <meta name="description" content="ICETy - Upskill Your Current Career">
     <meta name="keywords"
-        content="education,edumel,instructor,lms,online,instructor,dreambuzz,bootstrap,kindergarten,tutor,e learning">
+        content="education,lms,online,tutor,e learning,icety">
     <meta name="author" content="dreambuzz">
 
     <title>{{ $title }}</title>

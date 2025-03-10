@@ -53,6 +53,7 @@
                             <th>No</th>
                             <th>Nama User</th>
                             <th>Email</th>
+                            <th>Category</th>
                             <th>No Telpon</th>
                             <th>Jenis Kelamin</th>
                             <th>Action</th>
@@ -67,6 +68,15 @@
                                 <td><?= $number ?></td>
                                 <td><?= $item->NAME ?></td>
                                 <td><?= $item->EMAIL ?></td>
+                                @if($item->ID_CATEGORY_USER == 2)
+                                    <td>Perusahaan</td>
+                                @elseif ($item->ID_CATEGORY_USER == 3)
+                                    <td>Umum</td>
+                                @elseif ($item->ID_CATEGORY_USER == 4)
+                                    <td>Instansi</td>
+                                @else
+                                    <td>-</td>
+                                @endif
                                 <td><?= $item->TELP ?></td>
                                 <td><?= $item->JK ?></td>
                                 <td>

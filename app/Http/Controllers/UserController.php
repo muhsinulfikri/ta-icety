@@ -31,10 +31,11 @@ class UserController extends Controller
                 u.SESS_KEY ,
                 u.STATUS,
                 u.IS_DELETE ,
+                u.ID_CATEGORY_USER,
                 ud.*
             FROM
                 user u
-            LEFT JOIN user_data ud ON   
+            LEFT JOIN user_data ud ON
                 ud.ID_USER = u.ID_USER
             WHERE
                 u.IS_DELETE = 0

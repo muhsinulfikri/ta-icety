@@ -130,16 +130,7 @@
                         <select name="promo_for" id="promo_for" class="form-control">
                             <option value="0">All</option>
                             <option value="1">Course's</option>
-                            <option value="2">Event's</option>
-                            <option value="3">Book's</option>
-                        </select>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label>Category User<span class="text-danger">*</span></label>
-                        <select name="category_user" id="category_user" class="form-control">
-                            <option value="0">All</option>
-                            <option value="1">Instructor</option>
-                            <option value="2">Student</option>
+                            <option value="2">Book's</option>
                         </select>
                     </div>
                     <div class="form-group mb-3">
@@ -196,8 +187,7 @@
                         <select name="up_promo_for" id="up_promo_for" class="form-control">
                             <option value="0">All</option>
                             <option value="1">Course's</option>
-                            <option value="2">Event's</option>
-                            <option value="3">Book's</option>
+                            <option value="2">Book's</option>
                         </select>
                     </div>
                     <div class="form-group mb-3">

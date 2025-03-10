@@ -7,7 +7,7 @@
     <title><?= $title ?> - ICETy</title>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets') }}/images/favicon.ico">
+    <link rel="shortcut icon" href="{{ asset('assets') }}/images/logo-url.svg">
     <!-- Select2 css -->
     <link href="<?= asset('assets_admin/vendors/select2/select2.css') ?>" rel="stylesheet">
     <!-- DatePicker css -->
