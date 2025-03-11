@@ -106,6 +106,7 @@ Route::middleware(['usersession:1'])->group(function () {
 
     Route::get('redeem-code/', 'RedeemCodeController@index');
     Route::post('redeem-code/submit', 'RedeemCodeController@submit');
+    Route::post('redeem-code/delete', 'RedeemCodeController@delete_code');
     Route::get('redeem-code/excell/{id}', 'RedeemCodeController@gen_excell');
 
     // Koperasi Controller

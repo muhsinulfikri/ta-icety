@@ -76,7 +76,7 @@ use Illuminate\Support\Facades\Request;
                         <a href="https://www.youtube.com/channel/UCJMrxaHPEKL3PL1ohFhjbjg?sub_confirmation=1" target="_blank">
                             <img src="{{ asset('icety_assets') }}/logo-youtube.svg" class="img-fluid" />
                         </a>
-                        <a href="https://wa.me/628119006393" target="_blank">
+                        <a href="http://wa.me/6285117301678" target="_blank">
                             <img src="{{ asset('icety_assets') }}/logo-wa.svg" class="img-fluid" />
                         </a>
                     </div>
