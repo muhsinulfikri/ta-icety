@@ -16,51 +16,53 @@ class RedeemCodeController extends Controller
         $data['title'] = "Promo";
 
         $data["redeem"] = DB::select("
-            SELECT 
+            SELECT
                 a.ID_ACTIVITY ,
                 a.TITLE_ACTIVITY ,
                 trc.ID_REDEEM ,
                 trc.EXPIRED_DATE ,
                 trc.LIST_KODE ,
                 trc.TOTAL_CODE,
-                trc.CAT
-            FROM 
+                trc.CAT,
+                trc.ID_CATEGORY_USER
+            FROM
                 activity a
-            RIGHT JOIN 
+            RIGHT JOIN
                 (
-                    SELECT 
+                    SELECT
                         trc.ID_ACTIVITY ,
+                        trc.ID_CATEGORY_USER,
                         MAX(mcu.NAME_CATEGORY_USER) AS CAT ,
                         COUNT(trc.ID_REDEEM) AS TOTAL_CODE ,
                         MAX(trc.EXPIRED_DATE) AS EXPIRED_DATE ,
                         GROUP_CONCAT(trc.ID_REDEEM SEPARATOR ';') AS ID_REDEEM ,
                         GROUP_CONCAT(trc.KODE SEPARATOR ', ') AS LIST_KODE
-                    FROM 
-                        tb_redeem_code trc 
-                    LEFT JOIN md_category_user mcu ON 
-                        mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER 
-                    GROUP BY 
+                    FROM
+                        tb_redeem_code trc
+                    LEFT JOIN md_category_user mcu ON
+                        mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER
+                    GROUP BY
                         trc.ID_ACTIVITY ,
                         trc.ID_CATEGORY_USER,
                         trc.LOG_TIME
-                ) trc ON 
+                ) trc ON
                     trc.ID_ACTIVITY = a.ID_ACTIVITY
         ");
 
         $data['trial_for'] = DB::select("
-            SELECT 
+            SELECT
                 mcu.*
-            FROM 
-                md_category_user mcu 
+            FROM
+                md_category_user mcu
         ");
 
         $data['activity'] = DB::select("
-            SELECT 
+            SELECT
                 a.ID_ACTIVITY ,
-                a.TITLE_ACTIVITY 
-            FROM 
-                activity a 
-            WHERE 
+                a.TITLE_ACTIVITY
+            FROM
+                activity a
+            WHERE
                 a.STATUS = 1
                 AND
                 a.TYPE_ACTIVITY = 1
@@ -106,6 +108,19 @@ class RedeemCodeController extends Controller
 
             return redirect('redeem-code')->with('err_msg', 'Failed Add New Code');
         }
+    }
+
+    public function delete_code(Request $req){
+        $id_redeem_list = explode(';', $req->id_redeem);
+        if (empty($id_redeem_list)) {
+            return redirect('redeem-code')->with(['err_msg' => 'No redeem codes provided']);
+        }
+        DB::table('tb_redeem_code')
+        ->where('ID_ACTIVITY', $req->id_activity)
+        ->where('ID_CATEGORY_USER', $req->id_category_user)
+        ->whereIn('ID_REDEEM', $id_redeem_list)
+        ->delete();
+        return redirect('redeem-code')->with(['succ_msg' => 'Successfully Delete Code', 'location' => 'redeem-code']);
     }
 
     public function styling_title_template($ColorFill, $ColorText)
@@ -159,20 +174,20 @@ class RedeemCodeController extends Controller
                 trc.EXPIRED_DATE ,
                 mcu.NAME_CATEGORY_USER ,
                 u.NAME ,
-                trc.TGL_REDEEM 
+                trc.TGL_REDEEM
             FROM
                 tb_redeem_code trc
             LEFT JOIN md_category_user mcu ON
                 mcu.ID_CATEGORY_USER = trc.ID_CATEGORY_USER
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = trc.ID_ACTIVITY
-            LEFT JOIN `user` u ON 
-                u.ID_USER = trc.ID_USER 
-            WHERE 
+            LEFT JOIN `user` u ON
+                u.ID_USER = trc.ID_USER
+            WHERE
                 trc.ID_ACTIVITY = '$id_activity'
                 AND
                 mcu.NAME_CATEGORY_USER = '$cat'
-            ORDER BY 
+            ORDER BY
                 trc.ID_CATEGORY_USER ASC
         ");
 
@@ -247,7 +262,7 @@ class RedeemCodeController extends Controller
                 a.PRICE_ACTIVITY ,
                 COALESCE(c.DURATION, 0) AS DURATION
             FROM
-                tb_redeem_code trc 
+                tb_redeem_code trc
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = trc.ID_ACTIVITY
             LEFT JOIN course c ON

@@ -30,7 +30,9 @@
                                     <option value="" disabled selected>Choose your Category</option>
                                     <option value="2">Perusahaan</option>
                                     <option value="3">Umum</option>
-                                    <option value="4">Instansi</option>
+                                    <option value="4">Institusi Pemerintah</option>
+                                    <option value="5">Institusi Pendidikan</option>
+                                    <option value="6">Organisasi Nirlaba</option>
                                 </select>
                             </div>
                             <div class="my-4 float-label-control">

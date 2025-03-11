@@ -70,9 +70,14 @@
                             <td><?= $item->TOTAL_CODE ?></td>
                             <td><?= $item->EXPIRED_DATE ?></td>
                             <td>
-                                <button type="button" class="btn btn-success" onclick="generateExcell(`<?= Request::segment(0) ?>/redeem-code/excell/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
+                                <button type="button" class="btn btn-success mb-2" onclick="generateExcell(`<?= Request::segment(0) ?>/redeem-code/excell/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
                                     <i class="far fa-file-excel font-size-16 align-middle"></i>
                                 </button>
+                                @if (strtotime($item->EXPIRED_DATE) < time())
+                                    <button type="button" onclick="opendeleteModalRedeem('<?= $item->ID_ACTIVITY ?>','<?= $item->ID_CATEGORY_USER ?>','<?= $item->ID_REDEEM ?>')" class="btn btn-danger">
+                                        <i class="bx bx-trash font-size-16 align-middle"></i>
+                                    </button>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -132,6 +137,35 @@
     </div>
 </div>
 
+{{-- delete modal  --}}
+<div class="modal fade" id="deleteModal" style="z-index: 1060;" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Code</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-user" action="redeem-code/delete" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <p>Do you want to delete this Code ?</p>
+                        <input type="hidden" name="id_activity" value="" readonly>
+                        <input type="hidden" name="id_category_user" value="" readonly>
+                        <input type="hidden" name="id_redeem" value="" readonly>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -167,6 +201,15 @@
 
     function addModal() {
         $('#modal').modal('show')
+    }
+
+    function opendeleteModalRedeem(id_act, id_cat, id_redeem) {
+        // let id_redeem = id_redeem_list.join(';');
+        $('input[name="id_activity"]').val(id_act)
+        $('input[name="id_category_user"]').val(id_cat)
+        $('input[name="id_redeem"]').val(id_redeem)
+        $('#deleteModal').modal('show')
+        console.log(id_act, id_cat, id_redeem);
     }
 
     function submitForm() {
@@ -267,9 +310,4 @@
         }
     }
 
-    function opendeleteModal(viewData) {
-        var data = JSON.parse(viewData)
-        $('input[name="id_promo"]').val(data.ID_PROMO)
-        $('#deleteModal').modal('show')
-    }
 </script>

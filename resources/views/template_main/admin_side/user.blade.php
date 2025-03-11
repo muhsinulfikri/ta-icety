@@ -73,7 +73,11 @@
                                 @elseif ($item->ID_CATEGORY_USER == 3)
                                     <td>Umum</td>
                                 @elseif ($item->ID_CATEGORY_USER == 4)
-                                    <td>Instansi</td>
+                                    <td>Institusi Pemerintah</td>
+                                @elseif ($item->ID_CATEGORY_USER == 5)
+                                    <td>Institusi Pendidikan</td>
+                                @elseif ($item->ID_CATEGORY_USER == 6)
+                                    <td>Organisasi Nirlaba</td>
                                 @else
                                     <td>-</td>
                                 @endif
