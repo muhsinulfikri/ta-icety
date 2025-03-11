@@ -209,7 +209,6 @@
         $('input[name="id_category_user"]').val(id_cat)
         $('input[name="id_redeem"]').val(id_redeem)
         $('#deleteModal').modal('show')
-        console.log(id_act, id_cat, id_redeem);
     }
 
     function submitForm() {

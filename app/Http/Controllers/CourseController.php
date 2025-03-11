@@ -1103,7 +1103,7 @@ class CourseController extends Controller
                     $tmpNo++;
                 }
             }
-            if (!empty($id_quiz_old)) {
+            if (!empty($id_quiz_old) || $id_quiz_old != null) {
                 DB::table('nilai_quiz')->WHERE(['ID_QUIZ' => $id_quiz_old[$tmpNoQuiz]->ID_QUIZ])->update(['ID_QUIZ' => $id_quiz]);
             }
             $tmpNoQuiz++;
