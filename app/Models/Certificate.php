@@ -28,7 +28,7 @@ class Certificate extends Model
         return $this->db->affected_rows();
     }
 
-    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif)
+    public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif, $total_materi)
     {
         set_time_limit(120);
         try {
@@ -52,6 +52,7 @@ class Certificate extends Model
             $data['SUMMARY'] = $summary;
             $data['INFO_SERTIF'] = $info_sertif;
             $data['DURATION'] = $duration;
+            $data['TOTAL_MATERI'] = $total_materi;
             $data['DATE'] = $date;
             $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'/verifikasi/'.$encryptedId));
 
@@ -65,7 +66,7 @@ class Certificate extends Model
         }
     }
 
-    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif)
+    public function generateSertifExam($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif, $total_materi)
     {
         set_time_limit(120);
         try {
