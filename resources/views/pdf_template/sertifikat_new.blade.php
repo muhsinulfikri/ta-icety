@@ -65,8 +65,8 @@
 
         .modules {
         position: absolute;
-        left: 5%;
-        top: 55%;
+        left: 6%;
+        top: 47.5%;
         width: 250px;
         color: white;
         font-size: 16px;
@@ -115,14 +115,37 @@
             width: 100%;
             height: auto;
         }
+        .modules-header {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Jarak antara Total Materi dan Modules Completed */
+        }
+
+        .total-materi {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="certificate">
       <div class="certificate-number">{{ $NO_SERTIF }}</div>
+      {{-- <div class="total-materi">
+          <p style="font-size: 16px; color: white;">{{ $TOTAL_MATERI }}</p>
+      </div>
       <div class="modules">
         {!! $INFO_SERTIF !!}
-      </div>
+      </div> --}}
+      <div class="modules">
+        <div class="modules-header">
+            <div class="total-materi">
+                <p style="font-size: 16px; color: white;">{{ $TOTAL_MATERI }}</p>
+            </div>
+        </div>
+        <div class="modules-list">
+            {!! $INFO_SERTIF !!}
+        </div>
+    </div>
+
 
       <div class="text-container">
         <div class="date">{{ date('d F Y',strtotime($DATE)) }}</div>
