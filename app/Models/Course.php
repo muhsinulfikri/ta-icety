@@ -193,19 +193,6 @@ class Course extends Model
         ');
         return $sql;
     }
-    public function get_total_materi($id_course){
-        $data = DB::select("
-            SELECT
-                COUNT(ID_ITEM) as total
-            FROM
-                item_course
-            WHERE
-                ID_COURSE = '".$id_course."'
-            AND
-                TYPE = 1
-        ");
-        return $data;
-    }
     public function get_completed_course($id_user, $id_activity){
         $data = DB::select('
             SELECT
