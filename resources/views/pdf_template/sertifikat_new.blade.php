@@ -53,14 +53,14 @@
 
         .description {
         font-size: 18px;
-        margin-top: 30px;
+        margin-top: 20px;
         max-width: 80%;
         }
 
         .course-title {
         font-size: 28px;
         font-weight: bold;
-        margin-top: 100px;
+        margin-top: 75px;
         }
 
         .modules {
@@ -101,12 +101,13 @@
         .duration-info {
         font-size: 16px;
         font-style: italic;
-        margin-top: 10px;
-        color: #333; /* Warna lebih netral */
+        margin-top: 7px;
+        color: #333;
         }
         .qr-container {
             position: absolute;
-            margin-top: 30px;
+            left: 32.5%;
+            top: 70%;
             width: 100px;
             height: 100px;
         }
@@ -115,10 +116,11 @@
             width: 100%;
             height: auto;
         }
+
         .modules-header {
             display: flex;
             align-items: center;
-            gap: 20px; /* Jarak antara Total Materi dan Modules Completed */
+            gap: 20px;
         }
 
         .total-materi {
@@ -128,31 +130,32 @@
 </head>
 <body>
     <div class="certificate">
-      <div class="certificate-number">{{ $NO_SERTIF }}</div>
-      {{-- <div class="total-materi">
-          <p style="font-size: 16px; color: white;">{{ $TOTAL_MATERI }}</p>
-      </div>
-      <div class="modules">
-        {!! $INFO_SERTIF !!}
-      </div> --}}
-      <div class="modules">
-        <div class="modules-header">
-            <div class="total-materi">
-                <p style="font-size: 16px; color: white;">{{ $TOTAL_MATERI }}</p>
-            </div>
+        <div class="certificate-number">{{ $NO_SERTIF }}</div>
+        @php
+            $infoLines = explode('</p>', $INFO_SERTIF);
+            $firstLine = strip_tags($infoLines[0]);
+            $totalMateri = explode(',', $firstLine)[0];
+            array_shift($infoLines);
+            $InfoSertif = implode('</p>', $infoLines);
+        @endphp
+        <div class="modules">
+            <div class="modules-header">
+                <div class="total-materi">
+                    <p style="font-size: 16px; color: white;">{{ $totalMateri }}</p>
+                </div>
         </div>
         <div class="modules-list">
-            {!! $INFO_SERTIF !!}
+            {!! $InfoSertif !!}
         </div>
     </div>
 
 
-      <div class="text-container">
+    <div class="text-container">
         <div class="date">{{ date('d F Y',strtotime($DATE)) }}</div>
         <div class="name">{{ $NAME }}</div>
         <div class="course-title">{{ $ACTIVITY }}</div>
         <div class="description">
-          {{ strip_tags($SUMMARY) }}
+            {{ strip_tags($SUMMARY) }}
         </div>
         <div class="duration-info">
             @if ($DURATION == 0)
@@ -161,10 +164,10 @@
             <p>Has been completed this course in <?= $DURATION ?> days.</p>
             @endif
         </div>
+    </div>
         <div class="qr-container">
             <img src="data:image/svg+xml;base64,<?= $QR ?>" alt="QR Code">
         </div>
-      </div>
     </div>
-  </body>
+</body>
 </html>

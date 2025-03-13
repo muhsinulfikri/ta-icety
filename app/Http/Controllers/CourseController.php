@@ -690,10 +690,8 @@ class CourseController extends Controller
             'question' => $existingQuiz->pluck('SOAL')->toArray(),
             'kunci_soal' => $existingQuiz->pluck('KUNCI')->toArray(),
         ];
-        // dd($existingQuiz, $quiz);
         if (!empty($quiz['question'])) {
             $data['data_item'] = $data_item;
-            // dd($quiz, $existingQuiz);
             $this->item_quiz_copy($data, $quiz, $idQuiz);
         }
     }
@@ -1135,7 +1133,9 @@ class CourseController extends Controller
                         'TYPE'          => $categoryList[$i],
                         'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
                     ];
-                    if(empty($linkMateri[$i])){
+                    if(empty($linkMateri[$i]) && empty($file[$i])){
+                        null;
+                    } else if(empty($linkMateri[$i])){
                         $data_item['FILE'] = !empty($file[$i]) ? FileUpload::S3($file[$i], 'MATERI_FILE', 'Materi-' . strtotime(now())) :  $materiFile[$i];
                     }
 
