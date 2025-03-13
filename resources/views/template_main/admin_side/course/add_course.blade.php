@@ -61,7 +61,7 @@
                         </label>
                         <div class="col-md-5">
                             <input type="number" class="form-control CurrencyInput" name="price_course"
-                                placeholder="0">
+                                placeholder="0" required>
                             <span class="d-flex align-items-center mt-2">
                                 <div class="switch m-r-10">
                                     <input type="checkbox" id="setFree">
@@ -156,7 +156,7 @@
                         <div class="col-md-5">
                             <div class="custom-file">
                                 <input type="file" name="sertif_image" class="custom-file-input dropify"
-                                    accept=".jpg" data-allowed-file-extensions="jpg">
+                                    accept=".jpg" data-allowed-file-extensions="jpg" required>
                                 <small class="text-danger">Input JPG only file, Jika tidak input maka akan menggunakan sertifikat template</small>
                             </div>
                         </div>
