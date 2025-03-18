@@ -710,9 +710,8 @@ class CheckoutGuest extends Controller
 			WHERE
 				mc.ID_ACTIVITY = '" . $data_course->ID_COURSE . "'
 			ORDER BY
-				mc.ID_ITEM DESC
+				mc.ID_ITEM ASC
 		");
-
 		if (empty($mappingData)) {
 			for ($i = 0; $i < count($data_itemCourse); $i++) {
 				if ($i == 0) {
@@ -730,7 +729,6 @@ class CheckoutGuest extends Controller
 						"STATUS" => 0
 					);
 				}
-				// $this->checkoutModel->insert_mapping($data_mapping);
 				DB::table('mapping_course')->insert($data_mapping);
 			}
 		}
