@@ -1,7 +1,7 @@
 name : Deploy tbh-v3 to testing
 on:
   push:
-    branches: [ main ]
+    branches: [ dev-testing ]
 
 jobs:
   first:
