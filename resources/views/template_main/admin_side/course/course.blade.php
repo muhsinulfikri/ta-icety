@@ -94,11 +94,11 @@
                                             <i class="bx bx-edit-alt font-size-16 align-middle"></i> Edit Course
                                         </button>
                                     </form>
-                                    {{-- @if ($item->TYPE_ACTIVITY == 1)
+                                    @if ($item->TYPE_ACTIVITY == 1)
                                         <button type="button" onclick="opencopyModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important; margin: 5px 0px;">
                                             <i class="bx bx-copy font-size-16 align-middle"></i> Copy Course
                                         </button>
-                                    @endif --}}
+                                    @endif
                                     <button type="button" onclick="opendeleteModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-danger btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
                                         <i class="bx bx-trash font-size-16 align-middle"></i> Delete Course
                                     </button>
