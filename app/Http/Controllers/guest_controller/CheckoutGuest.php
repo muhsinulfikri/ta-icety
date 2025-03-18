@@ -710,7 +710,7 @@ class CheckoutGuest extends Controller
 			WHERE
 				mc.ID_ACTIVITY = '" . $data_course->ID_COURSE . "'
 			ORDER BY
-				mc.ID_ITEM ASC
+				mc.ID_ITEM DESC
 		");
 
 		if (empty($mappingData)) {
