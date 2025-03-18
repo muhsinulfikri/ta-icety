@@ -93,7 +93,8 @@
                         "code_exam": "<?= $code ?>",
                         "id_activity": id_activity,
                         "pilih_jwbn": pilih_jwbn,
-                        "min_nilai": "<?= $data[0]->MIN_NILAI ?>"
+                        "min_nilai": "<?= $data[0]->MIN_NILAI ?>",
+                        "activity_asal": "<?= $id_activity_parent ?>",
                     },
                     success: function(data) {
                         if (data.status == 'error') {
