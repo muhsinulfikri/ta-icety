@@ -714,7 +714,7 @@ class CheckoutGuest extends Controller
 		");
 		if (empty($mappingData)) {
 			for ($i = 0; $i < count($data_itemCourse); $i++) {
-				if ($i == 0) {
+				if ($i == count($data_itemCourse) -1) {
 					$data_mapping = array(
 						"ID_USER" => session('user')[0]->get('ID_USER'),
 						"ID_ACTIVITY" => $item,
