@@ -116,7 +116,7 @@ class CourseGuest extends Controller
 			ID_USER = '" . session('user')[0]->get('ID_USER') .
 			"'AND ID_ACTIVITY = '" . $data['id_activity'] . "'
 		";
-		// $data['data_all_mapping'] = $this->courseModel->get_all_mapping($condition_all_mapping);
+		
 		$data['data_all_mapping'] = DB::select("
 			SELECT
 				*
