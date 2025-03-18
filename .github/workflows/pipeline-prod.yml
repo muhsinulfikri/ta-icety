@@ -1,7 +1,7 @@
 name : Deploy tbh-v3 to prod
 on:
   push:
-    branches: [ main ]
+    branches: [ test ]
 
 jobs:
   first:
