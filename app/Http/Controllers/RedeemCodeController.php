@@ -64,8 +64,10 @@ class RedeemCodeController extends Controller
                 activity a
             WHERE
                 a.STATUS = 1
-                AND
+            AND
                 a.TYPE_ACTIVITY = 1
+            AND
+                a.IS_DELETED IS NULL
         ");
 
         return
