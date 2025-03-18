@@ -383,6 +383,8 @@ class Course extends Model
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 				AND
 				ID_ACTIVITY = '" . $id_activity . "'
+            ORDER BY 
+                ID_ITEM ASC
 		");
 
         $dataNewMapping = DB::select('
@@ -394,6 +396,8 @@ class Course extends Model
 				ic.ID_COURSE = c.ID_COURSE
 			WHERE
 				c.ID_ACTIVITY = "' . $id_activity . '"
+            ORDER BY
+                ic.ID_ITEM ASC
 		');
 
         if ($dataOldMapping != null) {
@@ -433,6 +437,7 @@ class Course extends Model
             WHERE
                 ID_USER = "' . session('user')[0]->get('ID_USER') . '"
                 AND ID_ACTIVITY = "' . $id_activity . '"
+            ORDER BY ID_ITEM ASC
         ');
 
         // $new_item = $this->db->get_where('item_course', ['ID_COURSE' => $id_course])->result_array();
@@ -443,6 +448,8 @@ class Course extends Model
                 item_course
             WHERE
                 ID_COURSE = "' . $id_course . '"
+            ORDER BY
+                ORDER_LIST ASC
         ');
 
         if (count($mapping) < count($new_item)) {
@@ -473,12 +480,8 @@ class Course extends Model
         } else {
             for ($i = 0; $i < count($mapping); $i++) {
                 if (empty($new_item[$i]->ID_ITEM)) {
-                    // $this->db->where('ID_MAPPING', $mapping[$i]->ID_MAPPING);
-                    // $this->db->delete('mapping_course');
                     DB::table('mapping_course')->where('ID_MAPPING', $mapping[$i]->ID_MAPPING)->delete();
                 } else {
-                    // $this->db->where('ID_MAPPING', $mapping[$i]->ID_MAPPING);
-                    // $this->db->update('mapping_course', ['ID_ITEM' => $new_item[$i]->ID_ITEM]);
                     DB::table('mapping_course')->where('ID_MAPPING', $mapping[$i]->ID_ITEM)->update(['ID_ITEM' => $new_item[$i]->ID_ITEM]);
                 }
             }
