@@ -760,7 +760,7 @@
                         confirmButtonText: 'Continue',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam;
+                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam + "/" + "<?= $id_activity ?>";
                         }
                     });
                 } else {
