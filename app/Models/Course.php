@@ -433,6 +433,7 @@ class Course extends Model
             WHERE
                 ID_USER = "' . session('user')[0]->get('ID_USER') . '"
                 AND ID_ACTIVITY = "' . $id_activity . '"
+            ORDER BY ID_ITEM ASC
         ');
 
         // $new_item = $this->db->get_where('item_course', ['ID_COURSE' => $id_course])->result_array();
@@ -443,6 +444,8 @@ class Course extends Model
                 item_course
             WHERE
                 ID_COURSE = "' . $id_course . '"
+            ORDER BY
+                ID_ITEM ASC
         ');
 
         if (count($mapping) < count($new_item)) {
