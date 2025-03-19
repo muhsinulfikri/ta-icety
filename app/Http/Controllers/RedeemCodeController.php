@@ -24,6 +24,7 @@ class RedeemCodeController extends Controller
                 trc.LIST_KODE ,
                 trc.TOTAL_CODE,
                 trc.CAT,
+                trc.LOG_TIME,
                 trc.ID_CATEGORY_USER
             FROM
                 activity a
@@ -32,6 +33,7 @@ class RedeemCodeController extends Controller
                     SELECT
                         trc.ID_ACTIVITY ,
                         trc.ID_CATEGORY_USER,
+                        trc.LOG_TIME,
                         MAX(mcu.NAME_CATEGORY_USER) AS CAT ,
                         COUNT(trc.ID_REDEEM) AS TOTAL_CODE ,
                         MAX(trc.EXPIRED_DATE) AS EXPIRED_DATE ,
@@ -169,6 +171,7 @@ class RedeemCodeController extends Controller
     {
         $id_activity = explode(';', base64_decode($data))[0];
         $cat = explode(';', base64_decode($data))[1];
+        $logTime = explode(';', base64_decode($data))[2];
         $redeemCode = DB::select("
             SELECT
                 a.TITLE_ACTIVITY ,
@@ -189,6 +192,8 @@ class RedeemCodeController extends Controller
                 trc.ID_ACTIVITY = '$id_activity'
                 AND
                 mcu.NAME_CATEGORY_USER = '$cat'
+                AND
+                trc.LOG_TIME = '$logTime'
             ORDER BY
                 trc.ID_CATEGORY_USER ASC
         ");

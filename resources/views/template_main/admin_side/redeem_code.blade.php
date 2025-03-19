@@ -70,7 +70,7 @@
                             <td><?= $item->TOTAL_CODE ?></td>
                             <td><?= $item->EXPIRED_DATE ?></td>
                             <td>
-                                <button type="button" class="btn btn-success mb-2" onclick="generateExcell(`<?= Request::segment(0) ?>/redeem-code/excell/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>')}`)">
+                                <button type="button" class="btn btn-success mb-2" onclick="generateExcell(`<?= Request::segment(0) ?>/redeem-code/excell/${btoa('<?= $item->ID_ACTIVITY ?>;<?= $item->CAT ?>;<?= $item->LOG_TIME ?>')}`)">
                                     <i class="far fa-file-excel font-size-16 align-middle"></i>
                                 </button>
                                 @if (strtotime($item->EXPIRED_DATE) < time())
