@@ -892,17 +892,19 @@ class CourseGuest extends Controller
 		$data['title'] = 'Final Exam';
 		$data['id_activity'] = $request->id;
 		$data['code'] = $request->code;
+		$data['id_activity_parent'] = $request->activity_asal;;
+		$id_activity_parent = $request->activity_asal;
 
 		$is_code_verif = $this->isCodeVerif($data['code']);
-		$id_activity_parent = DB::selectOne("
-			SELECT
-				ID_ACTIVITY
-			FROM
-				course
-			WHERE
-				FINAL_EXAM = ?;
-		", [$data['id_activity']])->ID_ACTIVITY;
-		$data['id_activity_parent'] = $id_activity_parent;
+		// $id_activity_parent = DB::selectOne("
+		// 	SELECT
+		// 		ID_ACTIVITY
+		// 	FROM
+		// 		course
+		// 	WHERE
+		// 		FINAL_EXAM = ?;
+		// ", [$data['id_activity']])->ID_ACTIVITY;
+		// $data['id_activity_parent'] = $id_activity_parent;
 		if ($is_code_verif == false) {
 			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
 		}
@@ -982,16 +984,17 @@ class CourseGuest extends Controller
 		$id_user = session('user')[0]->get('ID_USER');
 		$code_exam = $request->code_exam;
 		$min_nilai = $request->min_nilai;
+		$id_activity_parent = $request->activity_asal;
 
 		$is_code_verif = $this->isCodeVerif($code_exam);
-		$id_activity_parent = DB::selectOne("
-			SELECT
-				ID_ACTIVITY
-			FROM
-				course
-			WHERE
-				FINAL_EXAM = ?;
-		", [$request->id_activity])->ID_ACTIVITY;
+		// $id_activity_parent = DB::selectOne("
+		// 	SELECT
+		// 		ID_ACTIVITY
+		// 	FROM
+		// 		course
+		// 	WHERE
+		// 		FINAL_EXAM = ?;
+		// ", [$request->id_activity])->ID_ACTIVITY;
 		if ($is_code_verif == false) {
 			return response()->json([
 				'status' => 'error',
@@ -1024,14 +1027,14 @@ class CourseGuest extends Controller
 			"created_at" 	=> date('Y-m-d H:i:s'),
 		];
 
-		$id_activity_parent = DB::selectOne("
-			SELECT
-				ID_ACTIVITY
-			FROM
-				course
-			WHERE
-				FINAL_EXAM = ?;
-		", [$_POST['id_activity']])->ID_ACTIVITY;
+		// $id_activity_parent = DB::selectOne("
+		// 	SELECT
+		// 		ID_ACTIVITY
+		// 	FROM
+		// 		course
+		// 	WHERE
+		// 		FINAL_EXAM = ?;
+		// ", [$_POST['id_activity']])->ID_ACTIVITY;
 
 		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
