@@ -470,36 +470,36 @@
                                 </div>`);
     }
 
-    function BuyCertificateCode(e) {
-        <?php foreach ($item_course as $item) :  ?>
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
-        <?php endforeach; ?>
-        $(e).removeClass('btn-main-outline')
-        $(e).addClass('btn-primary')
-        $("#detail-item").html(
-            '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
-        );
-        $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
-                                    <div class="d-flex justify-content-center">
-                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
-                                            <div class="mx-4 py-3 bg-white">
-                                                @if ($id_sertif_is_paid->IS_PAY == 0)
-                                                    <label>Buy Sertificate Course</label>
-                                                    </br>
-                                                    <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                    <input type="hidden" name="id_sertif_pay" value="<?= $id_sertif_is_paid->ID_PAYMENT_SERTIF ?>">
-                                                    <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
-                                                @else
-                                                    <label>Download Sertificate Course</label>
-                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                        onclick="DownloadPdf(this)">Download PDF</button>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`);
-    }
+    // function BuyCertificateCode(e) {
+    //     <?php foreach ($item_course as $item) :  ?>
+    //         $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+    //         $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+    //     <?php endforeach; ?>
+    //     $(e).removeClass('btn-main-outline')
+    //     $(e).addClass('btn-primary')
+    //     $("#detail-item").html(
+    //         '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
+    //     );
+    //     $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
+    //                                 <div class="d-flex justify-content-center">
+    //                                     <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+    //                                         <div class="mx-4 py-3 bg-white">
+    //                                             @if ($id_sertif_is_paid->IS_PAY == 0)
+    //                                                 <label>Buy Sertificate Course</label>
+    //                                                 </br>
+    //                                                 <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
+    //                                                 <input type="hidden" name="id_sertif_pay" value="<?= $id_sertif_is_paid->ID_PAYMENT_SERTIF ?>">
+    //                                                 <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+    //                                             @else
+    //                                                 <label>Download Sertificate Course</label>
+    //                                                 <button type="button" class="btn btn-primary col-md-12 my-3"
+    //                                                     onclick="DownloadPdf(this)">Download PDF</button>
+    //                                             @endif
+    //                                         </div>
+    //                                     </div>
+    //                                 </div>
+    //                             </div>`);
+    // }
 
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
@@ -846,89 +846,89 @@
         <?php } ?>
     }
 
-    $(document).on('click', '#buy', function() {
-        Swal.fire({
-            title: 'Loading Payment!',
-            html: 'Please Wait ...',
-            timerProgressBar: false,
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+    // $(document).on('click', '#buy', function() {
+    //     Swal.fire({
+    //         title: 'Loading Payment!',
+    //         html: 'Please Wait ...',
+    //         timerProgressBar: false,
+    //         allowOutsideClick: false,
+    //         didOpen: () => {
+    //             Swal.showLoading();
+    //         }
+    //     });
 
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    //     const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-        // AJAX call to get the order ID
-        $.ajax({
-            url: '/get_id_sertif_pay',
-            type: "POST",
-            data: {
-                _token: csrfToken,
-                TotPrice: <?= $course->PRICE_SERTIF ?>,
-                id_sertif_pay: $('input:hidden[name="id_sertif_pay"]').val()
-            },
-            dataType: 'json',
-            success: function(response) {
-                console.log(response);
-                getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
-            },
-            error: function(xhr, status, error) {
-                displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
-                console.error(error);
-                Swal.close();
-            }
-        });
-    });
+    //     // AJAX call to get the order ID
+    //     $.ajax({
+    //         url: '/get_id_sertif_pay',
+    //         type: "POST",
+    //         data: {
+    //             _token: csrfToken,
+    //             TotPrice: <?= $course->PRICE_SERTIF ?>,
+    //             id_sertif_pay: $('input:hidden[name="id_sertif_pay"]').val()
+    //         },
+    //         dataType: 'json',
+    //         success: function(response) {
+    //             console.log(response);
+    //             getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
+    //         },
+    //         error: function(xhr, status, error) {
+    //             displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
+    //             console.error(error);
+    //             Swal.close();
+    //         }
+    //     });
+    // });
 
     // Function to handle the second step: fetching the invoice
-    async function getInvoiceXendit(data, csrfToken) {
-        try {
-            const invoiceData = {
-                xendit_id: data,
-            };
-            console.log(invoiceData);
+    // async function getInvoiceXendit(data, csrfToken) {
+    //     try {
+    //         const invoiceData = {
+    //             xendit_id: data,
+    //         };
+    //         console.log(invoiceData);
 
-            // Fetch call to create the invoice
-            const fetchResponse = await fetch('/payment/get', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify(invoiceData),
-            });
+    //         // Fetch call to create the invoice
+    //         const fetchResponse = await fetch('/payment/get', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json;charset=utf-8',
+    //                 'X-CSRF-TOKEN': csrfToken
+    //             },
+    //             body: JSON.stringify(invoiceData),
+    //         });
 
-            const responseData = await fetchResponse.json();
-            console.log(fetchResponse);
+    //         const responseData = await fetchResponse.json();
+    //         console.log(fetchResponse);
 
-            if (fetchResponse.ok && responseData.invoice_url) {
-                window.location.href = responseData.invoice_url; // Redirect to the invoice URL
-            } else {
-                displayError('Payment Error', responseData?.message || 'An error occurred while creating the invoice.');
-                console.error(responseData);
-                Swal.close();
-            }
-        } catch (error) {
-            displayError('Payment Error', error.message || 'An unexpected error occurred.');
-            console.error(error);
-            Swal.close();
-        }
-    }
+    //         if (fetchResponse.ok && responseData.invoice_url) {
+    //             window.location.href = responseData.invoice_url; // Redirect to the invoice URL
+    //         } else {
+    //             displayError('Payment Error', responseData?.message || 'An error occurred while creating the invoice.');
+    //             console.error(responseData);
+    //             Swal.close();
+    //         }
+    //     } catch (error) {
+    //         displayError('Payment Error', error.message || 'An unexpected error occurred.');
+    //         console.error(error);
+    //         Swal.close();
+    //     }
+    // }
 
 
-    // Helper function to display error messages
-    function displayError(title, message) {
-        const alertContainer = document.getElementById('alert_div');
-        alertContainer.innerHTML = `
-            <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
-                <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                    style="transition: none; background-color: transparent; color: inherit;">
-                </button>
-            </div>
-        `;
-    }
+    // // Helper function to display error messages
+    // function displayError(title, message) {
+    //     const alertContainer = document.getElementById('alert_div');
+    //     alertContainer.innerHTML = `
+    //         <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
+    //             <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
+    //             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+    //                 style="transition: none; background-color: transparent; color: inherit;">
+    //             </button>
+    //         </div>
+    //     `;
+    // }
 
 </script>
 
