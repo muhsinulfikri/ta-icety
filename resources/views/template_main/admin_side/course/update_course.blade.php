@@ -3,9 +3,32 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 align-self-center mt-5">
-                    <h3 class="fw-bold" style="color:#45b104">Update Course </h3>
+                    <a href="<?= url('courses') ?>" class="d-flex align-items-center justify-content-start w-100 gap-2 text-dark">
+                        <i class="fas fa-chevron-left mr-2"></i>
+                        <h3 class="fw-bold mb-0" style="color:#45b104 !important">Update Course </h3>
+                    </a>
                 </div>
             </div>
+            <?php if (!empty(session('err_msg'))) { ?>
+                <div class="alert alert-danger">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span class="alert-icon">
+                            <i class="anticon anticon-check-o"></i>
+                        </span>
+                        <span><?= session('err_msg') ?></span>
+                    </div>
+                </div>
+            <?php } ?>
+            <?php if (!empty(session('succ_msg'))) { ?>
+                <div class="alert alert-success">
+                    <div class="d-flex align-items-center justify-content-start">
+                        <span class="alert-icon">
+                            <i class="anticon anticon-check-o"></i>
+                        </span>
+                        <span><?= session('succ_msg') ?></span>
+                    </div>
+                </div>
+            <?php } ?>
             <div class="mt-5">
                 <form id="form-user" action="update" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -62,8 +85,8 @@
                     </div>
                     <div id="requirement-container"></div>
                     <div class="form-group row">
-                            <label class="col-sm-2 col-form-label control-label"></label>
-                            <div class="d-flex align-items-center mt-2">
+                        <label class="col-sm-2 col-form-label control-label"></label>
+                        <div class="d-flex align-items-center mt-2">
                             No Final Exam
                             <div class="switch m-r-10" style="margin-left: 7px;">
                                 <input type="checkbox" id="final-toggle">
@@ -165,8 +188,8 @@
                         <div class="col-md-10">
                             <select class="select2" name="category">
                                 @foreach ($data['kategori'] as $item)
-                                    <option value="<?= $item->ID_KATEGORI ?>"><?= $item->KATEGORI ?>
-                                    </option>
+                                <option value="<?= $item->ID_KATEGORI ?>"><?= $item->KATEGORI ?>
+                                </option>
                                 @endforeach
                             </select>
                         </div>
