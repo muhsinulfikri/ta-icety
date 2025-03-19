@@ -3,6 +3,8 @@
         <h5 class="card-title d-flex align-items-center row">
             <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12">
                 <span class="col-md-11">Detail - Materi</span>
+                <input type="hidden" name="DELETED[]" value="0">
+                <input type="hidden" name="ID_ITEM[]" value="">
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}" required>
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
                 <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right"
@@ -20,6 +22,7 @@
                 <label class="col-sm-2 col-form-label control-label">Select Option</label>
                 <div class="col-md-5">
                     <div class="form-check">
+                        <input type="hidden" name="default_file[]" value="">
                         <input type="radio" class="form-check-input materi-option"
                             id="optionFile_{{ $no }}"
                             value="file"
@@ -115,7 +118,6 @@
         $(`#fileInputGroup_${no}, #linkInputGroup_${no}`).prop('hidden', true);
         $(`#materi_file_${no}, #materi_link_${no}`).val('');
 
-        // Tampilkan input sesuai pilihan
         if (type === 'file') {
             $(`#fileInputGroup_${no}`).prop('hidden', false);
         } else if (type === 'link') {
@@ -181,7 +183,7 @@
         $(this).toggleClass("is-loading");
         $("#delete_materi_{{ $no }}").removeClass("is-loading")
         $("#materi_item_{{ $no }}").remove();
-        i--;
+        // i--;
         e.preventDefault();
     });
 </script>

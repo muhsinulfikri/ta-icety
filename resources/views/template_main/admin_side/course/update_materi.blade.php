@@ -1,10 +1,11 @@
 <div class="card" id="materi_item_{{ $no }}">
     <div class="card-header">
         <h5 class="card-title d-flex row">
-            <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12">
+            <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12 collapsed" aria-expanded="false">
                 <span class="col-md-11">Detail - Materi <?= $item['TITLE'] ?></span>
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}" required>
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
+                <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
                 <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
@@ -13,7 +14,7 @@
             </a>
         </h5>
     </div>
-    <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
+    <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default" aria-expanded="false" style="height: 0px;">
         <div class="card-body">
             <?php
             $hasFile = !empty($item['FILE']);
@@ -62,6 +63,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $('input[name="materi_file[]"]').each(function() {
         var dropifyInstance = $(this).data('dropify');
@@ -132,8 +134,25 @@
     $('#delete_materi_{{ $no }}').click(function(e) {
         $(this).toggleClass("is-loading");
         $("#delete_materi_{{ $no }}").removeClass("is-loading")
-        $("#materi_item_{{ $no }}").remove();
-        item--;
+        // $("#materi_item_{{ $no }}").remove();
+
+        var idItem = $("#materi_item_{{ $no }}").find('input[name="ID_ITEM[]"]').eq(0).val();        
+        var itemType = $("#materi_item_{{ $no }}").find('input[name="type[]"]').eq(0).val();
+        $("#materi_item_{{ $no }}").hide();
+        $("#materi_item_{{ $no }}").html(`
+                <input type="hidden" name="ID_ITEM[]" value="${idItem}">
+                <input type="hidden" name="DELETED[]" value="1">
+                <input type="hidden" name="type[]" value="${itemType}">
+                <input type="hidden" name="order_list[]" value="">
+                
+                <input id="file-upload" type="file" name="materi_file[]" style="display: none;">
+                <input type="hidden" name="default_file[]" value="">
+                <input type="hidden" name="materi_link[]" value="">
+                <input type="hidden" name="materi_title[]" value="">
+                <input type="hidden" name="materi_link_yt[]" value="">
+                <input type="hidden" name="desc_materi[]" value="">
+        `);
+        // item--;
         e.preventDefault();
     });
 </script>

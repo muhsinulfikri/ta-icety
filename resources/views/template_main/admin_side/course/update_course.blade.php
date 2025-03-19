@@ -232,7 +232,7 @@
     var id_quiz = 1;
     var limit = 0;
 
-    var data = {!! $jsonData !!};
+    var data = <?= $jsonData ?? '' ?>;
     var price = data.PRICE_ACTIVITY;
     var id_course = data.ID_COURSE;
     var id_act = data.ID_ACTIVITY;
