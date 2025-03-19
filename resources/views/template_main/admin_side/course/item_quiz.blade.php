@@ -3,11 +3,12 @@
         opacity: 0.7;
         cursor: grabbing !important;
     }
-    .ui-state-highlight { 
-        height: 210px; 
-        line-height: 1.2em; 
-        background: #edf2f9; 
-        border-radius: .25rem; 
+
+    .ui-state-highlight {
+        height: 210px;
+        line-height: 1.2em;
+        background: #edf2f9;
+        border-radius: .25rem;
     }
 </style>
 
@@ -16,7 +17,7 @@
         <h5 class="card-title d-flex align-items-center row">
             <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12">
                 <span class="col-md-11">Detail - Quiz</span>
-                
+
                 <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="">
                 <input type="hidden" name="default_file[]" value="">
@@ -24,11 +25,10 @@
                 <input type="hidden" name="materi_title[]" value="">
                 <input type="hidden" name="materi_link_yt[]" value="">
                 <input type="hidden" name="desc_materi[]" value="">
-                
+
                 <input type="hidden" class="form-control" name="order_list[]" value="{{ $no }}">
                 <input type="hidden" class="form-control" name="type[]" value="2">
-                <div id="delete_quiz_{{ $no }}" class="btn btn-danger px-1 py-0 float-right"
-                    style="cursor: pointer;">
+                <div id="delete_quiz_{{ $no }}" class="btn btn-danger px-1 py-0 float-right" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
                     <span><i class="anticon anticon-close"></i> </span>
                 </div>
@@ -36,11 +36,14 @@
         </h5>
     </div>
     <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
-        <div class="form-group ps-3 pe-3 row mt-3">
-            <label class="col mt-3">Minimum Nilai Lulus<span class="text-danger">*</span></label>
-            <div class="col-md-10">
-                <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}" placeholder="75" required>
-                <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+        <div class="card-body pb-0">
+            <div class="w-100 d-flex justify-content-start align-items-center mt-3">
+                <label>Minimum Nilai Lulus<span class="text-danger">*</span></label>
+                <div class="col">
+                    <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}"
+                        placeholder="75" required>
+                    <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -51,7 +54,8 @@
                     <i class="anticon anticon-loading m-r-5"></i>
                     <span>Add New Question</span>
                 </div>
-                <div id="import_soal_{{ $no }}{{ $id_quiz }}" class="btn btn-success rounded col-md-3 float-end mx-2" style="cursor: pointer;">
+                <div id="import_soal_{{ $no }}{{ $id_quiz }}" class="btn btn-success rounded col-md-3 float-end mx-2"
+                    style="cursor: pointer;">
                     <span class="col-md-12 text-white">Import Soal</span>
                 </div>
             </div>
@@ -71,15 +75,17 @@
             </div>
             <div class="modal-body row d-flex justify-content-center">
                 <p>Masukkan File Excel Sesuai Template yang disediakan</p>
-                <a href="https://expo-dev.is3.cloudhost.id/CAROUSEL/Image1729761040-1729761040.xlsx" class="btn btn-success rounded text-white" download> Download Template</a>
+                <a href="https://expo-dev.is3.cloudhost.id/CAROUSEL/Image1729761040-1729761040.xlsx"
+                    class="btn btn-success rounded text-white" download> Download Template</a>
                 <div class="col-md-12 text-center d-flex justify-content-around py-2">
-                    <input type="file" name="excel" id="excelFile_{{ $no }}{{ $id_quiz }}" class="custom-file-input dropify"
-                    accept=".xlsx" data-allowed-file-extensions="xlsx">
+                    <input type="file" name="excel" id="excelFile_{{ $no }}{{ $id_quiz }}"
+                        class="custom-file-input dropify" accept=".xlsx" data-allowed-file-extensions="xlsx">
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-dark rounded text-white" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success rounded text-white" id="submitFile_{{ $no }}{{ $id_quiz }}">Submit</button>
+                <button type="button" class="btn btn-success rounded text-white"
+                    id="submitFile_{{ $no }}{{ $id_quiz }}">Submit</button>
             </div>
         </div>
     </div>
@@ -89,18 +95,18 @@
 <script>
     $('#collapse{{ $no }}').collapse('hide')
 
-    $('#delete_quiz_{{ $no }}').click(function(e) {
+    $('#delete_quiz_{{ $no }}').click(function (e) {
         $(this).toggleClass("is-loading");
         $("#delete_quiz_{{ $no }}").removeClass("is-loading")
         $("#quiz_item_{{ $id_quiz }}").remove();
     });
 
     var no_quiz = 1;
-    $('#add_new_soal_{{ $no }}').click(function() {
+    $('#add_new_soal_{{ $no }}').click(function () {
         $('#add_new_soal_{{ $no }}').toggleClass("is-loading");
         $.ajax({
             url: 'add_question/' + <?= $no ?> + '/' + no_quiz,
-            success: function(html) {
+            success: function (html) {
                 $(".soal_form_{{ $no }}").append(html);
                 $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
                 $('#add_new_soal_{{ $no }}').removeClass("is-loading");
@@ -118,18 +124,18 @@
         }
     });
 
-    $("#import_soal_{{ $no }}{{ $id_quiz }}").click(function(){
+    $("#import_soal_{{ $no }}{{ $id_quiz }}").click(function () {
         $("#insert_soal_{{ $no }}{{ $id_quiz }}").modal('show');
     });
 
-    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function() {  
+    $('#submitFile_{{ $no }}{{ $id_quiz }}').click(function () {
         Swal.fire({
             title: 'Loading...',
             text: 'Harap Tunggu.',
             allowOutsideClick: false,
             showConfirmButton: false,
             willOpen: () => {
-            Swal.showLoading();
+                Swal.showLoading();
             }
         });
         $('#insert_soal_{{ $no }}{{ $id_quiz }}').modal('hide');
@@ -144,7 +150,7 @@
 
         const reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: 'array' });
 
@@ -158,7 +164,7 @@
             function mapData(data) {
                 return data.map(row => ({
                     questionNumber: row['No'],
-                    question: row['Soal'],    
+                    question: row['Soal'],
                     optionA: row['Pilihan A'],
                     optionB: row['Pilihan B'],
                     optionC: row['Pilihan C'],
@@ -176,16 +182,16 @@
 
                     $.ajax({
                         url: 'add_question/{{ $no }}/' + no_quiz,
-                        success: function(html) {
+                        success: function (html) {
                             $(".soal_form_{{ $no }}").append(html);
                             $('#add_new_batch_soal_{{ $no }}').removeClass("is-loading");
                             $('#add_new_soal_{{ $no }}').removeClass("is-loading");
 
-                            callback(row, <?= $no ?? 0 ?>, no_quiz);                        
+                            callback(row, <?= $no ?? 0 ?>, no_quiz);
                             no_quiz++;
                             resolve(); // Resolve the promise when the AJAX call is successful
                         },
-                        error: function(xhr, status, error) {
+                        error: function (xhr, status, error) {
                             console.log('Error adding question:', error);
                             console.log(xhr.responseText);
                             reject(error); // Reject the promise on error
@@ -200,17 +206,17 @@
                     return addQuestion(row);
                 });
             }, Promise.resolve()) // Start with a resolved promise
-            .then(() => {
-                Swal.close();
-            })
-            .catch((error) => {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Error during processing',
-                    icon: 'error'
+                .then(() => {
+                    Swal.close();
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error during processing',
+                        icon: 'error'
+                    });
+                    console.log("Error during processing:", error);
                 });
-                console.log("Error during processing:", error);
-            });
         };
 
         reader.readAsArrayBuffer(file);
@@ -218,18 +224,18 @@
 
     function callback(data, no, no_quiz) {
         $("input[name='question[" + no + "][" + no_quiz + "]']").val(data.question);
-        $("#jawaban_a"+no+no_quiz+"").val(data.optionA);
-        $("#jawaban_b"+no+no_quiz+"").val(data.optionB);
-        $("#jawaban_c"+no+no_quiz+"").val(data.optionC);
-        $("#jawaban_d"+no+no_quiz+"").val(data.optionD);
+        $("#jawaban_a" + no + no_quiz + "").val(data.optionA);
+        $("#jawaban_b" + no + no_quiz + "").val(data.optionB);
+        $("#jawaban_c" + no + no_quiz + "").val(data.optionC);
+        $("#jawaban_d" + no + no_quiz + "").val(data.optionD);
         $("input[name='kunci_soal[" + no + "][" + no_quiz + "]'][value='" + data.answer + "']").prop('checked', true);
     }
 
     $(".soal_form_{{ $no }}").sortable({
         cursor: "grabbing",
         helper: "clone",
-         placeholder: "ui-state-highlight",
-        start: function(event, ui) {
+        placeholder: "ui-state-highlight",
+        start: function (event, ui) {
             ui.helper.addClass("ui-sortable-helper");
         }
     });

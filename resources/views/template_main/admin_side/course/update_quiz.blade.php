@@ -144,12 +144,11 @@
     $('#delete_quiz_{{ $no }}').click(function(e) {
         $(this).toggleClass("is-loading");
         $("#delete_quiz_{{ $no }}").removeClass("is-loading")
-        // $("#quiz_item_{{ $id_quiz }}").remove();
 
-        var idItem = $("#quiz_item_{{ $no }}").find('input[name="ID_QUIZ[]"]').eq(0).val();
-        var itemType = $("#quiz_item_{{ $no }}").find('input[name="type[]"]').eq(0).val();
-        $("#quiz_item_{{ $no }}").hide();
-        $("#quiz_item_{{ $no }}").html(`
+        var idItem = $("#quiz_item_{{ $id_quiz }}").find('input[name="ID_QUIZ[]"]').eq(0).val();
+        var itemType = $("#quiz_item_{{ $id_quiz }}").find('input[name="type[]"]').eq(0).val();
+        $("#quiz_item_{{ $id_quiz }}").hide();
+        $("#quiz_item_{{ $id_quiz }}").html(`
                 <input type="hidden" name="ID_QUIZ[]" value="${idItem}">
                 <input type="hidden" name="DELETED[]" value="1">
                 <input type="hidden" name="type[]" value="${itemType}">
