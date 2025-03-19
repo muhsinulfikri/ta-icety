@@ -210,11 +210,19 @@
                                     <?php
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowCertificateCode(this)" data-type="5">
-                                            Show Certificate Course
-                                        </button>
+                                        {{-- @if($course->IS_SERTIF_PAID == 1)
+                                            <button
+                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                onclick="BuyCertificateCode(this)" data-type="5">
+                                                Certificate
+                                            </button>
+                                        @else
+                                            <button
+                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                onclick="ShowCertificateCode(this)" data-type="5">
+                                                Show Certificate Course
+                                            </button>
+                                        @endif --}}
                                         @if ($course->FINAL_EXAM != null)
                                         <button
                                             class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
@@ -461,6 +469,7 @@
                                     </div>
                                 </div>`);
     }
+
 
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
@@ -806,6 +815,21 @@
             })
         <?php } ?>
     }
+
+
+    // // Helper function to display error messages
+    function displayError(title, message) {
+        const alertContainer = document.getElementById('alert_div');
+        alertContainer.innerHTML = `
+            <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
+                <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                    style="transition: none; background-color: transparent; color: inherit;">
+                </button>
+            </div>
+        `;
+    }
+
 </script>
 
 @if (session('err_msg'))
