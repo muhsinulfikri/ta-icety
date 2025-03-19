@@ -147,6 +147,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Title Certificate<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="title_certificate" placeholder="Title Certificate"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Certifikat Template <span class="text-danger">*</span>
                         </label>
                         <div class="col-md-10">
@@ -172,6 +180,19 @@
                             <small class="text-danger">* Modules Certificate for display in Certificate</small>
                         </div>
                     </div>
+                    {{-- <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Price Certificate</label>
+                        <div class="col-md-10">
+                            <input type="number" class="form-control CurrencyInputSertif" name="price_sertif" value="">
+                            <span class="d-flex align-items-center mt-2">
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" id="setFreeSertif">
+                                    <label for="setFreeSertif"></label>
+                                </div>
+                                Free
+                            </span>
+                        </div>
+                    </div> --}}
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
                                 class="text-danger">*</span></label>
@@ -257,6 +278,7 @@
 
     var data = <?= $jsonData ?? '' ?>;
     var price = data.PRICE_ACTIVITY;
+    var price_sertif = data.PRICE_SERTIF
     var id_course = data.ID_COURSE;
     var id_act = data.ID_ACTIVITY;
     var req = data.REQUIREMENT;
@@ -285,6 +307,7 @@
     $('input[name="ID_ACTIVITY"]').val(id_act);
     $('input[name="ID_COURSE"]').val(data.ID_COURSE);
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
+    $('input[name="title_certificate"]').val(data.TITLE_CERTIFICATE);
     $('input[name="alias_course"]').val(data.ALIAS);
     $('#summary_certificate').summernote('code', data.SUMMARY_CERTIFICATE);
     $('#modules_certificate').summernote('code', data.MODULE_CERTIFICATE);
@@ -336,6 +359,13 @@
     $('input[name="date_end"]').val(data.DATE_END);
     $('input[name="duration_months"]').val(data.DURATION);
     $('input[name="duration_hours"]').val(data.HOURS);
+    if (price_sertif == 0) {
+        $('#setFreeSertif').prop('checked', true);
+        $('input[name="price_sertif"]').val(0);
+    } else {
+        $('#setFreeSertif').prop('checked', false);
+        $('input[name="price_sertif"]').val(price_sertif);
+    }
     $('select[name="is_public"]').val(data.IS_PUBLIC);
     $('select[name="category"]').val(data.ID_KATEGORI);
     $('input[name="status"]').prop('checked', data.STATUS);
@@ -361,6 +391,16 @@
         } else {
             $('.CurrencyInput').prop('readonly', false)
             $('.CurrencyInput').val(price)
+        }
+    })
+
+    $('#setFreeSertif').change(function() {
+        if ($(this).prop('checked')) {
+            $('.CurrencyInputSertif').prop('readonly', true)
+            $('.CurrencyInputSertif').val(0)
+        } else {
+            $('.CurrencyInputSertif').prop('readonly', false)
+            $('.CurrencyInputSertif').val(price_sertif)
         }
     })
 

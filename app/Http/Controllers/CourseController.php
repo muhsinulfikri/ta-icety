@@ -130,6 +130,7 @@ class CourseController extends Controller
                 'TYPE_ACTIVITY'         => 1,
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
                 'MODULE_CERTIFICATE'   => $req->input('modules_certificate'),
+                'TITLE_CERTIFICATE'   => $req->input('title_certificate'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
                 'IS_PUBLIC'             => $req->input('is_public'),
@@ -154,6 +155,11 @@ class CourseController extends Controller
                 'DURATION'              => $req->input('duration_month'),
                 'HOURS'                 => $req->input('duration_hour')
             ];
+
+            // if($req->input('price_sertif') != 0){
+            //     $course['PRICE_SERTIF']  = $req->input('price_sertif');
+            //     $course['IS_SERTIF_PAID']  = 1;
+            // }
 
             if ($req->input('req')) {
                 $course['REQUIREMENT']  = $req->input('req');
@@ -345,6 +351,7 @@ class CourseController extends Controller
                 a.DATE_END ,
                 a.STATUS ,
                 a.IS_PUBLIC ,
+                a.TITLE_CERTIFICATE,
                 a.SERTIF_IMAGE ,
                 a.SUMMARY_CERTIFICATE,
                 a.MODULE_CERTIFICATE,
@@ -356,6 +363,8 @@ class CourseController extends Controller
                 c.PENGUMUMAN ,
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
+                c.IS_SERTIF_PAID,
+                c.PRICE_SERTIF,
                 c.FINAL_EXAM ,
                 k.ID_KATEGORI
             FROM
@@ -498,6 +507,7 @@ class CourseController extends Controller
             $activity = [
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
+                'TITLE_CERTIFICATE'     => $req->input('title_certificate'),
                 'SUMMARY_CERTIFICATE'   => $req->input('summary_certificate'),
                 'MODULE_CERTIFICATE'    => $req->input('modules_certificate'),
                 'PRICE_ACTIVITY'        => $req->input('price'),
@@ -1149,7 +1159,7 @@ class CourseController extends Controller
         if (!empty($req->input('ID_QUIZ'))) {
             $id_quiz_in = implode(',', $req->input('ID_QUIZ'));
             DB::statement("DELETE FROM detail_quiz WHERE ID_QUIZ IN (" . $id_quiz_in . ")");
-            
+
             $id_quiz_old = DB::select("
                 SELECT
                     ID_QUIZ
