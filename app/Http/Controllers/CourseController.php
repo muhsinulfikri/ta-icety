@@ -494,7 +494,7 @@ class CourseController extends Controller
     public function update(Request $req)
     {
         try {
-            // DB::beginTransaction();
+            DB::beginTransaction();
             $activity = [
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
@@ -543,10 +543,10 @@ class CourseController extends Controller
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
 
             $this->update_item_materi($req);
-            // DB::commit();
-            return redirect('courses')->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
+            DB::commit();
+            return redirect('/courses/edit?id_activity=' . $req->input('ID_ACTIVITY'))->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
         } catch (ValidationException $e) {
-            // DB::rollBack();
+            DB::rollBack();
             log::error($e->getMessage(), $e->errors(), $e->getLine());
             return response()->json([
                 'status' => 'failure',
