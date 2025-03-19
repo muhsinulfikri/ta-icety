@@ -111,7 +111,7 @@ class CourseGuest extends Controller
 			ID_USER = '" . session('user')[0]->get('ID_USER') .
 			"'AND ID_ACTIVITY = '" . $data['id_activity'] . "'
 		";
-		
+
 		$data['data_all_mapping'] = DB::select("
 			SELECT
 				*
@@ -214,6 +214,9 @@ class CourseGuest extends Controller
             ->where('ID_ACTIVITY', $data['id_activity'])
             ->count() + 1;
 			$sertif_number_course = $countSertifCourse . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
+            if($completed_course == 0) {
+                return 1;
+            }
             $data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
@@ -227,7 +230,7 @@ class CourseGuest extends Controller
 				"LOG_TIME" => date('Y-m-d H:i:s')
 			);
             $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
-			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
+			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
 			$data_sertif_course = array(
 				"ID_USER" => session('user')[0]->get('ID_USER'),
 				"ID_ACTIVITY" => $data['id_activity'],
@@ -338,6 +341,9 @@ class CourseGuest extends Controller
                 $countSertifExam = DB::table('sertifikat_activity')
                     ->where('ID_ACTIVITY', $data['course']->FINAL_EXAM)
                     ->count() + 1;
+                if($completed_course == 0) {
+                    return 1;
+                }
                 $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
@@ -352,7 +358,7 @@ class CourseGuest extends Controller
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
                 $id_sertif_exam = DB::table('sertifikat_activity')->insertGetId($data_sertif_exam);
-                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_CERTIFICATE, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
                     "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
@@ -391,6 +397,22 @@ class CourseGuest extends Controller
 				'MIN_NILAI' => 0
 			];
 		}
+        // if($data['course']->IS_SERTIF_PAID == 1){
+        //     $data_pay_sertif = [
+        //         'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
+        //         'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+        //         'ID_USER' => session('user')[0]->get('ID_USER'),
+        //         'ID_PAY' => null,
+        //         'IS_PAY' => '0',
+        //         'ID_ACTIVITY' => $data['id_activity'],
+        //         'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
+        //     ];
+        //     if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
+        //         DB::table('payment_sertif')->insertGetId($data_pay_sertif);
+        //     }
+        // }
+
+        // $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
 
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .

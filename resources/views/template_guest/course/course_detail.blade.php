@@ -217,12 +217,12 @@
                                                 Certificate
                                             </button>
                                         @else
-                                            <button
-                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                onclick="ShowCertificateCode(this)" data-type="5">
-                                                Show Certificate Course
-                                            </button>
                                         @endif --}}
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowCertificateCode(this)" data-type="5">
+                                            Show Certificate Course
+                                        </button>
                                         @if ($course->FINAL_EXAM != null)
                                         <button
                                             class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
