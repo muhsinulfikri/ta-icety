@@ -15,7 +15,7 @@
 <div class="card" id="quiz_item_{{ $id_quiz }}">
     <div class="card-header">
         <h5 class="card-title d-flex align-items-center row">
-            <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12">
+            <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12 collapsed" aria-expanded="false">
                 <span class="col-md-11">Detail - Quiz</span>
                 <input type="hidden" name="default_file[]" value="">
                 <input type="hidden" name="materi_link[]" value="">
@@ -36,24 +36,26 @@
         </h5>
     </div>
     <input type="hidden" name="ID_QUIZ[]" value="<?= $ID_ITEM ?? '' ?>">
-    <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default">
-        <div class="form-group ps-3 pe-3 row mt-3">
-            <label class="col mt-3">Minimum Nilai Lulus<span class="text-danger">*</span></label>
-            <div class="col-md-10">
-                <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}" value="{{$MIN_NILAI}}" placeholder="75" required>
-                <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+    <div id="collapse{{ $no }}" class="collapse show" data-parent="#accordion-default" aria-expanded="false" style="height: 0px;">
+        <div class="card-body pb-0">
+            <div class="w-100 d-flex justify-content-start align-items-center mt-3">
+                <label>Minimum Nilai Lulus<span class="text-danger">*</span></label>
+                <div class="col">
+                    <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}" value="{{$MIN_NILAI}}" placeholder="75" required>
+                    <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+                </div>
             </div>
         </div>
         <div class="card-body">
             <div class="soal_form_{{ $no }}"></div>
             <div class="form-group row justify-content-center align-items-center">
                 <div id="add_new_soal_{{ $no }}{{ $id_quiz }}"
-                    class="btn btn-success rounded col-md-2 float-end mx-2" style="cursor: pointer;">
-                    <span class="col-md-12 text-white">Add New Question</span>
+                    class="btn btn-success rounded col-md-3 float-end mx-2" style="cursor: pointer;">
+                    <span class="text-white">Add New Question</span>
                 </div>
                 <div id="import_soal_{{ $no }}{{ $id_quiz }}"
-                    class="btn btn-success rounded col-md-2 float-end mx-2" style="cursor: pointer;">
-                    <span class="col-md-12 text-white">Import Soal</span>
+                    class="btn btn-success rounded col-md-3 float-end mx-2" style="cursor: pointer;">
+                    <span class="text-white">Import Soal</span>
                 </div>
             </div>
         </div>
@@ -143,8 +145,8 @@
         $(this).toggleClass("is-loading");
         $("#delete_quiz_{{ $no }}").removeClass("is-loading")
         // $("#quiz_item_{{ $id_quiz }}").remove();
-        
-        var idItem = $("#quiz_item_{{ $no }}").find('input[name="ID_QUIZ[]"]').eq(0).val();        
+
+        var idItem = $("#quiz_item_{{ $no }}").find('input[name="ID_QUIZ[]"]').eq(0).val();
         var itemType = $("#quiz_item_{{ $no }}").find('input[name="type[]"]').eq(0).val();
         $("#quiz_item_{{ $no }}").hide();
         $("#quiz_item_{{ $no }}").html(`

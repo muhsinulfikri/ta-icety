@@ -1107,7 +1107,6 @@ class CourseController extends Controller
                     }
                 } else {
                     if ($isDelete[$i]) {
-                        DB::table('detail_quiz')->where(['ID_QUIZ' => $idItem[$i]])->delete();
                         DB::table('item_course')->where(['ID_ITEM' => $idItem[$i]])->delete();
                     } else {
                         $orderList++;
@@ -1139,17 +1138,18 @@ class CourseController extends Controller
 
         if (!empty($req->input('question'))) {
             $data['data_item'] = $data_item;
+            $data['ID_COURSE'] = $dataIDCourse;
             $this->update_item_quiz($data, $req, $idQuiz);
         }
     }
 
-
     public function update_item_quiz($data, $req, $lastIdQuiz)
     {
-        dd($lastIdQuiz);
+        $id_quiz_old = '';
         if (!empty($req->input('ID_QUIZ'))) {
             $id_quiz_in = implode(',', $req->input('ID_QUIZ'));
-
+            DB::statement("DELETE FROM detail_quiz WHERE ID_QUIZ IN (" . $id_quiz_in . ")");
+            
             $id_quiz_old = DB::select("
                 SELECT
                     ID_QUIZ
