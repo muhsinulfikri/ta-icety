@@ -36,8 +36,11 @@ class CourseController extends Controller
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = c.ID_ACTIVITY
             WHERE
-                a.TYPE_ACTIVITY = 1
-                OR a.TYPE_ACTIVITY = 3
+                (a.TYPE_ACTIVITY = 1
+            OR
+                a.TYPE_ACTIVITY = 3)
+            AND
+                a.IS_DELETED IS NULL
             ");
         } else {
             $data['course'] = DB::select("

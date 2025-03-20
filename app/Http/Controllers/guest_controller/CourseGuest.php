@@ -358,7 +358,7 @@ class CourseGuest extends Controller
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
                 $id_sertif_exam = DB::table('sertifikat_activity')->insertGetId($data_sertif_exam);
-                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['exam']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
                     "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
