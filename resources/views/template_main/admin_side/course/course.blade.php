@@ -11,24 +11,24 @@
         </div>
     </div>
     <?php if (!empty(session('err_msg'))) { ?>
-    <div class="alert alert-danger">
-        <div class="d-flex align-items-center justify-content-start">
-            <span class="alert-icon">
-                <i class="anticon anticon-check-o"></i>
-            </span>
-            <span><?= session('err_msg') ?></span>
+        <div class="alert alert-danger">
+            <div class="d-flex align-items-center justify-content-start">
+                <span class="alert-icon">
+                    <i class="anticon anticon-check-o"></i>
+                </span>
+                <span><?= session('err_msg') ?></span>
+            </div>
         </div>
-    </div>
     <?php } ?>
     <?php if (!empty(session('succ_msg'))) { ?>
-    <div class="alert alert-success">
-        <div class="d-flex align-items-center justify-content-start">
-            <span class="alert-icon">
-                <i class="anticon anticon-check-o"></i>
-            </span>
-            <span><?= session('succ_msg') ?></span>
+        <div class="alert alert-success">
+            <div class="d-flex align-items-center justify-content-start">
+                <span class="alert-icon">
+                    <i class="anticon anticon-check-o"></i>
+                </span>
+                <span><?= session('succ_msg') ?></span>
+            </div>
         </div>
-    </div>
     <?php } ?>
     <div class="card">
         <div class="card-body">
@@ -39,8 +39,8 @@
                 <div class="col-md-6 d-flex justify-content-md-end justify-content-end align-items-center">
                     <div class="mt-3 mt-md-0">
                         <a data-toggle="modal" data-target="#modalAddCourse" style="color: white"><button type="button" class="btn btn-primary">
-                            <i class="mdi mdi-plus me-1"></i>
-                            Add Course</button></a>
+                                <i class="mdi mdi-plus me-1"></i>
+                                Add Course</button></a>
                     </div>
                 </div>
             </div>
@@ -63,47 +63,43 @@
                         <?php $number = 0; ?>
 
                         @foreach ($activity as $item)
-                            <?php $number++; ?>
-                            <tr>
-                                <td><?= $number ?></td>
-                                <td width="300"><?= $item->TITLE_ACTIVITY ?></td>
-                                <td><?= $item->IS_DELETED !== null ? '<span class="badge badge-danger">Deleted</span>' : ($item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>')?> </td>
-                                <td><?= $item->IS_PUBLIC == 1 ? '<span class="badge badge-success">Public</span>' : '<span class="badge badge-danger">Private</span>' ?></td>
-                                <td><?= $item->TYPE_ACTIVITY == 3 ? '<span class="badge badge-danger">Final Exam</span>' : '<span class="badge badge-success">Kursus Biasa</span>' ?></td>
-                                <td><?= $item->PRICE_ACTIVITY == 0 ? '<span class="badge badge-success">Free</span>' : 'Rp ' . number_format($item->PRICE_ACTIVITY, 0, '.', '.') ?>
-                                </td>
-                                <td><?= date_format(date_create($item->DATE_START), 'j F Y H:i:s') ?></td>
-                                <td><?= date_format(date_create($item->DATE_END), 'j F Y H:i:s') ?></td>
-                                <td>
-                                    <button type="button" onclick="location.href='courses/lihat_peserta?ID_ACTIVITY={{$item->ID_ACTIVITY}}'" class="btn btn-warning mb-1 btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 160px !important;">
-                                        <i class="bx bxs-user-detail font-size-16 align-middle"></i> See Participant
+                        <?php $number++; ?>
+                        <tr>
+                            <td><?= $number ?></td>
+                            <td width="300"><?= $item->TITLE_ACTIVITY ?></td>
+                            <td><?= $item->IS_DELETED !== null ? '<span class="badge badge-danger">Deleted</span>' : ($item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>') ?> </td>
+                            <td><?= $item->IS_PUBLIC == 1 ? '<span class="badge badge-success">Public</span>' : '<span class="badge badge-danger">Private</span>' ?></td>
+                            <td><?= $item->TYPE_ACTIVITY == 3 ? '<span class="badge badge-danger">Final Exam</span>' : '<span class="badge badge-success">Kursus Biasa</span>' ?></td>
+                            <td><?= $item->PRICE_ACTIVITY == 0 ? '<span class="badge badge-success">Free</span>' : 'Rp ' . number_format($item->PRICE_ACTIVITY, 0, '.', '.') ?>
+                            </td>
+                            <td><?= date_format(date_create($item->DATE_START), 'j F Y H:i:s') ?></td>
+                            <td><?= date_format(date_create($item->DATE_END), 'j F Y H:i:s') ?></td>
+                            <td>
+                                <button type="button" onclick="location.href='courses/lihat_peserta?ID_ACTIVITY={{$item->ID_ACTIVITY}}'" class="btn btn-warning mb-1 btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 160px !important;">
+                                    <i class="bx bxs-user-detail font-size-16 align-middle"></i> See Participant
+                                </button>
+                                <form action="courses/invite" method="GET">
+                                    <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
+                                    <button type="submit" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1" style="min-width: 155px !important;">
+                                        <i class="bx bx-send font-size-16 align-middle"></i> Invite User
                                     </button>
-                                    <form action="courses/invite" method="GET">
-                                        <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
-                                        <button type="submit" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
-                                            <i class="bx bx-send font-size-16 align-middle"></i> Invite User
-                                        </button>
-                                    </form>
-                                    @php
-                                        $link = $item->TYPE_ACTIVITY == 3 ? 'courses/add-final/edit' : 'courses/edit';
-                                    @endphp
-                                    {{-- <form action="{{$link}}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="id_activity" value="<?= $item->ID_ACTIVITY ?>">
-                                        <button type="submit" class="btn btn-dark btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important; margin: 5px 0px;">
-                                            <i class="bx bx-edit-alt font-size-16 align-middle"></i> Edit Course
-                                        </button>
-                                    </form>
-                                    @if ($item->TYPE_ACTIVITY == 1)
-                                        <button type="button" onclick="opencopyModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important; margin: 5px 0px;">
-                                            <i class="bx bx-copy font-size-16 align-middle"></i> Copy Course
-                                        </button>
-                                    @endif --}}
-                                    <button type="button" onclick="opendeleteModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-danger btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 155px !important;">
-                                        <i class="bx bx-trash font-size-16 align-middle"></i> Delete Course
-                                    </button>
-                                </td>
-                            </tr>
+                                </form>
+                                @php
+                                $link = $item->TYPE_ACTIVITY == 3 ? 'courses/add-final/edit' : 'courses/edit';
+                                @endphp
+                                <a href="<?= url($link) ?>?id_activity=<?= $item->ID_ACTIVITY ?>" class="btn btn-dark btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1" style="min-width: 155px !important;">
+                                    <i class="bx bx-edit-alt font-size-16 align-middle"></i> Edit Course
+                                </a>
+                                {{-- @if ($item->TYPE_ACTIVITY == 1)
+                                <button type="button" onclick="opencopyModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1 " style="min-width: 155px !important;">
+                                    <i class="bx bx-copy font-size-16 align-middle"></i> Copy Course
+                                </button>
+                                @endif --}}
+                                <button type="button" onclick="opendeleteModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-danger btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1 " style="min-width: 155px !important;">
+                                    <i class="bx bx-trash font-size-16 align-middle"></i> Delete Course
+                                </button>
+                            </td>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -134,7 +130,7 @@
                     <div class="form-group mb-3">
                         <label>Alias<span class="text-danger">*</span></label>
                         <input placeholder="Alias" type="text" name="alias_copy" class="form-control" pattern="[A-Z\s]+" title="Only uppercase letters are allowed"
-                        oninput="this.value = this.value.toUpperCase()" required>
+                            oninput="this.value = this.value.toUpperCase()" required>
                         <small id="alias-feedback"></small>
                     </div>
                 </div>
@@ -216,16 +212,18 @@
         $('input[name="id_activity"]').val(Data)
         $('#deleteModal').modal('show')
     }
-    $(document).ready(function () {
-        $('input[name="alias_copy"]').on('input', function () {
+    $(document).ready(function() {
+        $('input[name="alias_copy"]').on('input', function() {
             let alias = $(this).val();
 
             if (alias.length > 0) {
                 $.ajax({
                     url: '/check-alias',
                     type: 'GET',
-                    data: { alias: alias },
-                    success: function (response) {
+                    data: {
+                        alias: alias
+                    },
+                    success: function(response) {
                         if (response.exists) {
                             $('#alias-feedback').text('Alias sudah digunakan, silahkan pilih yang lain!').css('color', 'red');
                         } else {

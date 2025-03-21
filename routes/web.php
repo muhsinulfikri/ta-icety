@@ -213,7 +213,9 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/add_question/{id}/{index}', 'CourseController@add_question')->name('add_question');
     Route::get('courses/delete_question/{id}', 'CourseController@delete_question');
     Route::post('courses/store', 'CourseController@store');
-    Route::post('courses/edit', 'CourseController@update_course'); // open page update
+    
+    Route::get('courses/edit', 'CourseController@update_course'); // open page update
+
     Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc
     Route::get('courses/get_course_item/{id}', 'CourseController@get_course_item'); // get materi / quiz
     Route::post('courses/get_quiz', 'CourseController@send_question'); //send to another page
@@ -232,7 +234,9 @@ Route::middleware(['usersession:2,1'])->group(function () {
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');
     Route::post('courses/add-final/store', 'FinalExamController@store');
-    Route::post('courses/add-final/edit', 'FinalExamController@update_course');
+    
+    Route::get('courses/add-final/edit', 'FinalExamController@update_course');
+
     Route::post('courses/add-final/update', 'FinalExamController@update');
     Route::get('courses/add-final/add_quiz/{id}/{no_quiz}', 'FinalExamController@add_quiz');
     Route::get('courses/add-final/add_question/{id}/{index}', 'CourseController@add_question');

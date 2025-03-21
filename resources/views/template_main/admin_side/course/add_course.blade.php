@@ -151,6 +151,15 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Title Certificate<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="title_certificate" placeholder="Title Certificate"
+                                required>
+                                <small class="text-danger">* Title Certificate for display in Certificate</small>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Certifikat Template</span>
                         </label>
                         <div class="col-md-5">
@@ -179,6 +188,23 @@
                             <small class="text-danger">* Summary Certificate for display in Certificate</small>
                         </div>
                     </div>
+
+                    {{-- <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">
+                            Price For Certificate <span class="text-danger">*</span>
+                        </label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control CurrencyInputSertif" name="price_sertif"
+                                placeholder="0" required>
+                            <span class="d-flex align-items-center mt-2">
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" id="setFreeSertif">
+                                    <label for="setFreeSertif"></label>
+                                </div>
+                                Free
+                            </span>
+                        </div>
+                    </div> --}}
 
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
@@ -340,13 +366,13 @@
         }
     })
 
-    $('#setFree').change(function() {
+    $('#setFreeSertif').change(function() {
         if ($(this).prop('checked')) {
-            $('.CurrencyInput').prop('readonly', true)
-            $('.CurrencyInput').val(0)
+            $('.CurrencyInputSertif').prop('readonly', true)
+            $('.CurrencyInputSertif').val(0)
         } else {
-            $('.CurrencyInput').prop('readonly', false)
-            $('.CurrencyInput').val('')
+            $('.CurrencyInputSertif').prop('readonly', false)
+            $('.CurrencyInputSertif').val('')
         }
     })
 
