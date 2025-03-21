@@ -87,14 +87,14 @@
                                 @php
                                 $link = $item->TYPE_ACTIVITY == 3 ? 'courses/add-final/edit' : 'courses/edit';
                                 @endphp
-                                <a href="<?= url($link) ?>?id_activity=<?= $item->ID_ACTIVITY ?>" class="btn btn-dark btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1" style="min-width: 155px !important;">
+                                {{-- <a href="<?= url($link) ?>?id_activity=<?= $item->ID_ACTIVITY ?>" class="btn btn-dark btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1" style="min-width: 155px !important;">
                                     <i class="bx bx-edit-alt font-size-16 align-middle"></i> Edit Course
                                 </a>
                                 @if ($item->TYPE_ACTIVITY == 1)
                                 <button type="button" onclick="opencopyModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-primary btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1 " style="min-width: 155px !important;">
                                     <i class="bx bx-copy font-size-16 align-middle"></i> Copy Course
                                 </button>
-                                @endif
+                                @endif --}}
                                 <button type="button" onclick="opendeleteModal('<?= $item->ID_ACTIVITY ?>')" class="btn btn-danger btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1 " style="min-width: 155px !important;">
                                     <i class="bx bx-trash font-size-16 align-middle"></i> Delete Course
                                 </button>
