@@ -109,6 +109,10 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('redeem-code/delete', 'RedeemCodeController@delete_code');
     Route::get('redeem-code/excell/{id}', 'RedeemCodeController@gen_excell');
 
+    Route::get('send-email-verification', 'SendEmailController@index');
+    Route::post('verif-account-admin', 'SendEmailController@verif_email');
+
+
     // Koperasi Controller
     Route::get('bentuk', 'KoperasiController@index_bentuk');
     Route::post('bentuk/store', 'KoperasiController@store_bentuk');
@@ -191,6 +195,10 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('get_order_id', 'guest_controller\CheckoutGuest@get_order_id');
     //END PAYMENT & CART
 
+    //PAYMENT SERTIF
+    Route::post('get_id_sertif_pay', 'guest_controller\PaymentCertificate@get_pay_sertif_id');
+    Route::get('check_payment_sertif/{any}', 'guest_controller\PaymentCertificate@check_payment_status');
+
     //API XENDIT
     Route::post('/payment/get', 'guest_controller\CheckoutGuest@get_payment');
     Route::get('check_payment_status/{any}', 'guest_controller\CheckoutGuest@check_payment_status');
@@ -213,7 +221,7 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/add_question/{id}/{index}', 'CourseController@add_question')->name('add_question');
     Route::get('courses/delete_question/{id}', 'CourseController@delete_question');
     Route::post('courses/store', 'CourseController@store');
-    
+
     Route::get('courses/edit', 'CourseController@update_course'); // open page update
 
     Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc
@@ -234,7 +242,7 @@ Route::middleware(['usersession:2,1'])->group(function () {
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');
     Route::post('courses/add-final/store', 'FinalExamController@store');
-    
+
     Route::get('courses/add-final/edit', 'FinalExamController@update_course');
 
     Route::post('courses/add-final/update', 'FinalExamController@update');

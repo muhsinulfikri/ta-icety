@@ -55,9 +55,28 @@ class SertificateGuest extends Controller
 
     public function verifSertif(Request $request) {
         $data['title'] = 'Verifikasi Sertifikat';
-        $data['id_user'] = session('user')[0]->get('ID_USER');
+        // $data['id_user'] = session('user')[0]->get('ID_USER');
         $data['id'] = Crypt::decryptString($request->id);
-        $data['all_sertif'] = DB::select("
+
+        $data['sertifikat'] = DB::selectOne("
+            SELECT
+                sa.ID_SERTIFIKAT,
+                sa.FILE_SERTIFIKAT,
+                sa.DATE_COMPLETED,
+                u.NAME,
+                u.ID_USER,
+                a.TITLE_ACTIVITY
+            FROM
+                sertifikat_activity sa
+            LEFT JOIN user u ON
+                sa.ID_USER = u.ID_USER
+            LEFT JOIN activity a ON
+                sa.ID_ACTIVITY = a.ID_ACTIVITY
+            WHERE
+                ID_SERTIFIKAT = '".$data['id']."'
+            ");
+
+            $data['all_sertif'] = DB::select("
             SELECT
                 a.TITLE_ACTIVITY
             FROM
@@ -71,28 +90,11 @@ class SertificateGuest extends Controller
             ON
                 sa.ID_USER = u.ID_USER
             WHERE
-                sa.ID_USER = '".$data['id_user']."'
+                sa.ID_USER = '".$data['sertifikat']->ID_USER."'
             ORDER BY
                 sa.DATE_COMPLETED DESC
             LIMIT 5
         ");
-
-        $data['sertifikat'] = DB::selectOne("
-            SELECT
-                sa.ID_SERTIFIKAT,
-                sa.FILE_SERTIFIKAT,
-                sa.DATE_COMPLETED,
-                u.NAME,
-                a.TITLE_ACTIVITY
-            FROM
-                sertifikat_activity sa
-            LEFT JOIN user u ON
-                sa.ID_USER = u.ID_USER
-            LEFT JOIN activity a ON
-                sa.ID_ACTIVITY = a.ID_ACTIVITY
-            WHERE
-                ID_SERTIFIKAT = '".$data['id']."'
-            ");
 
         if ($data['sertifikat'] == null) {
             return redirect('/')->with('error', 'Sertifikat tidak ditemukan');
