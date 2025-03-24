@@ -366,8 +366,6 @@ class CourseController extends Controller
                 c.PENGUMUMAN ,
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
-                c.IS_SERTIF_PAID,
-                c.PRICE_SERTIF,
                 c.FINAL_EXAM ,
                 k.ID_KATEGORI
             FROM

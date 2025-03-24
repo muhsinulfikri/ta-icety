@@ -99,6 +99,15 @@
                     </a>
                 </li>
                 <li class="nav-item dropdown">
+                    <a class="dropdown-toggle" href="<?= url('send-email-verification') ?>"
+                        style="<?= $title == 'Send Email Verif' ? 'color: #4b94f7 ; background-color: #e2edfe' : '' ?>;">
+                        <span class="icon-holder">
+                            <i class="anticon anticon-check" style="<?= $title == 'Send Email Verif' ? 'color: #4b94f7;' : '' ?>;"></i>
+                        </span>
+                        <span class="title">Verif Account</span>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
                     <a class="dropdown-toggle" href="<?= url('instructor') ?>"
                         style="<?= $title == 'Instructor' ? 'color: #4b94f7 ; background-color: #e2edfe' : '' ?>;">
                         <span class="icon-holder">
