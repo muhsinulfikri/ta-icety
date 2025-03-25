@@ -11,18 +11,18 @@ class User extends Model
     use HasFactory;
 
     // Definisikan kolom-kolom yang dapat diisi secara massal
-    protected $fillable = ['EMAIL', 'TELP','NAME','JK'];    
+    protected $fillable = ['EMAIL', 'TELP','NAME','JK'];
     protected $table = 'user';
-    protected $primaryKey = 'ID_USER';    
+    protected $primaryKey = 'ID_USER';
     public $timestamps = false;
     public function get_user($id_user)
     {
         $sql = DB::select("
-            SELECT 
+            SELECT
                 *
-            FROM 
+            FROM
                 user
-            WHERE 
+            WHERE
                 ID_USER = '$id_user'
         ");
         return $sql;
@@ -30,10 +30,10 @@ class User extends Model
     public function get_my_product(){
         DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
         $sql = DB::select('
-        SELECT 
-            activity.*, 
-            kategori.KATEGORI, 
-            course.DESKRIPSI_COURSE, 
+        SELECT
+            activity.*,
+            kategori.KATEGORI,
+            course.DESKRIPSI_COURSE,
             (
                 SELECT
                     CASE
@@ -41,30 +41,30 @@ class User extends Model
                         WHEN MAX(tnfe.NILAI) < ic.MIN_NILAI THEN "Belum Lulus"
                         ELSE ""
                     END AS STATUS_FINAL_EXAM
-                FROM 
+                FROM
                     tb_nilai_final_exam tnfe
-                LEFT JOIN activity a2 ON 
+                LEFT JOIN activity a2 ON
                     course.FINAL_EXAM = a2.ID_ACTIVITY
                 LEFT JOIN course c2 ON
                     c2.ID_ACTIVITY = a2.ID_ACTIVITY
-                LEFT JOIN item_course ic ON 
+                LEFT JOIN item_course ic ON
                     ic.ID_COURSE = c2.ID_COURSE
-                WHERE 
+                WHERE
                     tnfe.ID_ACTIVITY = course.FINAL_EXAM
                     AND tnfe.ID_USER = "' . session('user')[0]['ID_USER'] . '"
                     AND ic.ID_COURSE = c2.ID_COURSE
             )AS STATUS_FINAL_EXAM,
             (
-                SELECT 
-                    COUNT(*) 
-                FROM 
-                    payment p 
-                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY 
-                WHERE 
+                SELECT
+                    COUNT(*)
+                FROM
+                    payment p
+                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
+                WHERE
                     o.ID_USER = "' . session('user')[0]['ID_USER'] . '"
-                    AND o.ID_PRODUCT = `activity`.ID_ACTIVITY 
+                    AND o.ID_PRODUCT = `activity`.ID_ACTIVITY
                     AND p.DATE_PAY IS NOT NULL
-            ) AS DATA_CHECKING, 
+            ) AS DATA_CHECKING,
             (
                 CEIL(
                     (
@@ -75,7 +75,7 @@ class User extends Model
                             WHERE
                                 o.ID_USER = "' . session('user')[0]['ID_USER'] . '"
                                 AND o.ID_PRODUCT = activity.ID_ACTIVITY
-                    ) / 
+                    ) /
                     (
                             SELECT
                             COUNT(*)
@@ -87,41 +87,41 @@ class User extends Model
                     ) * 100
                 )
             ) AS PROGRESS
-        FROM 
+        FROM
             activity
-            LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY 
-            LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI 
-        WHERE 
+            LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+            LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
+        WHERE
             activity.TYPE_ACTIVITY = 1
         ');
         return $sql;
     }
     public function get_my_product2(){
         $sql = DB::select("
-        SELECT `activity`.*, `kategori`.`KATEGORI`, `course`.`DESKRIPSI_COURSE`, ( SELECT COUNT(*) 
-        FROM payment p LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY 
-        WHERE o.ID_USER = '" . session('user')[0]['ID_USER'] . "' AND o.ID_PRODUCT = `activity`.ID_ACTIVITY AND p.DATE_PAY IS NOT NULL ) as DATA_CHECKING, ( CEIL(( SELECT COUNT(*) 
+        SELECT `activity`.*, `kategori`.`KATEGORI`, `course`.`DESKRIPSI_COURSE`, ( SELECT COUNT(*)
+        FROM payment p LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
+        WHERE o.ID_USER = '" . session('user')[0]['ID_USER'] . "' AND o.ID_PRODUCT = `activity`.ID_ACTIVITY AND p.DATE_PAY IS NOT NULL ) as DATA_CHECKING, ( CEIL(( SELECT COUNT(*)
         FROM `mapping_course` WHERE `mapping_course`.ID_USER = '" . session('user')[0]['ID_USER'] . "' AND `mapping_course`.ID_ACTIVITY = `activity`.ID_ACTIVITY AND `mapping_course`.STATUS = 1) / ( SELECT COUNT(*) FROM `mapping_course` WHERE `mapping_course`.ID_USER = '" . session('user')[0]['ID_USER'] . "' AND `mapping_course`.ID_ACTIVITY = `activity`.ID_ACTIVITY ) * 100)) as PROGRESS FROM `activity` LEFT JOIN `course` ON `course`.`ID_ACTIVITY` = `activity`.`ID_ACTIVITY` LEFT JOIN `kategori` ON `kategori`.`ID_KATEGORI` = `course`.`KATEGORI` WHERE `activity`.`TYPE_ACTIVITY` = 2
         ");
         return $sql;
     }
-    
+
     public function get_my_ebook(){
         $sql = DB::select('
-        SELECT 
+        SELECT
             `ebook`.*,
             (
-                SELECT 
-                    COUNT(*) 
-                FROM 
-                    payment p 
-                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY 
-                WHERE 
+                SELECT
+                    COUNT(*)
+                FROM
+                    payment p
+                    LEFT JOIN `order` o ON o.ID_PAY = p.ID_PAY
+                WHERE
                     o.ID_USER = "' . session('user')[0]['ID_USER'] . '"
                     AND o.ID_PRODUCT = `ebook`.ID_BUKU
                     AND p.DATE_PAY IS NOT NULL
             ) AS DATA_CHECKING
-        FROM 
+        FROM
             `ebook`
         ');
         return $sql;
@@ -141,6 +141,7 @@ class User extends Model
             $user->NAME = $data[0]['NAME'];
             $user->TELP = $data[0]['TELP'];
             $user->JK = $data[0]['JK'];
+            $user->ALAMAT = $data[0]['ALAMAT'];
             return $user->save(); // Simpan perubahan ke database
         }
 
@@ -149,8 +150,8 @@ class User extends Model
     public static function updateTableById(array $data)
     {
         // Temukan pengguna berdasarkan ID
-        
+
         return DB::table('user_data')->where('ID_USER', session('user')[0]['ID_USER'])->update($data);
     }
-    
+
 }

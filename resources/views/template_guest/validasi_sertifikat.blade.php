@@ -13,7 +13,7 @@
                 </div>
                 <p class="mt-2 text-muted">Approximately 6 months at 10 hours a week to complete</p>
                 <p class="mt-3">
-                    {{ $sertifikat->NAME }}'s account is verified. Coursera certifies their successful completion of
+                    {{ $sertifikat->NAME }}'s account is verified. ICETy certifies their successful completion of
                     <a href="#" class="text-decoration-none fw-bold">{{ $sertifikat->TITLE_ACTIVITY }}</a>.
                 </p>
                 <h5 class="mt-4 fw-bold">Course Certificates Completed</h5>
