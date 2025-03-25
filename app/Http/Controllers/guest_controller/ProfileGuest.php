@@ -210,6 +210,7 @@ class ProfileGuest extends Controller
                 'NAME' => $request->input('name_user'),
                 'TELP' => $request->input('no_hp'),
                 'JK' => $request->input('jk'),
+                'ALAMAT' => $request->input('alamat')
             ]
         );
         if (!empty($request->file('foto_profile'))) {

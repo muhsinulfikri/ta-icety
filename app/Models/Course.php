@@ -138,6 +138,8 @@ class Course extends Model
         activity.*,
         course.ID_COURSE,
         course.REQUIREMENT,
+        course.PRICE_SERTIF,
+        course.IS_SERTIF_PAID,
         (
             SELECT
                 a.TITLE_ACTIVITY
@@ -559,6 +561,18 @@ class Course extends Model
                 o.ID_PRODUCT = '$condition'
                 AND
                 o.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+        ");
+        return $data;
+    }
+
+    public function get_check_pay_sertif($condition){
+        $data = DB::selectOne("
+            SELECT
+                ID_PAYMENT_SERTIF
+            FROM
+                payment_sertif
+            WHERE
+                ID_PAYMENT_SERTIF = '". $condition ."'
         ");
         return $data;
     }
