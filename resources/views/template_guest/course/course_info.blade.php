@@ -163,6 +163,17 @@
                             <div class="font" style="font-size: 0.9rem;margin-top: -4px"><?= $course->PRICE_ACTIVITY == 0 ? 'Free' : 'Rp ' . number_format($course->PRICE_ACTIVITY, 2, ',', '.') ?> to learn</div>
                         </div>
                     </div>
+                    @if ($course->IS_SERTIF_PAID == 1)
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-cost.svg" class="img-fluid mt-1" />
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Certificate</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">Rp <?= number_format($course->PRICE_SERTIF, '0', '', '.') ?> to claim certificate</div>
+                        </div>
+                    </div>
+                    @endif
                     <div>
                         <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
                             <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
