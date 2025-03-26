@@ -651,24 +651,34 @@
                             </div>
                         </div>
                     @else
-                        @if ($final_exam != null)
-                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif' ?></h6>
-                        @endif
-                        @if ($final_exam == null)
-                            <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
-                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
-                                Buy Code Exam
-                            </button>
-                        @endif
+                            @if ($is_first != 0)
+                                @if ($final_exam != null)
+                                    <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif' ?></h6>
+                                @endif
+                                @if ($final_exam == null)
+                                    <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
+                                    <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
+                                        Buy Code Exam
+                                    </button>
+                                @endif
+                            @endif
                             <br>
                             <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
                                 Klick Here For Final Exam
                             <br>
-                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
-                                Final Exam
-                            </button>
+                            @if ($is_first == 0)
+                                <button type="button" class="btn btn-primary mt-2 mb-4"
+                                    onclick="window.location.href='{{ url('course/final-exam/'.$course->FINAL_EXAM.'/'.$codeFinalExam.'/'.$id_activity) }}'">
+                                    Final Exam
+                                </button>
+                            @else
+                                <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                                    Final Exam
+                                </button>
+                            @endif
                     @endif
                 @endif
+                @if ($is_first != 0)
                 @if (!empty($history_nilai_final_exam) != null)
                     <h4 class="mb-4 mt-4">History Exam</h4>
                     <table class="table mt-4 mb-4">
@@ -690,6 +700,7 @@
                         </tbody>
                     </table>
                 @endif
+                @endif  
                 </div>
             </div>`);
     }
@@ -820,30 +831,6 @@
         }
     });
 
-    // const readmoreText = document.querySelector('.readmore-text');
-    // const readmoreBtn = document.querySelector('.readmore-btn');
-    // const icon = document.getElementById('icon-btn');
-    // const textContent = document.querySelector('.text-btn-content');
-    // let isExpanded = false;
-    // const realHeight = readmoreText.clientHeight;
-    // const defaultHeight = '200px';
-
-    // const toggleExpandedState = () => {
-    //     isExpanded = !isExpanded;
-    //     const newHeight = isExpanded ? `${realHeight + 30}px` : defaultHeight;
-    //     const newText = isExpanded ? 'Less Info' : 'More Info';
-    //     const upClass = 'bi-chevron-up';
-    //     const downClass = 'bi-chevron-down';
-
-    //     readmoreText.style.height = newHeight;
-    //     textContent.innerHTML = newText;
-    //     icon.classList.remove(isExpanded ? downClass : upClass);
-    //     icon.classList.add(isExpanded ? upClass : downClass);
-    // };
-
-    // readmoreText.style.height = defaultHeight;
-    // readmoreBtn.addEventListener('click', toggleExpandedState);
-
     function useFinalCode() {
         var code = $('#trial_code').val();
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -920,7 +907,7 @@
     }
 
 
-    // // Helper function to display error messages
+    // Helper function to display error messages
     function displayError(title, message) {
         const alertContainer = document.getElementById('alert_div');
         alertContainer.innerHTML = `
@@ -941,8 +928,7 @@
         icon: 'error',
         title: 'Oops...',
         confirmButtonColor: '#ad0b0b',
-        text: '{{ session('
-        err_msg ') }}',
+        text: '{{ session('err_msg ') }}',
     });
 </script>
 @endif

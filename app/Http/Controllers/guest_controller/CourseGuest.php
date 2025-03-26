@@ -81,7 +81,8 @@ class CourseGuest extends Controller
 
         $data['date_sertif_course'] = DB::select("
             SELECT
-                o.DATE_COMPLETED
+                o.DATE_COMPLETED,
+				o.IS_FIRST
             FROM
                 `order` o
             LEFT JOIN
@@ -413,6 +414,47 @@ class CourseGuest extends Controller
             }
             $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
         }
+
+		//2 Final Exam Pertama Free
+		$data['is_first'] = $data['date_sertif_course'][0]->IS_FIRST;
+		if ($data['is_first'] == 0) {
+			$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
+			$data_final_exam = [
+				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+				"ID_USER"		=> session('user')[0]->get('ID_USER'),
+				"CODE_EXAM"		=> $data['codeFinalExam'],
+				"IS_USED"		=> 0,
+				"CREATED_AT"	=> date("Y-m-d H:i:s")
+			];
+			DB::table('tb_final_exam')->insert($data_final_exam);
+		} else if ($data['is_first'] == 1) {
+			$cek_kode_final_exam = DB::select("
+				SELECT
+					CODE_EXAM
+				FROM
+					tb_final_exam
+				WHERE
+					ID_ACTIVITY = ?
+					AND ID_USER = ?
+					AND IS_USED = 0
+				", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
+
+			if (empty($cek_kode_final_exam)) {
+				$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
+				$data_final_exam = [
+					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+					"ID_USER"		=> session('user')[0]->get('ID_USER'),
+					"CODE_EXAM"		=> $data['codeFinalExam'],
+					"IS_USED"		=> 0,
+					"CREATED_AT"	=> date("Y-m-d H:i:s")
+				];
+				DB::table('tb_final_exam')->insert($data_final_exam);
+			} else if (count($cek_kode_final_exam) > 1) {
+				for ($i = 1; $i < count($cek_kode_final_exam) - 1; $i++) {
+					DB::table('tb_final_exam')->where('CODE_EXAM', $cek_kode_final_exam[$i]->CODE_EXAM)->delete();
+				}
+			}
+		}
 
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
@@ -911,91 +953,85 @@ class CourseGuest extends Controller
 	}
 
 	public function finalExam(Request $request) {
-		$data['title'] = 'Final Exam';
-		$data['id_activity'] = $request->id;
-		$data['code'] = $request->code;
-		$data['id_activity_parent'] = $request->activity_asal;;
-		$id_activity_parent = $request->activity_asal;
+		try {
+			$data['title'] = 'Final Exam';
+			$data['id_activity'] = $request->id;
+			$data['code'] = $request->code;
+			$data['id_activity_parent'] = $request->activity_asal;;
+			$id_activity_parent = $request->activity_asal;
+			
+			$is_code_verif = $this->isCodeVerif($data['code']);
+			if ($is_code_verif == false) {
+				return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
+			}
 
-		$is_code_verif = $this->isCodeVerif($data['code']);
-		// $id_activity_parent = DB::selectOne("
-		// 	SELECT
-		// 		ID_ACTIVITY
-		// 	FROM
-		// 		course
-		// 	WHERE
-		// 		FINAL_EXAM = ?;
-		// ", [$data['id_activity']])->ID_ACTIVITY;
-		// $data['id_activity_parent'] = $id_activity_parent;
-		if ($is_code_verif == false) {
-			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
-		}
-
-		$data['id_course'] = DB::selectOne("
-			SELECT
-				ID_COURSE
-			FROM
-				course
-			WHERE
-				ID_ACTIVITY = ?
-		", [$request->id])->ID_COURSE;
-		$idItems = DB::select("
-			SELECT
-				ID_ITEM
-			FROM
-				item_course
-			WHERE
-				ID_COURSE = ?
-		", [$data['id_course']]);
-
-		$data['nilai_final_exam'] = DB::selectOne("
-			SELECT
-				NILAI
-			FROM
-				tb_nilai_final_exam
-			WHERE
-				ID_USER = ?
-				AND ID_ACTIVITY = ?
-				AND CODE_EXAM = ?
-			ORDER BY
-				created_at DESC
-		", [session('user')[0]->get('ID_USER'), $request->id, $data['code']]);
-
-		$idItemArray = array_map(fn($item) => $item->ID_ITEM, $idItems);
-		if (empty($idItemArray)) {
-			$data['data'] = [];
-		} else {
-			$idItemString = implode(',', array_map('intval', $idItemArray));
-			$data['data'] = DB::select("
+			$data['id_course'] = DB::selectOne("
 				SELECT
-					tc.ID_ITEM,
-					tc.TITLE,
-					tc.FILE,
-					tc.LINK_YT,
-					tc.DESKRIPSI,
-					tc.`TYPE`,
-					tc.MIN_NILAI,
-					dq.ID_DETAIL,
-					dq.ID_QUIZ,
-					dq.SOAL,
-					dq.PIL_JWB,
-					dq.ORDER_LIST,
-					dq.KUNCI
+					ID_COURSE
 				FROM
-					item_course tc
-				LEFT JOIN detail_quiz dq ON
-					dq.ID_QUIZ = tc.ID_ITEM
+					course
 				WHERE
-					tc.ID_ITEM IN ($idItemString)
-				ORDER BY RAND()
-			");
+					ID_ACTIVITY = ?
+			", [$request->id])->ID_COURSE;
+			$idItems = DB::select("
+				SELECT
+					ID_ITEM
+				FROM
+					item_course
+				WHERE
+					ID_COURSE = ?
+			", [$data['id_course']]);
+
+			$data['nilai_final_exam'] = DB::selectOne("
+				SELECT
+					NILAI
+				FROM
+					tb_nilai_final_exam
+				WHERE
+					ID_USER = ?
+					AND ID_ACTIVITY = ?
+					AND CODE_EXAM = ?
+				ORDER BY
+					created_at DESC
+			", [session('user')[0]->get('ID_USER'), $request->id, $data['code']]);
+
+			$idItemArray = array_map(fn($item) => $item->ID_ITEM, $idItems);
+			if (empty($idItemArray)) {
+				$data['data'] = [];
+			} else {
+				$idItemString = implode(',', array_map('intval', $idItemArray));
+				$data['data'] = DB::select("
+					SELECT
+						tc.ID_ITEM,
+						tc.TITLE,
+						tc.FILE,
+						tc.LINK_YT,
+						tc.DESKRIPSI,
+						tc.`TYPE`,
+						tc.MIN_NILAI,
+						dq.ID_DETAIL,
+						dq.ID_QUIZ,
+						dq.SOAL,
+						dq.PIL_JWB,
+						dq.ORDER_LIST,
+						dq.KUNCI
+					FROM
+						item_course tc
+					LEFT JOIN detail_quiz dq ON
+						dq.ID_QUIZ = tc.ID_ITEM
+					WHERE
+						tc.ID_ITEM IN ($idItemString)
+					ORDER BY RAND()
+				");
+			}
+
+			$data['quiz_grade'] = null;
+			return view('template.header', $data) .
+				view('template_guest.course.final_exam', $data) .
+				view('template.footer', $data);
+		} catch (\Throwable $e) {
+			return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', $e->getMessage());
 		}
-
-		$data['quiz_grade'] = null;
-
-		return view('template.header', $data) .
-			view('template_guest.course.final_exam', $data) .
-			view('template.footer', $data);
 	}
 
 	public function FinalExamEvaliation(Request $request)
@@ -1009,14 +1045,6 @@ class CourseGuest extends Controller
 		$id_activity_parent = $request->activity_asal;
 
 		$is_code_verif = $this->isCodeVerif($code_exam);
-		// $id_activity_parent = DB::selectOne("
-		// 	SELECT
-		// 		ID_ACTIVITY
-		// 	FROM
-		// 		course
-		// 	WHERE
-		// 		FINAL_EXAM = ?;
-		// ", [$request->id_activity])->ID_ACTIVITY;
 		if ($is_code_verif == false) {
 			return response()->json([
 				'status' => 'error',
@@ -1049,21 +1077,28 @@ class CourseGuest extends Controller
 			"created_at" 	=> date('Y-m-d H:i:s'),
 		];
 
-		// $id_activity_parent = DB::selectOne("
-		// 	SELECT
-		// 		ID_ACTIVITY
-		// 	FROM
-		// 		course
-		// 	WHERE
-		// 		FINAL_EXAM = ?;
-		// ", [$_POST['id_activity']])->ID_ACTIVITY;
-
 		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
 
 		$gambar = 'https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg';
 		if($min_nilai > $nilai) {
 			$gambar = 'https://tbh-v2.is3.cloudhost.id/IMAGE_ACTIVITY/Image-Activity-1741074077-1741074078.png';
+		}
+
+		$is_first = DB::selectOne("
+			SELECT
+				IS_FIRST
+			FROM
+				`order`
+			WHERE
+				ID_USER = ?
+				AND ID_PRODUCT = ?
+		", [$id_user, $id_activity_parent])->IS_FIRST;
+
+		if($is_first == 0) {
+			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
+		} else if ($is_first == 1) {
+			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
 		}
 
 		return response()->json([
