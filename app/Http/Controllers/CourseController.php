@@ -1148,7 +1148,7 @@ class CourseController extends Controller
         }
 
         if (!empty($req->input('question'))) {
-            $data['data_item'] = $data_item;
+            $data['data_item'] = $data_kuis;
             $data['ID_COURSE'] = $dataIDCourse;
             $this->update_item_quiz($data, $req, $idQuiz);
         }
