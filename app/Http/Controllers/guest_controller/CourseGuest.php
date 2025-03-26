@@ -397,22 +397,22 @@ class CourseGuest extends Controller
 				'MIN_NILAI' => 0
 			];
 		}
-        // if($data['course']->IS_SERTIF_PAID == 1){
-        //     $data_pay_sertif = [
-        //         'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
-        //         'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
-        //         'ID_USER' => session('user')[0]->get('ID_USER'),
-        //         'ID_PAY' => null,
-        //         'IS_PAY' => '0',
-        //         'ID_ACTIVITY' => $data['id_activity'],
-        //         'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
-        //     ];
-        //     if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
-        //         DB::table('payment_sertif')->insertGetId($data_pay_sertif);
-        //     }
-        // }
-
-        // $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
+        $data['id_sertif_is_paid'] = 0;
+        if($data['course']->IS_SERTIF_PAID == 1){
+            $data_pay_sertif = [
+                'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
+                'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+                'ID_USER' => session('user')[0]->get('ID_USER'),
+                'ID_PAY' => null,
+                'IS_PAY' => 0,
+                'ID_ACTIVITY' => $data['id_activity'],
+                'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
+            ];
+            if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
+                DB::table('payment_sertif')->insertGetId($data_pay_sertif);
+            }
+            $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
+        }
 
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
