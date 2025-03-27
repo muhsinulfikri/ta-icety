@@ -486,8 +486,8 @@
                                     <div class="d-flex justify-content-center">
                                         <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
                                             <div class="mx-4 py-3 bg-white">
-                                                @if($course->IS_SERTIF_PAID == 1 && $tot_proggress == 100 && $sertifCheck != null)
-                                                    @if ($id_sertif_is_paid->IS_PAY == 0))
+                                                @if($course->IS_SERTIF_PAID == 1 && $tot_proggress == 100)
+                                                    @if ($id_sertif_is_paid->IS_PAY == 0)
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
