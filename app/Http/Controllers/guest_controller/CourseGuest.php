@@ -398,8 +398,9 @@ class CourseGuest extends Controller
 				'MIN_NILAI' => 0
 			];
 		}
-        $data['id_sertif_is_paid'] = 0;
-        if($data['course']->IS_SERTIF_PAID == 1){
+        // dd($sertifCheck != null);
+        if($data['course']->IS_SERTIF_PAID == 1 && $data['tot_proggress'] == 100 && $sertifCheck != null){
+            // dd($data['course']);
             $data_pay_sertif = [
                 'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
                 'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
@@ -413,6 +414,7 @@ class CourseGuest extends Controller
                 DB::table('payment_sertif')->insertGetId($data_pay_sertif);
             }
             $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
+            // dd($data['id_sertif_is_paid']->IS_PAY);
         }
 
 		//2 Final Exam Pertama Free
