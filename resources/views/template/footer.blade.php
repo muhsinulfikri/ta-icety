@@ -107,7 +107,7 @@ use Illuminate\Support\Facades\Request;
 
                 <div class="col-xl-4 col-sm-12">
                     <div class="footer-widget pe-0 mb-5 mb-xl-0  d-flex flex-column d-lg-block justify-content-center text-center text-lg-start">
-                        <h5 class="widget-title">Address</h5>
+                        <h5 class="widget-title">Information</h5>
                         <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
                                 <li>
@@ -118,7 +118,9 @@ use Illuminate\Support\Facades\Request;
                                 </li>
                                 <li>
                                     <h6 class="text-white">Location</h6><a href="https://maps.app.goo.gl/M9oDzFPWKDBkbiqd7">
-                                        Bizhub Serpong Blok GB No.15 Jl. Raya Puspitek Gunung Sindur Bogor (16340) Yayasan Terang Garam Merica
+                                        Bizhub Serpong Blok GB No.15 Jl. Raya Puspitek Gunung Sindur Bogor (16340)
+                                    </br>
+                                    <a href="https://tagame.id/" target="blank"><span>Yayasan Terang Garam Merica (TAGAME)</span></a>
                                 </li>
                             </ul>
                             <!-- <ul class="list-unstyled footer-links" style="flex:2"> -->
