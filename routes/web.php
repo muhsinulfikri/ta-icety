@@ -109,9 +109,9 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('redeem-code/delete', 'RedeemCodeController@delete_code');
     Route::get('redeem-code/excell/{id}', 'RedeemCodeController@gen_excell');
 
-    Route::get('send-email-verification', 'SendEmailController@index');
-    Route::post('verif-account-admin', 'SendEmailController@verif_email');
-
+    //verif user
+    Route::get('send-email-verification', 'VerifUser@index');
+    Route::post('verif-account-admin', 'VerifUser@verif_email');
 
     // Koperasi Controller
     Route::get('bentuk', 'KoperasiController@index_bentuk');
