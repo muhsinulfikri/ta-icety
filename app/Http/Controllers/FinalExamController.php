@@ -181,7 +181,8 @@ class FinalExamController extends Controller
                     'ID_QUIZ'       => $id_quiz,
                     'ID_COURSE'     => $data['ID_COURSE'],
                     'SOAL'          => $reindexedQuestions[$j],
-                    'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
+                    'PIL_JWB'       => implode(';', [
+                        $jawaban_a[($j-1)], $jawaban_b[($j-1)], $jawaban_c[($j-1)], $jawaban_d[($j-1)]]),
                     'KUNCI'         => $reindexed_kunci_soal[$i][$j],
                     'ORDER_LIST'    => $order_list_quiz[$tmpNo]
                 ];
