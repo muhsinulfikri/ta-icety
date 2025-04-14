@@ -81,8 +81,7 @@ class CourseGuest extends Controller
 
         $data['date_sertif_course'] = DB::select("
             SELECT
-                o.DATE_COMPLETED,
-				o.IS_FIRST
+                o.DATE_COMPLETED
             FROM
                 `order` o
             LEFT JOIN
@@ -1152,21 +1151,21 @@ class CourseGuest extends Controller
 			$gambar = 'https://tbh-v2.is3.cloudhost.id/IMAGE_ACTIVITY/Image-Activity-1741074077-1741074078.png';
 		}
 
-		$is_first = DB::selectOne("
-			SELECT
-				IS_FIRST
-			FROM
-				`order`
-			WHERE
-				ID_USER = ?
-				AND ID_PRODUCT = ?
-		", [$id_user, $id_activity_parent])->IS_FIRST;
+		// $is_first = DB::selectOne("
+		// 	SELECT
+		// 		IS_FIRST
+		// 	FROM
+		// 		`order`
+		// 	WHERE
+		// 		ID_USER = ?
+		// 		AND ID_PRODUCT = ?
+		// ", [$id_user, $id_activity_parent])->IS_FIRST;
 
-		if($is_first == 0) {
-			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
-		} else if ($is_first == 1) {
-			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
-		}
+		// if($is_first == 0) {
+		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
+		// } else if ($is_first == 1) {
+		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
+		// }
 
 		return response()->json([
 			'status' => 'success',

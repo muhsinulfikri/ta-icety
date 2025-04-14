@@ -218,6 +218,7 @@ class FinalExamController extends Controller
                 a.IMAGE_ACTIVITY ,
                 a.TITLE_ACTIVITY ,
                 a.PRICE_ACTIVITY ,
+                a.REMEDIAL,
                 a.DATE_START ,
                 a.DATE_END ,
                 a.STATUS ,

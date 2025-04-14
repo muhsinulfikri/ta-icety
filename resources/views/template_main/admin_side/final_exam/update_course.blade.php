@@ -40,6 +40,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Remedial <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="remedial" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Date Course<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
@@ -145,6 +152,7 @@
                 `);
         $('select[name="req"]').val(req);
     }
+    $('input[name="remedial"]').val(data.REMEDIAL)
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
     $('input[name="certif_code"]').val(data.SERTIF_CODE);
