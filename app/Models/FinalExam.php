@@ -49,4 +49,15 @@ class FinalExam extends Model
         ');
         return $sql;
     }
+    public function get_remidi_for_exam($id_activity){
+        $sql = DB::select('
+            SELECT
+                REMEDIAL
+            FROM
+                activity
+            WHERE
+                ID_ACTIVITY = "'.$id_activity.'"
+        ');
+        return $sql;
+    }
 }

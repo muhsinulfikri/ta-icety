@@ -147,6 +147,7 @@
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
+    $('input[name="certif_code"]').val(data.SERTIF_CODE);
     $('input[name="status"]').prop('checked', data.STATUS);
 
     $('#setFree').change(function() {

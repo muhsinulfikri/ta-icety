@@ -27,10 +27,10 @@
                 <input type="hidden" class="form-control" name="type[]" value="2">
                 <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $ID_ITEM ?? '' ?>">
-                <div id="delete_quiz_{{ $no }}"
+                {{-- <div id="delete_quiz_{{ $no }}"
                     class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <span><i class="anticon anticon-close"></i> </span>
-                </div>
+                </div> --}}
 
             </a>
         </h5>

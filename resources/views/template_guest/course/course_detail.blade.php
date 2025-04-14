@@ -210,19 +210,19 @@
                                     <?php
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
-                                        @if($course->IS_SERTIF_PAID == 1)
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowCertificateCode(this)" data-type="5">
+                                            Show Certificate Course
+                                        </button>
+                                        {{-- @if($course->IS_SERTIF_PAID == 1)
                                             <button
                                                 class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                 onclick="BuyCertificateCode(this)" data-type="5">
                                                 Certificate
                                             </button>
-                                        @else
-                                            <button
-                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                onclick="ShowCertificateCode(this)" data-type="5">
-                                                Show Certificate Course
-                                            </button>
-                                        @endif
+                                        @else --}}
+                                        {{-- @endif --}}
                                         @if ($course->FINAL_EXAM != null)
                                         <button
                                             class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
@@ -472,110 +472,6 @@
                                 </div>`);
     }
 
-    function BuyCertificateCode(e) {
-        <?php foreach ($item_course as $item) :  ?>
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
-            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
-        <?php endforeach; ?>
-        $(e).removeClass('btn-main-outline')
-        $(e).addClass('btn-primary')
-        $("#detail-item").html(
-            '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
-        );
-        $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
-                                    <div class="d-flex justify-content-center">
-                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
-                                            <div class="mx-4 py-3 bg-white">
-                                                @if($course->IS_SERTIF_PAID == 1 && $tot_proggress == 100)
-                                                    @if ($id_sertif_is_paid->IS_PAY == 0)
-                                                        <label>Buy Sertificate Course</label>
-                                                        </br>
-                                                        <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= $id_sertif_is_paid->ID_PAYMENT_SERTIF ?>">
-                                                        <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
-                                                    @else
-                                                        <label>Download Sertificate Course</label>
-                                                        <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                            onclick="DownloadPdf(this)">Download PDF</button>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`);
-    }
-    $(document).on('click', '#buy', function() {
-        Swal.fire({
-            title: 'Loading Payment!',
-            html: 'Please Wait ...',
-            timerProgressBar: false,
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-        // AJAX call to get the order ID
-        if(totPrice != 0){
-            $.ajax({
-                url: '/get_id_sertif_pay',
-                type: "POST",
-                data: {
-                    _token: csrfToken,
-                    TotPrice: totPrice,
-                    id_sertif_pay: $('input:hidden[name="id_sertif_pay"]').val()
-                },
-                dataType: 'json',
-                success: function(response) {
-                    console.log(response);
-                    getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
-                },
-                error: function(xhr, status, error) {
-                    displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
-                    console.error(error);
-                    Swal.close();
-                }
-            });
-        }
-    });
-
-    // Function to handle the second step: fetching the invoice
-    async function getInvoiceXendit(data, csrfToken) {
-        try {
-            const invoiceData = {
-                xendit_id: data,
-            };
-            console.log(invoiceData);
-
-            // Fetch call to create the invoice
-            const fetchResponse = await fetch('/payment/get', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify(invoiceData),
-            });
-
-            const responseData = await fetchResponse.json();
-            console.log(fetchResponse);
-
-            if (fetchResponse.ok && responseData.invoice_url) {
-                window.location.href = responseData.invoice_url; // Redirect to the invoice URL
-            } else {
-                displayError('Payment Error', responseData?.message || 'An error occurred while creating the invoice.');
-                console.error(responseData);
-                Swal.close();
-            }
-        } catch (error) {
-            displayError('Payment Error', error.message || 'An unexpected error occurred.');
-            console.error(error);
-            Swal.close();
-        }
-    }
-
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
         function DownloadPdfExam(e) {
@@ -653,34 +549,34 @@
                             </div>
                         </div>
                     @else
-                            @if ($is_first != 0)
-                                @if ($final_exam != null)
-                                    <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif' ?></h6>
-                                @endif
-                                @if ($final_exam == null)
-                                    <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
-                                    <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
-                                        Buy Code Exam
-                                    </button>
-                                @endif
-                            @endif
+                        @if ($final_exam != null)
+                            <h6 class="mt-4">
+                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $final_exam->CODE_EXAM }}</span>
+                            </h6>
+                        @elseif (!empty($codeFinalExam) && ($isRemedialCode ?? false))
+                            <h6 class="mt-4">
+                                Kode Final Exam dari jatah <strong>Remedial</strong> telah digenerate otomatis.
+                            </h6>
+                            <h6 class="mt-2">
+                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $codeFinalExam }}</span>
+                            </h6>
+                        @else
+                            <h6 class="mt-4">
+                                Anda tidak memiliki Code Exam yang Aktif. Klik dibawah ini untuk membeli code exam.
+                            </h6>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
+                                Buy Code Exam
+                            </button>
+                        @endif
                             <br>
                             <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
                                 Klick Here For Final Exam
                             <br>
-                            @if ($is_first == 0)
-                                <button type="button" class="btn btn-primary mt-2 mb-4"
-                                    onclick="window.location.href='{{ url('course/final-exam/'.$course->FINAL_EXAM.'/'.$codeFinalExam.'/'.$id_activity) }}'">
-                                    Final Exam
-                                </button>
-                            @else
-                                <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
-                                    Final Exam
-                                </button>
-                            @endif
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                                Final Exam
+                            </button>
                     @endif
                 @endif
-                @if ($is_first != 0)
                 @if (!empty($history_nilai_final_exam) != null)
                     <h4 class="mb-4 mt-4">History Exam</h4>
                     <table class="table mt-4 mb-4">
@@ -701,7 +597,6 @@
                         @endforeach
                         </tbody>
                     </table>
-                @endif
                 @endif
                 </div>
             </div>`);
@@ -836,7 +731,7 @@
     function useFinalCode() {
         var code = $('#trial_code').val();
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : '#') : '#' ?>";
+        var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : $codeFinalExam) : '#' ?>";
 
         $.ajaxSetup({
             headers: {
