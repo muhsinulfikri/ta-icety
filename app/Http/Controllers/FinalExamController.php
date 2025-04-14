@@ -70,6 +70,7 @@ class FinalExamController extends Controller
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
                 'ID_USER'               => session('user')[0]['ID_USER'],
                 'PRICE_ACTIVITY'        => $req->input('price_course'),
+                'REMEDIAL'              => $req->input('remedial'),
                 'IMAGE_ACTIVITY'        => null,
                 'TYPE_ACTIVITY'         => 3,
                 'DATE_START'            => $req->input('date_start'),
@@ -169,7 +170,7 @@ class FinalExamController extends Controller
         $order_list_quiz        = $req->input('order_list_question');
         $question               = $req->input('question');
         $kunci_soal             = $req->input('kunci_soal');
-        
+
         $tmpNo = 0;
         foreach ($question as $i => $questions) {
             $reindexedQuestions = array_combine(range(1, count($questions)), array_values($questions));
@@ -217,6 +218,7 @@ class FinalExamController extends Controller
                 a.IMAGE_ACTIVITY ,
                 a.TITLE_ACTIVITY ,
                 a.PRICE_ACTIVITY ,
+                a.REMEDIAL,
                 a.DATE_START ,
                 a.DATE_END ,
                 a.STATUS ,

@@ -81,8 +81,7 @@ class CourseGuest extends Controller
 
         $data['date_sertif_course'] = DB::select("
             SELECT
-                o.DATE_COMPLETED,
-				o.IS_FIRST
+                o.DATE_COMPLETED
             FROM
                 `order` o
             LEFT JOIN
@@ -398,65 +397,130 @@ class CourseGuest extends Controller
 				'MIN_NILAI' => 0
 			];
 		}
-        // dd($sertifCheck != null);
-        if($data['course']->IS_SERTIF_PAID == 1 && $data['tot_proggress'] == 100 && $sertifCheck != null){
-            // dd($data['course']);
-            $data_pay_sertif = [
-                'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
-                'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
-                'ID_USER' => session('user')[0]->get('ID_USER'),
-                'ID_PAY' => null,
-                'IS_PAY' => 0,
-                'ID_ACTIVITY' => $data['id_activity'],
-                'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
-            ];
-            if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
-                DB::table('payment_sertif')->insertGetId($data_pay_sertif);
+        //sertif paid
+        // if($data['course']->IS_SERTIF_PAID == 1 && $data['tot_proggress'] == 100 && $sertifCheck != null){
+        //     $data_pay_sertif = [
+        //         'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
+        //         'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+        //         'ID_USER' => session('user')[0]->get('ID_USER'),
+        //         'ID_PAY' => null,
+        //         'IS_PAY' => 0,
+        //         'ID_ACTIVITY' => $data['id_activity'],
+        //         'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
+        //     ];
+        //     if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
+        //         DB::table('payment_sertif')->insertGetId($data_pay_sertif);
+        //     }
+        //     $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
+        // }
+
+        $data['remedial'] = $this->finalExamModel->get_remidi_for_exam($data['course']->FINAL_EXAM);
+        if ($data['course']->FINAL_EXAM != null) {
+            $userId = session('user')[0]->get('ID_USER');
+            $activityId = $data['course']->FINAL_EXAM;
+
+            // Ambil data remedial user
+            $remedial_user = DB::table('tb_remedial_user')
+                ->where('ID_USER', $userId)
+                ->where('ID_ACTIVITY', $activityId)
+                ->first();
+
+            // Jika belum ada di tb_remedial_user, tambahkan datanya
+            if (!$remedial_user && $data['remedial'][0]->REMEDIAL > 0) {
+                DB::table('tb_remedial_user')->insert([
+                    'ID_USER'     => $userId,
+                    'ID_ACTIVITY' => $activityId,
+                    'REMEDIAL'    => $data['remedial'][0]->REMEDIAL,
+                    'LOG_TIME'    => date('Y-m-d H:i:s')
+                ]);
+
+                // Refresh remedial_user setelah insert
+                $remedial_user = (object) [
+                    'REMEDIAL' => $data['remedial'][0]->REMEDIAL
+                ];
             }
-            $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
-            // dd($data['id_sertif_is_paid']->IS_PAY);
+
+            // Cek apakah user sudah punya code exam yang belum dipakai
+            $cek_kode_final_exam = DB::table('tb_final_exam')
+                ->where('ID_ACTIVITY', $activityId)
+                ->where('ID_USER', $userId)
+                ->where('IS_USED', 0)
+                ->first();
+
+            if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0) {
+                // Generate code exam dari jatah remedial
+                $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
+
+                DB::table('tb_final_exam')->insert([
+                    "ID_ACTIVITY" => $activityId,
+                    "ID_USER"     => $userId,
+                    "CODE_EXAM"   => $generatedCode,
+                    "IS_USED"     => 0,
+                    "CREATED_AT"  => date("Y-m-d H:i:s")
+                ]);
+
+                // Baru di sini kurangi jatah remedial user
+                DB::table('tb_remedial_user')
+                    ->where('ID_USER', $userId)
+                    ->where('ID_ACTIVITY', $activityId)
+                    ->decrement('REMEDIAL');
+
+                $data['codeFinalExam'] = $generatedCode;
+                $data['isRemedialCode'] = true;
+            } elseif ($cek_kode_final_exam) {
+                // Sudah ada code yang belum dipakai
+                $data['codeFinalExam'] = $cek_kode_final_exam->CODE_EXAM;
+                $data['isRemedialCode'] = false;
+            } else {
+                // Tidak ada code dan tidak punya remedial
+                $data['codeFinalExam'] = null;
+                $data['isRemedialCode'] = false;
+            }
         }
 
-		//2 Final Exam Pertama Free
-		$data['is_first'] = $data['date_sertif_course'][0]->IS_FIRST;
-		if ($data['is_first'] == 0) {
-			$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
-			$data_final_exam = [
-				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-				"ID_USER"		=> session('user')[0]->get('ID_USER'),
-				"CODE_EXAM"		=> $data['codeFinalExam'],
-				"IS_USED"		=> 0,
-				"CREATED_AT"	=> date("Y-m-d H:i:s")
-			];
-			DB::table('tb_final_exam')->insert($data_final_exam);
-		} else if ($data['is_first'] == 1) {
-			$cek_kode_final_exam = DB::select("
-				SELECT
-					CODE_EXAM
-				FROM
-					tb_final_exam
-				WHERE
-					ID_ACTIVITY = ?
-					AND ID_USER = ?
-					AND IS_USED = 0
-				", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
 
-			if (empty($cek_kode_final_exam)) {
-				$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
-				$data_final_exam = [
-					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-					"ID_USER"		=> session('user')[0]->get('ID_USER'),
-					"CODE_EXAM"		=> $data['codeFinalExam'],
-					"IS_USED"		=> 0,
-					"CREATED_AT"	=> date("Y-m-d H:i:s")
-				];
-				DB::table('tb_final_exam')->insert($data_final_exam);
-			} else if (count($cek_kode_final_exam) > 1) {
-				for ($i = 1; $i < count($cek_kode_final_exam) - 1; $i++) {
-					DB::table('tb_final_exam')->where('CODE_EXAM', $cek_kode_final_exam[$i]->CODE_EXAM)->delete();
-				}
-			}
-		}
+		//2 Final Exam Pertama Free
+	// 	$data['is_first'] = $data['date_sertif_course'][0]->IS_FIRST;
+    //     if($data['course']->FINAL_EXAM != null){
+	// 	if ($data['is_first'] == 0) {
+	// 		$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
+	// 		$data_final_exam = [
+	// 			"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+	// 			"ID_USER"		=> session('user')[0]->get('ID_USER'),
+	// 			"CODE_EXAM"		=> $data['codeFinalExam'],
+	// 			"IS_USED"		=> 0,
+	// 			"CREATED_AT"	=> date("Y-m-d H:i:s")
+	// 		];
+	// 		DB::table('tb_final_exam')->insert($data_final_exam);
+	// 	} else if ($data['is_first'] == 1) {
+	// 		$cek_kode_final_exam = DB::select("
+	// 			SELECT
+	// 				CODE_EXAM
+	// 			FROM
+	// 				tb_final_exam
+	// 			WHERE
+	// 				ID_ACTIVITY = ?
+	// 				AND ID_USER = ?
+	// 				AND IS_USED = 0
+	// 			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
+
+	// 		if (empty($cek_kode_final_exam)) {
+	// 			$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
+	// 			$data_final_exam = [
+	// 				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
+	// 				"ID_USER"		=> session('user')[0]->get('ID_USER'),
+	// 				"CODE_EXAM"		=> $data['codeFinalExam'],
+	// 				"IS_USED"		=> 0,
+	// 				"CREATED_AT"	=> date("Y-m-d H:i:s")
+	// 			];
+	// 			DB::table('tb_final_exam')->insert($data_final_exam);
+	// 		} else if (count($cek_kode_final_exam) > 1) {
+	// 			for ($i = 1; $i < count($cek_kode_final_exam) - 1; $i++) {
+	// 				DB::table('tb_final_exam')->where('CODE_EXAM', $cek_kode_final_exam[$i]->CODE_EXAM)->delete();
+	// 			}
+	// 		}
+	// 	}
+    // }
 
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
@@ -961,7 +1025,7 @@ class CourseGuest extends Controller
 			$data['code'] = $request->code;
 			$data['id_activity_parent'] = $request->activity_asal;;
 			$id_activity_parent = $request->activity_asal;
-			
+
 			$is_code_verif = $this->isCodeVerif($data['code']);
 			if ($is_code_verif == false) {
 				return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
@@ -1087,21 +1151,21 @@ class CourseGuest extends Controller
 			$gambar = 'https://tbh-v2.is3.cloudhost.id/IMAGE_ACTIVITY/Image-Activity-1741074077-1741074078.png';
 		}
 
-		$is_first = DB::selectOne("
-			SELECT
-				IS_FIRST
-			FROM
-				`order`
-			WHERE
-				ID_USER = ?
-				AND ID_PRODUCT = ?
-		", [$id_user, $id_activity_parent])->IS_FIRST;
+		// $is_first = DB::selectOne("
+		// 	SELECT
+		// 		IS_FIRST
+		// 	FROM
+		// 		`order`
+		// 	WHERE
+		// 		ID_USER = ?
+		// 		AND ID_PRODUCT = ?
+		// ", [$id_user, $id_activity_parent])->IS_FIRST;
 
-		if($is_first == 0) {
-			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
-		} else if ($is_first == 1) {
-			DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
-		}
+		// if($is_first == 0) {
+		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
+		// } else if ($is_first == 1) {
+		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
+		// }
 
 		return response()->json([
 			'status' => 'success',

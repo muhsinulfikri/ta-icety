@@ -12,9 +12,9 @@
                     <input type="text" class="form-control" name="question[{{ $no }}][{{ $index }}]"
                     value="{{ $item['SOAL'] }}">
                 </div>
-                <div id="delete_question_{{ $no }}{{ $index }}" class="justify-content-center rounded btn btn-danger px-3 py-0 float-end d-flex align-items-center" style="cursor: pointer;">
+                {{-- <div id="delete_question_{{ $no }}{{ $index }}" class="justify-content-center rounded btn btn-danger px-3 py-0 float-end d-flex align-items-center" style="cursor: pointer;">
                     <span><i class="anticon anticon-close"></i> </span>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
