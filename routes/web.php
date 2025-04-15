@@ -155,7 +155,7 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     //END COURSE
 
     //FINAL EXAM
-    Route::get('course/final-exam/{id}/{code}/{activity_asal}', 'guest_controller\CourseGuest@finalExam');
+    Route::get('course/final-exam/{id}/{code}/{activity_asal}/{id_user}', 'guest_controller\CourseGuest@finalExam');
     Route::post('/course/final-exam/evaluation/', 'guest_controller\CourseGuest@FinalExamEvaliation');
     Route::post('/course/final-exam/validasi-code', 'guest_controller\CourseGuest@ValidasiCode');
     //END FINAL EXAM

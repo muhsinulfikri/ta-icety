@@ -729,7 +729,11 @@
     });
 
     function useFinalCode() {
+        <?php if (empty(session('user'))) { ?>
+            location.href = "<?= url('login') ?>";
+        <?php } ?>
         var code = $('#trial_code').val();
+        var id_user = '<?= session('user')[0]['ID_USER'] ?>';
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
         var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : $codeFinalExam) : '#' ?>";
 
@@ -756,7 +760,7 @@
                         confirmButtonText: 'Continue',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam + "/" + "<?= $id_activity ?>";
+                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam + "/" + "<?= $id_activity ?>" + "/" + id_user;
                         }
                     });
                 } else {
