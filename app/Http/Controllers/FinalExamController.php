@@ -520,6 +520,31 @@ class FinalExamController extends Controller
         }
     }
 
+    public function index_lihat_peserta(Request $req)
+    {
+        $data['title'] = "Peserta Final Exam";
+
+        $data['list_peserta'] = $this->get_progress($req->input('ID_ACTIVITY'));
+
+        $data['exam'] = DB::selectOne("
+            SELECT
+                a.* ,
+                c.*
+            FROM
+                activity a
+            LEFT JOIN course c ON
+                c.ID_ACTIVITY = a.ID_ACTIVITY
+            WHERE
+                a.TYPE_ACTIVITY = 3
+                AND a.ID_ACTIVITY = '" . $req->input('ID_ACTIVITY') . "'
+        ");
+        // dd($data['list_peserta']);
+        return
+            view('template_main.admin_side.etc.header', $data) .
+            view('template_main.admin_side.etc.sidebar', $data) .
+            view('template_main.admin_side.final_exam.lihat_peserta_final', $data);
+    }
+
     public function GenerateUniqID($prefix, $var)
     {
         $string = preg_replace('/[^a-z]/i', '', $var);
@@ -528,5 +553,53 @@ class FinalExamController extends Controller
         $begin  = substr($scrap, 0, 4);
         $uniqid = strtoupper($begin);
         return $prefix . "_" . $uniqid . substr(md5(time()), 0, 3);
+    }
+
+    public function get_progress($id_activity)
+    {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        $data = DB::select("
+            SELECT
+                u.EMAIL,
+                u.NAME,
+                u.TELP,
+                u.ALAMAT,
+                (
+                    SELECT
+                        CASE
+                            WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN 'Lulus'
+                            ELSE 'Belum Lulus'
+                        END
+                    FROM
+                        tb_nilai_final_exam tnfe
+                    LEFT JOIN activity a2 ON tnfe.ID_ACTIVITY = a2.ID_ACTIVITY
+                    LEFT JOIN course c2 ON c2.ID_ACTIVITY = a2.ID_ACTIVITY
+                    LEFT JOIN item_course ic ON ic.ID_COURSE = c2.ID_COURSE
+                    WHERE
+                        tnfe.ID_ACTIVITY = tfe.ID_ACTIVITY
+                        AND tnfe.ID_USER = u.ID_USER
+                ) AS STATUS_FINAL_EXAM,
+                (
+                    SELECT
+                        MAX(tnfe.NILAI)
+                    FROM
+                        tb_nilai_final_exam tnfe
+                    WHERE
+                        tnfe.ID_ACTIVITY = tfe.ID_ACTIVITY
+                        AND tnfe.ID_USER = u.ID_USER
+                ) AS NILAI_TERTINGGI_FINAL_EXAM
+            FROM
+                tb_final_exam tfe
+            LEFT JOIN user u ON u.ID_USER = tfe.ID_USER
+            LEFT JOIN user_data ud ON ud.ID_USER = u.ID_USER
+            LEFT JOIN activity a ON tfe.ID_ACTIVITY = a.ID_ACTIVITY
+            LEFT JOIN course c ON c.ID_ACTIVITY = a.ID_ACTIVITY
+            WHERE
+                tfe.ID_ACTIVITY = '". $id_activity ."'
+            GROUP BY
+                u.EMAIL, u.NAME, u.TELP, u.ALAMAT, tfe.ID_ACTIVITY, u.ID_USER
+        ");
+
+        return $data;
     }
 }
