@@ -957,9 +957,10 @@ class CourseGuest extends Controller
 			$data['title'] = 'Final Exam';
 			$data['id_activity'] = $request->id;
 			$data['code'] = $request->code;
-			$data['id_activity_parent'] = $request->activity_asal;;
+			$data['id_activity_parent'] = $request->activity_asal;
+			$data['id_user'] = $request->id_user;
 			$id_activity_parent = $request->activity_asal;
-			
+
 			$is_code_verif = $this->isCodeVerif($data['code']);
 			if ($is_code_verif == false) {
 				return redirect('course/detail/courses?id_activity=' . $id_activity_parent)->with('err_msg', 'Code not valid');
@@ -1039,7 +1040,7 @@ class CourseGuest extends Controller
 		$id_quiz = $_POST['id_quiz'];
 		$id_detail = $_POST['id_detail'];
 		$pilih_jwbn = $_POST['pilih_jwbn'];
-		$id_user = session('user')[0]->get('ID_USER');
+		$id_user = $request->id_user;
 		$code_exam = $request->code_exam;
 		$min_nilai = $request->min_nilai;
 		$id_activity_parent = $request->activity_asal;
