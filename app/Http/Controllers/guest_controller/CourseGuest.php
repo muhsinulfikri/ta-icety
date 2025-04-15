@@ -419,13 +419,11 @@ class CourseGuest extends Controller
             $userId = session('user')[0]->get('ID_USER');
             $activityId = $data['course']->FINAL_EXAM;
 
-            // Ambil data remedial user
             $remedial_user = DB::table('tb_remedial_user')
                 ->where('ID_USER', $userId)
                 ->where('ID_ACTIVITY', $activityId)
                 ->first();
 
-            // Jika belum ada di tb_remedial_user, tambahkan datanya
             if (!$remedial_user && $data['remedial'][0]->REMEDIAL > 0) {
                 DB::table('tb_remedial_user')->insert([
                     'ID_USER'     => $userId,
@@ -434,21 +432,24 @@ class CourseGuest extends Controller
                     'LOG_TIME'    => date('Y-m-d H:i:s')
                 ]);
 
-                // Refresh remedial_user setelah insert
                 $remedial_user = (object) [
                     'REMEDIAL' => $data['remedial'][0]->REMEDIAL
                 ];
             }
 
-            // Cek apakah user sudah punya code exam yang belum dipakai
+            $has_done_first_attempt = DB::table('tb_final_exam')
+            ->where('ID_USER', $userId)
+            ->where('ID_ACTIVITY', $activityId)
+            ->where('IS_USED', 1)
+            ->exists();
+
             $cek_kode_final_exam = DB::table('tb_final_exam')
                 ->where('ID_ACTIVITY', $activityId)
                 ->where('ID_USER', $userId)
                 ->where('IS_USED', 0)
                 ->first();
 
-            if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0) {
-                // Generate code exam dari jatah remedial
+            if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0 && $has_done_first_attempt) {
                 $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
 
                 DB::table('tb_final_exam')->insert([
@@ -459,7 +460,6 @@ class CourseGuest extends Controller
                     "CREATED_AT"  => date("Y-m-d H:i:s")
                 ]);
 
-                // Baru di sini kurangi jatah remedial user
                 DB::table('tb_remedial_user')
                     ->where('ID_USER', $userId)
                     ->where('ID_ACTIVITY', $activityId)
@@ -468,11 +468,9 @@ class CourseGuest extends Controller
                 $data['codeFinalExam'] = $generatedCode;
                 $data['isRemedialCode'] = true;
             } elseif ($cek_kode_final_exam) {
-                // Sudah ada code yang belum dipakai
                 $data['codeFinalExam'] = $cek_kode_final_exam->CODE_EXAM;
                 $data['isRemedialCode'] = false;
             } else {
-                // Tidak ada code dan tidak punya remedial
                 $data['codeFinalExam'] = null;
                 $data['isRemedialCode'] = false;
             }
