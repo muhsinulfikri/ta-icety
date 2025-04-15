@@ -27,10 +27,10 @@
                 <input type="hidden" class="form-control" name="type[]" value="2">
                 <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $ID_ITEM ?? '' ?>">
-                <div id="delete_quiz_{{ $no }}"
+                {{-- <div id="delete_quiz_{{ $no }}"
                     class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <span><i class="anticon anticon-close"></i> </span>
-                </div>
+                </div> --}}
 
             </a>
         </h5>
@@ -42,13 +42,13 @@
                 <label>Minimum Nilai Lulus<span class="text-danger">*</span></label>
                 <div class="col">
                     <input type="number" class="form-control" id="min_nilai_{{ $no }}" name="min_nilai_{{ $no }}" value="{{$MIN_NILAI}}" placeholder="75" required>
-                    <small class="text-danger">Minimal Nilai lulus di quiz ini</small>
+                    <small class="text-danger">Minimal Nilai lulus di quiz ini, jangan di edit</small>
                 </div>
             </div>
         </div>
         <div class="card-body">
             <div class="soal_form_{{ $no }}"></div>
-            <div class="form-group row justify-content-center align-items-center">
+            {{-- <div class="form-group row justify-content-center align-items-center">
                 <div id="add_new_soal_{{ $no }}{{ $id_quiz }}"
                     class="btn btn-success rounded col-md-3 float-end mx-2" style="cursor: pointer;">
                     <span class="text-white">Add New Question</span>
@@ -57,7 +57,7 @@
                     class="btn btn-success rounded col-md-3 float-end mx-2" style="cursor: pointer;">
                     <span class="text-white">Import Soal</span>
                 </div>
-            </div>
+            </div> --}}
         </div>
     </div>
 </div>

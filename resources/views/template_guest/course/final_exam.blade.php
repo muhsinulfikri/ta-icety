@@ -2,6 +2,7 @@
 <div class="container d-flex justify-content-center align-items-center flex-column my-4">
     <input type="hidden" name="id_activity_final_quest" value="{{ $id_activity }}">
     <input type="hidden" name="code_exam" value="{{ $code }}">
+    <input type="hidden" name="id_user" value="{{ $id_user }}">
     <h5><span class="text-danger">*</span>Nilai minimal lulus final exam : {{ $data[0]->MIN_NILAI }}</h5>
     <h6 class="fw-semibold mt-5 w-100 text-start">Final Exam :</h6>
     <?php if (is_null($quiz_grade)) {
@@ -94,6 +95,7 @@
                         "id_activity": id_activity,
                         "pilih_jwbn": pilih_jwbn,
                         "min_nilai": "<?= $data[0]->MIN_NILAI ?>",
+                        "id_user": "<?= $id_user ?>",
                         "activity_asal": "<?= $id_activity_parent ?>",
                     },
                     success: function(data) {
@@ -115,7 +117,16 @@
                                 window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
                             });
                         }
-
+                    },
+                    error: function(data) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message,
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                        });
+                        window.location.href = "<?= Request::segment(0) ?>/course/detail/course-after_final?id_activity=<?= $id_activity_parent ?>";
                     }
                 });
             }

@@ -7,10 +7,10 @@
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
                 <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
-                <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
+                {{-- <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
                     <span><i class="anticon anticon-close"></i> </span>
-                </div>
+                </div> --}}
             </a>
         </h5>
     </div>
@@ -136,7 +136,7 @@
         $("#delete_materi_{{ $no }}").removeClass("is-loading")
         // $("#materi_item_{{ $no }}").remove();
 
-        var idItem = $("#materi_item_{{ $no }}").find('input[name="ID_ITEM[]"]').eq(0).val();        
+        var idItem = $("#materi_item_{{ $no }}").find('input[name="ID_ITEM[]"]').eq(0).val();
         var itemType = $("#materi_item_{{ $no }}").find('input[name="type[]"]').eq(0).val();
         $("#materi_item_{{ $no }}").hide();
         $("#materi_item_{{ $no }}").html(`
@@ -144,7 +144,7 @@
                 <input type="hidden" name="DELETED[]" value="1">
                 <input type="hidden" name="type[]" value="${itemType}">
                 <input type="hidden" name="order_list[]" value="">
-                
+
                 <input id="file-upload" type="file" name="materi_file[]" style="display: none;">
                 <input type="hidden" name="default_file[]" value="">
                 <input type="hidden" name="materi_link[]" value="">

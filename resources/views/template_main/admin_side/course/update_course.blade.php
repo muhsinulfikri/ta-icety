@@ -227,7 +227,7 @@
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <div class="col-md-12">
                             <div data-toggle="modal" id="add_item" data-target="#exampleModalCenter"
                                 class="btn btn-primary m-r-5 col-md-12" style="cursor: pointer;">
@@ -235,7 +235,7 @@
                                 <span class="col-md-12">Add Materi / Quiz</span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-group text-right mt-5">
                         <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
                     </div>

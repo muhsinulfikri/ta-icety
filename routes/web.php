@@ -155,7 +155,7 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     //END COURSE
 
     //FINAL EXAM
-    Route::get('course/final-exam/{id}/{code}/{activity_asal}', 'guest_controller\CourseGuest@finalExam');
+    Route::get('course/final-exam/{id}/{code}/{activity_asal}/{id_user}', 'guest_controller\CourseGuest@finalExam');
     Route::post('/course/final-exam/evaluation/', 'guest_controller\CourseGuest@FinalExamEvaliation');
     Route::post('/course/final-exam/validasi-code', 'guest_controller\CourseGuest@ValidasiCode');
     //END FINAL EXAM
@@ -194,6 +194,10 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('check_payment_status', 'guest_controller\CheckoutGuest@check_status');
     Route::post('get_order_id', 'guest_controller\CheckoutGuest@get_order_id');
     //END PAYMENT & CART
+
+    //PAYMENT SERTIF
+    Route::post('get_id_sertif_pay', 'guest_controller\PaymentCertificate@get_pay_sertif_id');
+    Route::get('check_payment_sertif/{any}', 'guest_controller\PaymentCertificate@check_payment_status');
 
     //API XENDIT
     Route::post('/payment/get', 'guest_controller\CheckoutGuest@get_payment');

@@ -210,19 +210,19 @@
                                     <?php
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
+                                        <button
+                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                            onclick="ShowCertificateCode(this)" data-type="5">
+                                            Show Certificate Course
+                                        </button>
                                         {{-- @if($course->IS_SERTIF_PAID == 1)
                                             <button
                                                 class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                 onclick="BuyCertificateCode(this)" data-type="5">
                                                 Certificate
                                             </button>
-                                        @else
-                                        @endif --}}
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowCertificateCode(this)" data-type="5">
-                                            Show Certificate Course
-                                        </button>
+                                        @else --}}
+                                        {{-- @endif --}}
                                         @if ($course->FINAL_EXAM != null)
                                         <button
                                             class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
@@ -402,6 +402,8 @@
 </style>
 
 <script>
+    let totPrice = <?= isset($course->PRICE_SERTIF) ? $course->PRICE_SERTIF : 0 ?>;
+
     $('#refreshPageBtn').click(function() {
         location.reload();
     });
@@ -469,7 +471,6 @@
                                     </div>
                                 </div>`);
     }
-
 
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
@@ -549,10 +550,20 @@
                         </div>
                     @else
                         @if ($final_exam != null)
-                            <h6 class="mt-4">Code Final Exam : <?= $final_exam != null ? $final_exam->CODE_EXAM : 'Anda tidak memiliki Code Exam yang Aktif' ?></h6>
-                        @endif
-                        @if ($final_exam == null)
-                            <h6 class="mt-4">Anda tidak memiliki Code Exam yang Aktif klik dibawah ini untuk membeli code exam</h6>
+                            <h6 class="mt-4">
+                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $final_exam->CODE_EXAM }}</span>
+                            </h6>
+                        @elseif (!empty($codeFinalExam) && ($isRemedialCode ?? false))
+                            <h6 class="mt-4">
+                                Kode Final Exam dari jatah <strong>Remedial</strong> telah digenerate otomatis.
+                            </h6>
+                            <h6 class="mt-2">
+                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $codeFinalExam }}</span>
+                            </h6>
+                        @else
+                            <h6 class="mt-4">
+                                Anda tidak memiliki Code Exam yang Aktif. Klik dibawah ini untuk membeli code exam.
+                            </h6>
                             <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
                                 Buy Code Exam
                             </button>
@@ -717,34 +728,14 @@
         }
     });
 
-    // const readmoreText = document.querySelector('.readmore-text');
-    // const readmoreBtn = document.querySelector('.readmore-btn');
-    // const icon = document.getElementById('icon-btn');
-    // const textContent = document.querySelector('.text-btn-content');
-    // let isExpanded = false;
-    // const realHeight = readmoreText.clientHeight;
-    // const defaultHeight = '200px';
-
-    // const toggleExpandedState = () => {
-    //     isExpanded = !isExpanded;
-    //     const newHeight = isExpanded ? `${realHeight + 30}px` : defaultHeight;
-    //     const newText = isExpanded ? 'Less Info' : 'More Info';
-    //     const upClass = 'bi-chevron-up';
-    //     const downClass = 'bi-chevron-down';
-
-    //     readmoreText.style.height = newHeight;
-    //     textContent.innerHTML = newText;
-    //     icon.classList.remove(isExpanded ? downClass : upClass);
-    //     icon.classList.add(isExpanded ? upClass : downClass);
-    // };
-
-    // readmoreText.style.height = defaultHeight;
-    // readmoreBtn.addEventListener('click', toggleExpandedState);
-
     function useFinalCode() {
+        <?php if (empty(session('user'))) { ?>
+            location.href = "<?= url('login') ?>";
+        <?php } ?>
         var code = $('#trial_code').val();
+        var id_user = '<?= session('user')[0]['ID_USER'] ?>';
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : '#') : '#' ?>";
+        var codeExam = "<?= ($course->FINAL_EXAM != null) ? (($final_exam != null) ? $final_exam->CODE_EXAM : $codeFinalExam) : '#' ?>";
 
         $.ajaxSetup({
             headers: {
@@ -769,7 +760,7 @@
                         confirmButtonText: 'Continue',
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam + "/" + "<?= $id_activity ?>";
+                            window.location.href = "<?= url('course/final-exam/' . $course->FINAL_EXAM) ?>/" + codeExam + "/" + "<?= $id_activity ?>" + "/" + id_user;
                         }
                     });
                 } else {
@@ -817,7 +808,7 @@
     }
 
 
-    // // Helper function to display error messages
+    // Helper function to display error messages
     function displayError(title, message) {
         const alertContainer = document.getElementById('alert_div');
         alertContainer.innerHTML = `
@@ -838,8 +829,7 @@
         icon: 'error',
         title: 'Oops...',
         confirmButtonColor: '#ad0b0b',
-        text: '{{ session('
-        err_msg ') }}',
+        text: '{{ session('err_msg ') }}',
     });
 </script>
 @endif

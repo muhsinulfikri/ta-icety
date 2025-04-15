@@ -58,7 +58,6 @@ class SertificateGuest extends Controller
         // $data['id_user'] = session('user')[0]->get('ID_USER');
         $data['id'] = Crypt::decryptString($request->id);
 
-
         $data['sertifikat'] = DB::selectOne("
             SELECT
                 sa.ID_SERTIFIKAT,

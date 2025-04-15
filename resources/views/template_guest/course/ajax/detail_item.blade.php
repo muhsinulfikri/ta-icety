@@ -1,7 +1,7 @@
 <?php if ($type == 1) { ?>
     <div class="mx-4 my-4">
         <h5 class="py-2 fw-semibold"><?= $detail_item_course->TITLE ?></h5>
-        @if ($detail_item_course->LINK_MATERI != null || $detail_item_course->FILE != null)        
+        @if ($detail_item_course->LINK_MATERI != null || $detail_item_course->FILE != null)
         <hr>
         <section id="doc-course">
             <div class="d-flex justify-content-center align-items-center" id="document-frame">

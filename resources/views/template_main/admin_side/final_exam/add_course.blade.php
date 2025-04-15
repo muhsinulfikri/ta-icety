@@ -48,6 +48,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Remedial <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="remedial" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Date <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">

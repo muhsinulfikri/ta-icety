@@ -27,6 +27,17 @@ class Certificate extends Model
         $this->db->insert('sertifikat_activity', $data);
         return $this->db->affected_rows();
     }
+    public function getSertifIsPaid($id){
+        $sql = DB::selectOne("
+            SELECT
+                ps.*
+            FROM
+                payment_sertif ps
+            WHERE
+                ps.ID_PAYMENT_SERTIF  = '".$id."'
+        ");
+        return $sql;
+    }
 
     public function generate($namaUser, $activity_name, $sertificate_no, $template_link, $summary, $info_sertif, $duration, $date, $id_sertif)
     {
