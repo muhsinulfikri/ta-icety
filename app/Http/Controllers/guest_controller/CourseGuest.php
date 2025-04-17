@@ -476,50 +476,6 @@ class CourseGuest extends Controller
             }
         }
 
-
-		//2 Final Exam Pertama Free
-	// 	$data['is_first'] = $data['date_sertif_course'][0]->IS_FIRST;
-    //     if($data['course']->FINAL_EXAM != null){
-	// 	if ($data['is_first'] == 0) {
-	// 		$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
-	// 		$data_final_exam = [
-	// 			"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-	// 			"ID_USER"		=> session('user')[0]->get('ID_USER'),
-	// 			"CODE_EXAM"		=> $data['codeFinalExam'],
-	// 			"IS_USED"		=> 0,
-	// 			"CREATED_AT"	=> date("Y-m-d H:i:s")
-	// 		];
-	// 		DB::table('tb_final_exam')->insert($data_final_exam);
-	// 	} else if ($data['is_first'] == 1) {
-	// 		$cek_kode_final_exam = DB::select("
-	// 			SELECT
-	// 				CODE_EXAM
-	// 			FROM
-	// 				tb_final_exam
-	// 			WHERE
-	// 				ID_ACTIVITY = ?
-	// 				AND ID_USER = ?
-	// 				AND IS_USED = 0
-	// 			", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
-
-	// 		if (empty($cek_kode_final_exam)) {
-	// 			$data['codeFinalExam'] = $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s'));
-	// 			$data_final_exam = [
-	// 				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-	// 				"ID_USER"		=> session('user')[0]->get('ID_USER'),
-	// 				"CODE_EXAM"		=> $data['codeFinalExam'],
-	// 				"IS_USED"		=> 0,
-	// 				"CREATED_AT"	=> date("Y-m-d H:i:s")
-	// 			];
-	// 			DB::table('tb_final_exam')->insert($data_final_exam);
-	// 		} else if (count($cek_kode_final_exam) > 1) {
-	// 			for ($i = 1; $i < count($cek_kode_final_exam) - 1; $i++) {
-	// 				DB::table('tb_final_exam')->where('CODE_EXAM', $cek_kode_final_exam[$i]->CODE_EXAM)->delete();
-	// 			}
-	// 		}
-	// 	}
-    // }
-
 		if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
 			return view('template.header', $data) .
 				view('template_guest.course.course_detail_expired', $data) .
