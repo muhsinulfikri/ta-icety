@@ -18,10 +18,11 @@ use Illuminate\Validation\ValidationException;
 
 class CourseController extends Controller
 {
+    protected $courseModel;
     private $id_detailCourse = 0;
     public function __construct()
     {
-        //
+        $this->courseModel = new Course();
     }
     public function index()
     {
@@ -576,6 +577,30 @@ class CourseController extends Controller
             WHERE
                 ID_ACTIVITY = '" . $req->id_activity . "'
         ");
+        $find_id_final = DB::select("
+            SELECT
+                ID_ACTIVITY
+            FROM
+                tb_final_exam
+        ");
+
+        $checkedCourses = $this->courseModel->get_check_activity();
+
+        $id_act = array_map(function ($item) {
+            return $item->ID_PRODUCT;
+        }, $checkedCourses);
+
+        $id_final = array_map(function ($item) {
+            return $item->ID_ACTIVITY;
+        }, $find_id_final);
+
+        if (in_array($find_id_course->ID_ACTIVITY, $id_act)) {
+            return back()->with('err_msg', 'Course tidak dapat dihapus karena sudah ada transaksi.');
+        }
+
+        if (in_array($find_id_course->ID_ACTIVITY, $id_final)) {
+            return back()->with('err_msg', 'Course tidak dapat dihapus karena sudah ada transaksi.');
+        }
 
         // DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('activity')->WHERE(['ID_ACTIVITY' => $find_id_course->ID_ACTIVITY])->update(['IS_DELETED' => date('Y-m-d H:i:s')]);
