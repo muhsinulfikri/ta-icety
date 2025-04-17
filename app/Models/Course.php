@@ -261,6 +261,24 @@ class Course extends Model
         ');
         return $data;
     }
+    public function get_check_activity(){
+        $data = DB::select("
+            SELECT
+                p.*,
+                o.ID_PRODUCT
+            FROM
+                payment p
+            LEFT JOIN `order` o ON
+                o.ID_PAY = p.ID_PAY
+            LEFT JOIN payment_method pm ON
+                pm.ID_PAY = p.ID_PAY
+            WHERE
+                o.ID_PRODUCT IS NOT NULL
+            AND
+            	p.DATE_PAY IS NOT NULL
+        ");
+        return $data;
+    }
     public function get_detail_item_course($condition, $type)
     {
         if ($type == 1) {
@@ -385,7 +403,7 @@ class Course extends Model
 				ID_USER = '" . session('user')[0]->get('ID_USER') . "'
 				AND
 				ID_ACTIVITY = '" . $id_activity . "'
-            ORDER BY 
+            ORDER BY
                 ID_ITEM ASC
 		");
 
