@@ -335,7 +335,7 @@ class CourseGuest extends Controller
 				'NILAI' => 0
 			];
 
-			if(($data['nilai_final_exam']->NILAI > $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))){
+			if(($data['nilai_final_exam']->NILAI >= $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))){
                 $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
                 $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
                 $countSertifExam = DB::table('sertifikat_activity')
