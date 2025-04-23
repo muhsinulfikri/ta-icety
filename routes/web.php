@@ -207,6 +207,8 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
 
     //get alias
     Route::get('/check-alias', 'CourseController@get_alias');
+
+    Route::post('/buy-certificate', 'guest_controller\CourseGuest@buyCertificateCode');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {

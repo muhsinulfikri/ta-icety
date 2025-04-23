@@ -189,7 +189,7 @@
                         </div>
                     </div>
 
-                    {{-- <div class="form-group row">
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">
                             Price For Certificate <span class="text-danger">*</span>
                         </label>
@@ -204,7 +204,7 @@
                                 Free
                             </span>
                         </div>
-                    </div> --}}
+                    </div>
 
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Type Course <span
