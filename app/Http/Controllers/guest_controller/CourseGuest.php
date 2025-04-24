@@ -269,6 +269,12 @@ class CourseGuest extends Controller
 
         $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data['id_payment_sertif']);
 
+        //cek data is pay
+        $data['is_paid'] = DB::table('payment_sertif')
+                        ->where('ID_ACTIVITY', $data['id_activity'])
+                        ->where('ID_USER', session('user')[0]->get('ID_USER'))
+                        ->value('IS_PAY');
+
 		//get nilai
 		$data['nilai'] = DB::selectOne("
 			SELECT
