@@ -211,41 +211,50 @@
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
                                         @if($course->IS_SERTIF_PAID == 1)
-                                        <form action="{{ url('/buy-certificate') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                            <button type="submit" id="refreshPageBtn"
+                                            <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                <button type="submit" id="refreshPageBtn"
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="BuyCertificateCode(this)"
+                                                        data-type="5">
+                                                    Certificate
+                                                </button>
+                                            </form>
+                                            @if ($is_paid == 1 && $course->FINAL_EXAM != null)
+                                                <button
                                                     class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                    onclick="BuyCertificateCode(this)"
-                                                    data-type="5">
-                                                Certificate
-                                            </button>
-                                        </form>
-                                            {{-- <button
-                                                class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                onclick="BuyCertificateCode(this)" data-type="5">
-                                                Certificate
-                                            </button> --}}
+                                                    onclick="ShowFinalExam(this)" data-type="6">
+                                                    Final Exam
+                                                </button>
+                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                    <button
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="ShowCertificateFinal(this)" data-type="5">
+                                                        Show Certificate Final Exam
+                                                    </button>
+                                                @endif
+                                            @endif
                                         @else
                                             <button
                                                 class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                 onclick="ShowCertificateCode(this)" data-type="5">
                                                 Show Certificate Course
                                             </button>
-                                        @endif
-                                        @if ($course->FINAL_EXAM != null)
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowFinalExam(this)" data-type="6">
-                                            Final Exam
-                                        </button>
-                                        @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowCertificateFinal(this)" data-type="5">
-                                            Show Certificate Final Exam
-                                        </button>
-                                        @endif
+                                            @if ($course->FINAL_EXAM != null)
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowFinalExam(this)" data-type="6">
+                                                    Final Exam
+                                                </button>
+                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowCertificateFinal(this)" data-type="5">
+                                                    Show Certificate Final Exam
+                                                </button>
+                                                @endif
+                                            @endif
                                         @endif
                                     <?php } ?>
 
