@@ -698,6 +698,20 @@ class CourseGuest extends Controller
 			'materi' => 0,
 			'quiz' => 0
 		);
+        $data['cek_course_user'] = DB::select("
+            SELECT
+                ID_USER,
+                ID_PRODUCT,
+                ID_PAY
+            FROM
+                `order`
+            WHERE
+                ID_USER = '".$data_user."'
+            AND
+                ID_PRODUCT = '".$id_activity."'
+            AND
+                ID_PAY IS NOT NULL
+        ");
 		foreach ($data_itemCourse as $item) {
 			if ($item->TYPE == 1) {
 				array_push(
