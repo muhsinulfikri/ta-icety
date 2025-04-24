@@ -94,15 +94,29 @@
 
                 <div>
                     <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                        <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                            class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                            Join Now
-                        </button>
+                        @if (!empty($cek_course_user))
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                     <?php } else if (empty($course->REQUIREMENT)) { ?>
-                        <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                            class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                            Join Now
-                        </button>
+                        @if (!empty($cek_course_user))
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                     <?php } else { ?>
                         <label class="text-black" style="align-items: center">Please finish <span class="fw-bold text-danger"><?= $course->REQ_NAME ?></span> course first
                             before take this course</label>
@@ -176,15 +190,29 @@
                     @endif
                     <div>
                         <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                Join Now
-                            </button>
+                            @if (!empty($cek_course_user))
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                         <?php } else if (empty($course->REQUIREMENT)) { ?>
-                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                Join Now
-                            </button>
+                            @if (!empty($cek_course_user))
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                         <?php } else { ?>
                             <label class="text-black" style="align-items: center">Please finish <span class="fw-bold text-danger"><?= $course->REQ_NAME ?></span> course first
                                 before take this course</label>
