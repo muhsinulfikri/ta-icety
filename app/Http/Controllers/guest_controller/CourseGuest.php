@@ -208,6 +208,7 @@ class CourseGuest extends Controller
 			WHERE
 				$condition_all_mapping
 		");
+        $data['id_sertif'] = null;
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
             $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 			$countSertifCourse = DB::table('sertifikat_activity')
@@ -246,6 +247,16 @@ class CourseGuest extends Controller
 
 			DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
 			$data['sertif_course'] = (object) $data_sertif_course;
+            $data['id_sertif'] = DB::selectOne("
+                SELECT
+                    ID_SERTIFIKAT
+                FROM
+                    sertifikat_activity
+                WHERE
+                    ID_ACTIVITY = '".$data['id_activity']."'
+                AND
+                    ID_USER = '".session('user')[0]->get('ID_USER')."'
+            ")->ID_SERTIFIKAT;
 		} else {
 			$data['sertif_course'] = $sertifCheck;
 		}
@@ -619,6 +630,7 @@ class CourseGuest extends Controller
 
     public function buyCertificateCode(Request $request){
         $idActivity = $request->input('id_activity');
+        $idPayment = $request->input('id_sertif_pay');
         $userId = session('user')[0]->get('ID_USER');
 
         $course = $this->courseModel->get_course($request->input('id_activity'));
@@ -643,7 +655,6 @@ class CourseGuest extends Controller
                     DB::table('payment_sertif')->insert($dataPaySertif);
                 }
             }
-
             return response()->noContent();
         }
 
