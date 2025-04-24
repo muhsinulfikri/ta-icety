@@ -552,7 +552,7 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= $id_sertif_is_paid->ID_PAYMENT_SERTIF ?? NULL ?>">
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
                                                     @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
                                                         <label>Download Sertificate Course</label>
@@ -562,7 +562,7 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= $id_sertif_is_paid->ID_PAYMENT_SERTIF ?? NULL ?>">
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
                                                     @endif
                                                 @endif
@@ -584,19 +584,7 @@
 
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
         const idSertifPay = $('input:hidden[name="id_sertif_pay"]').val();
-
-        if (!idSertifPay) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Sertifikat Tidak Ditemukan',
-                text: 'Silakan refresh halaman dan coba lagi.',
-                confirmButtonText: 'Refresh Sekarang'
-            }).then(() => {
-                location.reload();
-            });
-            return;
-        }
-
+        console.log(idSertifPay);
         if(totPrice != 0){
             $.ajax({
                 url: '/get_id_sertif_pay',
