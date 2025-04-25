@@ -208,6 +208,7 @@ class CourseGuest extends Controller
 			WHERE
 				$condition_all_mapping
 		");
+        $data['id_sertif'] = null;
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
             $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
 			$countSertifCourse = DB::table('sertifikat_activity')
@@ -246,9 +247,33 @@ class CourseGuest extends Controller
 
 			DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
 			$data['sertif_course'] = (object) $data_sertif_course;
+            $data['id_sertif'] = DB::selectOne("
+                SELECT
+                    ID_SERTIFIKAT
+                FROM
+                    sertifikat_activity
+                WHERE
+                    ID_ACTIVITY = '".$data['id_activity']."'
+                AND
+                    ID_USER = '".session('user')[0]->get('ID_USER')."'
+            ")->ID_SERTIFIKAT;
 		} else {
 			$data['sertif_course'] = $sertifCheck;
 		}
+
+        //get id payment sertif
+        $data['id_payment_sertif'] = DB::table('payment_sertif')
+                                    ->where('ID_USER', session('user')[0]->get('ID_USER'))
+                                    ->where('ID_ACTIVITY', $data['id_activity'])
+                                    ->value('ID_PAYMENT_SERTIF');
+
+        $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data['id_payment_sertif']);
+
+        //cek data is pay
+        $data['is_paid'] = DB::table('payment_sertif')
+                        ->where('ID_ACTIVITY', $data['id_activity'])
+                        ->where('ID_USER', session('user')[0]->get('ID_USER'))
+                        ->value('IS_PAY');
 
 		//get nilai
 		$data['nilai'] = DB::selectOne("
@@ -397,22 +422,6 @@ class CourseGuest extends Controller
 				'MIN_NILAI' => 0
 			];
 		}
-        //sertif paid
-        // if($data['course']->IS_SERTIF_PAID == 1 && $data['tot_proggress'] == 100 && $sertifCheck != null){
-        //     $data_pay_sertif = [
-        //         'ID_PAYMENT_SERTIF' => 'PAY_SERTIF_'. $sertifCheck->ID_SERTIFIKAT,
-        //         'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
-        //         'ID_USER' => session('user')[0]->get('ID_USER'),
-        //         'ID_PAY' => null,
-        //         'IS_PAY' => 0,
-        //         'ID_ACTIVITY' => $data['id_activity'],
-        //         'TITLE_ACTIVITY' => $data['course']->TITLE_ACTIVITY
-        //     ];
-        //     if(empty($this->courseModel->get_check_pay_sertif($data_pay_sertif['ID_PAYMENT_SERTIF']))){
-        //         DB::table('payment_sertif')->insertGetId($data_pay_sertif);
-        //     }
-        //     $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data_pay_sertif['ID_PAYMENT_SERTIF']);
-        // }
 
         $data['remedial'] = $this->finalExamModel->get_remidi_for_exam($data['course']->FINAL_EXAM);
         if ($data['course']->FINAL_EXAM != null) {
@@ -625,6 +634,39 @@ class CourseGuest extends Controller
 		return view('template_guest.course.ajax.detail_item', $data);
 	}
 
+    public function buyCertificateCode(Request $request){
+        $idActivity = $request->input('id_activity');
+        $idPayment = $request->input('id_sertif_pay');
+        $userId = session('user')[0]->get('ID_USER');
+
+        $course = $this->courseModel->get_course($request->input('id_activity'));
+        $sertifCheck = DB::table('sertifikat_activity')->where('ID_ACTIVITY', $idActivity)->where('ID_USER', $userId)->first();
+
+        if (!empty($sertifCheck)) {
+            $idPaymentSertif = 'PAY_SERTIF_' . $sertifCheck->ID_SERTIFIKAT;
+            $statusFirst = 1;
+
+            if ($course->IS_SERTIF_PAID == 1 && $statusFirst == 1) {
+                $dataPaySertif = [
+                    'ID_PAYMENT_SERTIF' => $idPaymentSertif,
+                    'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+                    'ID_USER' => $userId,
+                    'ID_PAY' => null,
+                    'IS_PAY' => 0,
+                    'ID_ACTIVITY' => $idActivity,
+                    'TITLE_ACTIVITY' => $course->TITLE_ACTIVITY
+                ];
+
+                if (!DB::table('payment_sertif')->where('ID_PAYMENT_SERTIF', $idPaymentSertif)->exists()) {
+                    DB::table('payment_sertif')->insert($dataPaySertif);
+                }
+            }
+            return response()->noContent();
+        }
+
+        return redirect()->back()->with('err_msg', 'Sertifikat tidak ditemukan.');
+    }
+
 	public function getMappingCourse()
 	{
 		$condition_all_mapping = "ID_USER = '" . session('user')[0]->get('ID_USER') . "' AND ID_ACTIVITY = '" . $_POST['id_activity'] . "'";
@@ -656,6 +698,20 @@ class CourseGuest extends Controller
 			'materi' => 0,
 			'quiz' => 0
 		);
+        $data['cek_course_user'] = DB::select("
+            SELECT
+                ID_USER,
+                ID_PRODUCT,
+                ID_PAY
+            FROM
+                `order`
+            WHERE
+                ID_USER = '".$data_user."'
+            AND
+                ID_PRODUCT = '".$id_activity."'
+            AND
+                ID_PAY IS NOT NULL
+        ");
 		foreach ($data_itemCourse as $item) {
 			if ($item->TYPE == 1) {
 				array_push(
@@ -1195,4 +1251,13 @@ class CourseGuest extends Controller
 		return true;
 
 	}
+    public function GenerateUniqIDPay($var)
+    {
+        $string = preg_replace('/[^a-z]/i', '', $var);
+        $vocal  = array("a", "e", "i", "o", "u", "A", "E", "I", "O", "U", " ");
+        $scrap  = str_replace($vocal, "", $string);
+        $begin  = substr($scrap, 0, 4);
+        $uniqid = strtoupper($begin);
+        return "PAY_SERTIF_" . $uniqid . substr(md5(microtime()), 0, 7);
+    }
 }

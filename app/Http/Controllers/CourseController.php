@@ -160,10 +160,10 @@ class CourseController extends Controller
                 'HOURS'                 => $req->input('duration_hour')
             ];
 
-            // if($req->input('price_sertif') != 0){
-            //     $course['PRICE_SERTIF']  = $req->input('price_sertif');
-            //     $course['IS_SERTIF_PAID']  = 1;
-            // }
+            if($req->input('price_sertif') != 0){
+                $course['PRICE_SERTIF']  = $req->input('price_sertif');
+                $course['IS_SERTIF_PAID']  = 1;
+            }
 
             if ($req->input('req')) {
                 $course['REQUIREMENT']  = $req->input('req');

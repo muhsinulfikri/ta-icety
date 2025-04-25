@@ -583,14 +583,15 @@ class Course extends Model
         return $data;
     }
 
-    public function get_check_pay_sertif($condition){
-        $data = DB::selectOne("
+    public function get_check_pay_sertif($id){
+        $data = DB::select("
             SELECT
-                ID_PAYMENT_SERTIF
+                ID_PAYMENT_SERTIF,
+                IS_PAY
             FROM
                 payment_sertif
             WHERE
-                ID_PAYMENT_SERTIF = '". $condition ."'
+                ID_PAYMENT_SERTIF = '".$id."'
         ");
         return $data;
     }

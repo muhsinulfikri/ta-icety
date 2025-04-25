@@ -210,32 +210,51 @@
                                     <?php
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowCertificateCode(this)" data-type="5">
-                                            Show Certificate Course
-                                        </button>
-                                        {{-- @if($course->IS_SERTIF_PAID == 1)
+                                        @if($course->IS_SERTIF_PAID == 1)
+                                            <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                <button type="submit" id="refreshPageBtn"
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="BuyCertificateCode(this)"
+                                                        data-type="5">
+                                                    Certificate
+                                                </button>
+                                            </form>
+                                            @if ($is_paid == 1 && $course->FINAL_EXAM != null)
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowFinalExam(this)" data-type="6">
+                                                    Final Exam
+                                                </button>
+                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                    <button
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="ShowCertificateFinal(this)" data-type="5">
+                                                        Show Certificate Final Exam
+                                                    </button>
+                                                @endif
+                                            @endif
+                                        @else
                                             <button
                                                 class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                onclick="BuyCertificateCode(this)" data-type="5">
-                                                Certificate
+                                                onclick="ShowCertificateCode(this)" data-type="5">
+                                                Show Certificate Course
                                             </button>
-                                        @else --}}
-                                        {{-- @endif --}}
-                                        @if ($course->FINAL_EXAM != null)
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowFinalExam(this)" data-type="6">
-                                            Final Exam
-                                        </button>
-                                        @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
-                                        <button
-                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                            onclick="ShowCertificateFinal(this)" data-type="5">
-                                            Show Certificate Final Exam
-                                        </button>
-                                        @endif
+                                            @if ($course->FINAL_EXAM != null)
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowFinalExam(this)" data-type="6">
+                                                    Final Exam
+                                                </button>
+                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                <button
+                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                    onclick="ShowCertificateFinal(this)" data-type="5">
+                                                    Show Certificate Final Exam
+                                                </button>
+                                                @endif
+                                            @endif
                                         @endif
                                     <?php } ?>
 
@@ -521,6 +540,114 @@
                                         </div>
                                     </div>
                                 </div>`);
+    }
+
+    function BuyCertificateCode(e) {
+        <?php foreach ($item_course as $item) :  ?>
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).removeClass('btn-primary')
+            $('#show-detail-' + <?= $item->ID_ITEM ?>).addClass('btn-main-outline')
+        <?php endforeach; ?>
+        $(e).removeClass('btn-main-outline')
+        $(e).addClass('btn-primary')
+        $("#detail-item").html(
+            '<div class="d-flex justify-content-center align-items-center h-100"><img src="https://icons8.com/preloaders/preloaders/1476/Rocket.gif" alt="Loader.gif" /></div>'
+        );
+        $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+                                            <div class="mx-4 py-3 bg-white">
+                                                @if($course->IS_SERTIF_PAID == 1 && $tot_proggress == 100)
+                                                    @if (!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 0)
+                                                        <label>Buy Sertificate Course</label>
+                                                        </br>
+                                                        <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
+                                                        <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                    @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
+                                                        <label>Download Sertificate Course</label>
+                                                        <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                            onclick="DownloadPdf(this)">Download PDF</button>
+                                                    @else
+                                                        <label>Buy Sertificate Course</label>
+                                                        </br>
+                                                        <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
+                                                        <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                    @endif
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`);
+    }
+    $(document).on('click', '#buy', function() {
+        Swal.fire({
+            title: 'Loading Payment!',
+            html: 'Please Wait ...',
+            timerProgressBar: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const idSertifPay = $('input:hidden[name="id_sertif_pay"]').val();
+        console.log(idSertifPay);
+        if(totPrice != 0){
+            $.ajax({
+                url: '/get_id_sertif_pay',
+                type: "POST",
+                data: {
+                    _token: csrfToken,
+                    TotPrice: totPrice,
+                    id_sertif_pay: idSertifPay
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    getInvoiceXendit(response.invoice.id, csrfToken); // Pass csrfToken for fetch
+                },
+                error: function(xhr, status, error) {
+                    displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
+                    console.error(error);
+                    Swal.close();
+                }
+            });
+        }
+    });
+
+    async function getInvoiceXendit(data, csrfToken) {
+        try {
+            const invoiceData = {
+                xendit_id: data,
+            };
+            console.log(invoiceData);
+
+            const fetchResponse = await fetch('/payment/get', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify(invoiceData),
+            });
+
+            const responseData = await fetchResponse.json();
+            console.log(fetchResponse);
+
+            if (fetchResponse.ok && responseData.invoice_url) {
+                window.location.href = responseData.invoice_url; // Redirect to the invoice URL
+            } else {
+                displayError('Payment Error', responseData?.message || 'An error occurred while creating the invoice.');
+                console.error(responseData);
+                Swal.close();
+            }
+        } catch (error) {
+            displayError('Payment Error', error.message || 'An unexpected error occurred.');
+            console.error(error);
+            Swal.close();
+        }
     }
 
     function ShowFinalExam(e) {
