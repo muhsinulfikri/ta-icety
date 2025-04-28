@@ -27,6 +27,17 @@ class User extends Model
         ");
         return $sql;
     }
+    public function get_intitusi_name($id){
+        $sql = DB::select("
+            SELECT
+                UNIV
+            FROM
+                `user_data`
+            WHERE
+                ID_USER = '".$id."'
+        ");
+        return $sql;
+    }
     public function get_my_product(){
         DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
         $sql = DB::select('
