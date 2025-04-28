@@ -11,6 +11,7 @@ use App\Models\Event;
 use App\Models\Category;
 use App\Models\Certificate;
 use App\Models\Ebook;
+use App\Models\User;
 use Carbon\Traits\ToStringFormat;
 use Exception;
 use Illuminate\Support\Facades\Session;
@@ -28,6 +29,7 @@ class CourseGuest extends Controller
 	protected $certificateModel;
     protected $activityModel;
     protected $finalExamModel;
+    protected $userModel;
 
 	public function __construct()
 	{
@@ -39,6 +41,7 @@ class CourseGuest extends Controller
 		$this->certificateModel = new Certificate();
         $this->activityModel = new Activity();
         $this->finalExamModel = new FinalExam();
+        $this->userModel = new User();
 	}
 
 	public function index()
@@ -74,6 +77,7 @@ class CourseGuest extends Controller
         $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
 		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
+        $data_category_user = $this->userModel->get_user(session('user')[0]->get('ID_USER'));
 
 		$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 
@@ -208,6 +212,8 @@ class CourseGuest extends Controller
 			WHERE
 				$condition_all_mapping
 		");
+
+        $institusi_name = $this->userModel->get_intitusi_name(session('user')[0]->get('ID_USER'));
         $data['id_sertif'] = null;
 		if ($data['tot_proggress'] == 100 && empty($sertifCheck)) {
             $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
@@ -218,45 +224,91 @@ class CourseGuest extends Controller
             if($completed_course == 0) {
                 return 1;
             }
-            $data_sertif_course = array(
-				"ID_USER" => session('user')[0]->get('ID_USER'),
-				"ID_ACTIVITY" => $data['id_activity'],
-				"NO_SERTIFIKAT" => $sertif_number_course,
-				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-				"FILE_SERTIFIKAT" => null,
-                "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-                "DURATION" => $completed_course[0]->days_difference,
-                "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
-				"LOG_TIME" => date('Y-m-d H:i:s')
-			);
-            $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
-			$sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
-			$data_sertif_course = array(
-				"ID_USER" => session('user')[0]->get('ID_USER'),
-				"ID_ACTIVITY" => $data['id_activity'],
-				"NO_SERTIFIKAT" => $sertif_number_course,
-				"JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-				"FILE_SERTIFIKAT" => $sertif_path_course,
-                "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-                "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-                "DURATION" => $completed_course[0]->days_difference,
-                "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
-				"LOG_TIME" => date('Y-m-d H:i:s')
-			);
+            if ($data_category_user[0]->ID_CATEGORY_USER == 5){
+                $data_sertif_course = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $data['id_activity'],
+                    "NO_SERTIFIKAT" => $sertif_number_course,
+                    "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+                    "FILE_SERTIFIKAT" => null,
+                    "INTITUSI_NAME" => $institusi_name[0]->UNIV,
+                    "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
+                    "DURATION" => $completed_course[0]->days_difference,
+                    "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
+                    "LOG_TIME" => date('Y-m-d H:i:s')
+                );
+                $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
 
-			DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
-			$data['sertif_course'] = (object) $data_sertif_course;
-            $data['id_sertif'] = DB::selectOne("
-                SELECT
-                    ID_SERTIFIKAT
-                FROM
-                    sertifikat_activity
-                WHERE
-                    ID_ACTIVITY = '".$data['id_activity']."'
-                AND
-                    ID_USER = '".session('user')[0]->get('ID_USER')."'
-            ")->ID_SERTIFIKAT;
+                $sertif_path_course = $this->certificateModel->generateCourseSekolah(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif, $institusi_name[0]->UNIV);
+                // dd($data_sertif_course, $sertif_path_course);
+                $data_sertif_course = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $data['id_activity'],
+                    "NO_SERTIFIKAT" => $sertif_number_course,
+                    "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+                    "FILE_SERTIFIKAT" => $sertif_path_course,
+                    "INTITUSI_NAME" => $institusi_name[0]->UNIV,
+                    "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
+                    "DURATION" => $completed_course[0]->days_difference,
+                    "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
+                    "LOG_TIME" => date('Y-m-d H:i:s')
+                );
+
+                DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
+                $data['sertif_course'] = (object) $data_sertif_course;
+                $data['id_sertif'] = DB::selectOne("
+                    SELECT
+                        ID_SERTIFIKAT
+                    FROM
+                        sertifikat_activity
+                    WHERE
+                        ID_ACTIVITY = '".$data['id_activity']."'
+                    AND
+                        ID_USER = '".session('user')[0]->get('ID_USER')."'
+                ")->ID_SERTIFIKAT;
+            } else {
+                $data_sertif_course = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $data['id_activity'],
+                    "NO_SERTIFIKAT" => $sertif_number_course,
+                    "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+                    "FILE_SERTIFIKAT" => null,
+                    "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
+                    "DURATION" => $completed_course[0]->days_difference,
+                    "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
+                    "LOG_TIME" => date('Y-m-d H:i:s')
+                );
+                $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
+                $sertif_path_course = $this->certificateModel->generate(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_course, $data['course']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['date_sertif_course'][0]->DATE_COMPLETED, $id_sertif);
+                $data_sertif_course = array(
+                    "ID_USER" => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY" => $data['id_activity'],
+                    "NO_SERTIFIKAT" => $sertif_number_course,
+                    "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+                    "FILE_SERTIFIKAT" => $sertif_path_course,
+                    "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
+                    "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
+                    "DURATION" => $completed_course[0]->days_difference,
+                    "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
+                    "LOG_TIME" => date('Y-m-d H:i:s')
+                );
+
+                DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
+                $data['sertif_course'] = (object) $data_sertif_course;
+                $data['id_sertif'] = DB::selectOne("
+                    SELECT
+                        ID_SERTIFIKAT
+                    FROM
+                        sertifikat_activity
+                    WHERE
+                        ID_ACTIVITY = '".$data['id_activity']."'
+                    AND
+                        ID_USER = '".session('user')[0]->get('ID_USER')."'
+                ")->ID_SERTIFIKAT;
+            }
 		} else {
 			$data['sertif_course'] = $sertifCheck;
 		}
