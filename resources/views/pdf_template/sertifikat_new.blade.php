@@ -43,17 +43,11 @@
         .date {
         font-size: 16px;
         font-style: italic;
-        margin-top: 15px;
+        margin-top: 40px;
         }
 
         .name {
         font-size: 32px;
-        font-weight: bold;
-        }
-
-        .intitusi {
-        font-size: 16px;
-        padding-top: 5px;
         font-weight: bold;
         }
 
@@ -159,9 +153,6 @@
     <div class="text-container">
         <div class="date">{{ date('d F Y',strtotime($DATE)) }}</div>
         <div class="name">{{ $NAME }}</div>
-        @if (!empty($INTITUSI))
-            <div class="intitusi">{{ strtoupper($INTITUSI) }}</div>
-        @endif
         <div class="course-title">{{ $ACTIVITY }}</div>
         <div class="description">
             {{ strip_tags($SUMMARY) }}

@@ -106,7 +106,7 @@ class Certificate extends Model
             $data['DATE'] = $date;
             $data['QR'] = base64_encode(QrCode::format("svg")->size(516)->generate(URL::to('/').'/verifikasi/'.$encryptedId));
 
-            $html = view('pdf_template.sertifikat_new', $data)->render();
+            $html = view('pdf_template.sertifikat', $data)->render();
             $resPdf = PDFGenerator::generate($html, $file_pdf, $paper, $orientation);
             $new_path = FileUpload::UploadFileBlob($file_pdf, $resPdf, 'certificate');
 
