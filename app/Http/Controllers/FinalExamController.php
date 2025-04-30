@@ -567,7 +567,7 @@ class FinalExamController extends Controller
                 (
                     SELECT
                         CASE
-                            WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN 'Lulus'
+                            WHEN MAX(tnfe.NILAI) >= ic.MIN_NILAI THEN 'Lulus'
                             ELSE 'Belum Lulus'
                         END
                     FROM
