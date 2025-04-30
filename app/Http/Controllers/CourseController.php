@@ -1250,6 +1250,7 @@ class CourseController extends Controller
                 u.TELP,
                 u.JK ,
                 u.ALAMAT ,
+                a.TITLE_ACTIVITY,
                 (CASE
                     WHEN tnfe.NILAI >= ic.MIN_NILAI THEN 'Lulus'
                     ELSE 'Belum Lulus'
