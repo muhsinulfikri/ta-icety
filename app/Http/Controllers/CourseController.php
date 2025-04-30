@@ -1081,7 +1081,6 @@ class CourseController extends Controller
                 a.TYPE_ACTIVITY = 1
                 AND a.ID_ACTIVITY = '" . $req->input('ID_ACTIVITY') . "'
         ");
-        dd($data['list_peserta']);
         return
             view('template_main.admin_side.etc.header', $data) .
             view('template_main.admin_side.etc.sidebar', $data) .
