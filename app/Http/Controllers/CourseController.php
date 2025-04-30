@@ -1249,97 +1249,16 @@ class CourseController extends Controller
                 u.NAME,
                 u.TELP,
                 u.JK ,
-                u.ALAMAT,
+                u.ALAMAT ,
                 o.LOG_TIME,
                 a.TITLE_ACTIVITY,
-                c.FINAL_EXAM,
-                (
-                    SELECT
-                        CASE
-                            WHEN MAX(tnfe.NILAI) > ic.MIN_NILAI THEN 'Lulus'
-                            ELSE 'Belum Lulus'
-                        END AS STATUS_FINAL_EXAM
-                    FROM
-                        tb_nilai_final_exam tnfe
-                    LEFT JOIN activity a2 ON
-                        c.FINAL_EXAM = a2.ID_ACTIVITY
-                    LEFT JOIN course c2 ON
-                        c2.ID_ACTIVITY = a2.ID_ACTIVITY
-                    LEFT JOIN item_course ic ON
-                        ic.ID_COURSE = c2.ID_COURSE
-                    WHERE
-                        tnfe.ID_ACTIVITY = c.FINAL_EXAM
-                        AND tnfe.ID_USER = u.ID_USER
-                        AND ic.ID_COURSE = c2.ID_COURSE
-                )AS STATUS_FINAL_EXAM,
-                (
-                    SELECT
-                        MAX(tnfe.NILAI)
-                    FROM
-                        tb_nilai_final_exam tnfe
-                    LEFT JOIN activity a2 ON
-                        c.FINAL_EXAM = a2.ID_ACTIVITY
-                    LEFT JOIN course c2 ON
-                        c2.ID_ACTIVITY = a2.ID_ACTIVITY
-                    LEFT JOIN item_course ic ON
-                        ic.ID_COURSE = c2.ID_COURSE
-                    WHERE
-                        tnfe.ID_ACTIVITY = c.FINAL_EXAM
-                        AND tnfe.ID_USER = u.ID_USER
-                        AND ic.ID_COURSE = c2.ID_COURSE
-                )AS NILAI_TERTINGGI_FINAL_EXAM,
-                (
-                    CEIL(
-                        (
-                            SELECT
-                                MAX(o.MAPPING_COUNT)
-                            FROM
-                                `order` o
-                            WHERE
-                                o.ID_USER  = u.ID_USER
-                                AND o.ID_PRODUCT = a.ID_ACTIVITY
-                        ) /
-                        (
-                            SELECT
-                                COUNT(*)
-                            FROM
-                                mapping_course
-                            WHERE
-                                mapping_course.ID_USER = u.ID_USER
-                                AND mapping_course.ID_ACTIVITY = a.ID_ACTIVITY
-                        ) * 100
-                    )
-                ) AS PROGRESS,
-                (
-                    CEIL
-                    (
-                    (
-                        SELECT
-                            SUM(nq.NILAI)
-                        FROM
-                            nilai_quiz nq
-                        LEFT JOIN detail_quiz dq ON
-                            dq.ID_QUIZ = nq.ID_QUIZ
-                        LEFT JOIN course c ON
-                            c.ID_COURSE = dq.ID_COURSE
-                        WHERE
-                            nq.ID_USER = u.ID_USER
-                            AND c.ID_ACTIVITY = o.ID_PRODUCT
-                    ) / (
-                        SELECT
-                            COUNT(nq2.NILAI)
-                        FROM
-                            nilai_quiz nq2
-                        LEFT JOIN detail_quiz dq ON
-                            dq.ID_QUIZ = nq2.ID_QUIZ
-                        LEFT JOIN course c ON
-                            c.ID_COURSE = dq.ID_COURSE
-                        WHERE
-                            nq2.ID_USER = u.ID_USER
-                            AND c.ID_ACTIVITY = o.ID_PRODUCT
-                    )
-                    )
-                ) AS Rata_Nilai
+                (CASE
+                    WHEN tnfe.NILAI >= ic.MIN_NILAI THEN 'Lulus'
+                    ELSE 'Belum Lulus'
+                END) AS STATUS_FINAL_EXAM ,
+                COALESCE(tnfe.NILAI, 'Belum Mengerjakan') AS NILAI_TERTINGGI_FINAL_EXAM ,
+                nq.NILAI AS NILAI_RATA ,
+                CEIL((o.MAPPING_COUNT / mc.TOTAL) * 100) AS PROGRESS
             FROM
                 user u
             LEFT JOIN user_data ud ON
@@ -1350,11 +1269,54 @@ class CourseController extends Controller
                 o.ID_PRODUCT  = a.ID_ACTIVITY
             LEFT JOIN course c  ON
                 c.ID_ACTIVITY  = a.ID_ACTIVITY
-            LEFT JOIN tb_final_exam tfe  ON
-                c.ID_ACTIVITY  = a.ID_ACTIVITY
+            LEFT JOIN course c2 ON
+                c2.ID_ACTIVITY = c.FINAL_EXAM
+            LEFT JOIN item_course ic ON
+                ic.ID_COURSE = c2.ID_COURSE
+            LEFT JOIN (
+                SELECT
+                        MAX(tnfe.NILAI) AS NILAI,
+                        tnfe.ID_USER ,
+                        tnfe.ID_ACTIVITY
+                    FROM
+                        tb_nilai_final_exam tnfe
+                    GROUP BY
+                        tnfe.ID_USER ,
+                        tnfe.ID_ACTIVITY
+                ) tnfe ON
+                tnfe.ID_USER = u.ID_USER
+                AND
+                tnfe.ID_ACTIVITY = c.FINAL_EXAM
+            LEFT JOIN (
+                SELECT
+                    CEIL(SUM(nq.NILAI) / COUNT(nq.NILAI)) AS NILAI ,
+                    nq.ID_USER
+                FROM
+                    nilai_quiz nq
+                LEFT JOIN item_course ic ON
+                    ic.ID_ITEM = nq.ID_QUIZ
+                GROUP BY
+                    nq.ID_USER
+                ) nq ON
+                nq.ID_USER = u.ID_USER
+            LEFT JOIN (
+                SELECT
+                    mc.ID_USER ,
+                    mc.ID_ACTIVITY ,
+                    COUNT(*) AS TOTAL
+                FROM
+                    mapping_course mc
+                GROUP BY
+                    mc.ID_USER ,
+                    mc.ID_ACTIVITY
+                ) mc ON
+                mc.ID_USER = u.ID_USER
+                AND mc.ID_ACTIVITY = c.ID_ACTIVITY
             WHERE
-                o.ID_PRODUCT = '" . $id_activity . "'
-            GROUP BY u.ID_USER
+                o.ID_PRODUCT = '".$id_activity."'
+            GROUP BY
+                u.ID_USER ,
+                o.ID_PRODUCT
         ");
         return $data;
     }
