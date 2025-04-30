@@ -444,7 +444,7 @@
 
         function DownloadPdf(e) {
 
-            var file = '<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>'
+            var file = "<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>"
 
             $.ajax({
                 url: '<?= Request::segment(0) ?>/update-sertif',
