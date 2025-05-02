@@ -82,9 +82,9 @@
                 <a href="/courses" class="btn btn-sm btn-danger">
                     <i class="fas fa-chevron-left"></i> KEMBALI</a>
                 <?php if(!empty($list_peserta)) { ?>
-                <button id="exportButton"
+                {{-- <button id="exportButton"
                     onclick="location.href='/courses/laporan_course?ID_ACTIVITY=<?= $exam->ID_ACTIVITY ?>'"
-                    class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Report</button>
+                    class="btn btn-sm btn-success"><i class="fas fa-file-excel"></i> Export Report</button> --}}
                 <?php } ?>
             </div>
         </div>
