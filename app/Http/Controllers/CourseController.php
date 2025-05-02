@@ -1257,15 +1257,8 @@ class CourseController extends Controller
                     ELSE 'Belum Lulus'
                 END) AS STATUS_FINAL_EXAM ,
                 COALESCE(
-                    NULLIF(
-                        SUBSTRING_INDEX(
-                            SUBSTRING_INDEX(tnfe_group.NILAI_SEMUA, ',', 2),
-                            ',', -1
-                        ),
-                        ''
-                    ),
-                    'Belum remidi'
-                ) AS NILAI_REMIDI ,
+                    tnfe_group.NILAI_SEMUA, 'Belum remidi'
+                ) AS NILAI_REMIDI,
                 COALESCE(tnfe.NILAI, 'Belum Mengerjakan') AS NILAI_TERTINGGI_FINAL_EXAM ,
                 nq.NILAI AS NILAI_RATA ,
                 CEIL((o.MAPPING_COUNT / mc.TOTAL) * 100) AS PROGRESS
