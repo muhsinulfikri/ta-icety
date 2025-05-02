@@ -119,6 +119,7 @@ class Laporan extends Model
         $ObjSheet->getColumnDimension('J')->setAutoSize(true);
         $ObjSheet->getColumnDimension('K')->setAutoSize(true);
         $ObjSheet->getColumnDimension('L')->setAutoSize(true);
+        $ObjSheet->getColumnDimension('M')->setAutoSize(true);
 
         $ObjSheet->mergeCells('B2:J2')->setCellValue('B2', "DATA PESERTA KURSUS")->getStyle('B2:J2')->applyFromArray($this->styling_title_template('ff948a54', 'ffffffff'))->getFont()->setSize(14)->setUnderline(\PhpOffice\PhpSpreadsheet\Style\Font::UNDERLINE_SINGLE);
         $ObjSheet->mergeCells('B3:J3')->setCellValue('B3', $data[0]->TITLE_ACTIVITY)->getStyle('B3:J3')->applyFromArray($this->styling_title_template('ff948a54', 'ffffffff'));
@@ -134,6 +135,7 @@ class Laporan extends Model
         $ObjSheet->setCellValue('J7', 'Nilai Rata Rata Quiz')->getStyle('J7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
         $ObjSheet->setCellValue('K7', 'Status Final Exam')->getStyle('K7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
         $ObjSheet->setCellValue('L7', 'Nilai Tertinggi Final Exam')->getStyle('L7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
+        $ObjSheet->setCellValue('M7', 'Nilai Remedial')->getStyle('L7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
 
         $rowStart = 8;
         foreach ($data as $key => $item) {
@@ -148,6 +150,7 @@ class Laporan extends Model
             $ObjSheet->setCellValue('J' . $rowStart, (empty($item->NILAI_RATA) ? "Belum Mengerjakan" : $item->NILAI_RATA))->getStyle('J' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('K' . $rowStart, ($item->STATUS_FINAL_EXAM))->getStyle('K' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
             $ObjSheet->setCellValue('L' . $rowStart, (empty($item->NILAI_TERTINGGI_FINAL_EXAM) ? "Belum Mengerjakan" : $item->NILAI_TERTINGGI_FINAL_EXAM))->getStyle('L' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
+            $ObjSheet->setCellValue('M' . $rowStart, (empty($item->NILAI_REMIDI) ? "Belum Remidi" : $item->NILAI_REMIDI))->getStyle('M' . $rowStart)->applyFromArray($this->styling_content_template('00FFFFFF', '00000000', 'center', 'left'))->getAlignment()->setWrapText(false);
 
             $rowStart++;
         }
