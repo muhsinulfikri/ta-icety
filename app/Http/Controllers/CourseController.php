@@ -1320,7 +1320,7 @@ class CourseController extends Controller
                     tnfe_group.ID_USER,
                     tnfe_group.ID_ACTIVITY,
                     SUBSTRING_INDEX(
-                        GROUP_CONCAT(tnfe_group.NILAI ORDER BY tnfe_group.created_at DESC),
+                        GROUP_CONCAT(tnfe_group.NILAI ORDER BY tnfe_group.created_at ASC),
                         ',',
                         - (COUNT(tnfe_group.NILAI) - 1)
                     ) AS NILAI_SEMUA
