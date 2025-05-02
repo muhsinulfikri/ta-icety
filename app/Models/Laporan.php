@@ -135,7 +135,7 @@ class Laporan extends Model
         $ObjSheet->setCellValue('J7', 'Nilai Rata Rata Quiz')->getStyle('J7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
         $ObjSheet->setCellValue('K7', 'Status Final Exam')->getStyle('K7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
         $ObjSheet->setCellValue('L7', 'Nilai Tertinggi Final Exam')->getStyle('L7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
-        $ObjSheet->setCellValue('M7', 'Nilai Remedial')->getStyle('L7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
+        $ObjSheet->setCellValue('M7', 'Nilai Remedial')->getStyle('M7')->applyFromArray($this->styling_title_template('FFFFD966', 'FF000000'));
 
         $rowStart = 8;
         foreach ($data as $key => $item) {
