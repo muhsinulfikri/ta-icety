@@ -561,7 +561,7 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
                                                     @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
                                                         <label>Download Sertificate Course</label>
@@ -571,7 +571,7 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= 'PAY_SERTIF_'.$id_sertif ?>">
+                                                        <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
                                                     @endif
                                                 @endif
