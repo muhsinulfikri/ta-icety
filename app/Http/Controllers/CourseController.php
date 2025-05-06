@@ -1256,6 +1256,9 @@ class CourseController extends Controller
                     WHEN tnfe.NILAI >= ic.MIN_NILAI THEN 'Lulus'
                     ELSE 'Belum Lulus'
                 END) AS STATUS_FINAL_EXAM ,
+                COALESCE(
+                    tnfe_group.NILAI_SEMUA, 'Belum remidi'
+                ) AS NILAI_REMIDI,
                 COALESCE(tnfe.NILAI, 'Belum Mengerjakan') AS NILAI_TERTINGGI_FINAL_EXAM ,
                 nq.NILAI AS NILAI_RATA ,
                 CEIL((o.MAPPING_COUNT / mc.TOTAL) * 100) AS PROGRESS
@@ -1312,6 +1315,23 @@ class CourseController extends Controller
                 ) mc ON
                 mc.ID_USER = u.ID_USER
                 AND mc.ID_ACTIVITY = c.ID_ACTIVITY
+            LEFT JOIN (
+                SELECT
+                    tnfe_group.ID_USER,
+                    tnfe_group.ID_ACTIVITY,
+                    SUBSTRING_INDEX(
+                        GROUP_CONCAT(tnfe_group.NILAI ORDER BY tnfe_group.created_at ASC),
+                        ',',
+                        - (COUNT(tnfe_group.NILAI) - 1)
+                    ) AS NILAI_SEMUA
+                FROM
+                    tb_nilai_final_exam tnfe_group
+                GROUP BY
+                    tnfe_group.ID_USER,
+                    tnfe_group.ID_ACTIVITY
+                ) AS tnfe_group ON
+                tnfe_group.ID_ACTIVITY = c.FINAL_EXAM
+                AND tnfe_group.ID_USER = u.ID_USER
             WHERE
                 o.ID_PRODUCT = '".$id_activity."'
             GROUP BY
