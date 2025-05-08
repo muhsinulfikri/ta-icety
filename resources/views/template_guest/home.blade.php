@@ -46,9 +46,9 @@
         <div class="row flex-column-reverse flex-lg-row align-items-center justify-content-center">
             <div class="col-md-12 col-xl-6 col-lg-6 ps-0 ps-lg-5 mb-7 mb-lg-0">
                 <div class="banner-content ">
-                    <div class="fw-bold text-black font-title">Upskill Your</div>
-                    <div class="fw-bold text-black pt-2 font-title">Current Career</div>
-                    <div class="text-black mt-4 fs-5">Tingkatkan keterampilan kebersihan dan sanitasi Anda di ICETy.org untuk sukses lebih besar dan lingkungan lebih sehat!</div>
+                    <div class="fw-bold text-black font-title">Belajar Lebih Mudah</div>
+                    <div class="fw-bold text-black pt-2 font-title">di ICETy.org!</div>
+                    <div class="text-black mt-4 fs-5">Tingkatkan kompetensi Anda dalam berbagai bidang untuk masa depan yang lebih baik</div>
 
                     <a href="store" class="btn btn-secondary rounded mt-40">Find your courses here</a>
                 </div>
@@ -166,22 +166,22 @@
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-solusi.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">Solusi Praktis</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Menyediakan solusi kebersihan dan sanitasi untuk berbagai kebutuhan masyarakat dan industri.</div>
+            <div class="text-center text-black fw-semibold fs-5">✅ Solusi Praktis</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Menyediakan beragam kursus berbasis kebutuhan nyata di lapangan — mulai dari keterampilan teknis hingga pengembangan diri, untuk individu dan organisasi.</div>
         </div>
         <div class="card card-why flex-fill p-4 hover-shadow">
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-kursus.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">Pengalaman Kursus Online</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Modul kursus interaktif dengan teknologi VR dan AR untuk pembelajaran kebersihan yang menyeluruh.</div>
+            <div class="text-center text-black fw-semibold fs-5">🌐 Pengalaman Kursus Online</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Modul interaktif dengan pendekatan multimedia dan teknologi inovatif  yang mendukung pembelajaran fleksibel dan menyenangkan.</div>
         </div>
         <div class="card card-why flex-fill p-4 hover-shadow">
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-citra.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">Meningkatkan Citra Pariwisata Indonesia</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Mendukung destinasi wisata Indonesia agar berstandar internasional dalam kebersihan dan sanitasi.</div>
+            <div class="text-center text-black fw-semibold fs-5">🇮🇩 Kontribusi untuk Indonesia</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">Mendukung peningkatan kualitas SDM dan citra Indonesia di berbagai sektor — dari pendidikan, layanan publik, hingga pariwisata — melalui pelatihan yang aplikatif dan relevan.</div>
         </div>
     </div>
 </section>

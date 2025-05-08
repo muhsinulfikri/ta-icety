@@ -98,7 +98,6 @@ use Illuminate\Support\Facades\Request;
                     <div class="footer-widget mb-5 mb-xl-0 pe-0" style="width: fit-content;">
                         <h5 class="widget-title">The Platform</h5>
                         <ul class="list-unstyled footer-links footer-links-1">
-                            <li><a href="https://www.openlearning.com">Open Learning</a></li>
                             <li><a href="https://solutions.openlearning.com/terms-of-service?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Terms of Service</a></li>
                             <li><a href="https://solutions.openlearning.com/privacy-policy?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Privacy Policy</a></li>
                         </ul>
