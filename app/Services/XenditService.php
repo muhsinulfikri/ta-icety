@@ -11,11 +11,8 @@ class XenditService
 {
     public function __construct()
     {
-        if (app()->environment('development', 'local')) {
-            Configuration::setXenditKey('xnd_development_4ZELaL2sdqbdfMBH4FRlgMfqa8fdVXIzrDtiJXsm033h3OwZ2gm7mtSHrnnJOR');
-        } else {
-            Configuration::setXenditKey('xnd_production_HALDbZ0wkKNqsgeZw8cb04RxfwA3okR3lkpRZs9xRd6FtwntQUieg8vJLiCiU');
-        }
+        // Configuration::setXenditKey('xnd_development_4ZELaL2sdqbdfMBH4FRlgMfqa8fdVXIzrDtiJXsm033h3OwZ2gm7mtSHrnnJOR');
+        Configuration::setXenditKey('xnd_production_HALDbZ0wkKNqsgeZw8cb04RxfwA3okR3lkpRZs9xRd6FtwntQUieg8vJLiCiU');
     }
 
     // public function createPaymentRequest($params)
