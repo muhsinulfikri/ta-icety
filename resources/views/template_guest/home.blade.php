@@ -180,7 +180,7 @@
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-citra.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">🇮🇩 Kontribusi untuk Indonesia</div>
+            <div class="text-center text-black fw-semibold fs-5">Kontribusi untuk Indonesia</div>
             <div class="text-center text-black mt-2" style="line-height:22px">Mendukung peningkatan kualitas SDM dan citra Indonesia di berbagai sektor — dari pendidikan, layanan publik, hingga pariwisata — melalui pelatihan yang aplikatif dan relevan.</div>
         </div>
     </div>
