@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'xendit' => [
+        'dev_key' => env('XENDIT_DEV_KEY'),
+        'prod_key' => env('XENDIT_PROD_KEY'),
+    ],
+
 ];
