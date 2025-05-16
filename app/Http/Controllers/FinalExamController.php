@@ -370,7 +370,8 @@ class FinalExamController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
-                'LOG_TIME'              => date('Y-m-d H:i:s')
+                'LOG_TIME'              => date('Y-m-d H:i:s'),
+                'REMEDIAL'              => $req->input('remedial')
             ];
 
             if (!empty($req->file('image_activity'))) {
