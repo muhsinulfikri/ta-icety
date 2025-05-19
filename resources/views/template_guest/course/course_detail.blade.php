@@ -214,7 +214,7 @@
                                             <form action="{{ url('/buy-certificate') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                                <button type="submit" id="refreshPageBtn"
+                                                <button type="submit"
                                                         class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                         onclick="BuyCertificateCode(this)"
                                                         data-type="5">

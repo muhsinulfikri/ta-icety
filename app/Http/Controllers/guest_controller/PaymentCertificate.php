@@ -58,13 +58,15 @@ class PaymentCertificate extends Controller
         ");
 		$ID_PAY = $this->GenerateUniqIDPay('ICETY-XENDIT-checkout-' . date('Y-m-d H:i:s'));
 		if (empty($checking_trans)) {
+            $url_success = url('check_payment_sertif/payment?id_pay=' . $ID_PAY);
+            $url_failed = url('purchase');
 			$invoice = $this->xenditService->createInvoice([
 				'external_id' => $ID_PAY,
 				'payer_email' => $data_trans->EMAIL,
 				'amount' => (int) $PRICE,
 				'invoice_duration' => 7200,
-				"success_redirect_url" => url('check_payment_sertif/payment?id_pay=' . $ID_PAY . ''),
-				"failure_redirect_url" => url('purchase'),
+				"success_redirect_url" => $url_success,
+				"failure_redirect_url" => $url_failed,
 			]);
 
 			$data_payment = [
