@@ -519,6 +519,14 @@ class CourseGuest extends Controller
                 ->where('IS_USED', 0)
                 ->first();
 
+            // $log_remedial = DB::select("
+            //     SELECT
+            //         *
+            //     FROM
+            //         user_remedial_log
+            //     WHERE
+            // ");
+
             if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0 && $has_done_first_attempt) {
                 $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
 
@@ -537,8 +545,7 @@ class CourseGuest extends Controller
 
                 $data['codeFinalExam'] = $generatedCode;
                 $data['isRemedialCode'] = true;
-            // } elseif ($cek_kode_final_exam && $data['data_final_exam']->REMEDIAL != $data['remedial'][0]->REMEDIAL) {
-            //     // dd($remedial_user, $remedial_user->REMEDIAL, $data['remedial'][0]->REMEDIAL);
+            // } elseif ($data['data_final_exam']->REMEDIAL != $data['remedial'][0]->REMEDIAL) {
             //     DB::table('tb_remedial_user')
             //         ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
             //         ->update([
@@ -913,6 +920,17 @@ class CourseGuest extends Controller
 				ID_ACTIVITY = '" . $dataActivity->ID_ACTIVITY . "'
 		");
 
+        $get_final_exam = DB::selectOne("
+            SELECT
+                INCLUDE_COURSE
+            FROM
+                activity
+            WHERE
+                ID_ACTIVITY = '".$id_final_exam->FINAL_EXAM."'
+            AND
+                TYPE_ACTIVITY = 3
+        ");
+
 		$check_history_final_exam = DB::selectOne("
 			SELECT
 				*
@@ -934,8 +952,7 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $dataActivity->ID_ACTIVITY)
 				->update($count);
-
-			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null) {
+			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null && $get_final_exam->INCLUDE_COURSE == 1) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $id_final_exam->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),

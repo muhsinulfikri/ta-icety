@@ -351,14 +351,18 @@ class CheckoutGuest extends Controller
 		$checking_trans = $this->checkoutModel->get_trans(session('user')[0]->get('ID_USER'));
 		$ID_PAY = $this->GenerateUniqIDPay('ICETY-XENDIT-checkout-' . date('Y-m-d H:i:s'));
 		if (empty($checking_trans)) {
-			$invoice = $this->xenditService->createInvoice([
-				'external_id' => $ID_PAY,
-				'payer_email' => $data_trans->EMAIL,
-				'amount' => (int) $PRICE,
-				'invoice_duration' => 7200,
-				"success_redirect_url" => url('check_payment_status/payment?id_pay=' . $ID_PAY . ''),
-				"failure_redirect_url" => url('purchase'),
-			]);
+
+			$successUrl = url('check_payment_status/payment?id_pay=' . $ID_PAY);
+            $failureUrl = url('purchase');
+
+            $invoice = $this->xenditService->createInvoice([
+                'external_id' => $ID_PAY,
+                'payer_email' => $data_trans->EMAIL,
+                'amount' => (int) $PRICE,
+                'invoice_duration' => 7200,
+                "success_redirect_url" => $successUrl,
+                "failure_redirect_url" => $failureUrl
+            ]);
 
 			$data_payment = [
 				"ID_PAY" => $ID_PAY,
@@ -380,11 +384,19 @@ class CheckoutGuest extends Controller
 
 			foreach ($_POST['id_order'] as $item) {
 				$_response = $this->checkoutModel->get_detail_order($item, "")[0];
-
+                $duration = DB::select("
+                    SELECT
+                        DURATION
+                    FROM
+                        course
+                    WHERE
+                        ID_ACTIVITY = '".$_response->ID_PRODUCT."'
+                ");
+                $dur= $duration[0]->DURATION;
 				$data_order = [
 					"ID_PAY" => $ID_PAY,
 					"LOG_TIME" => date("Y-m-d H:i:s"),
-					"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+					"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+$dur months"))
 				];
 
 				DB::table('order')
@@ -392,7 +404,7 @@ class CheckoutGuest extends Controller
 					->where('ID_PRODUCT', $_response->ID_PRODUCT)
 					->where('ID_USER', session('user')[0]['ID_USER'])
 					->update($data_order);
-                
+
 				//Final Exam
 				// $final_exam = DB::selectOne("
 				// 	SELECT
@@ -461,7 +473,8 @@ class CheckoutGuest extends Controller
 				foreach ($id_item as $item) {
 					$id_item = DB::selectOne("
 						SELECT
-							COALESCE(TYPE_ACTIVITY, 0) AS TYPE_ACTIVITY
+							COALESCE(TYPE_ACTIVITY, 0) AS TYPE_ACTIVITY,
+                            INCLUDE_COURSE
 						FROM
 							activity
 						WHERE
@@ -478,11 +491,20 @@ class CheckoutGuest extends Controller
 						$_response = $this->checkoutModel->get_detail_order_final_exam("", $item);
 					}
 
-					$data_order = [
-						"ID_PAY" => $ID_PAY,
-						"LOG_TIME" => date("Y-m-d H:i:s"),
-						"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
-					];
+					$duration = DB::select("
+                    SELECT
+                        DURATION
+                    FROM
+                        course
+                    WHERE
+                        ID_ACTIVITY = '".$_response->ID_PRODUCT."'
+                    ");
+                    $dur= $duration[0]->DURATION;
+                    $data_order = [
+                        "ID_PAY" => $ID_PAY,
+                        "LOG_TIME" => date("Y-m-d H:i:s"),
+                        "EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+$dur months"))
+                    ];
 
 					DB::table('order')
 						->where('ID_ORDER', $_response->ID_ORDER)
@@ -494,7 +516,7 @@ class CheckoutGuest extends Controller
 						$this->InsertDataMapping($item);
 					}
 
-					if ($id_item->TYPE_ACTIVITY == 3) {
+					if ($id_item->TYPE_ACTIVITY == 3 && $id_item->INCLUDE_COURSE == 1) {
 						$data_final_exam = [
 							"ID_ACTIVITY"	=> $item,
 							"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -504,25 +526,6 @@ class CheckoutGuest extends Controller
 						];
 						DB::table('tb_final_exam')->insert($data_final_exam);
 					}
-					//Final Exam
-					// $final_exam = DB::selectOne("
-					// 	SELECT
-					// 		FINAL_EXAM
-					// 	FROM
-					// 		course
-					// 	WHERE
-					// 		ID_ACTIVITY = '" . $item . "'
-					// ")->FINAL_EXAM;
-					// if ($final_exam != null) {
-					// 	$data_final_exam = [
-					// 		"ID_ACTIVITY"	=> $final_exam,
-					// 		"ID_USER"		=> session('user')[0]->get('ID_USER'),
-					// 		"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
-					// 		"IS_USED"		=> 0,
-					// 		"CREATED_AT"	=> date("Y-m-d H:i:s")
-					// 	];
-					// 	DB::table('tb_final_exam')->insert($data_final_exam);
-					// }
 				}
 
 				session()->flash('msg', "<script>
@@ -570,10 +573,19 @@ class CheckoutGuest extends Controller
 				WHERE
 					p.ID_PAY = '" . $req->id_pay . "'
 			");
+            $duration = DB::select("
+                    SELECT
+                        DURATION
+                    FROM
+                        course
+                    WHERE
+                        ID_ACTIVITY = '".$data_trans->id_product."'
+            ");
+            $dur= $duration[0]->DURATION;
 
 			$data_order = [
 				"LOG_TIME" => date("Y-m-d H:i:s"),
-				"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+2 months"))
+				"EXPIRED_DATE" => date("Y-m-d H:i:s", strtotime("+$dur months"))
 			];
 			DB::table('order')
 				->where('ID_ORDER', $data_trans->ID_ORDER)
@@ -585,7 +597,8 @@ class CheckoutGuest extends Controller
 			$type_acticity = DB::select("
 				SELECT
 					TYPE_ACTIVITY,
-					ID_ACTIVITY
+					ID_ACTIVITY,
+                    INCLUDE_COURSE
 				FROM
 					activity
 				WHERE
@@ -606,28 +619,9 @@ class CheckoutGuest extends Controller
 			DB::table('payment_method')->where('ID_PAY', $req->id_pay)->update($data_payment_method);
 
 			foreach ($type_acticity as $item_activity) {
-				if ($item_activity->TYPE_ACTIVITY == 1) {
-					foreach ($id_item as $item) {
-						$this->InsertDataMapping($item);
-						// //Final Exam
-						// $final_exam = DB::selectOne("
-						// 	SELECT
-						// 		FINAL_EXAM
-						// 	FROM
-						// 		course
-						// 	WHERE
-						// 		ID_ACTIVITY = '" . $item . "'
-						// ");
-						// if ($final_exam != null) {
-						// 	$data_final_exam = [
-						// 		"ID_ACTIVITY"	=> $final_exam->FINAL_EXAM,
-						// 		"ID_USER"		=> session('user')[0]->get('ID_USER'),
-						// 		"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
-						// 		"IS_USED"		=> 0,
-						// 		"CREATED_AT"	=> date("Y-m-d H:i:s")
-						// 	];
-						// 	DB::table('tb_final_exam')->insert($data_final_exam);
-						// }
+                if ($item_activity->TYPE_ACTIVITY == 1) {
+                    foreach ($id_item as $item) {
+                        $this->InsertDataMapping($item);
 					}
 				}
 
