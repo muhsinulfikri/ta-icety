@@ -48,6 +48,17 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Include Course?</label>
+                        <div class="col-md-5 row">
+                            No
+                            <div class="switch m-r-10" style="margin-left: 7px;">
+                                <input type="checkbox" id="switch-2" name="setYesNo">
+                                <label for="switch-2"></label>
+                            </div>
+                            Yes
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Remedial <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
