@@ -8,6 +8,8 @@ use App\Services\XenditService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Certificate;
+use DateTime;
+use DateTimeZone;
 
 class PaymentCertificate extends Controller
 {
@@ -129,7 +131,7 @@ class PaymentCertificate extends Controller
 				LEFT JOIN payment_sertif ps ON
 					ps.ID_PAY = p.ID_PAY
 				WHERE
-					p.ID_PAY = '" . $req->id_pay . "'
+					p.ID_PAY = '" . $req->input('id_pay') . "'
 			");
 
 			$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
@@ -161,6 +163,65 @@ class PaymentCertificate extends Controller
 		}
 
 	}
+
+    public function check_payment_status_ajax($idPayRaw)
+	{
+		try {
+			DB::beginTransaction();
+
+			$data_trans = DB::selectOne("
+				SELECT
+					p.XENDIT_ID as xendit_id,
+                    p.ID_PAY,
+					ps.ID_PAYMENT_SERTIF,
+					ps.ID_SERTIFIKAT as id_product,
+                    ps.ID_ACTIVITY,
+                    ps.TITLE_ACTIVITY
+				FROM
+					payment p
+				LEFT JOIN payment_sertif ps ON
+					ps.ID_PAY = p.ID_PAY
+				WHERE
+				    ps.ID_PAYMENT_SERTIF = '" . $idPayRaw . "'
+			");
+
+            $id_pay = $data_trans->ID_PAY;
+			$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
+            $dateTime = new DateTime("2025-05-23 07:39:15.126", new DateTimeZone("UTC"));
+            $data_payment = [
+				"DATE_PAY" => $dateTime->format('Y-m-d H:i:s'),
+			];
+			DB::table("payment")->where('ID_PAY', $id_pay)->update($data_payment);
+
+			$data_payment_method = [
+				"STATUS" => $check_xendit['status'],
+				"PAY_METHOD" => $check_xendit['payment_method'],
+				"EXP_DATE" => $check_xendit['expiry_date'],
+			];
+			DB::table('payment_method')->where('ID_PAY', $id_pay)->update($data_payment_method);
+
+            DB::table('payment_sertif')
+                ->where('ID_PAYMENT_SERTIF', $data_trans->ID_PAYMENT_SERTIF)
+                ->where('ID_PAY', $id_pay)
+                ->where('ID_USER', session('user')[0]['ID_USER'])
+                ->update(['IS_PAY' => 1]);
+
+            DB::commit();
+
+			return response([
+                'status' => 200,
+                'msg' => 'Payment successfully update'
+            ], 200);
+		} catch (Exception $th) {
+			DB::rollBack();
+			return response([
+                'status' => 500,
+                'msg' => 'System get error, error: ' . $th->getMessage()
+            ], 200);
+		}
+
+	}
+
     public function GenerateUniqIDPay($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
