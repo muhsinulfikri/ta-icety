@@ -563,6 +563,10 @@
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+
+                                                        @if (!isset($id_sertif))
+                                                            <button type="button" class="btn btn-primary col-md-12 mb-3" onclick="checkPayment('<?= $id_payment_sertif ?>')">Check Payment</button>
+                                                        @endif
                                                     @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
                                                         <label>Download Sertificate Course</label>
                                                         <button type="button" class="btn btn-primary col-md-12 my-3"
@@ -580,6 +584,7 @@
                                     </div>
                                 </div>`);
     }
+
     $(document).on('click', '#buy', function() {
         Swal.fire({
             title: 'Loading Payment!',
@@ -954,6 +959,65 @@
         <?php } ?>
     }
 
+    function checkPayment(idPayRaw) {
+        let Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.onmouseenter = Swal.stopTimer;
+                toast.onmouseleave = Swal.resumeTimer;
+            }
+        });
+        let swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure want to check your payment?",
+            text: "Make sure don't refresh this page!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let timerInterval;
+                Swal.fire({
+                    title: "Please wait system is still checking!",
+                    html: "Don't refresh this page.",
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                $.ajax({
+                    url: `<?= url('check_payment_ajax/${idPayRaw}') ?>`,
+                    method: 'GET',
+                    contentType: 'application/json',
+                    success: function(response) {
+                        if (response.status == 200) {
+                            location.reload()
+                        } else {
+                            Swal.close()
+                            displayError('Payment Error', error.message || 'An unexpected error occurred.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.close()
+                        displayError('Payment Error', error.message || 'An unexpected error occurred.');
+                    }
+                });
+            }
+        });
+    }
 
     // Helper function to display error messages
     function displayError(title, message) {
