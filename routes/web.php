@@ -69,7 +69,7 @@ Route::post('resetPassword', 'AuthController@resetPassword');
 Route::get('verification/confirm', 'AuthController@verifAccount');
 
 //VERIFICATION SERTIF
-Route::get('verifikasi/{id}', 'guest_controller\SertificateGuest@verifSertif');
+Route::get('check_payment_ajax/{id}', 'guest_controller\PaymentCertificate@check_payment_status_ajax');
 
 // 1 Admin
 Route::middleware(['usersession:1'])->group(function () {
