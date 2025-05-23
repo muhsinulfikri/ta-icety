@@ -74,6 +74,7 @@ class CourseGuest extends Controller
 
 		$data['id_activity'] = $_GET['id_activity'];
 		$data['course'] = $this->courseModel->get_course($data['id_activity']);
+        $finalExamModel = new FinalExam();
         $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
 		$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
 			" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
@@ -166,6 +167,8 @@ class CourseGuest extends Controller
 				AND ID_ACTIVITY = '" . $data['course']->FINAL_EXAM . "'"
 		);
 
+        $data['get_data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+
 		if (count($data['last_item']) == count($data['data_all_mapping']) && (!empty($cek_nilai->NILAI) ? $cek_nilai->NILAI >= $cek_item_course->MIN_NILAI : false)) {
 			$data['tot_proggress'] = 100;
 			DB::table('order')
@@ -173,7 +176,7 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
 
-			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null) {
+			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null && $data['get_data_final_exam']->INCLUDE_COURSE == 1) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -191,7 +194,7 @@ class CourseGuest extends Controller
 				->where('ID_PRODUCT', $data['id_activity'])
 				->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
 
-			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null) {
+			if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null && $data['get_data_final_exam']->INCLUDE_COURSE == 1) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -406,7 +409,7 @@ class CourseGuest extends Controller
 				ORDER BY
 					created_at ASC
 			", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
-			$finalExamModel = new FinalExam();
+
 			$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
 			$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
 				'NILAI' => 0
@@ -435,7 +438,7 @@ class CourseGuest extends Controller
                     "LOG_TIME" => date('Y-m-d H:i:s')
                 );
                 $id_sertif_exam = DB::table('sertifikat_activity')->insertGetId($data_sertif_exam);
-                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['course']->TITLE_ACTIVITY, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
+                $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
                 $data_sertif_exam = array(
                     "ID_USER" => session('user')[0]->get('ID_USER'),
                     "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
@@ -486,11 +489,18 @@ class CourseGuest extends Controller
                 ->first();
 
             if (!$remedial_user && $data['remedial'][0]->REMEDIAL > 0) {
-                DB::table('tb_remedial_user')->insert([
+                $remedialUserId = DB::table('tb_remedial_user')->insertGetId([
                     'ID_USER'     => $userId,
                     'ID_ACTIVITY' => $activityId,
                     'REMEDIAL'    => $data['remedial'][0]->REMEDIAL,
                     'LOG_TIME'    => date('Y-m-d H:i:s')
+                ]);
+
+                // insert untuk log perubahan total remedial
+                DB::table('user_remedial_log')->insert([
+                    'ID_REMEDIAL'   => $remedialUserId,
+                    'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL,
+                    'LOG_TIME'      => now()
                 ]);
 
                 $remedial_user = (object) [
@@ -510,6 +520,13 @@ class CourseGuest extends Controller
                 ->where('IS_USED', 0)
                 ->first();
 
+            $log_remedial = null;
+            if(!empty($remedial_user->ID_REMEDIAL) != null){
+                $log_remedial = DB::table('user_remedial_log')
+                    ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
+                    ->first();
+            }
+            // dd($data['remedial'][0]->REMEDIAL , $log_remedial->LOG_REMEDIAL, $data['get_data_final_exam']->INCLUDE_COURSE == 1, !empty($remedial_user->ID_REMEDIAL) != null);
             if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0 && $has_done_first_attempt) {
                 $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
 
@@ -528,7 +545,43 @@ class CourseGuest extends Controller
 
                 $data['codeFinalExam'] = $generatedCode;
                 $data['isRemedialCode'] = true;
-            } elseif ($cek_kode_final_exam) {
+            } elseif(!empty($log_remedial->LOG_REMEDIAL)){
+                $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
+                if($data['remedial'][0]->REMEDIAL != $log_remedial->LOG_REMEDIAL && $data['get_data_final_exam']->INCLUDE_COURSE == 1 && !empty($remedial_user->ID_REMEDIAL) != null){
+
+                    DB::table('tb_final_exam')->insert([
+                        "ID_ACTIVITY" => $activityId,
+                        "ID_USER"     => $userId,
+                        "CODE_EXAM"   => $generatedCode,
+                        "IS_USED"     => 0,
+                        "CREATED_AT"  => date("Y-m-d H:i:s")
+                    ]);
+
+                    $remed = DB::table('tb_remedial_user')->insertGetId([
+                        'ID_USER'     => $userId,
+                        'ID_ACTIVITY' => $activityId,
+                        'REMEDIAL'    => 1,
+                        'LOG_TIME'    => date('Y-m-d H:i:s')
+                    ]);
+
+                    DB::table('tb_remedial_user')
+                    ->where('ID_REMEDIAL', $remed)
+                    ->where('ID_USER', $userId)
+                    ->where('ID_ACTIVITY', $activityId)
+                    ->decrement('REMEDIAL');
+
+                    DB::table('user_remedial_log')
+                        ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
+                        ->update([
+                            'LOG_REMEDIAL' => $data['remedial'][0]->REMEDIAL,
+                            'LOG_TIME'     => now()
+                        ]);
+                    $data['codeFinalExam'] = $generatedCode;
+                    $data['isRemedialCode'] = true;
+                }
+                $data['codeFinalExam'] = false;
+                $data['isRemedialCode'] = true;
+            }elseif ($cek_kode_final_exam) {
                 $data['codeFinalExam'] = $cek_kode_final_exam->CODE_EXAM;
                 $data['isRemedialCode'] = false;
             } else {
@@ -886,6 +939,17 @@ class CourseGuest extends Controller
 				ID_ACTIVITY = '" . $dataActivity->ID_ACTIVITY . "'
 		");
 
+        $get_final_exam = DB::selectOne("
+            SELECT
+                INCLUDE_COURSE
+            FROM
+                activity
+            WHERE
+                ID_ACTIVITY = '".$id_final_exam->FINAL_EXAM."'
+            AND
+                TYPE_ACTIVITY = 3
+        ");
+
 		$check_history_final_exam = DB::selectOne("
 			SELECT
 				*
@@ -907,8 +971,7 @@ class CourseGuest extends Controller
 				->where('ID_USER', session('user')[0]->get('ID_USER'))
 				->where('ID_PRODUCT', $dataActivity->ID_ACTIVITY)
 				->update($count);
-
-			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null) {
+			if ($check_history_final_exam == null && $id_final_exam->FINAL_EXAM != null && $get_final_exam->INCLUDE_COURSE == 1) {
 				$data_final_exam = [
 					"ID_ACTIVITY"	=> $id_final_exam->FINAL_EXAM,
 					"ID_USER"		=> session('user')[0]->get('ID_USER'),

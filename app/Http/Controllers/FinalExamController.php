@@ -86,6 +86,12 @@ class FinalExamController extends Controller
                 $activity['STATUS'] = 0;
             }
 
+            if ($req->input('setYesNo') == 'on') {
+                $activity['INCLUDE_COURSE'] = 1;
+            } else {
+                $activity['INCLUDE_COURSE'] = 0;
+            }
+
             $course = [
                 'ID_COURSE'             => $this->GenerateUniqID('FNL', $req->input('announcement')),
                 'ID_ACTIVITY'           => $activity['ID_ACTIVITY'],
@@ -225,6 +231,7 @@ class FinalExamController extends Controller
                 a.STATUS ,
                 a.IS_PUBLIC ,
                 a.SERTIF_IMAGE ,
+                a.INCLUDE_COURSE,
                 c.ID_COURSE ,
                 c.ALIAS,
                 c.REQUIREMENT ,
@@ -370,7 +377,8 @@ class FinalExamController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
-                'LOG_TIME'              => date('Y-m-d H:i:s')
+                'LOG_TIME'              => date('Y-m-d H:i:s'),
+                'REMEDIAL'              => $req->input('remedial')
             ];
 
             if (!empty($req->file('image_activity'))) {
@@ -379,6 +387,12 @@ class FinalExamController extends Controller
 
             if (!empty($req->file('sertif_image'))) {
                 $activity['SERTIF_IMAGE'] = FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Sertificate-Template-' . strtotime(now()));
+            }
+
+            if ($req->input('setYesNo') == 'on') {
+                $activity['INCLUDE_COURSE'] = 1;
+            } else {
+                $activity['INCLUDE_COURSE'] = 0;
             }
 
             if ($req->input('status') == 'on') {

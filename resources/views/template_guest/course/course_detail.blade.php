@@ -214,7 +214,7 @@
                                             <form action="{{ url('/buy-certificate') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                                <button type="submit" id="refreshPageBtn"
+                                                <button type="submit"
                                                         class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                         onclick="BuyCertificateCode(this)"
                                                         data-type="5">
@@ -675,18 +675,38 @@
                                 <h6>Anda Sudah Menyelesaikan Quiz dan Mendapatkan Nilai {{round($nilai_final_exam->NILAI)}}</h6>
                             </div>
                         </div>
+                    @elseif ($final_exam != null && $get_data_final_exam->INCLUDE_COURSE == 0)
+                        @if (!empty($codeFinalExam))
+                            <h6 class="mt-4">
+                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $final_exam->CODE_EXAM }}</span>
+                            </h6>
+                        @else
+                            <h6 class="mt-4">
+                                Anda tidak memiliki Code Exam yang Aktif. Klik dibawah ini untuk membeli code exam.
+                            </h6>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#buyCodeModal">
+                                Buy Code Exam
+                            </button>
+                        @endif
+                        <br>
+                            <i class="bi bi-file-text me-2" style="font-size: 1.1rem; -webkit-text-stroke: 0.2px;"></i>
+                                Klick Here For Final Exam
+                            <br>
+                            <button type="button" class="btn btn-primary mt-2 mb-4" data-bs-toggle="modal" data-bs-target="#redeemModal">
+                                Final Exam
+                            </button>
                     @else
-                        @if ($final_exam != null)
+                        @if ($final_exam != null && $get_data_final_exam->INCLUDE_COURSE == 1)
                             <h6 class="mt-4">
                                 Kode Final Exam Anda: <span class="text-success fw-bold">{{ $final_exam->CODE_EXAM }}</span>
                             </h6>
                         @elseif (!empty($codeFinalExam) && ($isRemedialCode ?? false))
-                            <h6 class="mt-4">
-                                Kode Final Exam dari jatah <strong>Remedial</strong> telah digenerate otomatis.
-                            </h6>
-                            <h6 class="mt-2">
-                                Kode Final Exam Anda: <span class="text-success fw-bold">{{ $codeFinalExam }}</span>
-                            </h6>
+                                <h6 class="mt-4">
+                                    Kode Final Exam dari jatah <strong>Remedial</strong> telah digenerate otomatis.
+                                </h6>
+                                <h6 class="mt-2">
+                                    Kode Final Exam Anda: <span class="text-success fw-bold">{{ $codeFinalExam }}</span>
+                                </h6>
                         @else
                             <h6 class="mt-4">
                                 Anda tidak memiliki Code Exam yang Aktif. Klik dibawah ini untuk membeli code exam.
