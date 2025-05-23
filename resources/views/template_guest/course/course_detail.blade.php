@@ -976,7 +976,7 @@
                 confirmButton: "btn btn-success",
                 cancelButton: "btn btn-danger"
             },
-            buttonsStyling: false
+            buttonsStyling: true
         });
         swalWithBootstrapButtons.fire({
             title: "Are you sure want to check your payment?",
@@ -1007,12 +1007,24 @@
                             location.reload()
                         } else {
                             Swal.close()
-                            displayError('Payment Error', error.message || 'An unexpected error occurred.');
+                            Swal.fire({
+                                position: "center",
+                                icon: "error",
+                                title: "Check Payment Error",
+                                text: `${response.msg || 'An unexpected error occurred.'}`,
+                                showConfirmButton: false,
+                            });
                         }
                     },
                     error: function(xhr, status, error) {
                         Swal.close()
-                        displayError('Payment Error', error.message || 'An unexpected error occurred.');
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "Check Payment Error",
+                            text: `${error.message || 'An unexpected error occurred.'}`,
+                            showConfirmButton: false,
+                        });
                     }
                 });
             }

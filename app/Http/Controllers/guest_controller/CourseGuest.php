@@ -520,6 +520,14 @@ class CourseGuest extends Controller
                 ->where('IS_USED', 0)
                 ->first();
 
+            if(!isset($log_remedial)) {
+                DB::table('user_remedial_log')->insert([
+                            'ID_REMEDIAL'   => $remedial_user->ID_REMEDIAL,
+                            'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL,
+                            'LOG_TIME'      => now()
+                        ]);
+            }
+
             $log_remedial = null;
             if(!empty($remedial_user->ID_REMEDIAL) != null){
                 $log_remedial = DB::table('user_remedial_log')
