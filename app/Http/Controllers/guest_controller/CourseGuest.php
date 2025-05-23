@@ -489,18 +489,19 @@ class CourseGuest extends Controller
                 ->first();
 
             if (!$remedial_user && $data['remedial'][0]->REMEDIAL > 0) {
-                DB::table('tb_remedial_user')->insert([
+                $remedialUserId = DB::table('tb_remedial_user')->insertGetId([
                     'ID_USER'     => $userId,
                     'ID_ACTIVITY' => $activityId,
                     'REMEDIAL'    => $data['remedial'][0]->REMEDIAL,
                     'LOG_TIME'    => date('Y-m-d H:i:s')
                 ]);
 
-                //insert untuk log perubahan total remedial
-                // DB::table('user_remedial_log')->insert([
-                //     'ID_REMEDIAL'   => $remedialUserId,
-                //     'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL
-                // ]);
+                // insert untuk log perubahan total remedial
+                DB::table('user_remedial_log')->insert([
+                    'ID_REMEDIAL'   => $remedialUserId,
+                    'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL,
+                    'LOG_TIME'      => now()
+                ]);
 
                 $remedial_user = (object) [
                     'REMEDIAL' => $data['remedial'][0]->REMEDIAL
@@ -519,14 +520,13 @@ class CourseGuest extends Controller
                 ->where('IS_USED', 0)
                 ->first();
 
-            // $log_remedial = DB::select("
-            //     SELECT
-            //         *
-            //     FROM
-            //         user_remedial_log
-            //     WHERE
-            // ");
-
+            $log_remedial = null;
+            if(!empty($remedial_user->ID_REMEDIAL) != null){
+                $log_remedial = DB::table('user_remedial_log')
+                    ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
+                    ->first();
+            }
+            // dd($data['remedial'][0]->REMEDIAL , $log_remedial->LOG_REMEDIAL, $data['get_data_final_exam']->INCLUDE_COURSE == 1, !empty($remedial_user->ID_REMEDIAL) != null);
             if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0 && $has_done_first_attempt) {
                 $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
 
@@ -545,24 +545,43 @@ class CourseGuest extends Controller
 
                 $data['codeFinalExam'] = $generatedCode;
                 $data['isRemedialCode'] = true;
-            // } elseif ($data['data_final_exam']->REMEDIAL != $data['remedial'][0]->REMEDIAL) {
-            //     DB::table('tb_remedial_user')
-            //         ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
-            //         ->update([
-            //             'REMEDIAL' => $data['remedial'][0]->REMEDIAL,
-            //             'LOG_TIME' => now()
-            //         ]);
+            } elseif(!empty($log_remedial->LOG_REMEDIAL)){
+                $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
+                if($data['remedial'][0]->REMEDIAL != $log_remedial->LOG_REMEDIAL && $data['get_data_final_exam']->INCLUDE_COURSE == 1 && !empty($remedial_user->ID_REMEDIAL) != null){
 
-            //     // Catat perubahan ke log
-            //     DB::table('user_remedial_log')
-            //     ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
-            //     ->update([
-            //         'LOG_REMEDIAL' => $data['remedial'][0]->REMEDIAL
-            //     ]);
+                    DB::table('tb_final_exam')->insert([
+                        "ID_ACTIVITY" => $activityId,
+                        "ID_USER"     => $userId,
+                        "CODE_EXAM"   => $generatedCode,
+                        "IS_USED"     => 0,
+                        "CREATED_AT"  => date("Y-m-d H:i:s")
+                    ]);
 
-            //     // Refresh data remedial_user
-            //     $remedial_user->REMEDIAL = $data['remedial'][0]->REMEDIAL;
-            } elseif ($cek_kode_final_exam) {
+                    $remed = DB::table('tb_remedial_user')->insertGetId([
+                        'ID_USER'     => $userId,
+                        'ID_ACTIVITY' => $activityId,
+                        'REMEDIAL'    => 1,
+                        'LOG_TIME'    => date('Y-m-d H:i:s')
+                    ]);
+
+                    DB::table('tb_remedial_user')
+                    ->where('ID_REMEDIAL', $remed)
+                    ->where('ID_USER', $userId)
+                    ->where('ID_ACTIVITY', $activityId)
+                    ->decrement('REMEDIAL');
+
+                    DB::table('user_remedial_log')
+                        ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
+                        ->update([
+                            'LOG_REMEDIAL' => $data['remedial'][0]->REMEDIAL,
+                            'LOG_TIME'     => now()
+                        ]);
+                    $data['codeFinalExam'] = $generatedCode;
+                    $data['isRemedialCode'] = true;
+                }
+                $data['codeFinalExam'] = false;
+                $data['isRemedialCode'] = true;
+            }elseif ($cek_kode_final_exam) {
                 $data['codeFinalExam'] = $cek_kode_final_exam->CODE_EXAM;
                 $data['isRemedialCode'] = false;
             } else {
