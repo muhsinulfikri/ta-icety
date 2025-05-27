@@ -669,7 +669,7 @@
                 <div class="bg-white px-3 py-2 rounded-3 fw-semibold text-center">
 
                 @if ($course->FINAL_EXAM != null)
-                    @if (($final_min_nilai->MIN_NILAI < $nilai_final_exam->NILAI) || ($nilai_final_exam->NILAI == 100))
+                    @if (($final_min_nilai->MIN_NILAI <= $nilai_final_exam->NILAI) || ($nilai_final_exam->NILAI == 100))
                         <h6 class="mt-4 mb-4">Anda Sudah Lulus Final Exam</h6>
 
                         <div class="py-5">
