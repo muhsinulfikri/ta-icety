@@ -564,7 +564,7 @@
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
                                                         <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
 
-                                                        @if (!isset($id_sertif))
+                                                        @if (!empty($id_sertif))
                                                             <button type="button" class="btn btn-primary col-md-12 mb-3" onclick="checkPayment('<?= $id_payment_sertif ?>')">Check Payment</button>
                                                         @endif
                                                     @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)

@@ -54,7 +54,7 @@ class PaymentCertificate extends Controller
             FROM
                 payment_sertif ps
             WHERE
-                ps.ID_PAYMENT_SERTIF  = '".$id_sertif_pay->ID_PAYMENT_SERTIF."'
+                ps.ID_PAYMENT_SERTIF  = '" . ((!empty($id_sertif_pay) && !empty($id_sertif_pay->ID_PAYMENT_SERTIF)) ? $id_sertif_pay->ID_PAYMENT_SERTIF : '') . "'
             AND
                 ps.IS_PAY = 1
         ");
@@ -89,17 +89,16 @@ class PaymentCertificate extends Controller
 			];
 			DB::table('payment_method')->insert($data_payment_method);
 
-
-            $_response = $this->sertifPayModel->getSertifIsPaid($id_sertif_pay->ID_PAYMENT_SERTIF);
-
-            $data_order = [
-                "ID_PAY" => $ID_PAY
-            ];
-
-            DB::table('payment_sertif')
-                ->where('ID_PAYMENT_SERTIF', $_response->ID_PAYMENT_SERTIF)
-                ->where('ID_USER', session('user')[0]['ID_USER'])
-                ->update($data_order);
+            if (!empty($id_sertif_pay) && !empty($id_sertif_pay->ID_PAYMENT_SERTIF)) {
+                $_response = $this->sertifPayModel->getSertifIsPaid($id_sertif_pay->ID_PAYMENT_SERTIF);
+                $data_order = [
+                    "ID_PAY" => $ID_PAY
+                ];
+                DB::table('payment_sertif')
+                    ->where('ID_PAYMENT_SERTIF', $_response->ID_PAYMENT_SERTIF)
+                    ->where('ID_USER', session('user')[0]['ID_USER'])
+                    ->update($data_order);
+            }
 
 			return response([
 				'status_code'       => 200,
