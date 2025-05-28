@@ -179,11 +179,11 @@
                         <div class="tab-pane fade show active" id="nav-course" role="tabpanel"
                             aria-labelledby="nav-course-tab" tabindex="0">
                             <div class="row flex-row gap-3">
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end d-none d-md-block">
                                     <button id="refreshPageBtn" type="button" class="btn btn-primary"
                                         style="padding: 5px !important;">Refresh</button>
                                 </div>
-                                <div class="col-3 mb-4 d-none d-lg-block">
+                                <div class="col-12 col-lg-3 mb-4">
                                     <?php
                                     $quiz = 0;
                                     $materi = 0;
