@@ -73,6 +73,22 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Instructor <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="instructor_activity" placeholder="Instructor Course"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Description Instructor<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-10">
+                            <textarea class="form-desc-course" name="desc_instructor" id="desc_instructor"></textarea>
+                            <div id="desc_instructor_editor"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label"></label>
                         <div class="d-flex align-items-center mt-2">
                             No Requirement
@@ -309,6 +325,8 @@
     $('input[name="title_activity"]').val(data.TITLE_ACTIVITY);
     $('input[name="title_certificate"]').val(data.TITLE_CERTIFICATE);
     $('input[name="alias_course"]').val(data.ALIAS);
+    $('input[name="instructor_activity"]').val(data.INSTRUCTOR_NAME);
+    $('#desc_instructor').summernote('code', data.DESC_INSTRUCTOR);
     $('#summary_certificate').summernote('code', data.SUMMARY_CERTIFICATE);
     $('#modules_certificate').summernote('code', data.MODULE_CERTIFICATE);
     if (price == 0) {

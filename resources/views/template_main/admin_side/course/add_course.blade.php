@@ -72,6 +72,22 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Instructor <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" name="instructor_activity" placeholder="Instructor Course"
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Description Instructor<span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <textarea class="form-desc-course" name="desc_instructor" id="desc_instructor" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+                            <div id="desc_instructor_editor"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                             <label class="col-sm-2 col-form-label control-label"></label>
                             <div class="d-flex align-items-center mt-2">
                             No Requirement
@@ -351,6 +367,7 @@
         // Initialize Summernote for all editors
         initializeSummernote('#announcement_editor', '#announcement', '#form-user');
         initializeSummernote('#desc_course_editor', '#desc_course', '#form-user');
+        initializeSummernote('#desc_instructor_editor', '#desc_course', '#form-user');
         initializeSummernote('#desc_learn_editor', '#desc_what_to_learn', '#form-user');
         initializeSummernote('#modules_certificate_editor', '#modules_certificate', '#form-user');
         initializeSummernote('#summary_certificate_editor', '#summary_certificate', '#form-user');
