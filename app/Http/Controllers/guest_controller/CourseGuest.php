@@ -216,8 +216,6 @@ class CourseGuest extends Controller
 				$condition_all_mapping
 		");
 
-        // dd($sertifCheck);
-
         $institusi_name = $this->userModel->get_intitusi_name(session('user')[0]->get('ID_USER'));
         $data['id_sertif'] = null;
 		if ($data['tot_proggress'] == 100 && (empty($sertifCheck) || empty($sertifCheck->FILE_SERTIFIKAT))) {

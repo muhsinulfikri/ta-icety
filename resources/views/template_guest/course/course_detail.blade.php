@@ -46,7 +46,8 @@
 
                                         <div class="col-lg-8 col-md-8">
                                             <div class="instructor-content">
-                                                <h4><?= $course->NAME ?></h4>
+                                                <h4><?= $course->INSTRUCTOR_NAME ?></h4>
+                                                <p><?= $course->DESC_INSTRUCTOR ?></p>
                                             </div>
                                         </div>
                                     </div>
