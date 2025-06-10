@@ -625,7 +625,7 @@ class CheckoutGuest extends Controller
 					}
 				}
 
-				if ($item_activity->TYPE_ACTIVITY == 3 && $check_xendit['status'] == "SETTLED" && $check_xendit['status'] == "PAID") {
+				if ($item_activity->TYPE_ACTIVITY == 3) {
 					$data_final_exam = [
 						"ID_ACTIVITY"	=> $item_activity->ID_ACTIVITY,
 						"ID_USER"		=> session('user')[0]->get('ID_USER'),
