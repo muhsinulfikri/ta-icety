@@ -301,9 +301,9 @@
             }
         })
         <?php if (!empty($checking_trans)) { ?>
-            // Toast.fire({
-            //     icon: 'error',
-            //     title: 'Complete your transaction first!'
+            Toast.fire({
+                icon: 'error',
+                title: 'Complete your transaction first!'
     })
     <?php } else { ?>
         if (data != "") {
