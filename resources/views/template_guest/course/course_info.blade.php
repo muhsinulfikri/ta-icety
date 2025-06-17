@@ -70,7 +70,7 @@
                 </div>
                 <h2 class="font mt-2">What You Will Learn</h2>
                 <div class="font "><?= $course->DESKRIPSI_COURSE_ITEM ?></div>
-                <h3 class="font ">course outcomes</h3>
+                <h3 class="font ">Course Outcomes</h3>
                 <div class="my-2" style="border: 2px solid black;"></div>
                 <?php
 
@@ -95,28 +95,38 @@
                 <div>
                     <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
                         @if (!empty($cek_course_user))
-                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    See Course
-                                </button>
-                            @else
-                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    Join Now
-                                </button>
-                            @endif
+                            <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                See Course
+                            </button>
+                        @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
+                            <button
+                                class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
+                                Course Expired
+                            </button>
+                        @else
+                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                Join Now
+                            </button>
+                        @endif
                     <?php } else if (empty($course->REQUIREMENT)) { ?>
                         @if (!empty($cek_course_user))
-                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    See Course
-                                </button>
-                            @else
-                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    Join Now
-                                </button>
-                            @endif
+                            <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                See Course
+                            </button>
+                        @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
+                            <button
+                                class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
+                                Course Expired
+                            </button>
+                        @else
+                            <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                Join Now
+                            </button>
+                        @endif
                     <?php } else { ?>
                         <label class="text-black" style="align-items: center">Please finish <span class="fw-bold text-danger"><?= $course->REQ_NAME ?></span> course first
                             before take this course</label>
@@ -195,6 +205,11 @@
                                     class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                     See Course
                                 </button>
+                            @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
+                                <button
+                                    class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
+                                    Course Expired
+                                </button>
                             @else
                                 <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
                                     class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
@@ -206,6 +221,11 @@
                                 <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
                                     class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                     See Course
+                                </button>
+                            @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
+                                <button
+                                    class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
+                                    Course Expired
                                 </button>
                             @else
                                 <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
