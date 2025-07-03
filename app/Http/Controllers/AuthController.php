@@ -144,7 +144,7 @@ class AuthController extends Controller
                 $User = new User();
                 $User->ID_USER = $KODE_USER;
                 $User->ID_CATEGORY_USER = $req->input('category_user');
-                $User->NAME = $req->input('name');
+                $User->NAME = $this->cleanString($req->input('name'));
                 $User->EMAIL = $req->input('email');
                 $User->PASS = hash('sha256', md5($req->input('password')));
                 $User->ID_ROLE = 3;
@@ -346,5 +346,13 @@ class AuthController extends Controller
         $begin = substr($scrap, 0, 4);
         $uniqid = strtoupper($begin);
         return "USR_" . $uniqid . substr(md5(time()), 0, 3);
+    }
+    function cleanString($string)
+    {
+        $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
+        $normalized = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
+        $asciiOnly = preg_replace('/[^\x20-\x7E]/', '', $normalized);
+        $cleaned = preg_replace('/[^a-zA-Z0-9\s-]/', '', $asciiOnly);
+        return trim(preg_replace('/\s+/', ' ', $cleaned));
     }
 }
