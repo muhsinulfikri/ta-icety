@@ -67,7 +67,7 @@
                         <tr>
                             <td><?= $number ?></td>
                             <td width="300"><?= $item->TITLE_ACTIVITY ?></td>
-                            <td><?= $item->IS_DELETED !== null ? '<span class="badge badge-danger">Deleted</span>' : ($item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-success">Active</span>') ?> </td>
+                            <td><?= $item->IS_DELETED !== null ? '<span class="badge badge-danger">Deleted</span>' : ($item->STATUS == 1 ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-danger">Not Active</span>') ?> </td>
                             <td><?= $item->IS_PUBLIC == 1 ? '<span class="badge badge-success">Public</span>' : '<span class="badge badge-danger">Private</span>' ?></td>
                             <td><?= $item->TYPE_ACTIVITY == 3 ? '<span class="badge badge-danger">Final Exam</span>' : '<span class="badge badge-success">Kursus Biasa</span>' ?></td>
                             <td><?= $item->PRICE_ACTIVITY == 0 ? '<span class="badge badge-success">Free</span>' : 'Rp ' . number_format($item->PRICE_ACTIVITY, 0, '.', '.') ?>
@@ -82,6 +82,12 @@
                                 @elseif ($item->TYPE_ACTIVITY == 3)
                                     <button type="button" onclick="location.href='courses/lihat_peserta_final?ID_ACTIVITY={{$item->ID_ACTIVITY}}'" class="btn btn-warning mb-1 btn-sm-2 w-100 fs-8 rounded waves-effect waves-light px-2" style="min-width: 160px !important;">
                                         <i class="bx bxs-user-detail font-size-16 align-middle"></i> See Participant
+                                    </button>
+                                @endif
+                                @if ($item->STATUS == 0 && session('user')[0]['ID_ROLE'] == 1 && $item->TYPE_ACTIVITY == 1)
+                                    <button type="submit" onclick="openApproveModal('<?= $item->ID_ACTIVITY ?>', '<?= $item->FINAL_EXAM ?>')"
+                                        class="btn btn-success btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1" style="min-width: 155px !important;">
+                                        <i class="bx bx-check font-size-16 align-middle"></i> Approve
                                     </button>
                                 @endif
                                 <form action="courses/invite" method="GET">
@@ -177,6 +183,35 @@
 </div>
 {{-- End Modal Delete --}}
 
+{{-- Start Modal Approve --}}
+<div class="modal fade" id="approveModal" style="z-index: 1060;" id="exampleModalCenter" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-user" action="courses/approve-course" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="modal-body">
+                        <p>Do you want to approve this Course ?</p>
+                        <input type="hidden" name="id_activity" value="" readonly>
+                        <input type="hidden" name="final_exam" value="" readonly>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- End Modal Approve --}}
+
 {{-- Start Modal Add Course --}}
 <div class="modal fade" style="z-index: 1060;" id="modalAddCourse" data-backdrop="static"
     data-keyboard="false">
@@ -212,6 +247,14 @@
         let form = document.getElementById('form-user');
         form.action = `courses/copy/${idActivity}`;
         $('#copyModal').modal('show')
+    }
+
+    function openApproveModal(id_act, final) {
+        console.log(id_act, final);
+
+        $('input[name="id_activity"]').val(id_act)
+        $('input[name="final_exam"]').val(final)
+        $('#approveModal').modal('show')
     }
 
     function opendeleteModal(Data) {

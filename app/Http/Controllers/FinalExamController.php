@@ -219,36 +219,68 @@ class FinalExamController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
-        $data_course = DB::Select("
-            SELECT
-                a.ID_ACTIVITY ,
-                a.IMAGE_ACTIVITY ,
-                a.TITLE_ACTIVITY ,
-                a.PRICE_ACTIVITY ,
-                a.REMEDIAL,
-                a.DATE_START ,
-                a.DATE_END ,
-                a.STATUS ,
-                a.IS_PUBLIC ,
-                a.SERTIF_IMAGE ,
-                a.INCLUDE_COURSE,
-                c.ID_COURSE ,
-                c.ALIAS,
-                c.REQUIREMENT ,
-                c.PENGUMUMAN ,
-                c.DESKRIPSI_COURSE ,
-                c.DESKRIPSI_COURSE_ITEM ,
-                a.SERTIF_CODE ,
-                k.ID_KATEGORI
-            FROM
-                activity a
-            LEFT JOIN course c ON
-                c.ID_ACTIVITY = a.ID_ACTIVITY
-            LEFT JOIN kategori k ON
-                k.ID_KATEGORI = c.KATEGORI
-            WHERE
-                a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
-        ")[0];
+        if(session('user')[0]->get('ID_ROLE') == 1){
+            $data_course = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY ,
+                    a.IMAGE_ACTIVITY ,
+                    a.TITLE_ACTIVITY ,
+                    a.PRICE_ACTIVITY ,
+                    a.REMEDIAL,
+                    a.DATE_START ,
+                    a.DATE_END ,
+                    a.STATUS ,
+                    a.IS_PUBLIC ,
+                    a.SERTIF_IMAGE ,
+                    a.INCLUDE_COURSE,
+                    c.ID_COURSE ,
+                    c.ALIAS,
+                    c.REQUIREMENT ,
+                    c.PENGUMUMAN ,
+                    c.DESKRIPSI_COURSE ,
+                    c.DESKRIPSI_COURSE_ITEM ,
+                    a.SERTIF_CODE ,
+                    k.ID_KATEGORI
+                FROM
+                    activity a
+                LEFT JOIN course c ON
+                    c.ID_ACTIVITY = a.ID_ACTIVITY
+                LEFT JOIN kategori k ON
+                    k.ID_KATEGORI = c.KATEGORI
+                WHERE
+                    a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
+            ")[0];
+        } elseif(session('user')[0]->get('ID_ROLE') == 2){
+            $data_course = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY ,
+                    a.IMAGE_ACTIVITY ,
+                    a.TITLE_ACTIVITY ,
+                    a.PRICE_ACTIVITY ,
+                    a.REMEDIAL,
+                    a.DATE_START ,
+                    a.DATE_END ,
+                    a.IS_PUBLIC ,
+                    a.SERTIF_IMAGE ,
+                    a.INCLUDE_COURSE,
+                    c.ID_COURSE ,
+                    c.ALIAS,
+                    c.REQUIREMENT ,
+                    c.PENGUMUMAN ,
+                    c.DESKRIPSI_COURSE ,
+                    c.DESKRIPSI_COURSE_ITEM ,
+                    a.SERTIF_CODE ,
+                    k.ID_KATEGORI
+                FROM
+                    activity a
+                LEFT JOIN course c ON
+                    c.ID_ACTIVITY = a.ID_ACTIVITY
+                LEFT JOIN kategori k ON
+                    k.ID_KATEGORI = c.KATEGORI
+                WHERE
+                    a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
+            ")[0];
+        }
 
         $data['items'] = DB::Selectone("
             SELECT

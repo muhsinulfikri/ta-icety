@@ -59,13 +59,7 @@
                                 <td><?= $item->NAME ?></td>
                                 <td><?= $item->UNIV ?></td>
                                 <td><?= $item->DEGREE . ' - ' . $item->STUDY ?></td>
-                                <?php if ($item->STATUS == 0) { ?>
-                                <td><span class="badge badge-warning text-dark">Need Verify</span></td>
-                                <?php } else if ($item->STATUS == 1) { ?>
                                 <td><span class="badge badge-success">Instructor</span></td>
-                                <?php } else { ?>
-                                <td><span class="badge badge-danger">Rejected</span></td>
-                                <?php } ?>
                                 <td>
                                     <button type="button"
                                         onclick="openviewModal(`<?= htmlentities(json_encode($item)) ?>`)"
