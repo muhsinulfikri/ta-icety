@@ -627,7 +627,6 @@ class CourseController extends Controller
     }
 
     public function approve_course(Request $request){
-        dd($request->input('id_activity'), $request->input('final_exam'));
         try{
             DB::beginTransaction();
             DB::table('activity')
