@@ -102,6 +102,7 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('user/update', 'UserController@update');
     Route::post('user/delete', 'UserController@delete');
     Route::post('user/import', 'UserController@importFile');
+    Route::post('user/add-instructor', 'InstructorController@add_instructor');
 
     Route::get('instructor', 'InstructorController@index');
     Route::post('instructor/accept', 'InstructorController@accept');
@@ -244,7 +245,8 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::post('courses/invite_batch', 'CourseController@invite_batch');
     //copy course
     Route::post('courses/copy/{id}', 'CourseController@copyCourse');
-
+    //approve courses
+    Route::post('courses/approve-course', 'CourseController@approve_course');
 
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');

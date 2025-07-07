@@ -29,6 +29,7 @@ class Course extends Model
             WHERE
                 activity.TYPE_ACTIVITY = 1
                 AND activity.IS_PUBLIC = 1
+                AND activity.STATUS = 1
                 AND course.ID_COURSE NOT LIKE 'FNL_%'
                 AND activity.IS_DELETED IS NULL
             ORDER BY
@@ -228,7 +229,8 @@ class Course extends Model
                     ->whereColumn('o.ID_PRODUCT', 'act.ID_ACTIVITY')
                     ->where('t.STAT_BAYAR', 3);
             }, 'DATA_CHECKING')
-            ->where('act.TYPE_ACTIVITY', $type);
+            ->where('act.TYPE_ACTIVITY', $type)
+            ->where('act.STATUS', 1);
 
         if (!empty($keyword)) {
             $query->where('act.TITLE_ACTIVITY', 'LIKE', "%$keyword%");

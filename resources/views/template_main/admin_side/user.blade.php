@@ -47,8 +47,8 @@
                 </div>
             </div>
             <div class="m-t-25">
-                <table class="table mb-0" id="dtTable">
-                    <thead>
+                <table class="table mb-0 text-center" id="dtTable">
+                    <thead class="align-middle">
                         <tr>
                             <th>No</th>
                             <th>Nama User</th>
@@ -84,16 +84,25 @@
                                 <td><?= $item->TELP ?></td>
                                 <td><?= $item->JK ?></td>
                                 <td>
+                                    <div class="d-flex gap-2 me-2">
                                     <button type="button"
                                         onclick="openviewModal(`<?= htmlentities(json_encode($item)) ?>`)"
                                         class="btn btn-subtle-primary waves-effect waves-light">
-                                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>
+                                        <i class="bx bx-edit-alt font-size-16 align-middle"></i>Edit
                                     </button>
+                                    @if ($item->ID_ROLE == 3)
+                                    <button type="button"
+                                        onclick="openAddIntructorModal(`<?= htmlentities(json_encode($item)) ?>`)"
+                                        class="btn btn-subtle-primary waves-effect waves-light">
+                                        <i class="bx bx-plus font-size-16 align-middle"></i>Add Instructor
+                                    </button>
+                                    @endif
                                     <button type="button"
                                         onclick="opendeleteModal(`<?= htmlentities(json_encode($item)) ?>`)"
                                         class="btn btn-subtle-danger waves-effect waves-light">
-                                        <i class="bx bx-trash font-size-16 align-middle"></i>
+                                        <i class="bx bx-trash font-size-16 align-middle"></i>Delete
                                     </button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -470,6 +479,32 @@
 </div>
 {{-- End Modal Delete --}}
 
+{{-- Start Modal add instructor --}}
+<div class="modal" id="addInstructorModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal lg">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Instructor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-delete" action="user/add-instructor" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <p>Apakah anda ingin menjadikan instruktur user ini ?</p>
+                    <input type="hidden" name="add_id_user" value="" readonly>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Ya</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- End Modal add instructor --}}
+
 <script>
     $('#dtTable').DataTable();
 
@@ -577,6 +612,14 @@
             $('input[name="up_semester"]').val(data.SEMESTER)
         }
         $('#updateModal').modal('show')
+    }
+
+    function openAddIntructorModal(viewData) {
+        var data = JSON.parse(viewData)
+        console.log(data);
+
+        $('input[name="add_id_user"]').val(data.ID_USER)
+        $('#addInstructorModal').modal('show')
     }
 
     function opendeleteModal(viewData) {

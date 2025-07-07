@@ -81,15 +81,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Status</label>
-                        <div class="col-md-5 column">
-                            <div class="switch m-r-10">
-                                <input type="checkbox" id="switch-1" name="status" checked="">
-                                <label for="switch-1"></label>
+                    @if (session('user')[0]['ID_ROLE'] == 1)
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label control-label">Status</label>
+                            <div class="col-md-5 column">
+                                <div class="switch m-r-10">
+                                    <input type="checkbox" id="switch-1" name="status" checked="">
+                                    <label for="switch-1"></label>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
