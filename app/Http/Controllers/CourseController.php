@@ -1299,16 +1299,20 @@ class CourseController extends Controller
                 tnfe.ID_ACTIVITY = c.FINAL_EXAM
             LEFT JOIN (
                 SELECT
-                    CEIL(SUM(nq.NILAI) / COUNT(nq.NILAI)) AS NILAI ,
-                    nq.ID_USER
+                    CEIL(SUM(nq.NILAI) / COUNT(nq.NILAI)) AS NILAI,
+                    nq.ID_USER,
+                    c.ID_ACTIVITY
                 FROM
                     nilai_quiz nq
                 LEFT JOIN item_course ic ON
                     ic.ID_ITEM = nq.ID_QUIZ
+                LEFT JOIN course c ON
+                    c.ID_COURSE = ic.ID_COURSE
                 GROUP BY
-                    nq.ID_USER
+                    nq.ID_USER, c.ID_ACTIVITY
                 ) nq ON
                 nq.ID_USER = u.ID_USER
+                AND nq.ID_ACTIVITY = c.ID_ACTIVITY
             LEFT JOIN (
                 SELECT
                     mc.ID_USER ,
