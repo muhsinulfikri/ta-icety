@@ -331,6 +331,7 @@
     $('#modules_certificate').summernote('code', data.MODULE_CERTIFICATE);
     if (price == 0) {
         $('#setFree').prop('checked', true);
+        $('.CurrencyInput').prop('readonly', true)
         $('input[name="price"]').val(0);
     } else {
         $('#setFree').prop('checked', false);

@@ -134,6 +134,9 @@ class AuthController extends Controller
             ->get();
 
         if ($check_user->isEmpty()) {
+            if (str_ends_with(strtolower($req->input('email')), '.ru')) {
+                return redirect('register')->with('error_msg', 'Failed to send email. Please try again later!');
+            }
             try {
                 $KODE_USER = $this->GenerateUniqID($req->input('name'));
 
