@@ -46,7 +46,7 @@
                             <th>University</th>
                             <th>Study</th>
                             <th>Status</th>
-                            {{-- <th>Action</th> --}}
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,6 +67,13 @@
                                         <i class="bx bx-edit-alt font-size-16 align-middle"></i>
                                     </button>
                                 </td> --}}
+                                <td>
+                                    <button type="button"
+                                        onclick="deleteModal(`<?= htmlentities(json_encode($item)) ?>`)"
+                                        class="btn btn-subtle-primary waves-effect waves-light">
+                                        <i class="bx bx-trash font-size-16 align-middle"></i>
+                                    </button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -171,6 +178,36 @@
 </div>
 {{-- End Modal View --}}
 
+{{-- Start Delete Modal --}}
+<div class="modal" id="deleteModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Instructor</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-user" action="instructor/delete" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <label>Apakah Anda Ingin Menghapus Instructor ini ?</label>
+                    <div class="hidden">
+                        <input type="hidden" name="id_user" class="form-control" readonly>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{{-- End Delete Modal --}}
+
+
 <script>
     $('#dtTable').DataTable()
 
@@ -197,5 +234,12 @@
         $('#dec_id_instructor').val(id_user)
         console.log(id_user);
         $('#addviewModal').modal('show')
+    }
+
+    function deleteModal(viewData){
+        var data = JSON.parse(viewData)
+        var id_user = data.ID_USER;
+        $('input[name="id_user"]').val(id_user);
+        $('#deleteModal').modal('show');
     }
 </script>

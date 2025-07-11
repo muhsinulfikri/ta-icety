@@ -105,6 +105,7 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('user/add-instructor', 'InstructorController@add_instructor');
 
     Route::get('instructor', 'InstructorController@index');
+    Route::post('instructor/delete', 'InstructorController@delete_instructor');
     Route::post('instructor/accept', 'InstructorController@accept');
     Route::post('instructor/decline', 'InstructorController@decline');
 

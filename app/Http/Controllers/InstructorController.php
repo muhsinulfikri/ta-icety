@@ -21,6 +21,7 @@ class InstructorController extends Controller
 
         $data["instructor"] = DB::select("
             SELECT
+                u.ID_USER,
                 u.NAME,
                 ud.UNIV,
                 ud.DEGREE,
@@ -46,6 +47,17 @@ class InstructorController extends Controller
             DB::table('user')->WHERE(['ID_USER' => $request->input('add_id_user')])->update(['ID_ROLE' => 2]);
             DB::commit();
             return redirect('user')->with(['succ_msg' => 'Successfully Add New Instructor', 'location' => 'user']);
+        }catch(Throwable $e){
+            DB::rollBack();
+            dd($e);
+        }
+    }
+    public function delete_instructor(Request $request){
+        try{
+            DB::beginTransaction();
+            DB::table('user')->WHERE(['ID_USER' => $request->input('id_user')])->update(['ID_ROLE' => 3]);
+            DB::commit();
+            return redirect('instructor')->with(['succ_msg' => 'Successfully delete Instructor', 'location' => 'instructor']);
         }catch(Throwable $e){
             DB::rollBack();
             dd($e);
