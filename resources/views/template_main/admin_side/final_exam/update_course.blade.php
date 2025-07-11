@@ -92,10 +92,10 @@
                             </div>
                         </div>
                     </div>
-                     <div class="form-group text-right mt-5">
-                        <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
-                    </div>
                     @endif
+                    <div class="form-group text-right mt-5">
+                       <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
+                   </div>
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
