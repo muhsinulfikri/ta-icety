@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Exception;
+
 use function PHPUnit\Framework\isEmpty;
 
 use Illuminate\Support\Facades\Session;
@@ -427,6 +429,7 @@ class CourseController extends Controller
             $data['no'] = $key + 1;
             if ($item_data->TYPE == 1) {
                 $data['item'] = [
+                    'ID_COURSE' => $item_data->ID_COURSE,
                     'ID_ITEM'   => $item_data->ID_ITEM,
                     'FILE'      => $item_data->FILE,
                     'TITLE'     => $item_data->TITLE,
@@ -560,7 +563,7 @@ class CourseController extends Controller
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
 
-            $this->update_item_materi($req);
+            // $this->update_item_materi($req);
             DB::commit();
             return redirect('/courses/edit?id_activity=' . $req->input('ID_ACTIVITY'))->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
         } catch (ValidationException $e) {
@@ -1101,12 +1104,9 @@ class CourseController extends Controller
         app(Laporan::class)->laporan_course($data);
     }
 
-    public function update_item_materi($req)
+    public function update_item_materi(Request $req)
     {
         $dataIDCourse = $req->input('ID_COURSE');
-
-        // dump($req->file());
-        // dd($req->input());
 
         $categoryList       = $req->input('type');
         $materiTitleList    = $req->input('materi_title');
@@ -1116,125 +1116,172 @@ class CourseController extends Controller
 
         $idItem             = $req->input('ID_ITEM');
         $isDelete           = $req->input('DELETED');
-        $nomor = 0;
 
-        $idQuiz = [];
-        $orderList = 0;
-        if (!empty($idItem)) {
-            for ($i = 0; $i < count($idItem); $i++) {
-                $nomor++;
-                if ($categoryList[$i] == 1) {
-                    if ($isDelete[$i]) {
-                        DB::table('item_course')->where(['ID_ITEM' => $idItem[$i]])->delete();
-                    } else {
-                        $orderList++;
-                        $data_item = [
-                            'ID_COURSE'     => $dataIDCourse,
-                            'TITLE'         => $materiTitleList[$i],
-                            'LINK_YT'       => $linkYT[$i],
-                            'DESKRIPSI'     => $descMateriList[$i],
-                            'ORDER_LIST'    => $orderList,
-                            'TYPE'          => $categoryList[$i],
-                            'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
-                        ];
 
-                        $materiFile = $req->input('default_file');
-                        if (!empty($materiFile)) {
-                            $file = (!empty($req->file('materi_file') && !empty($req->file('materi_file')[$i])) ? $req->file('materi_file')[$i] : '');
-                            $data_item['FILE'] = !empty($file) ? FileUpload::S3($file, 'MATERI_FILE', 'Materi-' . strtotime(now())) :  $materiFile[$i];
-                        } else {
-                            $data_item['FILE'] = NULL;
-                        }
+        $data = [
+            'ID_COURSE' => $dataIDCourse,
+            'TITLE' => $materiTitleList,
+            'DESKRIPSI' => $descMateriList,
+            'LINK_YT' => $linkYT,
+            'LINK_MATERI' => $linkMateri,
+        ];
 
-                        DB::table('item_course')->updateOrInsert(['ID_ITEM' => $idItem[$i]], $data_item);
-                    }
-                } else {
-                    if ($isDelete[$i]) {
-                        DB::table('item_course')->where(['ID_ITEM' => $idItem[$i]])->delete();
-                    } else {
-                        $orderList++;
-                        $data_kuis = [
-                            'ID_COURSE'     => $dataIDCourse,
-                            'TITLE'         => null,
-                            'FILE'          => null,
-                            'LINK_YT'       => null,
-                            'DESKRIPSI'     => null,
-                            'ORDER_LIST'    => $orderList,
-                            'TYPE'          => $categoryList[$i],
-                            'LINK_MATERI'   => null,
-                            'MIN_NILAI'     => $req->input('min_nilai_' . $nomor),
-                        ];
+        $materiFile = $req->input('default_file');
 
-                        $existingItem = DB::table('item_course')->where('ID_ITEM', $idItem[$i])->first();
-                        if ($existingItem) {
-                            DB::table('item_course')->where('ID_ITEM', $idItem[$i])->update($data_kuis);
-                            $id = $existingItem->ID_ITEM;
-                        } else {
-                            DB::table('item_course')->insert($data_kuis);
-                            $id = DB::getPdo()->lastInsertId();
-                        }
-                        $idQuiz[] = $id;
-                    }
-                }
+        if (!empty($materiFile)) {
+            if ($req->hasFile('materi_file')) {
+                $uploadedFile = $req->file('materi_file');
+                $data['FILE'] = FileUpload::S3($uploadedFile, 'MATERI_FILE', 'Materi-' . strtotime(now()));
+            } else {
+                $data['FILE'] = $materiFile;
             }
+        } else {
+            $data['FILE'] = null;
+        }
+        try {
+            DB::table('item_course')
+            ->where([
+                'ID_ITEM' => $idItem,
+                'ID_COURSE' => $dataIDCourse
+            ])
+            ->update($data);
+            return response()->json(['status' => 'success', 'succ_msg' => 'Berhasil Memperbarui Materi']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'err_msg' => $e]);
         }
 
-        if (!empty($req->input('question'))) {
-            $data['data_item'] = $data_kuis;
-            $data['ID_COURSE'] = $dataIDCourse;
-            $this->update_item_quiz($data, $req, $idQuiz);
-        }
+        // $idQuiz = [];
+        // $orderList = 0;
+        // if (!empty($idItem)) {
+        //     for ($i = 0; $i < count($idItem); $i++) {
+        //         $nomor++;
+        //         if ($categoryList[$i] == 1) {
+        //             if ($isDelete[$i]) {
+        //                 DB::table('item_course')->where(['ID_ITEM' => $idItem[$i]])->delete();
+        //             } else {
+        //                 $orderList++;
+        //                 $data_item = [
+        //                     'ID_COURSE'     => $dataIDCourse,
+        //                     'TITLE'         => $materiTitleList[$i],
+        //                     'LINK_YT'       => $linkYT[$i],
+        //                     'DESKRIPSI'     => $descMateriList[$i],
+        //                     'ORDER_LIST'    => $orderList,
+        //                     'TYPE'          => $categoryList[$i],
+        //                     'LINK_MATERI'   => !empty($linkMateri[$i]) ? $linkMateri[$i] : null
+        //                 ];
+
+        //                 $materiFile = $req->input('default_file');
+        //                 if (!empty($materiFile)) {
+        //                     $file = (!empty($req->file('materi_file') && !empty($req->file('materi_file')[$i])) ? $req->file('materi_file')[$i] : '');
+        //                     $data_item['FILE'] = !empty($file) ? FileUpload::S3($file, 'MATERI_FILE', 'Materi-' . strtotime(now())) :  $materiFile[$i];
+        //                 } else {
+        //                     $data_item['FILE'] = NULL;
+        //                 }
+
+        //                 DB::table('item_course')->updateOrInsert(['ID_ITEM' => $idItem[$i]], $data_item);
+        //             }
+        //         } else {
+        //             if ($isDelete[$i]) {
+        //                 DB::table('item_course')->where(['ID_ITEM' => $idItem[$i]])->delete();
+        //             } else {
+        //                 $orderList++;
+        //                 $data_kuis = [
+        //                     'ID_COURSE'     => $dataIDCourse,
+        //                     'TITLE'         => null,
+        //                     'FILE'          => null,
+        //                     'LINK_YT'       => null,
+        //                     'DESKRIPSI'     => null,
+        //                     'ORDER_LIST'    => $orderList,
+        //                     'TYPE'          => $categoryList[$i],
+        //                     'LINK_MATERI'   => null,
+        //                     'MIN_NILAI'     => $req->input('min_nilai_' . $nomor),
+        //                 ];
+
+        //                 $existingItem = DB::table('item_course')->where('ID_ITEM', $idItem[$i])->first();
+        //                 if ($existingItem) {
+        //                     DB::table('item_course')->where('ID_ITEM', $idItem[$i])->update($data_kuis);
+        //                     $id = $existingItem->ID_ITEM;
+        //                 } else {
+        //                     DB::table('item_course')->insert($data_kuis);
+        //                     $id = DB::getPdo()->lastInsertId();
+        //                 }
+        //                 $idQuiz[] = $id;
+        //             }
+        //         }
+        //     }
+        // }
+
+        // if (!empty($req->input('question'))) {
+        //     $data['data_item'] = $data_kuis;
+        //     $data['ID_COURSE'] = $dataIDCourse;
+        //     $this->update_item_quiz($data, $req, $idQuiz);
+        // }
     }
 
-    public function update_item_quiz($data, $req, $lastIdQuiz)
+    public function update_item_quiz(Request $req)
     {
-        $id_quiz_old = '';
-        if (!empty($req->input('ID_QUIZ'))) {
-            $id_quiz_in = implode(',', $req->input('ID_QUIZ'));
-            DB::statement("DELETE FROM detail_quiz WHERE ID_QUIZ IN (" . $id_quiz_in . ")");
-
-            $id_quiz_old = DB::select("
-                SELECT
-                    ID_QUIZ
-                FROM
-                    nilai_quiz
-                WHERE
-                    ID_QUIZ IN (" . $id_quiz_in . ")
-            ");
+        $data = [
+            'ID_DETAIL' => $req->input('ID_DETAIL'),
+            'ID_QUIZ'   => $req->input('ID_QUIZ'),
+            'ID_COURSE' => $req->input('ID_COURSE'),
+            'SOAL' => $req->input('SOAL'),
+            'PIL_JWB' => $req->input('PIL_JWB'),
+            'KUNCI' => $req->input('KUNCI'),
+        ];
+        try{
+            DB::table('detail_quiz')->where(['ID_DETAIL' => $data['ID_DETAIL'], 'ID_QUIZ' => $data['ID_QUIZ'], 'ID_COURSE' => $data['ID_COURSE']])->update($data);
+            return response()->json(['status' => 'success']);
+        } catch(Exception $e){
+            return response()->json(['status' => 'error', 'err_msg' => $e]);
         }
 
-        $jawaban_a          = $req->input('jawaban_a');
-        $jawaban_b          = $req->input('jawaban_b');
-        $jawaban_c          = $req->input('jawaban_c');
-        $jawaban_d          = $req->input('jawaban_d');
-        $order_list_quiz    = $req->input('order_list_question');
-        $question           = $req->input('question');
-        $kunci_soal         = $req->input('kunci_soal');
+        // $id_quiz_old = '';
+        // if (!empty($req->input('ID_QUIZ'))) {
+        //     $id_quiz_in = implode(',', $req->input('ID_QUIZ'));
+        //     DB::statement("DELETE FROM detail_quiz WHERE ID_QUIZ IN (" . $id_quiz_in . ")");
 
-        $tmpNo = 0;
-        $tmpNoQuiz = 0;
-        foreach ($question as $i => $questions) {
-            $id_quiz = $lastIdQuiz[$tmpNoQuiz];
-            $maxIndex = max(array_keys($questions));
-            for ($j = 1; $j <= $maxIndex; $j++) {
-                if (array_key_exists($j, $questions)) {
-                    $quiz = [
-                        'ID_QUIZ'       => $id_quiz,
-                        'ID_COURSE'     => $data['ID_COURSE'],
-                        'SOAL'          => $questions[$j],
-                        'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
-                        'KUNCI'         => $kunci_soal[$i][$j],
-                        'ORDER_LIST'    => $order_list_quiz[$tmpNo]
-                    ];
-                    DB::table('detail_quiz')->insert($quiz);
-                    $tmpNo++;
-                }
-            }
-            if (!empty($id_quiz_old) || $id_quiz_old != null) {
-                DB::table('nilai_quiz')->WHERE(['ID_QUIZ' => $id_quiz_old[$tmpNoQuiz]->ID_QUIZ])->update(['ID_QUIZ' => $id_quiz]);
-            }
-            $tmpNoQuiz++;
-        }
+        //     $id_quiz_old = DB::select("
+        //         SELECT
+        //             ID_QUIZ
+        //         FROM
+        //             nilai_quiz
+        //         WHERE
+        //             ID_QUIZ IN (" . $id_quiz_in . ")
+        //     ");
+        // }
+
+        // $jawaban_a          = $req->input('jawaban_a');
+        // $jawaban_b          = $req->input('jawaban_b');
+        // $jawaban_c          = $req->input('jawaban_c');
+        // $jawaban_d          = $req->input('jawaban_d');
+        // $order_list_quiz    = $req->input('order_list_question');
+        // $question           = $req->input('question');
+        // $kunci_soal         = $req->input('kunci_soal');
+        // dd($question);
+        // $tmpNo = 0;
+        // $tmpNoQuiz = 0;
+        // foreach ($question as $i => $questions) {
+        //     $id_quiz = $lastIdQuiz[$tmpNoQuiz];
+        //     $maxIndex = max(array_keys($questions));
+        //     for ($j = 1; $j <= $maxIndex; $j++) {
+        //         if (array_key_exists($j, $questions)) {
+        //             $quiz = [
+        //                 'ID_QUIZ'       => $id_quiz,
+        //                 'ID_COURSE'     => $data['ID_COURSE'],
+        //                 'SOAL'          => $questions[$j],
+        //                 'PIL_JWB'       => implode(';', [$jawaban_a[$tmpNo], $jawaban_b[$tmpNo], $jawaban_c[$tmpNo], $jawaban_d[$tmpNo]]),
+        //                 'KUNCI'         => $kunci_soal[$i][$j],
+        //                 'ORDER_LIST'    => $order_list_quiz[$tmpNo]
+        //             ];
+        //             DB::table('detail_quiz')->insert($quiz);
+        //             $tmpNo++;
+        //         }
+        //     }
+        //     if (!empty($id_quiz_old) || $id_quiz_old != null) {
+        //         DB::table('nilai_quiz')->WHERE(['ID_QUIZ' => $id_quiz_old[$tmpNoQuiz]->ID_QUIZ])->update(['ID_QUIZ' => $id_quiz]);
+        //     }
+        //     $tmpNoQuiz++;
+        // }
     }
 
     public function get_alias(Request $req)

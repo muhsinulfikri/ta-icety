@@ -45,14 +45,14 @@
         <div class="card-body">
             <div class="soal_form_{{ $no }}"></div>
             <div class="form-group row justify-content-center align-items-center">
-                <div id="add_new_soal_{{ $no }}{{ $id_quiz }}"
+                {{-- <div id="add_new_soal_{{ $no }}{{ $id_quiz }}"
                     class="btn btn-success rounded col-md-2 float-end mx-2" style="cursor: pointer;">
                     <span class="col-md-12 text-white">Add New Question</span>
                 </div>
                 <div id="import_soal_{{ $no }}{{ $id_quiz }}"
                     class="btn btn-success rounded col-md-4 float-end mx-2" style="cursor: pointer;">
                     <span class="col-md-12 text-white">Import Soal</span>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
