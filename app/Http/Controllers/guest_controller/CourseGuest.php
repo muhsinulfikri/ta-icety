@@ -59,6 +59,7 @@ class CourseGuest extends Controller
 		WHERE
 			ID_USER = '" . $data_user . "'
 		");
+        // dd($data);
 		return
 			view('template.header', $data) .
 			view('template_guest.course.course', $data) .
@@ -1065,7 +1066,7 @@ class CourseGuest extends Controller
 
 	public function getFilterByKat(Request $req)
 	{
-		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "' AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL";
+		$condition = (!empty($_POST['category'])) ? "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.KATEGORI = '" . $_POST['category'] . "' AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL AND activity.STATUS = 1" : "WHERE activity.TYPE_ACTIVITY = 1 AND activity.IS_PUBLIC = 1 AND course.ID_COURSE NOT LIKE 'FNL_%' AND activity.IS_DELETED IS NULL AND activity.STATUS = 1";
 		$id_user = (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
 		if ($_POST['category'] == 999) {
 			$data_id = DB::select("

@@ -46,7 +46,7 @@
                             <th>University</th>
                             <th>Study</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            {{-- <th>Action</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -59,20 +59,14 @@
                                 <td><?= $item->NAME ?></td>
                                 <td><?= $item->UNIV ?></td>
                                 <td><?= $item->DEGREE . ' - ' . $item->STUDY ?></td>
-                                <?php if ($item->STATUS == 0) { ?>
-                                <td><span class="badge badge-warning text-dark">Need Verify</span></td>
-                                <?php } else if ($item->STATUS == 1) { ?>
                                 <td><span class="badge badge-success">Instructor</span></td>
-                                <?php } else { ?>
-                                <td><span class="badge badge-danger">Rejected</span></td>
-                                <?php } ?>
-                                <td>
+                                {{-- <td>
                                     <button type="button"
                                         onclick="openviewModal(`<?= htmlentities(json_encode($item)) ?>`)"
                                         class="btn btn-subtle-primary waves-effect waves-light">
                                         <i class="bx bx-edit-alt font-size-16 align-middle"></i>
                                     </button>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>

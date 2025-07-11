@@ -71,12 +71,20 @@
                             </span>
                         </div>
                     </div>
+                    @php
+                        $user = session('user')[0];
+                    @endphp
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Instructor <span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
-                            <input type="text" class="form-control" name="instructor_activity" placeholder="Instructor Course"
-                                required>
+                            <input type="text"
+                                    class="form-control"
+                                    name="instructor_activity"
+                                    placeholder="Instructor Course"
+                                    value="{{ $user['ID_ROLE'] == 2 ? $user['NAME'] : '' }}"
+                                    {{ $user['ID_ROLE'] == 2 ? 'readonly' : '' }}
+                                    required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -244,17 +252,19 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label control-label">Status</label>
-                        <div class="col-md-5 row">
-                            Not Active
-                            <div class="switch m-r-10" style="margin-left: 7px;">
-                                <input type="checkbox" id="switch-1" name="status" checked="">
-                                <label for="switch-1"></label>
+                    @if (session('user')[0]['ID_ROLE'] == 1)
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label control-label">Status</label>
+                            <div class="col-md-5 row">
+                                Not Active
+                                <div class="switch m-r-10" style="margin-left: 7px;">
+                                    <input type="checkbox" id="switch-1" name="status" checked="">
+                                    <label for="switch-1"></label>
+                                </div>
+                                Active
                             </div>
-                            Active
                         </div>
-                    </div>
+                    @endif
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
@@ -367,7 +377,7 @@
         // Initialize Summernote for all editors
         initializeSummernote('#announcement_editor', '#announcement', '#form-user');
         initializeSummernote('#desc_course_editor', '#desc_course', '#form-user');
-        initializeSummernote('#desc_instructor_editor', '#desc_course', '#form-user');
+        initializeSummernote('#desc_instructor_editor', '#desc_instructor', '#form-user');
         initializeSummernote('#desc_learn_editor', '#desc_what_to_learn', '#form-user');
         initializeSummernote('#modules_certificate_editor', '#modules_certificate', '#form-user');
         initializeSummernote('#summary_certificate_editor', '#summary_certificate', '#form-user');

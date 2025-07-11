@@ -33,15 +33,36 @@ class CourseController extends Controller
         if (session('user')[0]->get('ID_ROLE') == 1) {
             $data["activity"] = DB::select("
             SELECT
-                c.*
+                c.*,
+                cr.FINAL_EXAM
             FROM
                 activity c
             LEFT JOIN activity a ON
                 a.ID_ACTIVITY = c.ID_ACTIVITY
+            LEFT JOIN
+                course cr ON cr.ID_ACTIVITY = c.ID_ACTIVITY
             WHERE
                 (a.TYPE_ACTIVITY = 1
             OR
                 a.TYPE_ACTIVITY = 3)
+            AND
+                a.IS_DELETED IS NULL
+            ");
+        } elseif (session('user')[0]->get('ID_ROLE') == 2){
+            $data["activity"] = DB::select("
+            SELECT
+                a.*,
+                c.FINAL_EXAM
+            FROM
+                activity a
+            LEFT JOIN
+                course c ON a.ID_ACTIVITY = c.ID_ACTIVITY
+            WHERE
+                (a.TYPE_ACTIVITY = 1
+            OR
+                a.TYPE_ACTIVITY = 3)
+            AND
+                a.ID_USER = '". session('user')[0]->get('ID_USER') ."'
             AND
                 a.IS_DELETED IS NULL
             ");
@@ -74,7 +95,7 @@ class CourseController extends Controller
             FROM
                 kategori k
         ");
-
+        // dd($data['activity']);
         return
             view('template_main.admin_side.etc.header', $data) .
             view('template_main.admin_side.etc.sidebar', $data) .
@@ -103,18 +124,36 @@ class CourseController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
-        $data['final_exam'] = DB::Select("
-            SELECT
-                a.ID_ACTIVITY,
-                a.TITLE_ACTIVITY
-            FROM
-                activity a
-            WHERE
-                a.TYPE_ACTIVITY = 3
+        if (session('user')[0]->get('ID_ROLE') == 1){
+            $data['final_exam'] = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY,
+                    a.TITLE_ACTIVITY,
+                    a.ID_USER
+                FROM
+                    activity a
+                WHERE
+                    a.TYPE_ACTIVITY = 3
+                    AND a.ID_ACTIVITY NOT IN (
+                        SELECT FINAL_EXAM FROM course WHERE FINAL_EXAM IS NOT NULL
+                    )
+            ");
+        } elseif(session('user')[0]->get('ID_ROLE') == 2){
+            $data['final_exam'] = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY,
+                    a.TITLE_ACTIVITY,
+                    a.ID_USER
+                FROM
+                    activity a
+                WHERE
+                    a.TYPE_ACTIVITY = 3
                 AND a.ID_ACTIVITY NOT IN (
                     SELECT FINAL_EXAM FROM course WHERE FINAL_EXAM IS NOT NULL
                 )
-        ");
+                AND a.ID_USER = '".session('user')[0]->get('ID_USER')."'
+            ");
+        }
 
         return
             view('template_main.admin_side.etc.header', $data) .
@@ -175,7 +214,7 @@ class CourseController extends Controller
             if ($req->input('final_exam')) {
                 $course['FINAL_EXAM']  = $req->input('final_exam');
             }
-
+            // dd($activity, $course);
             DB::table('activity')->insert($activity);
             DB::table('course')->insert($course);
 
@@ -186,7 +225,7 @@ class CourseController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
-            Log::error($e->getMessage());
+            Log::error(message: $e->getMessage());
             return redirect()->back()->with('err_msg', 'Terjadi kesalahan, mohon coba lagi nanti.' . $e->getMessage());
         }
     }
@@ -339,15 +378,29 @@ class CourseController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
-        $data['final_exam'] = DB::Select("
-            SELECT
-                a.ID_ACTIVITY,
-                a.TITLE_ACTIVITY
-            FROM
-                activity a
-            WHERE
-                a.TYPE_ACTIVITY = 3
-        ");
+        if(session('user')[0]->get('ID_ROLE') == 1){
+            $data['final_exam'] = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY,
+                    a.TITLE_ACTIVITY
+                FROM
+                    activity a
+                WHERE
+                    a.TYPE_ACTIVITY = 3
+            ");
+        } elseif(session('user')[0]->get('ID_ROLE') == 2){
+            $data['final_exam'] = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY,
+                    a.TITLE_ACTIVITY
+                FROM
+                    activity a
+                WHERE
+                    a.TYPE_ACTIVITY = 3
+                AND
+                    a.ID_USER = '".session('user')[0]->get('ID_USER')."'
+            ");
+        }
 
         $data_course = DB::Select("
             SELECT
@@ -573,6 +626,23 @@ class CourseController extends Controller
                 'status' => 'failure',
                 'errors' => $e->errors()
             ], 422);
+        }
+    }
+
+    public function approve_course(Request $request){
+        try{
+            DB::beginTransaction();
+            DB::table('activity')
+                ->whereIn('ID_ACTIVITY', [
+                    $request->input('id_activity'),
+                    $request->input('final_exam')
+                ])
+                ->update(['STATUS' => 1]);
+            DB::commit();
+            return redirect('courses')->with(['succ_msg' => 'Successfully Approve Course', 'location' => 'courses']);
+        }catch(Throwable $e){
+            DB::rollBack();
+            dd($e);
         }
     }
 
