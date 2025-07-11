@@ -496,7 +496,7 @@
 
         function DownloadPdfExam(e) {
 
-            var file = '<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>'
+            var file = "<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>"
 
             $.ajax({
                 url: '<?= Request::segment(0) ?>/update-sertif',

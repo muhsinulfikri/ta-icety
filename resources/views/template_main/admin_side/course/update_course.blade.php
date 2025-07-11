@@ -241,6 +241,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group text-right mt-5">
+                        <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
+                    </div>
                     @endif
                     <div class="accordion materi_form" id="accordion-default">
 
@@ -254,9 +258,7 @@
                             </div>
                         </div>
                     </div> --}}
-                    <div class="form-group text-right mt-5">
-                        <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
-                    </div>
+
                 </form>
             </div>
         </div>
@@ -333,6 +335,7 @@
     $('#modules_certificate').summernote('code', data.MODULE_CERTIFICATE);
     if (price == 0) {
         $('#setFree').prop('checked', true);
+        $('.CurrencyInput').prop('readonly', true)
         $('input[name="price"]').val(0);
     } else {
         $('#setFree').prop('checked', false);
