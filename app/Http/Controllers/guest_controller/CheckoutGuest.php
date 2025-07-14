@@ -515,8 +515,19 @@ class CheckoutGuest extends Controller
 					if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
 						$this->InsertDataMapping($item);
 					}
-
+                    //buy final exam include course
 					if ($id_item->TYPE_ACTIVITY == 3 && $id_item->INCLUDE_COURSE == 1) {
+						$data_final_exam = [
+							"ID_ACTIVITY"	=> $item,
+							"ID_USER"		=> session('user')[0]->get('ID_USER'),
+							"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+							"IS_USED"		=> 0,
+							"CREATED_AT"	=> date("Y-m-d H:i:s")
+						];
+						DB::table('tb_final_exam')->insert($data_final_exam);
+					}
+                    //buy final exam not include course
+                    if ($id_item->TYPE_ACTIVITY == 3 && $id_item->INCLUDE_COURSE == 0) {
 						$data_final_exam = [
 							"ID_ACTIVITY"	=> $item,
 							"ID_USER"		=> session('user')[0]->get('ID_USER'),
