@@ -399,9 +399,6 @@ class CourseController extends Controller
                     activity a
                 WHERE
                     a.TYPE_ACTIVITY = 3
-                    AND a.ID_ACTIVITY NOT IN (
-                    SELECT FINAL_EXAM FROM course WHERE FINAL_EXAM IS NOT NULL
-                )
                 AND a.IS_DELETED IS NULL
                 AND
                     a.ID_USER = '".session('user')[0]->get('ID_USER')."'
