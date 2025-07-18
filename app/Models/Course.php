@@ -51,6 +51,8 @@ class Course extends Model
             WHERE
                 activity.TYPE_ACTIVITY = 1 AND
                 " . implode(' AND ', $condition) . "
+            AND
+                activity.STATUS = 1
             ORDER BY
                 activity.LOG_TIME DESC
                 LIMIT 4");
