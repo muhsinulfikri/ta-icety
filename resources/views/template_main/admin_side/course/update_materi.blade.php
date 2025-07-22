@@ -7,6 +7,7 @@
                 <input type="hidden" class="form-control" name="type[]" value="1" required>
                 <input type="hidden" name="DELETED[]" value="0">
                 <input type="hidden" name="ID_ITEM[]" value="<?= $item['ID_ITEM'] ?>">
+                <input type="hidden" id="id_course_{{ $item['ID_ITEM'] }}" value="{{ $item['ID_COURSE'] ?? '' }}">
                 {{-- <div id="delete_materi_{{ $no }}" class="btn btn-danger px-1 py-0 float-right d-flex align-items-center" style="cursor: pointer;">
                     <i class="anticon anticon-loading"></i>
                     <span><i class="anticon anticon-close"></i> </span>
@@ -25,7 +26,7 @@
                 <label class="col-sm-2 col-form-label control-label">Chapter File</label>
                 <div class="col-md-10" <?php echo !$hasFile ? 'style="display: none;"' : ''; ?>>
                     <div class="custom-file">
-                        <input type="file" name="materi_file[]" accept=".pdf, .ppt, .pptx" id="materi_file<?=$no?>"
+                        <input type="file" name="materi_file" accept=".pdf, .ppt, .pptx" id="materi_file_{{ $item['ID_ITEM'] }}"
                             class="custom-file-input file_materi">
                     </div>
                 </div>
@@ -34,7 +35,7 @@
             <div class="form-group row" id="linkInputGroup_{{ $no }}" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
                 <label class="col-sm-2 col-form-label control-label" required>Link Materi</label>
                 <div class="col-md-10" <?php echo !$hasLink ? 'style="display: none;"' : ''; ?>>
-                    <input id="materi_link_{{ $no }}" type="<?php echo $hasLink ? 'text' : 'hidden'; ?>" class="form-control" name="materi_link[]"
+                    <input id="materi_link_{{ $item['ID_ITEM'] }}" type="<?php echo $hasLink ? 'text' : 'hidden'; ?>" class="form-control" name="materi_link[]"
                     value="{{ $item['LINK_MATERI'] ?? '' }}">
                 </div>
             </div>
@@ -42,29 +43,79 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label" required>Chapter Name</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="materi_title[]" value="<?= $item['TITLE'] ?>"
+                    <input type="text" class="form-control" id="materi_title_{{ $item['ID_ITEM'] }}" value="{{ $item['TITLE'] }}"
                         required>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Youtube Link</label>
                 <div class="col-md-10">
-                    <input type="text" class="form-control" name="materi_link_yt[]" value="<?= $item['LINK_YT'] ?>"
+                    <input type="text" class="form-control" id="materi_link_yt_{{ $item['ID_ITEM'] }}" value="{{ $item['LINK_YT'] }}"
                         required>
                 </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label control-label">Chapter Description</label>
                 <div class="col-md-10">
-                    <textarea name="desc_materi[]" id="mytextarea_<?= $no ?>" required>
+                    <textarea name="desc_materi[]" id="mytextarea_<?= $item['ID_ITEM'] ?>" required>
                     {{ $item['DESKRIPSI'] }}</textarea>
                 </div>
+            </div>
+            <div class="form-group text-right mt-5">
+                <button type="button" class="btn btn-primary btn-submit-form" onclick="submitMateriItem(this)" data-id="{{ $item['ID_ITEM'] }}">Simpan Materi</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    function submitMateriItem(button) {
+        let idItem = $(button).data('id');
+        let formData = new FormData();
+
+        formData.append('ID_ITEM', idItem);
+        formData.append('ID_COURSE', $('#id_course_' + idItem).val());
+        formData.append('materi_title', $('#materi_title_' + idItem).val());
+        formData.append('materi_link_yt', $('#materi_link_yt_' + idItem).val());
+        formData.append('materi_link', $('#materi_link_' + idItem).val());
+        formData.append('desc_materi', $('#mytextarea_' + idItem).val());
+
+        let fileInput = $('#materi_file_' + idItem).get(0);
+        if (fileInput && fileInput.files.length > 0) {
+            formData.append('materi_file', fileInput.files[0]);
+        }
+        $.ajax({
+            url: 'update/item_materi',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            success: function(response) {
+                console.log(response);
+
+                if (response.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sukses',
+                        text: response.succ_msg,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            },
+            error: function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan saat menyimpan materi.',
+                });
+                console.log(xhr.responseText);
+            }
+        });
+    }
     $('input[name="materi_file[]"]').each(function() {
         var dropifyInstance = $(this).data('dropify');
 
@@ -77,7 +128,7 @@
                 dropifyInstance.destroy();
             }
         } else {
-            var dropifyElement = $("#materi_file<?=$no?>").dropify();
+            var dropifyElement = $("#materi_file_{{ $item['ID_ITEM'] }}").dropify();
             dropifyInstance = dropifyElement.data('dropify');
             dropifyInstance.resetPreview();
             dropifyInstance.clearElement();
@@ -88,7 +139,7 @@
     });
 
     $(document).ready(function() {
-        var $editor = $('#mytextarea_{{ $no }}');
+        var $editor = $("#mytextarea_<?=  $item['ID_ITEM'] ?>");
         $editor.summernote({
             height: 200,
             callbacks: {

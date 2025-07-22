@@ -515,8 +515,19 @@ class CheckoutGuest extends Controller
 					if (!empty($id_item) && $id_item->TYPE_ACTIVITY == 1) {
 						$this->InsertDataMapping($item);
 					}
-
+                    //buy final exam include course
 					if ($id_item->TYPE_ACTIVITY == 3 && $id_item->INCLUDE_COURSE == 1) {
+						$data_final_exam = [
+							"ID_ACTIVITY"	=> $item,
+							"ID_USER"		=> session('user')[0]->get('ID_USER'),
+							"CODE_EXAM"		=> $this->GenerateCodeExam($item . date('Y-m-d H:i:s')),
+							"IS_USED"		=> 0,
+							"CREATED_AT"	=> date("Y-m-d H:i:s")
+						];
+						DB::table('tb_final_exam')->insert($data_final_exam);
+					}
+                    //buy final exam not include course
+                    if ($id_item->TYPE_ACTIVITY == 3 && $id_item->INCLUDE_COURSE == 0) {
 						$data_final_exam = [
 							"ID_ACTIVITY"	=> $item,
 							"ID_USER"		=> session('user')[0]->get('ID_USER'),
@@ -604,6 +615,21 @@ class CheckoutGuest extends Controller
 				WHERE
 					ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
 			");
+            //get final exam
+            $final_exam = DB::select("
+				SELECT
+					c.ID_ACTIVITY,
+                    c.FINAL_EXAM,
+                    a.ID_ACTIVITY,
+                    a.INCLUDE_COURSE
+				FROM
+					course c
+				RIGHT JOIN
+					activity a
+				ON a.ID_ACTIVITY = c.FINAL_EXAM
+				WHERE
+					c.ID_ACTIVITY IN ('" . implode("', '", $id_item) . "')
+			");
 			$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
 
 			$data_payment = [
@@ -630,6 +656,16 @@ class CheckoutGuest extends Controller
 						"ID_ACTIVITY"	=> $item_activity->ID_ACTIVITY,
 						"ID_USER"		=> session('user')[0]->get('ID_USER'),
 						"CODE_EXAM"		=> $this->GenerateCodeExam($item_activity->ID_ACTIVITY . date('Y-m-d H:i:s')),
+						"IS_USED"		=> 0,
+						"CREATED_AT"	=> date("Y-m-d H:i:s")
+					];
+					DB::table('tb_final_exam')->insert($data_final_exam);
+				}
+                if ($final_exam[0]->INCLUDE_COURSE == 1) {
+					$data_final_exam = [
+						"ID_ACTIVITY"	=> $final_exam[0]->ID_ACTIVITY,
+						"ID_USER"		=> session('user')[0]->get('ID_USER'),
+						"CODE_EXAM"		=> $this->GenerateCodeExam($final_exam[0]->ID_ACTIVITY . date('Y-m-d H:i:s')),
 						"IS_USED"		=> 0,
 						"CREATED_AT"	=> date("Y-m-d H:i:s")
 					];

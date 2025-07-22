@@ -102,8 +102,10 @@ Route::middleware(['usersession:1'])->group(function () {
     Route::post('user/update', 'UserController@update');
     Route::post('user/delete', 'UserController@delete');
     Route::post('user/import', 'UserController@importFile');
+    Route::post('user/add-instructor', 'InstructorController@add_instructor');
 
     Route::get('instructor', 'InstructorController@index');
+    Route::post('instructor/delete', 'InstructorController@delete_instructor');
     Route::post('instructor/accept', 'InstructorController@accept');
     Route::post('instructor/decline', 'InstructorController@decline');
 
@@ -229,6 +231,10 @@ Route::middleware(['usersession:2,1'])->group(function () {
 
     Route::get('courses/edit', 'CourseController@update_course'); // open page update
 
+    //update item materi & item quiz course
+    Route::post('courses/update/item_materi', 'CourseController@update_item_materi');
+    Route::post('courses/update/item_quiz', 'CourseController@update_item_quiz');
+
     Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc
     Route::get('courses/get_course_item/{id}', 'CourseController@get_course_item'); // get materi / quiz
     Route::post('courses/get_quiz', 'CourseController@send_question'); //send to another page
@@ -244,7 +250,8 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::post('courses/invite_batch', 'CourseController@invite_batch');
     //copy course
     Route::post('courses/copy/{id}', 'CourseController@copyCourse');
-
+    //approve courses
+    Route::post('courses/approve-course', 'CourseController@approve_course');
 
     //Final Exam
     Route::get('courses/add-final', 'FinalExamController@index');
@@ -256,7 +263,10 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/add-final/add_quiz/{id}/{no_quiz}', 'FinalExamController@add_quiz');
     Route::get('courses/add-final/add_question/{id}/{index}', 'CourseController@add_question');
     Route::get('courses/add-final/get_course_item/{id}', 'FinalExamController@get_course_item'); // get materi / quiz
-    Route::post('courses/add-final/get_quiz', 'CourseController@send_question'); //send to another page
+    Route::post('courses/add-final/get_quiz', 'FinalExamController@send_question'); //send to another page
+
+    //update item materi & item quiz final exam
+    Route::post('courses/add-final/update/update_item_kuis', 'FinalExamController@update_item_kuis');
 
     Route::get('events', 'EventController@index');
     Route::get('events/get/{id}', 'EventController@deskripsi_get');

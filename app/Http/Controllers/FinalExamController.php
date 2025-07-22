@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Throwable;
 use App\Models\FileUpload;
 use Illuminate\Http\Request;
@@ -219,36 +220,68 @@ class FinalExamController extends Controller
                 a.TYPE_ACTIVITY = 1
         ");
 
-        $data_course = DB::Select("
-            SELECT
-                a.ID_ACTIVITY ,
-                a.IMAGE_ACTIVITY ,
-                a.TITLE_ACTIVITY ,
-                a.PRICE_ACTIVITY ,
-                a.REMEDIAL,
-                a.DATE_START ,
-                a.DATE_END ,
-                a.STATUS ,
-                a.IS_PUBLIC ,
-                a.SERTIF_IMAGE ,
-                a.INCLUDE_COURSE,
-                c.ID_COURSE ,
-                c.ALIAS,
-                c.REQUIREMENT ,
-                c.PENGUMUMAN ,
-                c.DESKRIPSI_COURSE ,
-                c.DESKRIPSI_COURSE_ITEM ,
-                a.SERTIF_CODE ,
-                k.ID_KATEGORI
-            FROM
-                activity a
-            LEFT JOIN course c ON
-                c.ID_ACTIVITY = a.ID_ACTIVITY
-            LEFT JOIN kategori k ON
-                k.ID_KATEGORI = c.KATEGORI
-            WHERE
-                a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
-        ")[0];
+        if(session('user')[0]->get('ID_ROLE') == 1){
+            $data_course = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY ,
+                    a.IMAGE_ACTIVITY ,
+                    a.TITLE_ACTIVITY ,
+                    a.PRICE_ACTIVITY ,
+                    a.REMEDIAL,
+                    a.DATE_START ,
+                    a.DATE_END ,
+                    a.STATUS ,
+                    a.IS_PUBLIC ,
+                    a.SERTIF_IMAGE ,
+                    a.INCLUDE_COURSE,
+                    c.ID_COURSE ,
+                    c.ALIAS,
+                    c.REQUIREMENT ,
+                    c.PENGUMUMAN ,
+                    c.DESKRIPSI_COURSE ,
+                    c.DESKRIPSI_COURSE_ITEM ,
+                    a.SERTIF_CODE ,
+                    k.ID_KATEGORI
+                FROM
+                    activity a
+                LEFT JOIN course c ON
+                    c.ID_ACTIVITY = a.ID_ACTIVITY
+                LEFT JOIN kategori k ON
+                    k.ID_KATEGORI = c.KATEGORI
+                WHERE
+                    a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
+            ")[0];
+        } elseif(session('user')[0]->get('ID_ROLE') == 2){
+            $data_course = DB::Select("
+                SELECT
+                    a.ID_ACTIVITY ,
+                    a.IMAGE_ACTIVITY ,
+                    a.TITLE_ACTIVITY ,
+                    a.PRICE_ACTIVITY ,
+                    a.REMEDIAL,
+                    a.DATE_START ,
+                    a.DATE_END ,
+                    a.IS_PUBLIC ,
+                    a.SERTIF_IMAGE ,
+                    a.INCLUDE_COURSE,
+                    c.ID_COURSE ,
+                    c.ALIAS,
+                    c.REQUIREMENT ,
+                    c.PENGUMUMAN ,
+                    c.DESKRIPSI_COURSE ,
+                    c.DESKRIPSI_COURSE_ITEM ,
+                    a.SERTIF_CODE ,
+                    k.ID_KATEGORI
+                FROM
+                    activity a
+                LEFT JOIN course c ON
+                    c.ID_ACTIVITY = a.ID_ACTIVITY
+                LEFT JOIN kategori k ON
+                    k.ID_KATEGORI = c.KATEGORI
+                WHERE
+                    a.ID_ACTIVITY = '" . $req->input('id_activity') . "'
+            ")[0];
+        }
 
         $data['items'] = DB::Selectone("
             SELECT
@@ -302,7 +335,7 @@ class FinalExamController extends Controller
                     'ORDER_LIST' => $item_data->ORDER_LIST,
                     'LINK_MATERI' => $item_data->LINK_MATERI
                 ];
-                $allView .= view('template_main.admin_side.course.update_materi', $data)->render();
+                $allView .= view('template_main.admin_side.final_exam.update_materi', $data)->render();
             } else {
                 $data['id_quiz'] = $item_data->ID_ITEM;
                 $dataquiz = DB::select("
@@ -342,7 +375,7 @@ class FinalExamController extends Controller
                     }
                     $data['no_index']++;
                 }
-                $allView .= view('template_main.admin_side.course.update_quiz', $data)->render();
+                $allView .= view('template_main.admin_side.final_exam.update_quiz', $data)->render();
             }
         }
         return $allView;
@@ -356,7 +389,7 @@ class FinalExamController extends Controller
         $html = '';
 
         foreach ($quizData as $question) {
-            $html .= view('template_main.admin_side.course.update_question', ['item' => $question, 'no' => $no, 'index' => $no_index])->render();
+            $html .= view('template_main.admin_side.final_exam.update_question', ['item' => $question, 'no' => $no, 'index' => $no_index])->render();
             $no_index++;
         }
 
@@ -414,7 +447,7 @@ class FinalExamController extends Controller
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
 
             $data['ID_COURSE'] = $req->input('ID_COURSE');
-            $this->update_item_materi($data, $req);
+            // $this->update_item_materi($data, $req);
             DB::commit();
             return redirect('courses')->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
         } catch (ValidationException $e) {
@@ -531,6 +564,22 @@ class FinalExamController extends Controller
                 DB::table('nilai_quiz')->WHERE(['ID_QUIZ' => $id_quiz_old[$tmpNoQuiz]->ID_QUIZ])->update(['ID_QUIZ' => $id_quiz]);
             }
             $tmpNoQuiz++;
+        }
+    }
+    public function update_item_kuis(Request $req){
+        $data = [
+            'ID_DETAIL' => $req->input('ID_DETAIL'),
+            'ID_QUIZ'   => $req->input('ID_QUIZ'),
+            'ID_COURSE' => $req->input('ID_COURSE'),
+            'SOAL' => $req->input('SOAL'),
+            'PIL_JWB' => $req->input('PIL_JWB'),
+            'KUNCI' => $req->input('KUNCI'),
+        ];
+        try{
+            DB::table('detail_quiz')->where(['ID_DETAIL' => $data['ID_DETAIL'], 'ID_QUIZ' => $data['ID_QUIZ'], 'ID_COURSE' => $data['ID_COURSE']])->update($data);
+            return response()->json(['status' => 'success']);
+        } catch(Exception $e){
+            return response()->json(['status' => 'error', 'err_msg' => $e]);
         }
     }
 
