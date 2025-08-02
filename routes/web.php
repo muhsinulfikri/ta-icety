@@ -244,6 +244,7 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::get('courses/laporan_course', 'CourseController@laporan_course');
     //lihat peserta final exam
     Route::get('courses/lihat_peserta_final', 'FinalExamController@index_lihat_peserta');
+    Route::post('courses/lihat_jawaban_final', 'FinalExamController@get_jawaban'); //send another page
 
     Route::get('courses/invite', 'CourseController@invite');
     Route::post('courses/invite_individu', 'CourseController@invite_individu');

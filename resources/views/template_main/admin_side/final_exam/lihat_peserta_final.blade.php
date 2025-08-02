@@ -99,6 +99,7 @@
                         <th>Alamat</th>
                         <th>Status Final Exam</th>
                         <th>Nilai Tertinggi Final Exam</th>
+                        <th>Lihat Jawaban</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -114,6 +115,19 @@
                             <td><?= $item->ALAMAT ?></td>
                             <td><?= $item->STATUS_FINAL_EXAM ?></td>
                             <td><?= $item->NILAI_TERTINGGI_FINAL_EXAM ?? 'Belum Mengerjakan' ?></td>
+                            <td>
+                                <form action="{{ url('courses/lihat_jawaban_final') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="id_act" value="{{ $item->ID_ACTIVITY }}">
+                                    <input type="hidden" name="id_user" value="{{ $item->ID_USER }}">
+                                    <button type="submit"
+                                        class="btn btn-success btn-sm-2 w-100 fs-8 rounded waves-effect waves-light mb-1"
+                                        style="min-width: 155px !important;">
+                                        <i class="bi bi-eye"></i> Jawaban
+                                    </button>
+                                </form>
+
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

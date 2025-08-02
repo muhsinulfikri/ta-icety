@@ -1880,6 +1880,14 @@ class CourseGuest extends Controller
 		}
 		$nilai = round(($jml_jwbn_benar / count($id_detail)) * 100);
 
+        $data_jawaban = [
+            'ID_ACTIVITY'   => $_POST['id_activity'],
+            'ID_USER'       => $id_user,
+            'ID_QUIZ'       => $id_quiz,
+            'ID_DETAIL'     => implode(';', $id_detail),
+            'JAWABAN'       => implode(';', $pilih_jwbn)
+        ];
+
 		$data_nilai = [
 			"ID_ACTIVITY" 	=> $_POST['id_activity'],
 			"ID_QUIZ" 		=> $id_quiz,
@@ -1891,27 +1899,12 @@ class CourseGuest extends Controller
 
 		DB::table('tb_final_exam')->where('CODE_EXAM', $_POST['code_exam'])->update(['IS_USED' => 1]);
 		DB::table('tb_nilai_final_exam')->insert($data_nilai);
+        DB::table('tb_jawaban')->insert($data_jawaban);
 
 		$gambar = 'https://img.freepik.com/free-vector/completed-concept-illustration_114360-3891.jpg';
 		if($min_nilai > $nilai) {
 			$gambar = 'https://tbh-v2.is3.cloudhost.id/IMAGE_ACTIVITY/Image-Activity-1741074077-1741074078.png';
 		}
-
-		// $is_first = DB::selectOne("
-		// 	SELECT
-		// 		IS_FIRST
-		// 	FROM
-		// 		`order`
-		// 	WHERE
-		// 		ID_USER = ?
-		// 		AND ID_PRODUCT = ?
-		// ", [$id_user, $id_activity_parent])->IS_FIRST;
-
-		// if($is_first == 0) {
-		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 1]);
-		// } else if ($is_first == 1) {
-		// 	DB::table('order')->where('ID_USER', $id_user)->where('ID_PRODUCT', $id_activity_parent)->update(['IS_FIRST' => 2]);
-		// }
 
 		return response()->json([
 			'status' => 'success',
