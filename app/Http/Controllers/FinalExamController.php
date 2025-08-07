@@ -650,7 +650,9 @@ class FinalExamController extends Controller
                     WHERE
                         tnfe.ID_ACTIVITY = tfe.ID_ACTIVITY
                         AND tnfe.ID_USER = u.ID_USER
-                ) AS NILAI_TERTINGGI_FINAL_EXAM
+                ) AS NILAI_TERTINGGI_FINAL_EXAM,
+                a.ID_ACTIVITY,
+                u.ID_USER
             FROM
                 tb_final_exam tfe
             LEFT JOIN user u ON u.ID_USER = tfe.ID_USER
