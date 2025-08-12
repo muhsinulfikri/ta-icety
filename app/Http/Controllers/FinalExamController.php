@@ -650,7 +650,9 @@ class FinalExamController extends Controller
                     WHERE
                         tnfe.ID_ACTIVITY = tfe.ID_ACTIVITY
                         AND tnfe.ID_USER = u.ID_USER
-                ) AS NILAI_TERTINGGI_FINAL_EXAM
+                ) AS NILAI_TERTINGGI_FINAL_EXAM,
+                a.ID_ACTIVITY,
+                u.ID_USER
             FROM
                 tb_final_exam tfe
             LEFT JOIN user u ON u.ID_USER = tfe.ID_USER
@@ -664,5 +666,80 @@ class FinalExamController extends Controller
         ");
 
         return $data;
+    }
+    public function get_jawaban(Request $request){
+        $data['title'] = 'Lihat Jawaban';
+        $id_act = $request->input('id_act');
+        $id_user = $request->input('id_user');
+        $data['user'] = DB::selectOne("
+            SELECT
+                NAME
+            FROM
+                user
+            WHERE
+                ID_USER = '".$id_user."'
+        ");
+
+        $data['act'] = DB::selectOne("
+            SELECT
+                ID_ACTIVITY,
+                TITLE_ACTIVITY
+            FROM
+                activity
+            WHERE
+                ID_ACTIVITY = '".$id_act."'
+        ");
+
+        $data_jawaban_all = DB::select("
+            SELECT
+                tj.*
+            FROM tb_jawaban tj
+            WHERE tj.ID_ACTIVITY = '".$id_act."'
+            AND tj.ID_USER = '".$id_user."'
+            ORDER BY ID_JAWABAN ASC
+        ");
+
+        foreach($data_jawaban_all as $data_jawaban){
+            $id_details = explode(';', $data_jawaban->ID_DETAIL ?? '');
+            $data_pilih = explode(';', $data_jawaban->JAWABAN);
+            $soal_data = DB::table('detail_quiz')
+                    ->whereIn('ID_DETAIL', $id_details)
+                    ->get()
+                    ->keyBy('ID_DETAIL');
+            $result = [];
+
+            foreach ($id_details as $index => $id_detail) {
+                if (!isset($soal_data[$id_detail])) continue;
+
+                $soal = $soal_data[$id_detail];
+                $jawaban = $data_pilih[$index] ?? null;
+
+                $hurufToIndex = ['a' => 0, 'b' => 1, 'c' => 2, 'd' => 3, 'e' => 4];
+                $pilihan = explode(';', $soal->PIL_JWB);
+
+                $jawaban_tertulis = $jawaban && isset($hurufToIndex[$jawaban]) && isset($pilihan[$hurufToIndex[$jawaban]])
+                    ? $pilihan[$hurufToIndex[$jawaban]]
+                    : null;
+
+                $result[] = [
+                    'id_detail' => $id_detail,
+                    'soal' => $soal->SOAL,
+                    'kunci' => $soal->KUNCI,
+                    'jawaban_huruf' => $jawaban,
+                    'jawaban_tertulis' => $jawaban_tertulis,
+                    'pilihan' => $pilihan,
+                ];
+            }
+            $data['jawabanAll'][] = [
+                'order' => $data_jawaban->ID_JAWABAN,
+                'hasil' => $result
+            ];
+        }
+        // dd($data['act']->TITLE_ACTIVITY);
+        return view('template_main.admin_side.etc.header', $data).
+            view('template_main.admin_side.etc.sidebar', $data).
+            view('template_main.admin_side.final_exam.lihat_jawaban', $data).
+            view('template_main.admin_side.etc.footer');
+
     }
 }
