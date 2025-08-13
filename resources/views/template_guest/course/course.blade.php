@@ -2,7 +2,7 @@
 
 <section class="py-5 py-md-7" style="background-color: #B90C0B;">
     <div class="container">
-        <h1 class="font text-center" style="color: white !important">COURSES</h1>
+        <h1 class="font text-center" style="color: white !important">STORE</h1>
         <!-- <div class="justify-content-center mt-3 d-flex">
             <a href="/" class="font" style="color: white !important;text-decoration: underline;text-decoration-color: white;">Home</a>
             <div class="ms-2 me-1" style="border-left: 2px solid white;height: 27px">&nbsp;</div>

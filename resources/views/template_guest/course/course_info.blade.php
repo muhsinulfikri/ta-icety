@@ -198,6 +198,27 @@
                         </div>
                     </div>
                     @endif
+                    @if (empty($course->RATE))
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-star.svg" class="img-fluid mt-1" style="width: 25px; height: 25px;"/>
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Ratings</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">0.0</div>
+                        </div>
+                    </div>
+                    @else
+                    <div class="d-flex gap-3">
+                        <div>
+                            <img src="{{ asset('icety_assets') }}/icon-star.svg" class="img-fluid mt-1" style="width: 25px; height: 25px;"/>
+                        </div>
+                        <div>
+                            <div class="font fw-bold">Ratings</div>
+                            <div class="font" style="font-size: 0.9rem;margin-top: -4px">{{ $course->RATE }}</div>
+                        </div>
+                    </div>
+                    @endif
                     <div>
                         <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
                             @if (!empty($cek_course_user))
