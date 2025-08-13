@@ -708,6 +708,7 @@ class CourseGuest extends Controller
         $this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
 
         $data['item_course'] = $this->courseModel->get_item_course($condition);
+        $data['testimoni'] = $this->courseModel->getTesti($data['id_activity'], session('user')[0]->get('ID_USER'));
 
         return $data;
     }
@@ -1472,7 +1473,7 @@ class CourseGuest extends Controller
 		$data['courses'] = $courseModel->get_courses(["activity.ID_ACTIVITY != '" . $id_activity . "'"]);
 		$ebookModel = new Ebook();
 		$data['ebooks'] = $ebookModel->get_all_book_home();
-
+        // dd($data['course']);
 		return
 			view('template.header', $data) .
 			view('template_guest.course.course_info', $data) .
@@ -1672,25 +1673,51 @@ class CourseGuest extends Controller
 									AND mapping_course.ID_ACTIVITY = activity.ID_ACTIVITY
 							) * 100
 						)
-					) AS PROGRESS
+					) AS PROGRESS,
+                    tbr.RATE,
+                    tbr.TOTAL
 				FROM
 					activity
 				LEFT JOIN course ON
 					course.ID_ACTIVITY = activity.ID_ACTIVITY
+                LEFT JOIN (
+                    SELECT
+                        r.ID_ACTIVITY,
+                        ROUND(AVG(r.RATE), 1) AS RATE,
+                        (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+                    FROM
+                        tb_rate_review r
+                    GROUP BY
+                        r.ID_ACTIVITY
+                    ) tbr ON tbr.ID_ACTIVITY = activity.ID_ACTIVITY
 				' . $condition . '
 				');
 		} else {
 			$data['course'] = DB::select('
 				SELECT
 					activity.*,
-					course.DESKRIPSI_COURSE
+					course.DESKRIPSI_COURSE,
+                    tbr.RATE,
+                    tbr.TOTAL
 				FROM
 					activity
 				LEFT JOIN
 					course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                LEFT JOIN (
+                    SELECT
+                        r.ID_ACTIVITY,
+                        ROUND(AVG(r.RATE), 1) AS RATE,
+                        (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+                    FROM
+                        tb_rate_review r
+                    GROUP BY
+                        r.ID_ACTIVITY
+                    ) tbr ON tbr.ID_ACTIVITY = activity.ID_ACTIVITY
 					' . $condition . '
 				');
 		}
+        // $data['testimoni'] = $this->courseModel->get_testimoni_course();
+        // dd($data['course']);
 
 		return
 			view('template_guest.course.ajax.course_by_category', $data);
@@ -1939,6 +1966,17 @@ class CourseGuest extends Controller
 			'message' => 'Code Valid'
 		]);
 	}
+    public function addRateTestimoni(Request $request){
+        $data = [
+            'ID_ACTIVITY'   => $request->input('id_activity'),
+            'ID_USER'       => $request->input('id_user'),
+            'RATE'          => $request->input('rating'),
+            'REVIEW'        => $request->input('review'),
+            'LOG_TIME'      => date('Y-m-d H:i:s')
+        ];
+        DB::table('tb_rate_review')->insert($data);
+		return redirect()->back();
+    }
 
 	public function GenerateCodeExam($var)
 	{

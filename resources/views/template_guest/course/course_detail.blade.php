@@ -1,3 +1,96 @@
+{{-- style for rating --}}
+<style>
+    .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+        }
+        .rate:not(:checked) > input {
+        position:absolute;
+        display: none;
+        }
+        .rate:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        color:#ccc;
+        }
+        .rated:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        color:#ccc;
+        }
+        .rate:not(:checked) > label:before {
+        content: '★ ';
+        }
+        .rate > input:checked ~ label {
+        color: #ffc700;
+        }
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+        color: #deb217;
+        }
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+        color: #c59b08;
+        }
+        .star-rating-complete{
+        color: #c59b08;
+        }
+        .rating-container .form-control:hover, .rating-container .form-control:focus{
+        background: #fff;
+        border: 1px solid #ced4da;
+        }
+        .rating-container textarea:focus, .rating-container input:focus {
+        color: #000;
+        }
+        .rated {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+        }
+        .rated:not(:checked) > input {
+        position:absolute;
+        display: none;
+        }
+        .rated:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        color:#ffc700;
+        }
+        .rated:not(:checked) > label:before {
+        content: '★ ';
+        }
+        .rated > input:checked ~ label {
+        color: #ffc700;
+        }
+        .rated:not(:checked) > label:hover,
+        .rated:not(:checked) > label:hover ~ label {
+        color: #deb217;
+        }
+        .rated > input:checked + label:hover,
+        .rated > input:checked + label:hover ~ label,
+        .rated > input:checked ~ label:hover,
+        .rated > input:checked ~ label:hover ~ label,
+        .rated > label:hover ~ input:checked ~ label {
+        color: #c59b08;
+        }
+</style>
+{{-- end style for rating --}}
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <section class="page-wrapper">
@@ -172,6 +265,8 @@
                                     role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a> --}}
                                 <a class="nav-item nav-link" id="nav-komen-tab" data-bs-toggle="tab" href="#nav-komen"
                                     role="tab" aria-controls="nav-komen-tab" aria-selected="false">Komentar</a>
+                                <a class="nav-item nav-link" id="nav-rate-tab" data-bs-toggle="tab" href="#nav-rate"
+                                    role="tab" aria-controls="nav-rate-tab" aria-selected="false">Rate & Reviews</a>
                             <?php } ?>
                         </div>
                     </nav>
@@ -343,6 +438,63 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="nav-rate" role="tabpanel"
+                                aria-labelledby="nav-rate-tab" tabindex="0">
+                                <div style="display: flex; justify-content: center; width: 100%;">
+                                    @if (!empty($testimoni))
+                                        <div style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); margin: 1rem auto; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center;">
+                                            <div style="width: 100%; padding: 1rem;">
+                                                <label for="komentar">Rate & Review</label>
+                                                <div class="form-group row" style="margin-top: 1rem">
+                                                    <div class="col">
+                                                        <div class="rate" style="pointer-events: none;">
+                                                            @for ($i = 5; $i >= 1; $i--)
+                                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" {{ $testimoni->RATE == $i ? 'checked' : '' }} />
+                                                                <label for="star{{ $i }}" title="{{ $i }} stars">{{ $i }} stars</label>
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <textarea class="form-control mb-4" rows="4" readonly style="width: 100%;">{{ $testimoni->REVIEW }}</textarea>
+                                            </div>
+                                        </div>
+                                    @else
+                                    <form action="add_rating" method="POST" style="width: 100%; max-width: 800px;">
+                                        @csrf
+                                        <input type="hidden" name="id_activity" value="<?= $id_activity ?>">
+                                        <input type="hidden" name="id_user"
+                                            value="<?= session('user')[0]['ID_USER'] ?>">
+                                        <div
+                                            style="box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); margin: 1rem auto; border-radius: 0.5rem; padding: 1rem; display: flex; flex-direction: column; align-items: center;">
+                                            <div style="width: 100%; padding: 1rem;">
+                                                <label for="komentar">Rate & Reviews</label>
+                                                <div class="form-group row" style="margin-top: 1rem">
+                                                    <div class="col">
+                                                        <div class="rate">
+                                                            <input type="radio" id="star5" name="rating" value="5"/>
+                                                            <label for="star5" title="text">5 stars</label>
+                                                            <input type="radio" id="star4" name="rating" value="4"/>
+                                                            <label for="star4" title="text">4 stars</label>
+                                                            <input type="radio" id="star3" name="rating" value="3"/>
+                                                            <label for="star3" title="text">3 stars</label>
+                                                            <input type="radio" id="star2" name="rating" value="2">
+                                                            <label for="star2" title="text">2 stars</label>
+                                                            <input type="radio" id="star1" name="rating" value="1"/>
+                                                            <label for="star1" title="text">1 star</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <textarea class="form-control mb-4" rows="4" name="review" id="review" required style="width: 100%;"></textarea>
+                                                <div style="display: flex; justify-content: flex-end;">
+                                                    <button type="submit" class="btn btn-primary"
+                                                        style="width: 20%;">Kirim</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    @endif
                                 </div>
                             </div>
                         <?php } ?>
