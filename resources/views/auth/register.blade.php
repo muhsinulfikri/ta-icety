@@ -8,7 +8,7 @@
             </div>
             <div class="col-12 col-lg-6 h-100 p-4 bg-white rounded-5 absolute-auth" id="formLogin">
                 <div class="d-flex ps-md-4 flex-column justify-content-center h-100">
-                    <h4 class="ps-1 fw-semibold mt-5">Register as User</h4>
+                    <h4 class="ps-1 fw-semibold mt-5">{{ __('register.txt_rau') }}</h4>
                     <form class="fw-normal" action="<?= url('register/store') ?>" method="POST">
                         @csrf
                         <div id="form-1">
@@ -16,35 +16,35 @@
                             <div class="my-4 float-label-control">
                                 <input type="text"
                                     class="form-control input-text woocommerce-Input woocommerce-Input--text"
-                                    id="exampleInputEmail1" placeholder="Name" name="name" aria-describedby=""
+                                    id="exampleInputEmail1" placeholder="{{ __('register.txt_name') }}" name="name" aria-describedby=""
                                     required>
                             </div>
                             <div class="my-4 float-label-control">
                                 <input type="email"
                                     class="form-control input-text woocommerce-Input woocommerce-Input--text"
-                                    id="exampleInputEmail1" placeholder="Email address" name="email"
+                                    id="exampleInputEmail1" placeholder="{{ __('register.txt_email') }}" name="email"
                                     aria-describedby="emailHelp" required>
                             </div>
                             <div class="my-4 float-label-control">
                                 <select name="category_user" id="category_user" class="form-control form-select pe-5" style="color: #999999" required>
-                                    <option value="" disabled selected>Choose your Category</option>
-                                    <option value="2">Perusahaan</option>
-                                    <option value="3">Umum</option>
-                                    <option value="4">Institusi Pemerintah</option>
-                                    <option value="5">Institusi Pendidikan</option>
-                                    <option value="6">Organisasi Nirlaba</option>
+                                    <option value="" disabled selected>{{ __('register.txt_category') }}</option>
+                                    <option value="2">{{ __('register.txt_company') }}</option>
+                                    <option value="3">{{ __('register.txt_umum') }}</option>
+                                    <option value="4">{{ __('register.txt_pemerintah') }}</option>
+                                    <option value="5">{{ __('register.txt_pendidikan') }}</option>
+                                    <option value="6">{{ __('register.txt_nirlaba') }}</option>
                                 </select>
                             </div>
                             <div class="my-4 float-label-control">
-                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="Name of your Perusahaan/Institusi" name="agency" aria-describedby="" required>
+                                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="{{ __('register.txt_institution') }}" name="agency" aria-describedby="" required>
                             </div>
                             <div class="my-4 float-label-control">
-                                <input type="number" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Phone Number" name="telp" aria-describedby="" required>
+                                <input type="number" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="{{ __('register.txt_number') }}" name="telp" aria-describedby="" required>
                             </div>
                             <div class="input-group my-4">
                                 <input type="password"
                                     class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3"
-                                    id="registerPassword1" placeholder="Create password" name="password"
+                                    id="registerPassword1" placeholder="{{ __('register.txt_password') }}" name="password"
                                     aria-describedby="passwordHelp" required>
                                 <span class="align-self-center fw-semibold" id="togglePassword1"
                                     style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i
@@ -53,7 +53,7 @@
                             <div class="input-group my-4 pb-lg-3">
                                 <input type="password"
                                     class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3"
-                                    id="registerPassword2" placeholder="Confirm Password"
+                                    id="registerPassword2" placeholder="{{ __('register.txt_confirm') }}"
                                     aria-describedby="passwordHelp" required>
                                 <span class="align-self-center fw-semibold" id="togglePassword2"
                                     style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i
@@ -62,11 +62,11 @@
                             <div class="col-md-12 mr-2 px-md-1 mt-1">
                                 <button type="submit"
                                     class="btn btn-primary btn-main-2 w-100 rounded-3 fw-semibold py-2 text-black border-0"
-                                    id="next-2">Register</button>
+                                    id="next-2">{{ __('register.txt_register') }}</button>
                             </div>
                             <div class="my-4 text-center">
-                                <span>Have an account? <a href="<?= url('login') ?>"
-                                        class="text-decoration-none fw-bold text-black">Login</a></span>
+                                <span>{{ __('register.txt_have') }} <a href="<?= url('login') ?>"
+                                        class="text-decoration-none fw-bold text-black">{{ __('register.txt_login') }}</a></span>
                             </div>
                         </div>
                     </form>

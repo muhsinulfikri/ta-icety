@@ -2,7 +2,7 @@
 @section('content')
 <div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
     <div class="d-flex justify-content-between align-items-center mb-5">
-        <h3 class="fw-bold" style="color:#AD0B0B">My Courses</h3>
+        <h3 class="fw-bold" style="color:#AD0B0B">{{ __('profile.txt_course') }}</h3>
         <button type="button" class="btn btn-primary rounded-4 fw-semibold" onclick="openModalRedeem()">
             Use Private Code
         </button>
@@ -10,10 +10,10 @@
     <table class="table" style="color: #8A8A8E">
         <thead>
             <tr class="fw-normal text-black">
-                <td scope="col" class="fw-semibold fs-5" width="60%">Courses</td>
-                <td scope="col" class="fw-semibold fs-5" width="20%">Category</td>
-                <td scope="col" class="fw-semibold fs-5" width="20%">Status Course</td>
-                <td scope="col" class="fw-semibold fs-5" width="20%">Status Final Exam</td>
+                <td scope="col" class="fw-semibold fs-5" width="60%">{{ __('profile.txt_crs') }}</td>
+                <td scope="col" class="fw-semibold fs-5" width="20%">{{ __('profile.txt_category') }}</td>
+                <td scope="col" class="fw-semibold fs-5" width="20%">{{ __('profile.txt_status_crs') }}</td>
+                <td scope="col" class="fw-semibold fs-5" width="20%">{{ __('profile.txt_status_fnl') }}</td>
             </tr>
         </thead>
         <tbody class="table-group-divider text-black" style="border-color:#C8C8C8; border-top-width: 2px !important">
@@ -58,7 +58,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="redeemModalLabel">Enter The Private Code</h5>
+                <h5 class="modal-title" id="redeemModalLabel">{{ __('profile.txt_enter') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="form-redeem" action="" method="post">
@@ -68,7 +68,7 @@
                 </div>
             </form>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-submit" onclick="useTrialVoucher()">Apply Code</button>
+                <button type="button" class="btn btn-primary btn-submit" onclick="useTrialVoucher()">{{ __('profile.txt_apply') }}</button>
             </div>
         </div>
     </div>

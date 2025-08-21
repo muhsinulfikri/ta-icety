@@ -20,6 +20,13 @@ use Illuminate\Support\Facades\Route;
 //     return view('guest.home');
 // });
 
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::get('/', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 

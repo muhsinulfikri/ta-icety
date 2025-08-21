@@ -84,39 +84,39 @@ use Illuminate\Support\Facades\Request;
 
                 <div class="col-xl-2 col-sm-12 pt-lg-5 pt-xl-0 d-flex d-xl-block justify-content-center justify-content-lg-start text-lg-start text-center text-xl-start">
                     <div class="footer-widget mb-5 mb-xl-0 pe-0 pe-xl-7" style="width: fit-content;float: inline-end;padding-right: 50px;">
-                        <h5 class="widget-title">Explore</h5>
+                        <h5 class="widget-title">{{ __('footer.txt_explore') }}</h5>
                         <ul class="list-unstyled footer-links footer-links-1">
-                            <li><a href="<?= url('') ?>">Home</a></li>
-                            <li><a href="<?= url('/store#course-section') ?>">Course</a></li>
-                            <li><a href="<?= url('/store#course-section') ?>">Event</a></li>
-                            <li><a href="<?= url('/about') ?>">About</a></li>
+                            <li><a href="<?= url('') ?>">{{ __('footer.txt_home') }}</a></li>
+                            <li><a href="<?= url('/store#course-section') ?>">{{ __('footer.txt_course') }}</a></li>
+                            <li><a href="<?= url('/store#course-section') ?>">{{ __('footer.txt_event') }}</a></li>
+                            <li><a href="<?= url('/about') ?>">{{ __('footer.txt_about') }}</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-xl-2 col-sm-12  d-flex d-xl-block justify-content-center justify-content-lg-start text-lg-start text-center text-xl-start">
                     <div class="footer-widget mb-5 mb-xl-0 pe-0" style="width: fit-content;">
-                        <h5 class="widget-title">The Platform</h5>
+                        <h5 class="widget-title">{{ __('footer.txt_platform') }}</h5>
                         <ul class="list-unstyled footer-links footer-links-1">
-                            <li><a href="https://solutions.openlearning.com/terms-of-service?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Terms of Service</a></li>
-                            <li><a href="https://solutions.openlearning.com/privacy-policy?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">Privacy Policy</a></li>
+                            <li><a href="https://solutions.openlearning.com/terms-of-service?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">{{ __('footer.txt_term') }}</a></li>
+                            <li><a href="https://solutions.openlearning.com/privacy-policy?__hstc=206963404.a5653ae9846fb4f75a6092018c3a81c8.1738741786120.1738741786120.1738741786120.1&amp;__hssc=206963404.5.1738741786120&amp;__hsfp=3797677121">{{ __('footer.txt_policies') }}</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-xl-4 col-sm-12">
                     <div class="footer-widget pe-0 mb-5 mb-xl-0  d-flex flex-column d-lg-block justify-content-center text-center text-lg-start">
-                        <h5 class="widget-title">Information</h5>
+                        <h5 class="widget-title">{{ __('footer.txt_information') }}</h5>
                         <div class="d-flex flex-column flex-lg-row gap-2 gap-lg-5 mt-3 mt-lg-0">
                             <ul class="list-unstyled footer-links" style="flex:1;">
                                 <li>
-                                    <h6 class="text-white">Phone</h6><a href="http://wa.me/6285117301678">+62 851-1730 -1678</a>
+                                    <h6 class="text-white">{{ __('footer.txt_phone') }}</h6><a href="http://wa.me/6285117301678">+62 851-1730 -1678</a>
                                 </li>
                                 <li>
                                     <h6 class="text-white">Email</h6><a href="mailto:info@icety.org">info@icety.org</a>
                                 </li>
                                 <li>
-                                    <h6 class="text-white">Location</h6><a href="https://maps.app.goo.gl/M9oDzFPWKDBkbiqd7">
+                                    <h6 class="text-white">{{ __('footer.txt_location') }}</h6><a href="https://maps.app.goo.gl/M9oDzFPWKDBkbiqd7">
                                         Bizhub Serpong Blok GB No.15 Jl. Raya Puspitek Gunung Sindur Bogor (16340)
                                     </br>
                                     <a href="https://tagame.id/" target="blank"><span>Yayasan Terang Garam Merica (TAGAME)</span></a>

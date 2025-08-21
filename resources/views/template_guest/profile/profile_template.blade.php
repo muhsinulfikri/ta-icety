@@ -16,7 +16,7 @@
 <!-- Header -->
 <section class="py-5 py-md-7 mb-4" style="background-color: #B90C0B;">
     <div class="container">
-        <h1 class="font text-center" style="color: white !important">PROFILE</h1>
+        <h1 class="font text-center" style="color: white !important">{{ __('profile.txt_profile') }}</h1>
     </div>
 </section>
 
@@ -34,8 +34,7 @@
                                 <ul class="sidebar-profile nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start w-100" id="menu">
                                     <li class="nav-item w-100 pt-2">
                                         <a href="/profile" class=" {{ request()->is('profile') ? 'active' : '' }}  .  nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-user"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">Personal
-                                                Data</span>
+                                            <i class="fs-6 d-flex align-items-center far fa-user"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">{{ __('profile.txt_personal') }}</span>
                                         </a>
                                     </li>
                                     <li class="w-100">
@@ -56,8 +55,7 @@
                                         </li>
                                         <li class="nav-item w-100">
                                             <a href="/dashboard" class="{{ request()->is('dashboard') ? 'active' : '' }}  nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                <i class="fs-6 d-flex align-items-center far fa-book-medical"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Create
-                                                    Activity</span>
+                                                <i class="fs-6 d-flex align-items-center far fa-book-medical"></i> <span class="ms-1 ps-2 fs-6 align-self-center">{{__('profile.txt_create')}}</span>
                                             </a>
                                         </li>
                                         <li class="w-100">
@@ -70,7 +68,7 @@
                                     <li class="nav-item w-100">
                                         <a data-bs-toggle="collapse" data-bs-target="#submenu" aria-expanded="true" aria-controls="submenu" class="{{ request()->is('profile/mycourses') ? 'active' : '' }}  nav-link d-flex align-middle px-4 py-3 rounded-0" style="cursor: pointer;">
                                             <i class="fs-6 d-flex align-items-center far fa-book-open"></i>
-                                            <span class="ms-1 ps-2 fs-6 align-self-center">My Activities</span>
+                                            <span class="ms-1 ps-2 fs-6 align-self-center">{{ __('profile.txt_activities') }}</span>
                                             <svg class="svg-inline--fa fa-chevron-down ms-auto" style="width: 18px" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
                                                 <path fill="currentColor" d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z">
                                                 </path>
@@ -79,7 +77,7 @@
                                         <ul class="nav nav-list collapse" id="submenu">
                                             <li class="nav-item w-100">
                                                 <a href="/profile/mycourses" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                                    <span class="ms-3 ps-3 fs-6 align-self-center">My Courses</span>
+                                                    <span class="ms-3 ps-3 fs-6 align-self-center">{{ __('profile.txt_course') }}</span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -98,13 +96,12 @@
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/mysertificate" class="{{ request()->is('profile/mysertificate') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">My Certificate</span>
+                                            <i class="fs-6 d-flex align-items-center far fa-file-alt"></i> <span class="ms-1 ps-2 fs-6 align-self-center ">{{ __('profile.txt_certificate') }}</span>
                                         </a>
                                     </li>
                                     <li class="nav-item w-100">
                                         <a href="/profile/myvoucher" class="{{ request()->is('profile/myvoucher') ? 'active' : '' }}  nav-link  d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center">My
-                                                Voucher</span>
+                                            <i class="fs-6 d-flex align-items-center far fa-file"></i> <span class="ms-1 ps-2 fs-6 align-self-center">{{__('profile.txt_voucher')}}</span>
                                         </a>
                                     </li>
                                     <li class="w-100">
@@ -137,8 +134,7 @@
                                         @csrf
                                         <li class="nav-item w-100">
                                             <a href="#" class="nav-link  d-flex align-middle px-4 py-3 rounded-0" onclick="forgot()">
-                                                <i class="fs-6 d-flex align-items-center far fa-lock"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Reset
-                                                    Password</span>
+                                                <i class="fs-6 d-flex align-items-center far fa-lock"></i> <span class="ms-1 ps-2 fs-6 align-self-center">{{__('profile.txt_reset')}}</span>
                                             </a>
                                         </li>
                                     </form>
@@ -148,8 +144,7 @@
                                     </li>
                                     <li class="nav-item w-100 pb-3">
                                         <a href="<?= url('logout') ?>" class="nav-link d-flex align-middle px-4 py-3 rounded-0">
-                                            <i class="fs-6 d-flex align-items-center far fa-arrow-alt-to-left"></i> <span class="ms-1 ps-2 fs-6 align-self-center">Log
-                                                out</span>
+                                            <i class="fs-6 d-flex align-items-center far fa-arrow-alt-to-left"></i> <span class="ms-1 ps-2 fs-6 align-self-center">{{__('profile.txt_logout')}}</span>
                                         </a>
                                     </li>
                                 </ul>
