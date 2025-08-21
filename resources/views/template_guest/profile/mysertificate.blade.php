@@ -1,14 +1,14 @@
 @extends('template_guest.profile.profile_template')
 @section('content')
 <div class="col ms-0 ms-md-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
-    <h3 class="fw-bold pb-4">My Certificate</h3>
+    <h3 class="fw-bold pb-4">{{ __('header.txt_certificate') }}</h3>
     <div class="table-responsive">
         <table class="table table-hover" style="color: #8A8A8E">
             <thead>
                 <tr class="fw-normal text-black">
-                    <td scope="col" class="fw-semibold fs-5" width="60%">Course</td>
-                    <td scope="col" class="fw-semibold fs-5" width="20%">Type</td>
-                    <td scope="col" class="fw-semibold fs-5" width="20%">Verification</td>
+                    <td scope="col" class="fw-semibold fs-5" width="60%">{{ __('profile.txt_crs') }}</td>
+                    <td scope="col" class="fw-semibold fs-5" width="20%">{{ __('profile.txt_type') }}</td>
+                    <td scope="col" class="fw-semibold fs-5" width="20%">{{ __('profile.txt_verification') }}</td>
                 </tr>
             </thead>
             <tbody class="table-group-divider text-black" style="border-color:#C8C8C8; border-top-width: 2px !important">

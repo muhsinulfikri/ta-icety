@@ -265,8 +265,18 @@
                                     role="tab" aria-controls="nav-sertif-tab" aria-selected="false">Certificate</a> --}}
                                 <a class="nav-item nav-link" id="nav-komen-tab" data-bs-toggle="tab" href="#nav-komen"
                                     role="tab" aria-controls="nav-komen-tab" aria-selected="false">Komentar</a>
+                                @if (empty($testimoni))
+                                    <a class="nav-item nav-link position-relative" id="nav-rate-tab" data-bs-toggle="tab"
+                                        href="#nav-rate" role="tab" aria-controls="nav-rate-tab" aria-selected="false">
+                                        Rate & Reviews
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            1
+                                        </span>
+                                    </a>
+                                @else
                                 <a class="nav-item nav-link" id="nav-rate-tab" data-bs-toggle="tab" href="#nav-rate"
                                     role="tab" aria-controls="nav-rate-tab" aria-selected="false">Rate & Reviews</a>
+                                @endif
                             <?php } ?>
                         </div>
                     </nav>

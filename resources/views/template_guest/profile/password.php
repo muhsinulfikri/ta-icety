@@ -1,22 +1,22 @@
 <div class="col ms-4 px-5 py-5 shadow rounded-3 overflow-hidden bg-white">
-    <h3 class="fw-bold pb-5" style="color:#5580E9">Change Password</h3>
-    <h5 class="text-black ps-1">Your Current Password</h5>
+    <h3 class="fw-bold pb-5" style="color:#5580E9">{{ __('profile.txt_change_pw') }}</h3>
+    <h5 class="text-black ps-1">{{ __('profile.txt_current') }}</h5>
     <div class="input-group my-4">
         <input type="password" class="form-control border-bottom border-0 shadow-none rounded-0 ps-1" id="currentPassword" placeholder="Your Current Password" name="password" value="bahagia">
         <span class="align-self-center fw-semibold" id="togglePassword1" style="cursor: pointer; margin-left: -25px; z-index: 5;"><i class="bi bi-eye fs-4"></i></span>
     </div>
 
-    <h5 class="text-black ps-1">New Password</h5>
+    <h5 class="text-black ps-1">{{ __('profile.txt_new') }}</h5>
     <div class="input-group my-4 pb-lg-3">
         <input type="password" class="form-control border-bottom border-0 shadow-none rounded-0 ps-1" id="newPassword" placeholder="New Password" value="bahagia">
         <span class="align-self-center fw-semibold" id="togglePassword2" style="cursor: pointer; margin-left: -25px; z-index: 5;"><i class="bi bi-eye fs-4"></i></span>
     </div>
-    <h5 class="text-black ps-1">Confirm New Password</h5>
+    <h5 class="text-black ps-1">{{ __('profile.txt_confirm') }}</h5>
     <div class="input-group my-4 pb-lg-3">
         <input type="password" class="form-control border-bottom border-0 shadow-none rounded-0 ps-1" id="confirmPassword" placeholder="Confirm New Password" value="bahagia">
         <span class="align-self-center fw-semibold" id="togglePassword3" style="cursor: pointer; margin-left: -25px; z-index: 5;"><i class="bi bi-eye fs-4"></i></span>
     </div>
-    <button type="submit" class="btn btn-primary rounded-4 fw-semibold py-2 w-100" style="--bs-btn-padding-x: 4.5rem;">Save</button>
+    <button type="submit" class="btn btn-primary rounded-4 fw-semibold py-2 w-100" style="--bs-btn-padding-x: 4.5rem;">{{ __('profile.txt_save') }}</button>
 </div>
 
 <script>

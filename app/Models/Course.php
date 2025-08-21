@@ -21,11 +21,24 @@ class Course extends Model
             SELECT
                 activity.*,
                 course.DESKRIPSI_COURSE,
-                kategori.KATEGORI
+                kategori.KATEGORI,
+                kategori.ID_KATEGORI,
+                tbr.RATE,
+                tbr.TOTAL
             FROM
                 activity
                 LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
                 LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
+                LEFT JOIN (
+                    SELECT
+                        r.ID_ACTIVITY,
+                        ROUND(AVG(r.RATE), 1) AS RATE,
+                        (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+                    FROM
+                        tb_rate_review r
+                    GROUP BY
+                        r.ID_ACTIVITY
+                    ) tbr ON tbr.ID_ACTIVITY = activity.ID_ACTIVITY
             WHERE
                 activity.TYPE_ACTIVITY = 1
                 AND activity.IS_PUBLIC = 1
@@ -34,7 +47,7 @@ class Course extends Model
                 AND activity.IS_DELETED IS NULL
             ORDER BY
                 activity.LOG_TIME DESC
-                LIMIT 4");
+            ");
         return $data;
     }
     public function get_courses($condition)

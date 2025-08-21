@@ -46,11 +46,11 @@
         <div class="row flex-column-reverse flex-lg-row align-items-center justify-content-center">
             <div class="col-md-12 col-xl-6 col-lg-6 ps-0 ps-lg-5 mb-7 mb-lg-0">
                 <div class="banner-content ">
-                    <div class="fw-bold text-black font-title">Belajar Lebih Mudah</div>
-                    <div class="fw-bold text-black pt-2 font-title">di ICETy.org!</div>
-                    <div class="text-black mt-4 fs-5">Tingkatkan kompetensi Anda dalam berbagai bidang untuk masa depan yang lebih baik</div>
+                    <div class="fw-bold text-black font-title">{{ __('home.txt_subtit_1') }}</div>
+                    <div class="fw-bold text-black pt-2 font-title">{{ __('home.txt_subtit_2') }}</div>
+                    <div class="text-black mt-4 fs-5">{{ __('home.txt_subtit_3') }}</div>
 
-                    <a href="store" class="btn btn-secondary rounded mt-40">Find your courses here</a>
+                    <a href="store" class="btn btn-secondary rounded mt-40">{{ __('home.txt_btn_subtit') }}</a>
                 </div>
             </div>
 
@@ -68,8 +68,8 @@
 <section class="container sponsor py-3 my-2">
     <div class="row">
         <div class="col-12 col-lg-2 mb-3 mb-lg-0">
-            <div class="fs-5 text-black fw-semibold text-center text-lg-start">Thanks For</div>
-            <div class="fs-5 text-black fw-semibold  text-center text-lg-start" style="margin-top: -8px;">Our Supporter</div>
+            <div class="fs-5 text-black fw-semibold text-center text-lg-start">{{ __('home.txt_support_1') }}</div>
+            <div class="fs-5 text-black fw-semibold  text-center text-lg-start" style="margin-top: -8px;">{{ __('home.txt_support_2') }}</div>
         </div>
         <div class="col-12 col-lg-10">
             <div>
@@ -160,28 +160,28 @@
 </style>
 
 <section class="container py-6">
-    <div class="text-center fs-3 fw-semibold text-black">Mengapa Memilih ICETy.org</div>
+    <div class="text-center fs-3 fw-semibold text-black">{{ __('home.txt_why') }}</div>
     <div class="d-flex flex-column flex-md-row gap-5 justify-content-between pt-6">
         <div class="card card-why flex-fill p-4 hover-shadow">
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-solusi.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">✅ Solusi Praktis</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Menyediakan beragam kursus berbasis kebutuhan nyata di lapangan — mulai dari keterampilan teknis hingga pengembangan diri, untuk individu dan organisasi.</div>
+            <div class="text-center text-black fw-semibold fs-5">✅ {{ __('home.txt_card_1') }}</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">{{ __('home.txt_card_2') }}</div>
         </div>
         <div class="card card-why flex-fill p-4 hover-shadow">
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-kursus.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">🌐 Pengalaman Kursus Online</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Modul interaktif dengan pendekatan multimedia dan teknologi inovatif  yang mendukung pembelajaran fleksibel dan menyenangkan.</div>
+            <div class="text-center text-black fw-semibold fs-5">🌐 {{ __('home.txt_card_3') }}</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">{{ __('home.txt_card_4') }}</div>
         </div>
         <div class="card card-why flex-fill p-4 hover-shadow">
             <div class="align-self-center mb-4">
                 <img src="{{ asset('icety_assets') }}/icon-citra.svg" class="img-fluid" style="width: 55px; height:55px" />
             </div>
-            <div class="text-center text-black fw-semibold fs-5">Kontribusi untuk Indonesia</div>
-            <div class="text-center text-black mt-2" style="line-height:22px">Mendukung peningkatan kualitas SDM dan citra Indonesia di berbagai sektor — dari pendidikan, layanan publik, hingga pariwisata — melalui pelatihan yang aplikatif dan relevan.</div>
+            <div class="text-center text-black fw-semibold fs-5">{{ __('home.txt_card_5') }}</div>
+            <div class="text-center text-black mt-2" style="line-height:22px">{{ __('home.txt_card_6') }}</div>
         </div>
     </div>
 </section>
@@ -540,13 +540,20 @@
     <div class="container py-6 mt-5 mt-md-7">
         <div class="text-center fs-3 fw-semibold text-black">Kembangkan berbagai keterampilan baru bersama ICETy</div>
 
-        <div class="d-flex gap-4 mt-5 mb-4">
+        {{-- <div class="d-flex gap-4 mt-5 mb-4">
             <button class="btn btn-tertiary btn-course active">Course</button>
             <button class="btn btn-tertiary btn-ebook">E-Book</button>
-            {{-- <button class="btn btn-tertiary btn-event">Event</button> --}}
+            <button class="btn btn-tertiary btn-event">Event</button>
+        </div> --}}
+
+        <div class="d-flex gap-3 mt-5 mb-4 flex-wrap category-buttons">
+            <button class="btn btn-tertiary btn-course active" data-category="0">All</button>
+            @foreach($kategori as $item_kategori)
+                <button class="btn btn-tertiary btn-course" data-category="{{ $item_kategori->ID_KATEGORI }}">
+                    {{ $item_kategori->KATEGORI }}
+                </button>
+            @endforeach
         </div>
-
-
         <div class="d-grid gap-4 course-grid-template course-container">
 
         </div>
@@ -557,14 +564,14 @@
 
         </div>
 
-        <div class="text-center text-sm-start show-all-course">
+        {{-- <div class="text-center text-sm-start show-all-course">
             <a href="/course" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
 
-        </div>
-        <div class="text-center text-sm-start show-all-ebook">
+        </div> --}}
+        {{-- <div class="text-center text-sm-start show-all-ebook">
             <a href="/ebooks" class=" btn btn-secondary my-4" style="font-size: 0.8rem">Tampilkan semua</a>
 
-        </div>
+        </div> --}}
 
     </div>
 </section>
@@ -585,6 +592,10 @@
                             <div class="d-flex flex-column justify-content-between h-100">
                                 <div class="text-black fs-6 mb-2 description" style="line-height: 20px;height:76px">${data.DESKRIPSI_COURSE ?? "-"}</div>
                                 <div>
+                                    <i class="bi bi-star text-warning me-1"></i>
+                                    <span class="text-black">${(data.RATE) === null ? "0 Ratings" : data.RATE + " Ratings"}</span>
+                                </div>
+                                <div>
                                     <div class="d-flex justify-content-between mb-1 ">
                                         <div>
                                             <span class="text-black fw-bold fs-5">
@@ -603,8 +614,36 @@
     }
 
     const coursesData = @json($course);
-    coursesData.forEach(data => {
-        $('.course-container').append(createCardCourse(data));
+    // coursesData.forEach(data => {
+    //     $('.course-container').append(createCardCourse(data));
+    // });
+    function renderCourses(categoryId) {
+        $(".course-container").html("");
+        let filtered = coursesData;
+
+        if (categoryId != 0) {
+            filtered = coursesData.filter(c => c.ID_KATEGORI == categoryId);
+        }
+        if (filtered.length > 0) {
+            filtered.forEach(data => {
+                $(".course-container").append(createCardCourse(data));
+            });
+        } else {
+            $(".course-container").html("<h3 class='font-sm text-center w-100'>No course available</h3>");
+        }
+    }
+
+    // default load (all)
+    renderCourses(0);
+
+    // event click button kategori
+    $(document).on("click", ".btn-course", function() {
+        $(".btn-course").removeClass("active");
+        $(this).addClass("active");
+
+        const categoryId = $(this).data("category");
+        renderCourses(categoryId);
+
     });
 
     function createCardBook(data) {
@@ -682,49 +721,49 @@
         $('.event-container').append(createCardEvent(data));
     });
 
-    $(document).ready(function() {
-        $('.show-all-course').show();
-        $('.show-all-ebook').hide();
-    });
+    // $(document).ready(function() {
+    //     $('.show-all-course').show();
+    //     $('.show-all-ebook').hide();
+    // });
 
-    $(document).on('click','.btn-course', function() {
-        $('.btn-ebook').removeClass('active')
-        $('.btn-event').removeClass('active')
-        $('.show-all-course').show();
-        $('.show-all-ebook').hide();
+    // $(document).on('click','.btn-course', function() {
+    //     $('.btn-ebook').removeClass('active')
+    //     $('.btn-event').removeClass('active')
+    //     $('.show-all-course').show();
+    //     $('.show-all-ebook').hide();
 
-        $(this).addClass('active')
-        $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
-        $('.event-container')[0].style.setProperty('display', 'none', 'important')
-        $('.course-container').show()
-    });
+    //     $(this).addClass('active')
+    //     $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
+    //     $('.event-container')[0].style.setProperty('display', 'none', 'important')
+    //     $('.course-container').show()
+    // });
 
-    $(document).on('click','.btn-ebook', function() {
-        $('.btn-course').removeClass('active')
-        $('.btn-event').removeClass('active')
-        $('.show-all-course').hide();
-        $('.show-all-ebook').show();
-        $(this).addClass('active')
-        $('.ebook-container').show()
-        $('.course-container')[0].style.setProperty('display', 'none', 'important')
-        $('.event-container')[0].style.setProperty('display', 'none', 'important')
-    });
+    // $(document).on('click','.btn-ebook', function() {
+    //     $('.btn-course').removeClass('active')
+    //     $('.btn-event').removeClass('active')
+    //     $('.show-all-course').hide();
+    //     $('.show-all-ebook').show();
+    //     $(this).addClass('active')
+    //     $('.ebook-container').show()
+    //     $('.course-container')[0].style.setProperty('display', 'none', 'important')
+    //     $('.event-container')[0].style.setProperty('display', 'none', 'important')
+    // });
 
-    $(document).on('click', '.btn-event', function() {
-        $('.btn-course').removeClass('active')
-        $('.btn-ebook').removeClass('active')
-        $(this).addClass('active')
-        $('.event-container').show()
-        $('.course-container')[0].style.setProperty('display', 'none', 'important')
-        $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
-    });
+    // $(document).on('click', '.btn-event', function() {
+    //     $('.btn-course').removeClass('active')
+    //     $('.btn-ebook').removeClass('active')
+    //     $(this).addClass('active')
+    //     $('.event-container').show()
+    //     $('.course-container')[0].style.setProperty('display', 'none', 'important')
+    //     $('.ebook-container')[0].style.setProperty('display', 'none', 'important')
+    // });
 </script>
 
 
 <!-- Testimoni -->
 <section class="py-7" style="background: #404040;">
     <div class="container">
-        <div class="text-center fs-2 fw-semibold text-white mb-5">Testimoni</div>
+        <div class="text-center fs-2 fw-semibold text-white mb-5">{{ __('home.txt_testimoni') }}</div>
 
         <div id="testimoniCarousel" class="splide">
             <div class="splide__track">
@@ -735,8 +774,8 @@
                         [
                         'banner' => 'avatar.svg',
                         'name' => 'Indah Rahayu',
-                        'position' => 'Supervisor Kebersihan, Hotel Nusantara',
-                        'testimoni' => 'Pemahaman mengenai industri pangan dari personal hygiene, sanitasi, foodborne illness, hingga cleaning',
+                        'position' => __('home.txt_post_1'),
+                        'testimoni' => __('home.txt_test_1'),
                         ]
                         )
                     </li>
@@ -746,8 +785,8 @@
                         [
                         'banner' => 'avatar-2.svg',
                         'name' => 'Rudi Hartono',
-                        'position' => 'Manajer Keamanan Pangan, Restoran Lezat',
-                        'testimoni' => 'Pelatihan Food Safety Management memberi pemahaman yang lebih baik pada tim kami dalam menjaga keamanan pangan setiap hari.',
+                        'position' => __('home.txt_post_2'),
+                        'testimoni' => __('home.txt_test_2'),
                         ]
                         )
                     </li>
@@ -757,8 +796,8 @@
                         [
                         'banner' => 'avatar-3.svg',
                         'name' => 'Dian Permata',
-                        'position' => 'Kepala Departemen K3, PT Sukses Bersama',
-                        'testimoni' => 'The Chemistry of Cleaning sangat membuka wawasan kami tentang kebersihan. Materi mudah dipahami dan aplikatif.',
+                        'position' => __('home.txt_post_3'),
+                        'testimoni' => __('home.txt_test_3'),
                         ]
                         )
                     </li>
@@ -768,8 +807,8 @@
                         [
                         'banner' => 'avatar-4.svg',
                         'name' => 'Ari Prakoso',
-                        'position' => 'Supervisor Produksi, PT Tani Jaya',
-                        'testimoni' => 'Kursus ICETy.org membantu kami meningkatkan higienitas di lini produksi. Sangat bermanfaat untuk seluruh tim!',
+                        'position' => __('home.txt_post_4'),
+                        'testimoni' => __('home.txt_test_4'),
                         ]
                         )
                     </li>
@@ -779,8 +818,8 @@
                         [
                         'banner' => 'avatar-5.svg',
                         'name' => 'Nyoman Sarya',
-                        'position' => 'Staf Kebersihan, Rumah Sakit Harmoni',
-                        'testimoni' => 'Materi di ICETy mudah dipahami dan langsung bisa diterapkan. Sangat mendukung tugas sehari-hari!',
+                        'position' => __('home.txt_post_5'),
+                        'testimoni' => __('home.txt_test_5'),
                         ]
                         )
                     </li>
@@ -790,8 +829,8 @@
                         [
                         'banner' => 'avatar-6.svg',
                         'name' => 'Siti Kurniasari',
-                        'position' => 'Kepala Divisi Kebersihan, Mall Indah',
-                        'testimoni' => 'Kelas Handling Chemical Safety sangat informatif, kami jadi lebih siap dalam menangani bahan kimia dengan aman.',
+                        'position' => __('home.txt_post_6'),
+                        'testimoni' => __('home.txt_test_6'),
                         ]
                         )
                     </li>
@@ -891,67 +930,67 @@
 
 <section class="py-7">
     <div class="container">
-        <div class="text-center fs-2 fw-semibold text-black mb-5">Pertanyaan yang sering diajukan</div>
+        <div class="text-center fs-2 fw-semibold text-black mb-5">{{ __('home.txt_faq') }}</div>
 
         <div>
             <div class="accordion d-flex flex-column gap-4" id="faqAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="one">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colOne" aria-expanded="false" aria-controls="colOne">
-                            Apa saja media komunikasi yang digunakan dalam Course ICETy?
+                            {{ __('home.txt_faq_1') }}
                         </button>
                     </h2>
                     <div id="colOne" class="accordion-collapse collapse" aria-labelledby="one">
                         <div class="accordion-body">
-                            ICETy menggunakan media gambar, video, quiz, e-book yang interaktif serta pengalaman 360 derajat, menggunakan VR (virtual reality) & AR (augmented reality).
+                            {{ __('home.txt_answer_1') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="two">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
-                            Siapa saja yang dilibatkan dalam pembuatan modul OCE yang disusun khusus oleh ICETy?
+                            {{ __('home.txt_faq_2') }}
                         </button>
                     </h2>
                     <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two">
                         <div class="accordion-body">
-                            ICETy melibatkan berbagai pakar, praktisi industri, asosiasi profesi, lembaga sertifikasi, serta pembuat kebijakan.
+                            {{ __('home.txt_answer_2') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="three">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colThree" aria-expanded="false" aria-controls="colThree">
-                            Apakah saya akan mendapatkan sertifikat setelah menyelesaikan kursus ICETy.org?
+                            {{ __('home.txt_faq_3') }}
                         </button>
                     </h2>
                     <div id="colThree" class="accordion-collapse collapse" aria-labelledby="three">
                         <div class="accordion-body">
-                            Setelah Anda menyelesaikan progress hingga 100% dan telah mendapatkan nilai post test lebih dari 80, Anda akan masuk pada tahap verification. Setelah itu, Anda akan mendapatkan sertifikat melalui email, dan dapat juga diakses melalui web pada tombol ‘Credential’.
+                            {{ __('home.txt_answer_3') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="four">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFour" aria-expanded="false" aria-controls="colFour">
-                            Berapa lama waktu yang diperlukan untuk menyelesaikan kursus ICETy.org?
+                            {{ __('home.txt_faq_4') }}
                         </button>
                     </h2>
                     <div id="colFour" class="accordion-collapse collapse" aria-labelledby="four">
                         <div class="accordion-body">
-                            Pada masing-masing kursus, rata-rata waktu penyelesaiannya adalah 1-2 jam. Pada kursus ICETy.org tidak ada batasan waktu dalam penyelesaian kursus.
+                            {{ __('home.txt_answer_4') }}
                         </div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="five">
                         <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFive" aria-expanded="false" aria-controls="colFive">
-                            Apakah saya tetap dapat mengakses materi kursus sekalipun sudah menyelesaikan kursus?
+                            {{ __('home.txt_faq_5') }}
                         </button>
                     </h2>
                     <div id="colFive" class="accordion-collapse collapse" aria-labelledby="five">
                         <div class="accordion-body">
-                            Setelah Anda selesai mengerjakan atau sudah mendapat sertifikat, Anda tetap akan dapat mengakses materi dalam kursus yang telah diambil selama 1 tahun.
+                            {{ __('home.txt_answer_5') }}
                         </div>
                     </div>
                 </div>

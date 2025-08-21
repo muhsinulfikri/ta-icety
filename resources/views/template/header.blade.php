@@ -241,8 +241,14 @@
         <div class="header-topbar topbar-style-1" style="background-color: white;">
             <div class="container">
                 <div class="d-flex justify-content-end">
-                    <img src="{{ asset('icety_assets') }}/id.svg" style="height: 30px; padding: 4px 0;" />
+                    <a href="{{ route('lang.switch', 'id') }}">
+                        <img src="{{ asset('icety_assets') }}/id.svg" style="height: 30px; padding: 4px 0;" />
+                    </a>
+                    <a href="{{ route('lang.switch', 'en') }}">
+                        <img src="{{ asset('icety_assets') }}/uk.svg" style="height: 30px; padding: 4px 0;" />
+                    </a>
                 </div>
+
             </div>
         </div>
 
@@ -265,31 +271,31 @@
                     <nav class="site-navbar ms-auto">
                         <ul class="primary-menu">
                             <li class="current">
-                                <a href="{{ url('') }}" class="fw-normal a-header">Home</a>
+                                <a href="{{ url('') }}" class="fw-normal a-header">{{ __('header.txt_home') }}</a>
                             </li>
                             <li class="current">
-                                <a href="{{ url('about') }}" class="fw-normal a-header">About ICETy</a>
+                                <a href="{{ url('about') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>
                             </li>
                             <li class="">
-                                <a href="{{ url('store') }}" class="fw-normal a-header">Store</a>
+                                <a href="{{ url('store') }}" class="fw-normal a-header">{{ __('header.txt_store') }}</a>
                             </li>
                             <li class="me-0">
-                                <a href="{{ url('blog') }}" class="fw-normal a-header">Blog</a>
+                                <a href="{{ url('blog') }}" class="fw-normal a-header">{{ __('header.txt_blog') }}</a>
                             </li>
 
                             <?php if (!empty(session('user')[0])) { ?>
                                 <li class="d-md-none">
-                                    <a href="#" onclick="$('#form_checkout').submit()">Cart</a>
+                                    <a href="#" onclick="$('#form_checkout').submit()">{{ __('header.txt_cart') }}</a>
                                 </li>
                                 <li class="d-md-none">
-                                    <a href="{{ url('profile') }}">My Profile</a>
+                                    <a href="{{ url('profile') }}">{{ __('header.txt_profile') }}</a>
                                 </li>
                             <?php } else { ?>
                                 <li class="d-md-none">
-                                    <a href="{{ url('login') }}">Login</a>
+                                    <a href="{{ url('login') }}">{{ __('header.txt_login') }}</a>
                                 </li>
                                 <li class="d-md-none">
-                                    <a href="{{ url('register') }}">Sign up</a>
+                                    <a href="{{ url('register') }}"{{ __('header.txt_register') }}</a>
                                 </li>
                             <?php } ?>
                         </ul>
@@ -355,14 +361,14 @@
                                                                 <img src="https://img.freepik.com/free-vector/empty-concept-illustration_114360-1253.jpg"
                                                                     height="210">
                                                             </div>
-                                                            <p class="text-center">No Product</p>
+                                                            <p class="text-center">{{ __('header.txt_product') }}</p>
                                                         </td>
                                                     </tr>
                                                 <?php } ?>
                                             </ul>
                                             <hr class="dropdown-divider">
                                             <p class="text-center m-0 p-0 mt-2"><a href="#"
-                                                    onclick="$('#form_checkout').submit()" class="small">View All</a>
+                                                    onclick="$('#form_checkout').submit()" class="small">{{ __('header.txt_view') }}</a>
                                             </p>
 
                                         </ul>
@@ -383,24 +389,23 @@
                                     </a>
                                     <ul class="submenu rounded mt-2" style="left: initial;right:0">
                                         <?php if (session('user')[0]['ID_ROLE'] == 1) { ?>
-                                            <li><a class="" href="<?= url('dashboard') ?>">Dashboard</a></li>
+                                            <li><a class="" href="<?= url('dashboard') ?>">{{ __('header.txt_dashboard') }}</a></li>
                                         <?php    } else { ?>
-                                            <li><a class="" href="<?= url('profile') ?>">Profile</a></li>
-                                            <li><a class=" " href="<?= url('profile/mycourses') ?>">My Courses</a></li>
+                                            <li><a class="" href="<?= url('profile') ?>">{{ __('header.txt_profile') }}</a></li>
+                                            <li><a class=" " href="<?= url('profile/mycourses') ?>">{{ __('header.txt_course') }}</a></li>
                                             <!-- <li><a class="" href="<?= url('profile/myevents') ?>">My Events</a></li> -->
                                             <li><a class="" href="<?= url('profile/myebook') ?>">My Ebook</a></li>
-                                            <li><a class="" href="<?= url('profile/mysertificate') ?>">My
-                                                    Certificate</a></li>
+                                            <li><a class="" href="<?= url('profile/mysertificate') ?>">{{ __('header.txt_certificate') }}</a></li>
                                         <?php    } ?>
                                         <hr>
-                                        <li><a class="text-danger" href="<?= url('logout') ?>">Keluar</a></li>
+                                        <li><a class="text-danger" href="<?= url('logout') ?>">{{ __('header.txt_logout') }}</a></li>
                                     </ul>
                                 </li>
                             </ul>
                         </nav>
                     <?php } else { ?>
                         <div class="header-btn d-none d-xl-block">
-                            <a href="{{ url('login') }}" class="fw-normal a-header">Login</a>
+                            <a href="{{ url('login') }}" class="fw-normal a-header">{{ __("header.txt_login") }}</a>
                         </div>
                     <?php } ?>
                 </div>
