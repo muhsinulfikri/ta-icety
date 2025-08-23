@@ -20,10 +20,18 @@ use Illuminate\Support\Facades\Route;
 //     return view('guest.home');
 // });
 
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['id', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('lang.switch');
+
 Route::get('/', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 
-Route::get('/store', 'GuestController@store');
+// Route::get('/store', 'GuestController@store');
+Route::get('/store', 'guest_controller\CourseGuest@index');
 Route::get('/about', 'GuestController@about');
 Route::get('/blog', 'GuestController@blog');
 
@@ -212,8 +220,10 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
 
     //get alias
     Route::get('/check-alias', 'CourseController@get_alias');
-
+    //sertif pay
     Route::post('/buy-certificate', 'guest_controller\CourseGuest@buyCertificateCode');
+    //add rating
+    Route::post('course/detail/add_rating', 'guest_controller\CourseGuest@addRateTestimoni');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {

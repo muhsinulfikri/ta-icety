@@ -20,6 +20,14 @@
                                 <?php } ?>
                                 <h3 class="course-title"> <a href="<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY)) . '?id_activity=' . $item->ID_ACTIVITY) ?>"><?= $item->TITLE_ACTIVITY ?> </a> </h3>
                             </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-star text-warning me-1"></i>
+                                @if (empty($item->RATE))
+                                    <span>0 Ratings</span>
+                                @else
+                                    <span>{{ $item->RATE }} Ratings</span>
+                                @endif
+                            </div>
                             <div class="course-meta">
                                 <div class="text-muted m-0 pt-2 fs-6" style="overflow: hidden !important;
                                     text-overflow: ellipsis !important;
@@ -48,6 +56,14 @@
                             <div class="course-content">
                                 <span class="course-price <?= ($item->PRICE_ACTIVITY == 0) ? "bg-success" : "bg-primary" ?>"><?= ($item->PRICE_ACTIVITY == 0) ? "Free" : "Rp " . number_format($item->PRICE_ACTIVITY, 2, ',', '.') ?></span>
                                 <h3 class="course-title"> <a href="<?= url('course/info/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $item->TITLE_ACTIVITY)) . '?id_activity=' . $item->ID_ACTIVITY) ?>"><?= $item->TITLE_ACTIVITY ?> </a> </h3>
+                            </div>
+                            <div class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-star text-warning me-1"></i>
+                                @if (empty($item->RATE))
+                                    <span>0 Ratings</span>
+                                @else
+                                    <span>{{ $item->RATE }} Ratings</span>
+                                @endif
                             </div>
                             <div class="course-meta">
                                 <div class="text-muted m-0 pt-2 fs-6" style="overflow: hidden !important;

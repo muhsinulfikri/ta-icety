@@ -21,11 +21,24 @@ class Course extends Model
             SELECT
                 activity.*,
                 course.DESKRIPSI_COURSE,
-                kategori.KATEGORI
+                kategori.KATEGORI,
+                kategori.ID_KATEGORI,
+                tbr.RATE,
+                tbr.TOTAL
             FROM
                 activity
                 LEFT JOIN course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
                 LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
+                LEFT JOIN (
+                    SELECT
+                        r.ID_ACTIVITY,
+                        ROUND(AVG(r.RATE), 1) AS RATE,
+                        (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+                    FROM
+                        tb_rate_review r
+                    GROUP BY
+                        r.ID_ACTIVITY
+                    ) tbr ON tbr.ID_ACTIVITY = activity.ID_ACTIVITY
             WHERE
                 activity.TYPE_ACTIVITY = 1
                 AND activity.IS_PUBLIC = 1
@@ -34,7 +47,7 @@ class Course extends Model
                 AND activity.IS_DELETED IS NULL
             ORDER BY
                 activity.LOG_TIME DESC
-                LIMIT 4");
+            ");
         return $data;
     }
     public function get_courses($condition)
@@ -183,7 +196,8 @@ class Course extends Model
             AND
             o.ID_PRODUCT = `activity`.ID_ACTIVITY
             AND
-            p.DATE_PAY IS NOT NULL ) as DATA_CHECKING
+            p.DATE_PAY IS NOT NULL ) as DATA_CHECKING,
+        tbr.RATE
         FROM
             activity
         LEFT JOIN
@@ -192,6 +206,16 @@ class Course extends Model
             kategori ON kategori.ID_KATEGORI = course.KATEGORI
         LEFT JOIN
             user ON user.ID_USER = activity.ID_USER
+        LEFT JOIN (
+            SELECT
+                r.ID_ACTIVITY,
+                ROUND(AVG(r.RATE), 1) AS RATE,
+                (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+            FROM
+                tb_rate_review r
+            GROUP BY
+                r.ID_ACTIVITY
+            ) tbr ON tbr.ID_ACTIVITY = activity.ID_ACTIVITY
         WHERE
             course.ID_ACTIVITY = "' . $id_activity . '"
             AND activity.TYPE_ACTIVITY = 1;
@@ -596,6 +620,36 @@ class Course extends Model
                 payment_sertif
             WHERE
                 ID_PAYMENT_SERTIF = '".$id."'
+        ");
+        return $data;
+    }
+    public function getTesti($id_act, $id_user){
+        $data = DB::selectOne("
+            SELECT
+                trr.*,
+                u.NAME
+            FROM
+                tb_rate_review trr
+            LEFT JOIN
+                user u ON u.ID_USER = trr.ID_USER
+            WHERE
+                trr.ID_ACTIVITY = '".$id_act."'
+            AND
+                trr.ID_USER = '".$id_user."'
+        ");
+        return $data;
+    }
+    public function get_testimoni_course(){
+        $data = DB::select("
+            SELECT
+                r.ID_ACTIVITY,
+                r.RATE,
+                (SELECT COUNT(*) FROM tb_rate_review WHERE ID_ACTIVITY = r.ID_ACTIVITY) AS TOTAL
+            FROM
+                tb_rate_review r
+            GROUP BY
+                r.ID_ACTIVITY,
+                r.RATE
         ");
         return $data;
     }

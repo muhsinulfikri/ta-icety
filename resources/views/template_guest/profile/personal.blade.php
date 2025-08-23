@@ -18,47 +18,47 @@
                 <img class="nav-link rounded-circle mb-2" src="<?= (!empty($data_personal->FOTO_PROFILE) ? $data_personal->FOTO_PROFILE : 'assets/images/person-circle.svg') ?>" id="preview" style="height:150px; width:150px; object-fit: cover;" />
             </button>
         </div>
-        <h3 class="fw-bold py-4" style="color:#AD0B0B">Personal Data</h3>
+        <h3 class="fw-bold py-4" style="color:#AD0B0B">{{ __('profile.txt_personal') }}</h3>
         <h5 class="text-black ps-1">Email</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="email" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputEmail1" placeholder="Email" value="<?= $data_personal->EMAIL ?>" aria-describedby="emailHelp" readonly>
         </div>
-        <h5 class="text-black ps-1 mt-4">Nama</h5>
+        <h5 class="text-black ps-1 mt-4">{{ __('register.txt_name') }}</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="name_user" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Nama" value="<?= $data_personal->NAME ?>" readonly>
         </div>
         <?php
         $categories = [
-            2 => "Perusahaan",
-            3 => "Umum",
-            4 => "Institusi Pemerintah",
-            5 => "Institusi Pendidikan",
-            6 => "Organisasi Nirlaba",
+            2 => __('register.txt_company'),
+            3 => __('register.txt_umum'),
+            4 => __('register.txt_pemerintah'),
+            5 => __('register.txt_pendidikan'),
+            6 => __('register.txt_nirlaba'),
         ];
 
         $categoryUser = $categories[$data_personal->ID_CATEGORY_USER] ?? "All";
         ?>
-        <h5 class="text-black ps-1 mt-4">Kategori Pengguna</h5>
+        <h5 class="text-black ps-1 mt-4">{{ __('profile.txt_kategori') }}</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="category_user" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Kategori Pengguna" value="<?= $categoryUser ?>" readonly disabled>
         </div>
         @if ($data_personal->ID_CATEGORY_USER == 5)
-            <h5 class="text-black ps-1 mt-4">Alamat</h5>
+            <h5 class="text-black ps-1 mt-4">{{ __('profile.txt_alamat') }}</h5>
             <div class="my-3 float-label-control">
                 <input type="text" name="alamat" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Alamat" value="<?= $data_personal->ALAMAT ?>" readonly>
             </div>
         @endif
-        <h5 class="text-black ps-1 mt-4">Phone Number</h5>
+        <h5 class="text-black ps-1 mt-4">{{ __('register.txt_number') }}</h5>
         <div class="my-3 float-label-control">
             <input type="text" name="no_hp" class="form-control input-text woocommerce-Input woocommerce-Input--text" placeholder="Number" value="<?= $data_personal->TELP ?>" readonly>
         </div>
-        <h5 class="text-black ps-1 mt-4">Gender</h5>
+        <h5 class="text-black ps-1 mt-4">{{ __('profile.txt_personal_gender') }}</h5>
         <div class="my-3 float-label-control">
             <select class="form-select woocommerce-Input woocommerce-Input--text" disabled>
                 <option value="Laki-laki" <?= ($data_personal->JK == "Laki-laki") ? "selected" : "" ?>>
-                    Male</option>
+                    {{ __('profile.txt_male') }}</option>
                 <option value="Perempuan" <?= ($data_personal->JK == "Perempuan") ? "selected" : "" ?>>
-                    Female</option>
+                    {{ __('profile.txt_female') }}</option>
             </select>
         </div>
         <input type="hidden" name="jk" id="setJK" value="<?= $data_personal->JK ?>">

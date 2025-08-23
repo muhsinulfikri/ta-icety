@@ -661,7 +661,7 @@ class CheckoutGuest extends Controller
 					];
 					DB::table('tb_final_exam')->insert($data_final_exam);
 				}
-                if ($final_exam[0]->INCLUDE_COURSE == 1) {
+                if (!empty($final_exam) && isset($final_exam[0]->INCLUDE_COURSE) && $final_exam[0]->INCLUDE_COURSE == 1) {
 					$data_final_exam = [
 						"ID_ACTIVITY"	=> $final_exam[0]->ID_ACTIVITY,
 						"ID_USER"		=> session('user')[0]->get('ID_USER'),

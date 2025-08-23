@@ -10,7 +10,7 @@
                     {{--
                         msg error
                     --}}
-                    <h4 class="ps-1 fw-semibold">Login</h4>
+                    <h4 class="ps-1 fw-semibold">{{ __('login.txt_login') }}</h4>
                     <form class="fw-normal" action="<?= url('login/authentication') ?>" method="POST">
                         @csrf
                         <div class="my-4 float-label-control">
@@ -23,7 +23,7 @@
                         <div class="mt-4 my-3">
                             <div class="slidercaptcha card" id="card-captcha">
                                 <div class="card-header">
-                                    <span>Please complete security verification before Login!</span>
+                                    <span>{{ __('login.txt_captcha') }}</span>
                                 </div>
                                 <div class="card-body" id="body-captcha">
                                     <div id="captcha"></div>
@@ -37,13 +37,13 @@
                             </div>
                         </div>
                         <div class="mt-3 my-3">
-                            <a href="<?= url('forgot-password') ?>" class="text-decoration-none fw-bold text-black">Forgot Password?</a>
+                            <a href="<?= url('forgot-password') ?>" class="text-decoration-none fw-bold text-black">{{ __('login.txt_forgot') }}</a>
                         </div>
                         <div class="my-4">
-                            <button id="btn-login" type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0" disabled>Login</button>
+                            <button id="btn-login" type="submit" class="btn  btn-main-2 btn-primary w-100 rounded-3 fw-semibold py-2 text-black border-0" disabled>{{ __('login.txt_login') }}</button>
                         </div>
                         <div class="my-4 text-center">
-                            <span>Don't have account? <a href="<?= url('register') ?>" class="text-decoration-none fw-bold text-black">Register</a></span>
+                            <span>{{ __('login.txt_dont') }} <a href="<?= url('register') ?>" class="text-decoration-none fw-bold text-black">{{ __('login.txt_register') }}</a></span>
                         </div>
                     </form>
                 </div>
