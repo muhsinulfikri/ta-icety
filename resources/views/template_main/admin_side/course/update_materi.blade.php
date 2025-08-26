@@ -67,7 +67,7 @@
         </div>
     </div>
 </div>
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <script>
     function submitMateriItem(button) {
         let idItem = $(button).data('id');
@@ -94,7 +94,6 @@
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
             success: function(response) {
-                console.log(response);
 
                 if (response.status === 'success') {
                     Swal.fire({
