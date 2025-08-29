@@ -738,7 +738,7 @@ class CheckoutGuest extends Controller
 			FROM
 				mapping_course mc
 			WHERE
-				mc.ID_ACTIVITY = '" . $data_course->ID_COURSE . "'
+				mc.ID_ACTIVITY = '" . $data_course->ID_ACTIVITY . "'
 			ORDER BY
 				mc.ID_ITEM ASC
 		");
