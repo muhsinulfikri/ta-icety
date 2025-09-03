@@ -46,7 +46,8 @@
                         const fileId = materiLink.match(googleDriveRegex)[1];
                         const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
                         $('#document-frame').html(
-                            `<iframe src="${embedUrl}" style="width:600px; height:500px;" frameborder="0"></iframe>`
+                            `<iframe src="${embedUrl}" style="width:600px; height:500px;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"></iframe>`
                         );
                     }else {
                         const link_file = file ? file : materiLink;
