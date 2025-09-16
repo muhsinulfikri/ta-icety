@@ -224,6 +224,9 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('/buy-certificate', 'guest_controller\CourseGuest@buyCertificateCode');
     //add rating
     Route::post('course/detail/add_rating', 'guest_controller\CourseGuest@addRateTestimoni');
+    //generate sertif
+    Route::post('/generate-sertif-course','guest_controller\CourseGuest@handleCertificateGeneration');
+    Route::post('/generate-sertif-exam','guest_controller\CourseGuest@handleFinalExamCertificate');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {
