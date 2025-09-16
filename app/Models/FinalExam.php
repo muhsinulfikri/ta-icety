@@ -33,7 +33,8 @@ class FinalExam extends Model
     public function get_nilai_for_sertif($id_activity, $id_user){
         $sql = DB::selectOne('
             SELECT
-           	tnfe.NILAI
+           	tnfe.NILAI,
+            tnfe.created_at
         FROM
             tb_final_exam tfe
         LEFT JOIN
