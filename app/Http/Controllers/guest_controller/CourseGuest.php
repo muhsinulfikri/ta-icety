@@ -317,6 +317,11 @@ class CourseGuest extends Controller
 
     private function updateExistingCertificate(&$data, $id_sertif, $sertif_number_course, $institusi_name, $completed_course, $summary_sertif)
     {
+        if (!empty($data['date_sertif_course'])) {
+            $dateCompleted = $data['date_sertif_course'][0]->DATE_COMPLETED;
+        } else {
+            $dateCompleted = now(); // fallback default tanggal hari ini
+        }
         $sertif_path_course = $this->certificateModel->generateCourseSekolah(
             session('user')[0]->get('NAME'),
             $data['course']->TITLE_CERTIFICATE,
@@ -325,7 +330,7 @@ class CourseGuest extends Controller
             $summary_sertif[0]->SUMMARY_CERTIFICATE,
             $summary_sertif[0]->MODULE_CERTIFICATE,
             $completed_course[0]->days_difference,
-            $data['date_sertif_course'][0]->DATE_COMPLETED,
+            date('d F Y', strtotime($dateCompleted)),
             $id_sertif,
             $institusi_name[0]->UNIV
         );
