@@ -632,7 +632,7 @@
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: data.message || "Gagal generate sertifikat ujian akhir"
+                            text: data.message || "Gagal generate sertifikat kursus"
                         });
                     }
                 },
@@ -641,7 +641,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: "AJAX Error: " + textStatus
+                        text: "Gagal Download, coba lagi"
                     });
                     console.error("AJAX Error: ", textStatus, errorThrown);
                 }
@@ -712,7 +712,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: "AJAX Error: " + textStatus
+                        text: "Gagal Download, coba lagi "
                     });
                     console.error("AJAX Error: ", textStatus, errorThrown);
                 }
@@ -741,8 +741,10 @@
                                         <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
                                             <div class="mx-4 py-3 bg-white">
                                                 <label>Download Sertificate Final Exam</label>
-                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                        onclick="DownloadPdfExam('{{ $get_data_final_exam->ID_ACTIVITY }}')">Download PDF</button>
+                                                @if (!(empty($get_data_final_exam)))
+                                                <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                    onclick="DownloadPdfExam('{{ $get_data_final_exam->ID_ACTIVITY }}')">Download PDF</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -769,7 +771,7 @@
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                        <form action="{{ secure_url('/buy-certificate') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
                                                             <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
@@ -787,7 +789,7 @@
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                        <form action="{{ secure_url('/buy-certificate') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
                                                             <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
