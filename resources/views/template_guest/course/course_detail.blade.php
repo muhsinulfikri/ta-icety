@@ -771,7 +771,7 @@
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <form action="{{ secure_url('/buy-certificate') }}" method="POST">
+                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
                                                             <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
@@ -789,7 +789,7 @@
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
                                                         <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <form action="{{ secure_url('/buy-certificate') }}" method="POST">
+                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
                                                             @csrf
                                                             <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
                                                             <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">

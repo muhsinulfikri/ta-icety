@@ -109,14 +109,14 @@ class CourseGuest extends Controller
 
     private function updateCourseProgress(&$data)
     {
-        $data['date_sertif_course'] = DB::select("
-            SELECT o.DATE_COMPLETED
-            FROM `order` o
-            LEFT JOIN activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
-            LEFT JOIN user u ON u.ID_USER = o.ID_USER
-            WHERE a.ID_ACTIVITY = '{$data['id_activity']}'
-            AND u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-        ");
+        // $data['date_sertif_course'] = DB::select("
+        //     SELECT o.DATE_COMPLETED
+        //     FROM `order` o
+        //     LEFT JOIN activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
+        //     LEFT JOIN user u ON u.ID_USER = o.ID_USER
+        //     WHERE a.ID_ACTIVITY = '{$data['id_activity']}'
+        //     AND u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+        // ");
 
         $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $data['id_activity']);
 

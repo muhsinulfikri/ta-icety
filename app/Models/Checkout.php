@@ -65,6 +65,7 @@ class Checkout extends Model
                 AND
                 p.KODE_USER = '$id_user'
                 AND pm.EXP_DATE > NOW()
+                AND p.ID_PAY IS NULL
         ");
     }
 
