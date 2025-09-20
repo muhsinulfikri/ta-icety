@@ -816,31 +816,23 @@ class CourseGuest extends Controller
         $userId = session('user')[0]->get('ID_USER');
 
         $course = $this->courseModel->get_course($request->input('id_activity'));
-        $sertifCheck = DB::table('sertifikat_activity')->where('ID_ACTIVITY', $idActivity)->where('ID_USER', $userId)->first();
 
-        if (!empty($sertifCheck)) {
-            $idPaymentSertif = 'PAY_SERTIF_' . $sertifCheck->ID_SERTIFIKAT;
-            $statusFirst = 1;
+            if ($course->IS_SERTIF_PAID == 1) {
+                // $dataPaySertif = [
+                //     'ID_PAYMENT_SERTIF' => $idPayment,
+                //     'ID_SERTIFIKAT' => null,
+                //     'ID_USER' => $userId,
+                //     'ID_PAY' => null,
+                //     'IS_PAY' => 0,
+                //     'ID_ACTIVITY' => $idActivity,
+                //     'TITLE_ACTIVITY' => $course->TITLE_ACTIVITY
+                // ];
 
-            if ($course->IS_SERTIF_PAID == 1 && $statusFirst == 1) {
-                $dataPaySertif = [
-                    'ID_PAYMENT_SERTIF' => $idPaymentSertif,
-                    'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
-                    'ID_USER' => $userId,
-                    'ID_PAY' => null,
-                    'IS_PAY' => 0,
-                    'ID_ACTIVITY' => $idActivity,
-                    'TITLE_ACTIVITY' => $course->TITLE_ACTIVITY
-                ];
-
-                if (!DB::table('payment_sertif')->where('ID_PAYMENT_SERTIF', $idPaymentSertif)->exists()) {
-                    DB::table('payment_sertif')->insert($dataPaySertif);
-                }
+                // if (!DB::table('payment_sertif')->where('ID_PAYMENT_SERTIF', $idPayment)->exists()) {
+                //     DB::table('payment_sertif')->insert($dataPaySertif);
+                // }
             }
             return response()->noContent();
-        }
-
-        return redirect()->back()->with('err_msg', 'Sertifikat tidak ditemukan.');
     }
 
 	public function getMappingCourse()
