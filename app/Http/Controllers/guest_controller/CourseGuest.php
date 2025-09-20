@@ -244,6 +244,12 @@ class CourseGuest extends Controller
             ");
 
             if (!empty($sertifCheck) && !empty($sertifCheck->FILE_SERTIFIKAT)) {
+                DB::table('payment_sertif')
+                    ->where('ID_USER', $userId)
+                    ->where('ID_ACTIVITY', $id_activity)
+                    ->update([
+                        'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+                ]);
                 return response()->json([
                     'status' => 'exists',
                     'file'   => url($sertifCheck->FILE_SERTIFIKAT)
