@@ -89,16 +89,6 @@ class PaymentCertificate extends Controller
 			];
 			DB::table('payment_method')->insert($data_payment_method);
 
-            // if (!empty($id_sertif_pay) && !empty($id_sertif_pay->ID_PAYMENT_SERTIF)) {
-            //     $_response = $this->sertifPayModel->getSertifIsPaid($id_sertif_pay->ID_PAYMENT_SERTIF);
-            //     $data_order = [
-            //         "ID_PAY" => $ID_PAY
-            //     ];
-            //     DB::table('payment_sertif')
-            //         ->where('ID_PAYMENT_SERTIF', $_response->ID_PAYMENT_SERTIF)
-            //         ->where('ID_USER', session('user')[0]['ID_USER'])
-            //         ->update($data_order);
-            // }
             if (empty($id_sertif_pay)) {
                 DB::table('payment_sertif')->insert([
                     "ID_PAYMENT_SERTIF" => $ID_PAY . 'sertif',
@@ -115,16 +105,16 @@ class PaymentCertificate extends Controller
                     ->update(["ID_PAY" => $ID_PAY]);
             }
 
-			return response([
-				'status_code'       => 200,
-				'invoice'           => $invoice,
-			], 200);
+			return response()->json([
+                'status_code' => 200,
+                'invoice'     => $invoice,
+            ]);
 		} else {
 			$invoice['id'] = $checking_trans->XENDIT_ID;
-			echo json_encode([
-				'status' => 200,
-				'invoice' => $invoice
-			]);
+			return response()->json([
+                'status_code' => 200,
+                'invoice'     => ['id' => $checking_trans->XENDIT_ID]
+            ]);
 		}
 	}
 
