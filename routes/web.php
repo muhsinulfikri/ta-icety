@@ -221,7 +221,19 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     //get alias
     Route::get('/check-alias', 'CourseController@get_alias');
     //sertif pay
-    Route::post('/buy-certificate', 'guest_controller\CourseGuest@buyCertificateCode');
+    // Route::post('/buy-certificate', 'guest_controller\CourseGuest@buyCertificateCode');
+    Route::post('/buy-certificate', function (\Illuminate\Http\Request $request) {
+    dd([
+        'full_url' => $request->fullUrl(),
+        'scheme' => $request->getScheme(),
+        'secure' => $request->isSecure(),
+        'server_https' => $_SERVER['HTTPS'] ?? null,
+        'forwarded_proto' => $request->header('X-Forwarded-Proto'),
+        'app_url' => config('app.url'),
+        'env' => config('app.env'),
+    ]);
+});
+
     //add rating
     Route::post('course/detail/add_rating', 'guest_controller\CourseGuest@addRateTestimoni');
     //generate sertif
