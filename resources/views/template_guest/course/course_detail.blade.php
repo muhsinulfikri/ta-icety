@@ -317,16 +317,13 @@
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
                                         @if($course->IS_SERTIF_PAID == 1)
-                                            <form action="{{ url('/buy-certificate') }}" method="POST">
-                                                @csrf
-                                                <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                                <button type="submit"
+
+                                                <button type="button"
                                                         class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                         onclick="BuyCertificateCode(this)"
                                                         data-type="5">
                                                     Certificate
                                                 </button>
-                                            </form>
                                             @if ($is_paid == 1 && $course->FINAL_EXAM != null)
                                                 <button
                                                     class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
@@ -605,22 +602,48 @@
 
     <?php if ($tot_proggress == 100) { ?>
 
-        function DownloadPdf(e) {
-
-            var file = "<?= empty($sertif_course->FILE_SERTIFIKAT) ? null : $sertif_course->FILE_SERTIFIKAT ?>"
-
+        function DownloadPdf() {
+            Swal.fire({
+                title: 'Loading Sertifikat!',
+                html: 'Please wait ...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            const idActivity = $('input:hidden[name="id_activity"]').val();
+            const idSertif = $('input:hidden[name="id_sertif"]').val() || '';
+            const payload = {
+                _token: csrfToken,
+                id_activity: idActivity,
+                id_sertif: idSertif
+            };
             $.ajax({
-                url: '<?= Request::segment(0) ?>/update-sertif',
+                url: '/generate-sertif-course',
                 type: "POST",
-                data: {
-                    id_activity: "<?= $course->ID_ACTIVITY ?>",
-                },
+                data: payload,
+                dataType: 'json',
                 success: function(data) {
-                    window.open(file, '_blank');
+                    Swal.close();
+                    if ((data.status === "exists" || data.status === "generated") && data.file) {
+                        window.open(data.file, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || "Gagal generate sertifikat kursus"
+                        });
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.close(); // tutup loading
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: "Gagal Download, coba lagi"
+                    });
                     console.error("AJAX Error: ", textStatus, errorThrown);
-                    console.error("Response Text: ", jqXHR.responseText);
                 }
             });
         }
@@ -656,25 +679,46 @@
 
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
-        function DownloadPdfExam(e) {
-
-            var file = "<?= empty($sertif_exam->FILE_SERTIFIKAT) ? null : $sertif_exam->FILE_SERTIFIKAT ?>"
-
+        function DownloadPdfExam(id_activity) {
+            Swal.fire({
+                title: 'Loading Sertifikat!',
+                html: 'Please wait ...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
             $.ajax({
-                url: '<?= Request::segment(0) ?>/update-sertif',
+                url: '/generate-sertif-exam',
                 type: "POST",
                 data: {
-                    id_activity: "<?= $course->FINAL_EXAM ?>",
+                    id_activity: id_activity,
+                    _token: "<?= csrf_token() ?>"
                 },
                 success: function(data) {
-                    window.open(file, '_blank');
+                    Swal.close();
+                    if ((data.status === "exists" || data.status === "generated") && data.file) {
+                        window.open(data.file, '_blank');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || "Gagal generate sertifikat ujian akhir"
+                        });
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
+                    Swal.close(); // tutup loading
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: "Gagal Download, coba lagi "
+                    });
                     console.error("AJAX Error: ", textStatus, errorThrown);
-                    console.error("Response Text: ", jqXHR.responseText);
                 }
             });
         }
+
 
         function filename(path) {
             path = path.substring(path.lastIndexOf("/") + 1);
@@ -697,8 +741,10 @@
                                         <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
                                             <div class="mx-4 py-3 bg-white">
                                                 <label>Download Sertificate Final Exam</label>
-                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                        onclick="DownloadPdfExam(this)">Download PDF</button>
+                                                @if (!(empty($get_data_final_exam)))
+                                                <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                    onclick="DownloadPdfExam('{{ $get_data_final_exam->ID_ACTIVITY }}')">Download PDF</button>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -724,9 +770,13 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
-
+                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
+                                                            <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                            <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
+                                                            <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                        </form>
                                                         @if (!empty($id_sertif))
                                                             <button type="button" class="btn btn-primary col-md-12 mb-3" onclick="checkPayment('<?= $id_payment_sertif ?>')">Check Payment</button>
                                                         @endif
@@ -738,8 +788,13 @@
                                                         <label>Buy Sertificate Course</label>
                                                         </br>
                                                         <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <input type="hidden" name="id_sertif_pay" value="<?= isset($id_sertif) ? 'PAY_SERTIF_'.$id_sertif : $id_payment_sertif ?>">
-                                                        <button type="button" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
+                                                            <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                            <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
+                                                            <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                        </form>
                                                     @endif
                                                 @endif
                                             </div>
@@ -761,6 +816,8 @@
 
         const csrfToken = $('meta[name="csrf-token"]').attr('content');
         const idSertifPay = $('input:hidden[name="id_sertif_pay"]').val();
+        const idActivity = $('input:hidden[name="id_activity"]').val();
+        const titleActivity = $('input:hidden[name="title_activity"]').val();
         console.log(idSertifPay);
         if(totPrice != 0){
             $.ajax({
@@ -769,7 +826,9 @@
                 data: {
                     _token: csrfToken,
                     TotPrice: totPrice,
-                    id_sertif_pay: idSertifPay
+                    id_sertif_pay: idSertifPay,
+                    idActivity: idActivity,
+                    titleActivity: titleActivity
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -1215,7 +1274,7 @@
         icon: 'error',
         title: 'Oops...',
         confirmButtonColor: '#ad0b0b',
-        text: '{{ session('err_msg ') }}',
+        text: '{{ session('err_msg') }}',
     });
 </script>
 @endif

@@ -89,27 +89,32 @@ class PaymentCertificate extends Controller
 			];
 			DB::table('payment_method')->insert($data_payment_method);
 
-            if (!empty($id_sertif_pay) && !empty($id_sertif_pay->ID_PAYMENT_SERTIF)) {
-                $_response = $this->sertifPayModel->getSertifIsPaid($id_sertif_pay->ID_PAYMENT_SERTIF);
-                $data_order = [
-                    "ID_PAY" => $ID_PAY
-                ];
+            if (empty($id_sertif_pay)) {
+                DB::table('payment_sertif')->insert([
+                    "ID_PAYMENT_SERTIF" => $ID_PAY . 'sertif',
+                    "ID_USER"           => session('user')[0]->get('ID_USER'),
+                    "ID_ACTIVITY"       => $request->idActivity,
+                    "TITLE_ACTIVITY"    => $request->titleActivity,
+                    "ID_PAY"            => $ID_PAY,
+                    "IS_PAY"            => 0,
+                ]);
+            } else {
+                // Kalau sudah ada → update ID_PAY saja
                 DB::table('payment_sertif')
-                    ->where('ID_PAYMENT_SERTIF', $_response->ID_PAYMENT_SERTIF)
-                    ->where('ID_USER', session('user')[0]['ID_USER'])
-                    ->update($data_order);
+                    ->where('ID_PAYMENT_SERTIF', $id_sertif_pay->ID_PAYMENT_SERTIF)
+                    ->update(["ID_PAY" => $ID_PAY]);
             }
 
-			return response([
-				'status_code'       => 200,
-				'invoice'           => $invoice,
-			], 200);
+			return response()->json([
+                'status_code' => 200,
+                'invoice'     => $invoice,
+            ]);
 		} else {
-			$invoice['id'] = $checking_trans[0]->XENDIT_ID;
-			echo json_encode([
-				'status' => 200,
-				'invoice' => $invoice
-			]);
+			$invoice['id'] = $checking_trans->XENDIT_ID;
+			return response()->json([
+                'status_code' => 200,
+                'invoice'     => ['id' => $checking_trans->XENDIT_ID]
+            ]);
 		}
 	}
 
@@ -132,7 +137,7 @@ class PaymentCertificate extends Controller
 				WHERE
 					p.ID_PAY = '" . $req->input('id_pay') . "'
 			");
-
+            // dd($req, $data_trans);
 			$check_xendit = $this->xenditService->retrieveInvoiceById($data_trans->xendit_id);
 
 			$data_payment = [
@@ -147,11 +152,26 @@ class PaymentCertificate extends Controller
 			];
 			DB::table('payment_method')->where('ID_PAY', $req->id_pay)->update($data_payment_method);
 
-            DB::table('payment_sertif')
-                ->where('ID_PAYMENT_SERTIF', $data_trans->ID_PAYMENT_SERTIF)
-                ->where('ID_PAY', $req->id_pay)
-                ->where('ID_USER', session('user')[0]['ID_USER'])
-                ->update(['IS_PAY' => 1]);
+            if (!$data_trans || !$data_trans->ID_PAYMENT_SERTIF) {
+                $newIdPaymentSertif = $this->GenerateUniqIDPay('ICETY-XENDIT-checkout-' . date('Y-m-d H:i:s'));
+
+                DB::table('payment_sertif')->insert([
+                    "ID_PAYMENT_SERTIF" => $newIdPaymentSertif . 'sertif',
+                    "ID_SERTIFIKAT"     => null,
+                    "ID_USER"           => session('user')[0]['ID_USER'],
+                    "IS_PAY"            => 1,
+                    "ID_PAY"            => $req->id_pay,
+                    "ID_ACTIVITY"       => $req->input('id_activity') ?? null,
+                    "TITLE_ACTIVITY"    => $req->input('title_activity') ?? null,
+                ]);
+            } else {
+                // Kalau sudah ada → update IS_PAY
+                DB::table('payment_sertif')
+                    ->where('ID_PAYMENT_SERTIF', $data_trans->ID_PAYMENT_SERTIF)
+                    ->where('ID_PAY', $req->id_pay)
+                    ->where('ID_USER', session('user')[0]['ID_USER'])
+                    ->update(['IS_PAY' => 1]);
+            }
 
             DB::commit();
 

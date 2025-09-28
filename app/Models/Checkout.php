@@ -64,6 +64,8 @@ class Checkout extends Model
                 pm.STATUS = 'PENDING'
                 AND
                 p.KODE_USER = '$id_user'
+                AND pm.EXP_DATE > NOW()
+                AND p.ID_PAY IS NULL
         ");
     }
 

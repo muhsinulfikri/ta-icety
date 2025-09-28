@@ -65,612 +65,6 @@ class CourseGuest extends Controller
 			view('template_guest.course.course', $data) .
 			view('template.footer', $data);
 	}
-
-	// public function detailCourse()
-	// {
-	// 	if (session('user') == null) {
-	// 		return redirect('login');
-	// 	}
-	// 	$data['title'] = 'Course';
-
-	// 	$data['id_activity'] = $_GET['id_activity'];
-	// 	$data['course'] = $this->courseModel->get_course($data['id_activity']);
-    //     $finalExamModel = new FinalExam();
-    //     $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
-	// 	$condition = "item_course.ID_COURSE = '" . $data['course']->ID_COURSE . "'" .
-	// 		" AND mapping_course.ID_USER = '" . session('user')[0]->get('ID_USER') . "'";
-    //     $data_category_user = $this->userModel->get_user(session('user')[0]->get('ID_USER'));
-
-	// 	$this->courseModel->updateMappingIndex($data['course']->ID_COURSE, $data['id_activity']);
-
-	// 	$data['item_course'] = $this->courseModel->get_item_course($condition);
-
-    //     $data['date_sertif_course'] = DB::select("
-    //         SELECT
-    //             o.DATE_COMPLETED
-    //         FROM
-    //             `order` o
-    //         LEFT JOIN
-    //             activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
-    //         LEFT JOIN
-    //             user u ON u.ID_USER = o.ID_USER
-    //         WHERE
-    //             a.ID_ACTIVITY = '".$data['id_activity']."'
-    //         AND
-    //             u.ID_USER = '".session('user')[0]->get('ID_USER')."'
-    //     ");
-
-    //     $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $data['id_activity']);
-	// 	$data['last_item'] = DB::select('
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			mapping_course
-	// 		WHERE
-	// 			ID_USER = "' . session('user')[0]->get('ID_USER') . '"
-	// 			AND ID_ACTIVITY = "' . $data['id_activity'] . '"
-	// 			AND STATUS = 1
-	// 		ORDER BY ID_ITEM DESC
-	// 	');
-
-	// 	$condition_all_mapping = "
-	// 		ID_USER = '" . session('user')[0]->get('ID_USER') .
-	// 		"'AND ID_ACTIVITY = '" . $data['id_activity'] . "'
-	// 	";
-
-	// 	$data['data_all_mapping'] = DB::select("
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			mapping_course
-	// 		WHERE
-	// 			$condition_all_mapping
-	// 	");
-	// 	$data_all_mapping = $this->courseModel->get_counttask($data['id_activity']);
-	// 	$data['tot_proggress'] = (!empty($data['last_item'])) ? (((int) $data_all_mapping[0]->MAPPING_COUNT) / count($data['data_all_mapping'])) * 100 : 0;
-
-	// 	$cek_nilai = DB::selectOne("
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			nilai_quiz
-	// 		WHERE
-	// 			ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-	// 			AND ID_QUIZ = " . $data['last_item'][0]->ID_ITEM . "
-	// 	");
-
-	// 	$cek_quiz = DB::select("
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			item_course
-	// 		WHERE
-	// 			TYPE = 2
-	// 			AND ID_COURSE = '" . $data['course']->ID_COURSE . "'
-	// 	");
-
-	// 	$cek_item_course = DB::selectOne("
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			item_course
-	// 		WHERE
-	// 			ID_ITEM = " . $data['last_item'][0]->ID_ITEM . "
-	// 	");
-
-	// 	$check_history_final_exam = DB::selectOne("
-	// 		SELECT
-	// 			*
-	// 		FROM
-	// 			tb_final_exam
-	// 		WHERE
-	// 			ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-	// 			AND ID_ACTIVITY = '" . $data['course']->FINAL_EXAM . "'"
-	// 	);
-
-    //     $data['get_data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
-
-	// 	if (count($data['last_item']) == count($data['data_all_mapping']) && (!empty($cek_nilai->NILAI) ? $cek_nilai->NILAI >= $cek_item_course->MIN_NILAI : false)) {
-	// 		$data['tot_proggress'] = 100;
-	// 		DB::table('order')
-	// 			->where('ID_USER', session('user')[0]->get('ID_USER'))
-	// 			->where('ID_PRODUCT', $data['id_activity'])
-	// 			->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
-
-	// 		if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null && $data['get_data_final_exam']->INCLUDE_COURSE == 1) {
-	// 			$data_final_exam = [
-	// 				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-	// 				"ID_USER"		=> session('user')[0]->get('ID_USER'),
-	// 				"CODE_EXAM"		=> $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s')),
-	// 				"IS_USED"		=> 0,
-	// 				"CREATED_AT"	=> date("Y-m-d H:i:s")
-	// 			];
-	// 			DB::table('tb_final_exam')->insert($data_final_exam);
-	// 		}
-	// 	}
-	// 	if (count($data['last_item']) == count($data['data_all_mapping']) && ($cek_item_course->TYPE == 1)) {
-	// 		$data['tot_proggress'] = 100;
-	// 		DB::table('order')
-	// 			->where('ID_USER', session('user')[0]->get('ID_USER'))
-	// 			->where('ID_PRODUCT', $data['id_activity'])
-	// 			->update(['COURSE_COMPLETED' => 1, 'MAPPING_COUNT' => count($data['data_all_mapping']), 'DATE_COMPLETED' => date('Y-m-d H:i:s')]);
-
-	// 		if ($check_history_final_exam == null && $data['course']->FINAL_EXAM != null && $data['get_data_final_exam']->INCLUDE_COURSE == 1) {
-	// 			$data_final_exam = [
-	// 				"ID_ACTIVITY"	=> $data['course']->FINAL_EXAM,
-	// 				"ID_USER"		=> session('user')[0]->get('ID_USER'),
-	// 				"CODE_EXAM"		=> $this->GenerateCodeExam($data['course']->FINAL_EXAM . date('Y-m-d H:i:s')),
-	// 				"IS_USED"		=> 0,
-	// 				"CREATED_AT"	=> date("Y-m-d H:i:s")
-	// 			];
-	// 			DB::table('tb_final_exam')->insert($data_final_exam);
-	// 		}
-	// 	}
-
-	// 	$sertifCheck = DB::selectOne("
-	// 		SELECT
-	// 			ID_SERTIFIKAT,
-	// 			FILE_SERTIFIKAT
-	// 		FROM
-	// 			sertifikat_activity
-	// 		WHERE
-	// 			$condition_all_mapping
-	// 	");
-
-    //     $institusi_name = $this->userModel->get_intitusi_name(session('user')[0]->get('ID_USER'));
-    //     $data['id_sertif'] = null;
-	// 	if ($data['tot_proggress'] == 100 && (empty($sertifCheck) || empty($sertifCheck->FILE_SERTIFIKAT))) {
-    //         $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-	// 		$countSertifCourse = DB::table('sertifikat_activity')
-    //         ->where('ID_ACTIVITY', $data['id_activity'])
-    //         ->count() + 1;
-	// 		$sertif_number_course = $countSertifCourse . '/' . (($data['course']->TYPE_ACTIVITY == 1) ? 'CRS' : 'EVT') . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-    //         if($completed_course == 0) {
-    //             return 1;
-    //         }
-    //         if ($data_category_user[0]->ID_CATEGORY_USER == 5){
-    //             if(!empty($sertifCheck) && !empty($sertifCheck->ID_SERTIFIKAT)){
-    //                 $id_sertif = $sertifCheck->ID_SERTIFIKAT;
-    //                 $sertif_path_course = $this->certificateModel->generateCourseSekolah(
-    //                     session('user')[0]->get('NAME'),
-    //                     $data['course']->TITLE_CERTIFICATE,
-    //                     $sertif_number_course,
-    //                     $data['course']->SERTIF_IMAGE,
-    //                     $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     $completed_course[0]->days_difference,
-    //                     $data['date_sertif_course'][0]->DATE_COMPLETED,
-    //                     $id_sertif,
-    //                     $institusi_name[0]->UNIV
-    //                 );
-
-    //                 $data_sertif_course = array(
-    //                     "FILE_SERTIFIKAT" => $sertif_path_course,
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-
-    //                 DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
-    //             } else {
-    //                 $data_sertif_course = array(
-    //                     "ID_USER" => session('user')[0]->get('ID_USER'),
-    //                     "ID_ACTIVITY" => $data['id_activity'],
-    //                     "NO_SERTIFIKAT" => $sertif_number_course,
-    //                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-    //                     "FILE_SERTIFIKAT" => null,
-    //                     "INTITUSI_NAME" => $institusi_name[0]->UNIV,
-    //                     "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     "DURATION" => $completed_course[0]->days_difference,
-    //                     "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-    //                 $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
-    //                 $sertif_path_course = $this->certificateModel->generateCourseSekolah(
-    //                     session('user')[0]->get('NAME'),
-    //                     $data['course']->TITLE_CERTIFICATE,
-    //                     $sertif_number_course,
-    //                     $data['course']->SERTIF_IMAGE,
-    //                     $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     $completed_course[0]->days_difference,
-    //                     $data['date_sertif_course'][0]->DATE_COMPLETED,
-    //                     $id_sertif,
-    //                     $institusi_name[0]->UNIV
-    //                 );
-
-    //                 $data_sertif_course = array(
-    //                     "ID_USER" => session('user')[0]->get('ID_USER'),
-    //                     "ID_ACTIVITY" => $data['id_activity'],
-    //                     "NO_SERTIFIKAT" => $sertif_number_course,
-    //                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-    //                     "FILE_SERTIFIKAT" => $sertif_path_course,
-    //                     "INTITUSI_NAME" => $institusi_name[0]->UNIV,
-    //                     "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     "DURATION" => $completed_course[0]->days_difference,
-    //                     "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-
-    //                 DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
-    //             }
-    //             $data['sertif_course'] = (object) $data_sertif_course;
-    //             $data['id_sertif'] = DB::selectOne("
-    //                 SELECT
-    //                     ID_SERTIFIKAT
-    //                 FROM
-    //                     sertifikat_activity
-    //                 WHERE
-    //                     ID_ACTIVITY = '".$data['id_activity']."'
-    //                 AND
-    //                     ID_USER = '".session('user')[0]->get('ID_USER')."'
-    //             ")->ID_SERTIFIKAT;
-    //         } else {
-    //             if(!empty($sertifCheck) && !empty($sertifCheck->ID_SERTIFIKAT)){
-    //                 $id_sertif = $sertifCheck->ID_SERTIFIKAT;
-    //                 $sertif_path_course = $this->certificateModel->generateCourseSekolah(
-    //                     session('user')[0]->get('NAME'),
-    //                     $data['course']->TITLE_CERTIFICATE,
-    //                     $sertif_number_course,
-    //                     $data['course']->SERTIF_IMAGE,
-    //                     $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     $completed_course[0]->days_difference,
-    //                     $data['date_sertif_course'][0]->DATE_COMPLETED,
-    //                     $id_sertif,
-    //                     $institusi_name[0]->UNIV
-    //                 );
-
-    //                 $data_sertif_course = array(
-    //                     "FILE_SERTIFIKAT" => $sertif_path_course,
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-
-    //                 DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
-    //             } else {
-    //                 $data_sertif_course = array(
-    //                     "ID_USER" => session('user')[0]->get('ID_USER'),
-    //                     "ID_ACTIVITY" => $data['id_activity'],
-    //                     "NO_SERTIFIKAT" => $sertif_number_course,
-    //                     "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-    //                     "FILE_SERTIFIKAT" => null,
-    //                     "INTITUSI_NAME" => $institusi_name[0]->UNIV,
-    //                     "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     "DURATION" => $completed_course[0]->days_difference,
-    //                     "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-    //                 $id_sertif = DB::table('sertifikat_activity')->insertGetId($data_sertif_course);
-    //                 $sertif_path_course = $this->certificateModel->generateCourseSekolah(
-    //                     session('user')[0]->get('NAME'),
-    //                     $data['course']->TITLE_CERTIFICATE,
-    //                     $sertif_number_course,
-    //                     $data['course']->SERTIF_IMAGE,
-    //                     $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                     $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                     $completed_course[0]->days_difference,
-    //                     $data['date_sertif_course'][0]->DATE_COMPLETED,
-    //                     $id_sertif,
-    //                     $institusi_name[0]->UNIV
-    //                 );
-
-    //                 $data_sertif_course = array(
-    //                     "FILE_SERTIFIKAT" => $sertif_path_course,
-    //                     "LOG_TIME" => date('Y-m-d H:i:s')
-    //                 );
-
-    //                 DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif)->update($data_sertif_course);
-    //             }
-    //             $data['sertif_course'] = (object) $data_sertif_course;
-    //             $data['id_sertif'] = DB::selectOne("
-    //                 SELECT
-    //                     ID_SERTIFIKAT
-    //                 FROM
-    //                     sertifikat_activity
-    //                 WHERE
-    //                     ID_ACTIVITY = '".$data['id_activity']."'
-    //                 AND
-    //                     ID_USER = '".session('user')[0]->get('ID_USER')."'
-    //             ")->ID_SERTIFIKAT;
-    //         }
-	// 	} else {
-	// 		$data['sertif_course'] = $sertifCheck;
-	// 	}
-
-    //     //get id payment sertif
-    //     $data['id_payment_sertif'] = DB::table('payment_sertif')
-    //                                 ->where('ID_USER', session('user')[0]->get('ID_USER'))
-    //                                 ->where('ID_ACTIVITY', $data['id_activity'])
-    //                                 ->value('ID_PAYMENT_SERTIF');
-
-    //     $data['id_sertif_is_paid'] = $this->certificateModel->getSertifIsPaid($data['id_payment_sertif']);
-
-    //     //cek data is pay
-    //     $data['is_paid'] = DB::table('payment_sertif')
-    //                     ->where('ID_ACTIVITY', $data['id_activity'])
-    //                     ->where('ID_USER', session('user')[0]->get('ID_USER'))
-    //                     ->value('IS_PAY');
-
-	// 	//get nilai
-	// 	$data['nilai'] = DB::selectOne("
-	// 		SELECT
-	// 			NILAI
-	// 		FROM
-	// 			nilai_quiz
-	// 		WHERE
-	// 			ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-	// 	");
-
-	// 	// KOMENTAR
-	// 	$data['komentar'] = DB::select("
-	// 		SELECT
-	// 			tk.komentar,
-	// 			u.NAME,
-	// 			u.FOTO_PROFILE,
-	// 			tk.LOG_TIME
-	// 		FROM
-	// 			tb_komentar tk
-	// 		LEFT JOIN user u ON
-	// 			u.ID_USER = tk.ID_USER
-	// 		WHERE
-	// 			tk.ID_ACTIVITY = '" . $data['id_activity'] . "'
-	// 	");
-	// 	$data['checkout'] = $this->checkoutModel->get_all_order(session('user')[0]->get('ID_USER'));
-
-	// 	$orderData = Checkout::where(["ID_PRODUCT" => $data['id_activity'], "ID_USER" => session('user')[0]->get('ID_USER')])
-	// 		->orderBy('LOG_TIME', 'DESC')
-	// 		->first();
-
-	// 	//Final Exam
-	// 	if ($data['course']->FINAL_EXAM != null) {
-	// 		$data['final_exam'] = DB::selectOne("
-	// 			SELECT
-	// 				CODE_EXAM
-	// 			FROM
-	// 				tb_final_exam
-	// 			WHERE
-	// 				ID_ACTIVITY = ?
-	// 				AND ID_USER = ?
-	// 				AND IS_USED = 0
-	// 		", [$data['course']->FINAL_EXAM, session('user')[0]->get('ID_USER')]);
-
-	// 		$data['final_min_nilai'] = DB::selectOne("
-	// 			SELECT
-	// 				COALESCE(ic.MIN_NILAI, '80') AS MIN_NILAI
-	// 			FROM
-	// 				item_course ic
-	// 			LEFT JOIN course c ON
-	// 				c.ID_COURSE = ic.ID_COURSE
-	// 			WHERE
-	// 				c.ID_ACTIVITY =	?
-	// 		", [$data['course']->FINAL_EXAM]);
-
-	// 		$data['nilai_final_exam'] = DB::selectOne("
-	// 			SELECT
-	// 				NILAI,
-    //                 created_at
-	// 			FROM
-	// 				tb_nilai_final_exam
-	// 			WHERE
-	// 				ID_USER = ?
-	// 				AND ID_ACTIVITY = ?
-	// 			ORDER BY
-	// 				NILAI DESC
-	// 		", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
-
-	// 		$data['history_nilai_final_exam'] = DB::select("
-	// 			SELECT
-	// 				NILAI,
-	// 				created_at
-	// 			FROM
-	// 				tb_nilai_final_exam
-	// 			WHERE
-	// 				ID_USER = ?
-	// 				AND ID_ACTIVITY = ?
-	// 			ORDER BY
-	// 				created_at ASC
-	// 		", [session('user')[0]->get('ID_USER'), $data['course']->FINAL_EXAM]);
-
-	// 		$data['data_final_exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
-	// 		$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
-	// 			'NILAI' => 0
-	// 		];
-
-	// 		if(($data['nilai_final_exam']->NILAI >= $data['final_min_nilai']->MIN_NILAI) || ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))){
-    //             $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
-    //             $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-    //             $countSertifExam = DB::table('sertifikat_activity')
-    //                 ->where('ID_ACTIVITY', $data['course']->FINAL_EXAM)
-    //                 ->count() + 1;
-    //             if($completed_course == 0) {
-    //                 return 1;
-    //             }
-    //             $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['course']->ALIAS . '/ICETy/' . $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
-    //             $data_sertif_exam = array(
-    //                 "ID_USER" => session('user')[0]->get('ID_USER'),
-    //                 "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
-    //                 "NO_SERTIFIKAT" => $sertif_number_exam,
-    //                 "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-    //                 "FILE_SERTIFIKAT" => null,
-    //                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                 "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                 "DURATION" => $completed_course[0]->days_difference,
-    //                 "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
-    //                 "LOG_TIME" => date('Y-m-d H:i:s')
-    //             );
-    //             $id_sertif_exam = DB::table('sertifikat_activity')->insertGetId($data_sertif_exam);
-    //             $sertif_path_exam = $this->certificateModel->generateSertifExam(session('user')[0]->get('NAME'), $data['course']->TITLE_CERTIFICATE, $sertif_number_exam, $data['exam']->SERTIF_IMAGE, $summary_sertif[0]->SUMMARY_CERTIFICATE, $summary_sertif[0]->MODULE_CERTIFICATE, $completed_course[0]->days_difference, $data['nilai_final_exam']->created_at, $id_sertif_exam);
-    //             $data_sertif_exam = array(
-    //                 "ID_USER" => session('user')[0]->get('ID_USER'),
-    //                 "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
-    //                 "NO_SERTIFIKAT" => $sertif_number_exam,
-    //                 "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
-    //                 "FILE_SERTIFIKAT" => $sertif_path_exam,
-    //                 "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
-    //                 "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
-    //                 "DURATION" => $completed_course[0]->days_difference,
-    //                 "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
-    //                 "LOG_TIME" => date('Y-m-d H:i:s')
-    //             );
-    //             DB::table('sertifikat_activity')->where('ID_SERTIFIKAT', $id_sertif_exam)->update($data_sertif_exam);
-	// 		    $data['sertif_exam'] = (object) $data_sertif_exam;
-    //         }
-    //         else {
-    //             $data['sertif_exam'] = $sertifCheck;
-    //         }
-	// 	} else {
-	// 		$data['final_exam'] = null;
-	// 		$data['final_min_nilai'] = null;
-	// 		$data['history_nilai_final_exam'] = null;
-	// 		$data['nilai_final_exam'] = null;
-	// 		$data['data_final_exam'] = null;
-
-	// 		$data['data_final_exam'] = $data['data_final_exam'] !== null ? $data['data_final_exam'] : (object) [
-	// 			'TITLE_ACTIVITY' => 0,
-	// 			'PRICE_ACTIVITY' => 0
-	// 		];
-
-	// 		$data['nilai_final_exam'] = $data['nilai_final_exam'] !== null ? $data['nilai_final_exam'] : (object) [
-	// 			'NILAI' => 0
-	// 		];
-
-	// 		$data['final_min_nilai'] = $data['final_min_nilai'] !== null ? $data['final_min_nilai'] : (object) [
-	// 			'MIN_NILAI' => 0
-	// 		];
-	// 	}
-
-    //     $data['remedial'] = $this->finalExamModel->get_remidi_for_exam($data['course']->FINAL_EXAM);
-    //     if ($data['course']->FINAL_EXAM != null) {
-    //         $userId = session('user')[0]->get('ID_USER');
-    //         $activityId = $data['course']->FINAL_EXAM;
-
-    //         $remedial_user = DB::table('tb_remedial_user')
-    //             ->where('ID_USER', $userId)
-    //             ->where('ID_ACTIVITY', $activityId)
-    //             ->first();
-
-    //         if (!$remedial_user && $data['remedial'][0]->REMEDIAL > 0) {
-    //             $remedialUserId = DB::table('tb_remedial_user')->insertGetId([
-    //                 'ID_USER'     => $userId,
-    //                 'ID_ACTIVITY' => $activityId,
-    //                 'REMEDIAL'    => $data['remedial'][0]->REMEDIAL,
-    //                 'LOG_TIME'    => date('Y-m-d H:i:s')
-    //             ]);
-
-    //             // insert untuk log perubahan total remedial
-    //             DB::table('user_remedial_log')->insert([
-    //                 'ID_REMEDIAL'   => $remedialUserId,
-    //                 'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL,
-    //                 'LOG_TIME'      => now()
-    //             ]);
-
-    //             $remedial_user = (object) [
-    //                 'REMEDIAL' => $data['remedial'][0]->REMEDIAL
-    //             ];
-    //         }
-
-    //         $has_done_first_attempt = DB::table('tb_final_exam')
-    //         ->where('ID_USER', $userId)
-    //         ->where('ID_ACTIVITY', $activityId)
-    //         ->where('IS_USED', 1)
-    //         ->exists();
-
-    //         $cek_kode_final_exam = DB::table('tb_final_exam')
-    //             ->where('ID_ACTIVITY', $activityId)
-    //             ->where('ID_USER', $userId)
-    //             ->where('IS_USED', 0)
-    //             ->first();
-
-    //         if(!isset($log_remedial)) {
-    //             DB::table('user_remedial_log')->insert([
-    //                         'ID_REMEDIAL'   => $remedial_user->ID_REMEDIAL,
-    //                         'LOG_REMEDIAL'  => $data['remedial'][0]->REMEDIAL,
-    //                         'LOG_TIME'      => now()
-    //                     ]);
-    //         }
-
-    //         $log_remedial = null;
-    //         if(!empty($remedial_user->ID_REMEDIAL) != null){
-    //             $log_remedial = DB::table('user_remedial_log')
-    //                 ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
-    //                 ->first();
-    //         }
-    //         // dd($data['remedial'][0]->REMEDIAL , $log_remedial->LOG_REMEDIAL, $data['get_data_final_exam']->INCLUDE_COURSE == 1, !empty($remedial_user->ID_REMEDIAL) != null);
-    //         if (!$cek_kode_final_exam && $remedial_user && $remedial_user->REMEDIAL > 0 && $has_done_first_attempt) {
-    //             $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
-
-    //             DB::table('tb_final_exam')->insert([
-    //                 "ID_ACTIVITY" => $activityId,
-    //                 "ID_USER"     => $userId,
-    //                 "CODE_EXAM"   => $generatedCode,
-    //                 "IS_USED"     => 0,
-    //                 "CREATED_AT"  => date("Y-m-d H:i:s")
-    //             ]);
-
-    //             DB::table('tb_remedial_user')
-    //                 ->where('ID_USER', $userId)
-    //                 ->where('ID_ACTIVITY', $activityId)
-    //                 ->decrement('REMEDIAL');
-
-    //             $data['codeFinalExam'] = $generatedCode;
-    //             $data['isRemedialCode'] = true;
-    //         } elseif(!empty($log_remedial->LOG_REMEDIAL)){
-    //             $generatedCode = $this->GenerateCodeExam($activityId . date('Y-m-d H:i:s'));
-    //             if($data['remedial'][0]->REMEDIAL != $log_remedial->LOG_REMEDIAL && $data['get_data_final_exam']->INCLUDE_COURSE == 1 && !empty($remedial_user->ID_REMEDIAL) != null){
-
-    //                 DB::table('tb_final_exam')->insert([
-    //                     "ID_ACTIVITY" => $activityId,
-    //                     "ID_USER"     => $userId,
-    //                     "CODE_EXAM"   => $generatedCode,
-    //                     "IS_USED"     => 0,
-    //                     "CREATED_AT"  => date("Y-m-d H:i:s")
-    //                 ]);
-
-    //                 $remed = DB::table('tb_remedial_user')->insertGetId([
-    //                     'ID_USER'     => $userId,
-    //                     'ID_ACTIVITY' => $activityId,
-    //                     'REMEDIAL'    => 1,
-    //                     'LOG_TIME'    => date('Y-m-d H:i:s')
-    //                 ]);
-
-    //                 DB::table('tb_remedial_user')
-    //                 ->where('ID_REMEDIAL', $remed)
-    //                 ->where('ID_USER', $userId)
-    //                 ->where('ID_ACTIVITY', $activityId)
-    //                 ->decrement('REMEDIAL');
-
-    //                 DB::table('user_remedial_log')
-    //                     ->where('ID_REMEDIAL', $remedial_user->ID_REMEDIAL)
-    //                     ->update([
-    //                         'LOG_REMEDIAL' => $data['remedial'][0]->REMEDIAL,
-    //                         'LOG_TIME'     => now()
-    //                     ]);
-    //                 $data['codeFinalExam'] = $generatedCode;
-    //                 $data['isRemedialCode'] = true;
-    //             }
-    //             $data['codeFinalExam'] = false;
-    //             $data['isRemedialCode'] = true;
-    //         }elseif ($cek_kode_final_exam) {
-    //             $data['codeFinalExam'] = $cek_kode_final_exam->CODE_EXAM;
-    //             $data['isRemedialCode'] = false;
-    //         } else {
-    //             $data['codeFinalExam'] = null;
-    //             $data['isRemedialCode'] = false;
-    //         }
-    //     }
-
-	// 	if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
-	// 		return view('template.header', $data) .
-	// 			view('template_guest.course.course_detail_expired', $data) .
-	// 			view('template.footer', $data);
-	// 	}
-
-	// 	return view('template.header', $data) .
-	// 		view('template_guest.course.course_detail', $data) .
-	// 		view('template.footer', $data);
-	// }
-
 	public function detailCourse()
     {
         if (session('user') == null) {
@@ -680,11 +74,11 @@ class CourseGuest extends Controller
         $data = $this->initializeCourseData();
         $this->updateCourseProgress($data);
         $this->handleCourseCompletion($data);
-        $this->handleCertificateGeneration($data);
+        // $this->handleCertificateGeneration($data);
         $this->handleFinalExamLogic($data);
         $this->handleRemedialLogic($data);
         $this->loadAdditionalData($data);
-
+        // dd($data);
         return $this->renderCourseView($data);
     }
 
@@ -709,20 +103,20 @@ class CourseGuest extends Controller
 
         $data['item_course'] = $this->courseModel->get_item_course($condition);
         $data['testimoni'] = $this->courseModel->getTesti($data['id_activity'], session('user')[0]->get('ID_USER'));
-
+        $this->loadPaymentData($data);
         return $data;
     }
 
     private function updateCourseProgress(&$data)
     {
-        $data['date_sertif_course'] = DB::select("
-            SELECT o.DATE_COMPLETED
-            FROM `order` o
-            LEFT JOIN activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
-            LEFT JOIN user u ON u.ID_USER = o.ID_USER
-            WHERE a.ID_ACTIVITY = '{$data['id_activity']}'
-            AND u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
-        ");
+        // $data['date_sertif_course'] = DB::select("
+        //     SELECT o.DATE_COMPLETED
+        //     FROM `order` o
+        //     LEFT JOIN activity a ON a.ID_ACTIVITY = o.ID_PRODUCT
+        //     LEFT JOIN user u ON u.ID_USER = o.ID_USER
+        //     WHERE a.ID_ACTIVITY = '{$data['id_activity']}'
+        //     AND u.ID_USER = '" . session('user')[0]->get('ID_USER') . "'
+        // ");
 
         $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $data['id_activity']);
 
@@ -825,25 +219,50 @@ class CourseGuest extends Controller
         DB::table('tb_final_exam')->insert($data_final_exam);
     }
 
-    private function handleCertificateGeneration(&$data)
+    public function handleCertificateGeneration(Request $request)
     {
-        $condition_all_mapping = "ID_USER = '" . session('user')[0]->get('ID_USER') . "'AND ID_ACTIVITY = '" . $data['id_activity'] . "'";
+        $id_activity = $request->input('id_activity');
+        $userId = session('user')[0]->get('ID_USER');
 
-        $sertifCheck = DB::selectOne("
-            SELECT ID_SERTIFIKAT, FILE_SERTIFIKAT
-            FROM sertifikat_activity
-            WHERE $condition_all_mapping
-        ");
+        $data = [
+            'id_activity' => $id_activity,
+            'course' => $this->courseModel->get_course($id_activity),
+        ];
 
-        $data['id_sertif'] = null;
-
-        if ($data['tot_proggress'] == 100 && (empty($sertifCheck) || empty($sertifCheck->FILE_SERTIFIKAT))) {
-            $this->generateCourseCertificate($data, $sertifCheck);
-        } else {
-            $data['sertif_course'] = $sertifCheck;
-        }
-
+        // Ambil progress
+        $condition_all_mapping = "ID_USER = '$userId' AND ID_ACTIVITY = '$id_activity'";
+        $data['data_all_mapping'] = DB::select("SELECT * FROM mapping_course WHERE $condition_all_mapping");
+        $data['last_item'] = DB::select("SELECT * FROM mapping_course WHERE $condition_all_mapping AND STATUS = 1 ORDER BY ID_ITEM DESC");
+        $data['tot_proggress'] = (count($data['last_item']) == count($data['data_all_mapping'])) ? 100 : 0;
         $this->loadPaymentData($data);
+        if ($data['tot_proggress'] == 100) {
+            // cek sertif sudah ada atau belum
+            $sertifCheck = DB::selectOne("
+                SELECT ID_SERTIFIKAT, FILE_SERTIFIKAT
+                FROM sertifikat_activity
+                WHERE $condition_all_mapping
+            ");
+
+            if (!empty($sertifCheck) && !empty($sertifCheck->FILE_SERTIFIKAT)) {
+                DB::table('payment_sertif')
+                    ->where('ID_USER', $userId)
+                    ->where('ID_ACTIVITY', $id_activity)
+                    ->update([
+                        'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
+                ]);
+                return response()->json([
+                    'status' => 'exists',
+                    'file'   => url($sertifCheck->FILE_SERTIFIKAT)
+                ]);
+            }
+            $this->generateCourseCertificate($data, $sertifCheck);
+            return response()->json([
+                'status' => 'generated',
+                'file'   => url($data['sertif_course']->FILE_SERTIFIKAT)
+            ]);
+        }
+        return response()->json(['status' => 'failed', 'message' => 'Progress belum 100%']);
+
     }
 
     private function generateCourseCertificate(&$data, $sertifCheck)
@@ -904,6 +323,11 @@ class CourseGuest extends Controller
 
     private function updateExistingCertificate(&$data, $id_sertif, $sertif_number_course, $institusi_name, $completed_course, $summary_sertif)
     {
+        if (!empty($data['date_sertif_course'])) {
+            $dateCompleted = $data['date_sertif_course'][0]->DATE_COMPLETED;
+        } else {
+            $dateCompleted = now(); // fallback default tanggal hari ini
+        }
         $sertif_path_course = $this->certificateModel->generateCourseSekolah(
             session('user')[0]->get('NAME'),
             $data['course']->TITLE_CERTIFICATE,
@@ -912,7 +336,7 @@ class CourseGuest extends Controller
             $summary_sertif[0]->SUMMARY_CERTIFICATE,
             $summary_sertif[0]->MODULE_CERTIFICATE,
             $completed_course[0]->days_difference,
-            $data['date_sertif_course'][0]->DATE_COMPLETED,
+            date('d F Y', strtotime($dateCompleted)),
             $id_sertif,
             $institusi_name[0]->UNIV
         );
@@ -928,6 +352,12 @@ class CourseGuest extends Controller
 
     private function createNewCertificate(&$data, $sertif_number_course, $institusi_name, $completed_course, $summary_sertif)
     {
+        if (!empty($data['date_sertif_course'])) {
+            $dateCompleted = $data['date_sertif_course'][0]->DATE_COMPLETED;
+        } else {
+            $dateCompleted = now(); // fallback default tanggal hari ini
+        }
+
         $data_sertif_course = [
             "ID_USER" => session('user')[0]->get('ID_USER'),
             "ID_ACTIVITY" => $data['id_activity'],
@@ -938,7 +368,7 @@ class CourseGuest extends Controller
             "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
             "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
             "DURATION" => $completed_course[0]->days_difference,
-            "DATE_COMPLETED" => date('d F Y', strtotime($data['date_sertif_course'][0]->DATE_COMPLETED)),
+            "DATE_COMPLETED" => date('d F Y', strtotime($dateCompleted)),
             "LOG_TIME" => date('Y-m-d H:i:s')
         ];
 
@@ -952,7 +382,7 @@ class CourseGuest extends Controller
             $summary_sertif[0]->SUMMARY_CERTIFICATE,
             $summary_sertif[0]->MODULE_CERTIFICATE,
             $completed_course[0]->days_difference,
-            $data['date_sertif_course'][0]->DATE_COMPLETED,
+            $dateCompleted,
             $id_sertif,
             $institusi_name[0]->UNIV
         );
@@ -983,7 +413,7 @@ class CourseGuest extends Controller
 
         if ($data['course']->FINAL_EXAM != null) {
             $this->loadFinalExamData($data, $finalExamModel);
-            $this->handleFinalExamCertificate($data, $finalExamModel);
+            // $this->handleFinalExamCertificate($data, $finalExamModel);
         } else {
             $this->setDefaultFinalExamData($data);
         }
@@ -1031,51 +461,77 @@ class CourseGuest extends Controller
         $data['data_final_exam'] = (object) ['TITLE_ACTIVITY' => 0, 'PRICE_ACTIVITY' => 0];
     }
 
-    private function handleFinalExamCertificate(&$data, $finalExamModel)
-    {
-        $condition_all_mapping = "ID_USER = '" . session('user')[0]->get('ID_USER') . "'AND ID_ACTIVITY = '" . $data['id_activity'] . "'";
-        $sertifCheck = DB::selectOne("
-            SELECT ID_SERTIFIKAT, FILE_SERTIFIKAT
-            FROM sertifikat_activity
-            WHERE $condition_all_mapping
-        ");
+    public function handleFinalExamCertificate(Request $request){
+        $id_activity = $request->input('id_activity');
+        $userId = session('user')[0]->get('ID_USER');
 
-        if (($data['nilai_final_exam']->NILAI >= $data['final_min_nilai']->MIN_NILAI) ||
-            ($data['nilai_final_exam']->NILAI == 100 && empty($sertifCheck))) {
-            $this->generateFinalExamCertificate($data, $finalExamModel);
-        } else {
-            $data['sertif_exam'] = $sertifCheck;
+        $data = [
+            'id_activity' => $id_activity,
+            'final_exam' => $this->finalExamModel->get_final_exam($id_activity),
+        ];
+
+        // ambil nilai ujian akhir
+        $exam = DB::selectOne("
+            SELECT * FROM tb_nilai_final_exam
+            WHERE ID_USER = '$userId' AND ID_ACTIVITY = '".$data['final_exam']->ID_ACTIVITY."'
+            ORDER BY CREATED_AT DESC
+            LIMIT 1
+        ");
+        if ($exam && $exam->NILAI >= 70) { // misal syarat lulus >= 70
+            $sertifCheck = DB::selectOne("
+                SELECT ID_SERTIFIKAT, FILE_SERTIFIKAT
+                FROM sertifikat_activity
+                WHERE ID_USER = '$userId' AND ID_ACTIVITY = '".$data['final_exam']->ID_ACTIVITY."'
+            ");
+            if (!empty($sertifCheck) || !empty($sertifCheck->FILE_SERTIFIKAT)) {
+                return response()->json([
+                    'status' => 'exists',
+                    'file'   => url($sertifCheck->FILE_SERTIFIKAT)
+                ]);
+            }
+            $this->generateFinalExamCertificate($data);
+            return response()->json([
+                'status' => 'generated',
+                'file'   => url($data['sertif_exam']->FILE_SERTIFIKAT)
+            ]);
         }
+
+        return response()->json(['status' => 'failed', 'message' => 'Ujian akhir belum lulus']);
     }
 
-    private function generateFinalExamCertificate(&$data, $finalExamModel)
+    private function generateFinalExamCertificate(&$data)
     {
-        $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $data['id_activity']);
-        $summary_sertif = $this->activityModel->get_summary_sert_activity($data['id_activity']);
-
+        $id_course_completed = DB::selectOne("
+            SELECT ID_ACTIVITY
+            FROM course
+            WHERE FINAL_EXAM = '".$data['id_activity']."'
+        ");
+        $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $id_course_completed->ID_ACTIVITY);
+        $summary_sertif = $this->activityModel->get_summary_sert_activity($id_course_completed->ID_ACTIVITY);
+        $nilai = $this->finalExamModel->get_nilai_for_sertif($data['id_activity'], session('user')[0]->get('ID_USER'));
         if ($completed_course == 0) {
             return 1;
         }
-
-        $data['exam'] = $finalExamModel->get_final_exam($data['course']->FINAL_EXAM);
+        // dd($summary_sertif);
+        $data['exam'] = $this->finalExamModel->get_final_exam($data['id_activity']);
         $bln = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
         $countSertifExam = DB::table('sertifikat_activity')
-            ->where('ID_ACTIVITY', $data['course']->FINAL_EXAM)
+            ->where('ID_ACTIVITY', $data['id_activity'])
             ->count() + 1;
 
-        $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['course']->ALIAS . '/ICETy/' .
-                            $bln[(date('m', strtotime($data['course']->DATE_START)) - 1)] . '/' . date('Y');
+        $sertif_number_exam = $countSertifExam . '/' . 'FINAL-EXAM' . '/' . $data['final_exam']->ALIAS . '/ICETy/' .
+                            $bln[(date('m', strtotime($data['final_exam']->DATE_START)) - 1)] . '/' . date('Y');
 
         $data_sertif_exam = [
             "ID_USER" => session('user')[0]->get('ID_USER'),
-            "ID_ACTIVITY" => $data['course']->FINAL_EXAM,
+            "ID_ACTIVITY" => $data['id_activity'],
             "NO_SERTIFIKAT" => $sertif_number_exam,
-            "JENIS_SERTIFIKAT" => $data['course']->TYPE_ACTIVITY,
+            "JENIS_SERTIFIKAT" => $data['final_exam']->TYPE_ACTIVITY,
             "FILE_SERTIFIKAT" => null,
             "SUMMARY_CERTIFICATE" => $summary_sertif[0]->SUMMARY_CERTIFICATE,
             "INFO_CERTIFICATE" => $summary_sertif[0]->MODULE_CERTIFICATE,
             "DURATION" => $completed_course[0]->days_difference,
-            "DATE_COMPLETED" => date('d F Y', strtotime($data['nilai_final_exam']->created_at)),
+            "DATE_COMPLETED" => date('d F Y', strtotime($nilai->created_at)),
             "LOG_TIME" => date('Y-m-d H:i:s')
         ];
 
@@ -1083,13 +539,13 @@ class CourseGuest extends Controller
 
         $sertif_path_exam = $this->certificateModel->generateSertifExam(
             session('user')[0]->get('NAME'),
-            $data['course']->TITLE_CERTIFICATE,
+            $summary_sertif[0]->TITLE_CERTIFICATE,
             $sertif_number_exam,
             $data['exam']->SERTIF_IMAGE,
             $summary_sertif[0]->SUMMARY_CERTIFICATE,
             $summary_sertif[0]->MODULE_CERTIFICATE,
             $completed_course[0]->days_difference,
-            $data['nilai_final_exam']->created_at,
+            $nilai->created_at,
             $id_sertif_exam
         );
 
@@ -1366,31 +822,23 @@ class CourseGuest extends Controller
         $userId = session('user')[0]->get('ID_USER');
 
         $course = $this->courseModel->get_course($request->input('id_activity'));
-        $sertifCheck = DB::table('sertifikat_activity')->where('ID_ACTIVITY', $idActivity)->where('ID_USER', $userId)->first();
 
-        if (!empty($sertifCheck)) {
-            $idPaymentSertif = 'PAY_SERTIF_' . $sertifCheck->ID_SERTIFIKAT;
-            $statusFirst = 1;
+            if ($course->IS_SERTIF_PAID == 1) {
+                // $dataPaySertif = [
+                //     'ID_PAYMENT_SERTIF' => $idPayment,
+                //     'ID_SERTIFIKAT' => null,
+                //     'ID_USER' => $userId,
+                //     'ID_PAY' => null,
+                //     'IS_PAY' => 0,
+                //     'ID_ACTIVITY' => $idActivity,
+                //     'TITLE_ACTIVITY' => $course->TITLE_ACTIVITY
+                // ];
 
-            if ($course->IS_SERTIF_PAID == 1 && $statusFirst == 1) {
-                $dataPaySertif = [
-                    'ID_PAYMENT_SERTIF' => $idPaymentSertif,
-                    'ID_SERTIFIKAT' => $sertifCheck->ID_SERTIFIKAT,
-                    'ID_USER' => $userId,
-                    'ID_PAY' => null,
-                    'IS_PAY' => 0,
-                    'ID_ACTIVITY' => $idActivity,
-                    'TITLE_ACTIVITY' => $course->TITLE_ACTIVITY
-                ];
-
-                if (!DB::table('payment_sertif')->where('ID_PAYMENT_SERTIF', $idPaymentSertif)->exists()) {
-                    DB::table('payment_sertif')->insert($dataPaySertif);
-                }
+                // if (!DB::table('payment_sertif')->where('ID_PAYMENT_SERTIF', $idPayment)->exists()) {
+                //     DB::table('payment_sertif')->insert($dataPaySertif);
+                // }
             }
             return response()->noContent();
-        }
-
-        return redirect()->back()->with('err_msg', 'Sertifikat tidak ditemukan.');
     }
 
 	public function getMappingCourse()
