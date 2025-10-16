@@ -20,6 +20,16 @@ class GuestController extends Controller
 	// 	// error_reporting(0);
 	// }
 
+    public function landing(){
+        return view('landing_page.header').
+            view('landing_page.landing_page').
+            view('landing_page.footer');
+    }
+    public function about_landing(){
+        return view('landing_page.header').
+            view('landing_page.about').
+            view('landing_page.footer');
+    }
 	public function index()
 	{
 		$data['title'] = 'ICETy';
