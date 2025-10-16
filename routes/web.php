@@ -27,13 +27,15 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::get('/', 'GuestController@index');
+Route::get('/', 'GuestController@landing');
+Route::get('/about', 'GuestController@about_landing');
+// Route::get('/', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 
 // Route::get('/store', 'GuestController@store');
 Route::get('/store', 'guest_controller\CourseGuest@index');
-Route::get('/about', 'GuestController@about');
-Route::get('/blog', 'GuestController@blog');
+// Route::get('/about', 'GuestController@about');
+// Route::get('/blog', 'GuestController@blog');
 
 //COURSE GUEST
 Route::get('course', 'guest_controller\CourseGuest@index');
