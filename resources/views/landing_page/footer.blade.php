@@ -24,9 +24,9 @@
             <div class="col-lg-3 col-md-6 text-center text-lg-start" >
                 <h6 class="fw-bold mb-3">Explore</h6>
                 <ul class="list-unstyled mb-0">
-                    <li><a href="/landing_page" class="text-white text-decoration-none d-block mb-2">Home</a></li>
+                    <li><a href="/" class="text-white text-decoration-none d-block mb-2">Home</a></li>
                     <li><a href="/about_landing" class="text-white text-decoration-none d-block">About</a></li>
-                    <li><a href="/landing_page" class="text-white text-decoration-none d-block mb-2">Blog</a></li>
+                    <li><a href="/" class="text-white text-decoration-none d-block mb-2">Blog</a></li>
                 </ul>
             </div>
 

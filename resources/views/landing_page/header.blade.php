@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="ICETy - Upskill Your Current Career">
+    <meta name="keywords"
+        content="education,lms,online,tutor,e learning,icety">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
+
     {{-- <meta name="author" content="TemplateMo"> --}}
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
@@ -27,9 +29,21 @@ TemplateMo 569 Edu Meeting
 https://templatemo.com/tm-569-edu-meeting
 
 -->
+    {{-- template lama
+    <!-- bootstrap.min css -->
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/bootstrap.css">
+    <!-- animate.css -->
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/animate-css/animate.css">
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/animated-headline/animated-headline.css">
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/owl/assets/owl.carousel.min.css">
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/owl/assets/owl.theme.default.min.css">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/woocomerce.css">
+    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/style.css"> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
-    
+
 
 </head>
 <body>
@@ -73,7 +87,7 @@ https://templatemo.com/tm-569-edu-meeting
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li class="scroll-to-section"><a href="/landing_page" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
                             <li><a href="/about">About</a></li>
                             <li class="has-sub">
                                 <a href="javascript:void(0)">Partnership</a>
