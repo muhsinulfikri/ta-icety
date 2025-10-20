@@ -6,7 +6,7 @@
 
     <!-- ***** Main Banner Area Start ***** -->
     <section class="section main-banner" id="top" data-section="section1">
-        <video autoplay muted loop id="bg-video">
+        <video autoplay muted loop playsinline id="bg-video">
             <source src="{{ asset('assets_landing') }}/assets/images/highlight_icety.mp4" type="video/mp4" />
         </video>
 
@@ -118,7 +118,7 @@
         }).mount();
     </script>
 
-    <section class="py-7" style="padding: 20px;background-image: url('<?= asset('assets_landing')?>/assets/images/apply-bg.jpg')">
+    <section class="py-7 d-flex justify-content-center align-items-center text-center" style="padding: 20px;background-image: url('<?= asset('assets_landing')?>/assets/images/apply-bg.jpg'); min-height: 100vh;">
         <div class="container">
             <div class="text-center fs-2 fw-semibold text-white mb-5">{{ __('home.txt_testimoni') }}</div>
 
@@ -220,42 +220,42 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="section-heading">
+                    <div class="section-heading text-center" >
                         <h2>Thanks For Our Supporter</h2>
                     </div>
                 </div>
                 <div class="col-lg-12">
                     <div class="owl-courses-item owl-carousel">
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/2.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/2.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/1.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/1.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/3.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/3.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/4.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/4.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/5.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/5.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/6.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/6.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/7.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/7.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
-                        <div class="item">
-                            <img src="{{ asset('icety_assets') }}/sponsor/8.svg" class="img-fluid">
+                        <div class="item" style="padding: 5px;">
+                            <img src="{{ asset('icety_assets') }}/sponsor/8.svg" class="img-fluid" style="max-width: 120px; height: auto;">
 
                         </div>
                     </div>
@@ -317,17 +317,73 @@
     </section>
 
     <style>
+        .accordion {
+            --bs-accordion-btn-bg: none;
+        }
         .accordion-item {
-        margin-bottom: 1rem;
+            border: 1px solid black;
+            border-radius: calc(0.375rem - 1px) !important;
+            margin-bottom: 1rem;
+        }
+        .accordion-collapse {
+    overflow: visible !important;
+}
+
+        .accordion-button {
+            border-radius: calc(0.375rem - 1px) !important;
         }
 
-        .accordion .accordion-collapse {
-        overflow: visible !important;
+        .accordion-item:not(:first-of-type) {
+            border-top: 1px solid black !important;
+            border-radius: calc(0.375rem - 1px) !important;
+        }
+
+        .accordion-item.accordion-button {
+            border-radius: calc(0.375rem - 1px) !important;
+        }
+
+        .accordion-item:first-of-type .accordion-button.collapsed {
+            border-radius: calc(0.375rem - 1px) !important;
+        }
+
+        .accordion-item .accordion-button.collapsed {
+            border-radius: calc(0.375rem - 1px) !important;
+        }
+
+        .accordion-item:last-of-type .accordion-button.collapsed {
+            border-radius: calc(0.375rem - 1px) !important;
+        }
+
+        .accordion-button:hover {
+            background-color: white !important;
+            box-shadow: 3px 3px 5px rgb(0 0 0 / 50%) !important;
+        }
+
+        .accordion-button:focus {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .accordion-button:not(.collapsed) {
+            color: black !important;
+            background-color: white !important;
+            box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color) !important;
+        }
+
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+            transform: var(--bs-accordion-btn-icon-transform) !important;
+        }
+
+        .accordion-button::after {
+            background-image: url("<?= asset('icety_assets') ?>/arrow-up.svg") !important;
+            --bs-accordion-btn-icon-width: 2rem !important;
         }
     </style>
 
-    <section class="py-7">
-    <div class="container" style="padding: 30px">
+    <section class="py-7 d-flex align-items-center" style="min-height: 100vh">
+    <div class="container">
         <div class="text-center fs-2 fw-semibold text-black mb-5">{{ __('home.txt_faq') }}</div>
 
         <div>

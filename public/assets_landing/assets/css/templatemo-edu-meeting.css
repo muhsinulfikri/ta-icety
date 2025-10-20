@@ -888,7 +888,7 @@ upcoming meetings
 */
 
 section.upcoming-meetings {
-  background-image: url(../images/benner_2.jpg);
+  /* background-image: url(../images/benner_2.jpg); */
   background-position: center center;
   background-attachment: fixed;
   background-repeat: no-repeat;
