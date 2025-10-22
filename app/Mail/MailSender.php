@@ -20,6 +20,6 @@ class MailSender extends Mailable
     }
     public function build()
     {
-        return $this->from('dbi.icety.server@gmail.com', 'ICETy Official')->view('template_file.another_mail_template');
+        return $this->from('icety-noreply@tagame.id', 'ICETy Official')->view('template_file.another_mail_template');
     }
 }
