@@ -94,7 +94,7 @@
 
                 <div>
                     <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                        @if (!empty($cek_course_user))
+                        @if ($cek_course_user[0]->DATE_PAY != null)
                             <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
                                 class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                 See Course
@@ -111,7 +111,7 @@
                             </button>
                         @endif
                     <?php } else if (empty($course->REQUIREMENT)) { ?>
-                        @if (!empty($cek_course_user))
+                        @if ($cek_course_user[0]->DATE_PAY != null)
                             <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
                                 class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                 See Course
@@ -221,7 +221,7 @@
                     @endif
                     <div>
                         <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                            @if (!empty($cek_course_user))
+                            @if ($cek_course_user[0]->DATE_PAY != null)
                                 <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
                                     class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                     See Course
@@ -238,7 +238,7 @@
                                 </button>
                             @endif
                         <?php } else if (empty($course->REQUIREMENT)) { ?>
-                            @if (!empty($cek_course_user))
+                            @if ($cek_course_user[0]->DATE_PAY != null)
                                 <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
                                     class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
                                     See Course
