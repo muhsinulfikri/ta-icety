@@ -873,7 +873,8 @@ class CourseGuest extends Controller
 			'quiz' => 0
 		);
         $data['cek_course_user'] = DB::select("
-            D_USER,
+            SELECT
+                ID_USER,
                 ID_PRODUCT,
                 ID_PAY
             FROM
