@@ -873,21 +873,17 @@ class CourseGuest extends Controller
 			'quiz' => 0
 		);
         $data['cek_course_user'] = DB::select("
-            SELECT
-                o.ID_USER,
-                o.ID_PRODUCT,
-                o.ID_PAY,
-                p.DATE_PAY
+            D_USER,
+                ID_PRODUCT,
+                ID_PAY
             FROM
-                `order` o
-            LEFT JOIN payment p ON o.ID_PAY = p.ID_PAY
+                `order`
             WHERE
-                o.ID_USER = '".$data_user."'
+                ID_USER = '".$data_user."'
             AND
-                o.ID_PRODUCT = '".$id_activity."'
+                ID_PRODUCT = '".$id_activity."'
             AND
-                o.ID_PAY IS NOT NULL
-            AND p.ID_PAY IS NOT NULL
+                ID_PAY IS NOT NULL
         ");
 		foreach ($data_itemCourse as $item) {
 			if ($item->TYPE == 1) {
