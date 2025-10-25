@@ -1,9 +1,20 @@
+<style>
+    @media (max-width: 576px) {
+        .col-lg-3 img[alt=""] {
+            max-width: 120px !important;
+        }
+        .col-lg-3 .d-flex img {
+            width: 24px !important;
+        }
+    }
+</style>
+
 <section class="contact-us py-5 text-white" style="background-color: #680706;">
     <div class="container">
         <div class="row gy-4">
             <!-- Column 1: Logo + Social -->
             <div class="col-lg-3 col-md-6 text-center text-lg-start pe-lg-5">
-                <img src="{{ asset('icety_assets/logo-footer.svg') }}" alt="">
+                <img src="{{ asset('icety_assets/logo-footer.svg') }}" alt="" class="img-fluid" style="max-width: 180px;">
                 <div class="d-flex justify-content-center justify-content-lg-start gap-3 mt-3 flex-wrap">
                     <a href="https://www.instagram.com/icetystudio/" target="_blank">
                         <img src="{{ asset('icety_assets/logo-ig.svg') }}" width="30" alt="Instagram">
@@ -74,7 +85,7 @@
 
 <!-- Scripts -->
 <script src="{{ asset('assets_landing')}}/vendor/jquery/jquery.min.js"></script>
-<script src="{{ asset('assets_landing')}}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('assets_landing')}}/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script src="{{ asset('assets_landing')}}/assets/js/isotope.min.js"></script>
 <script src="{{ asset('assets_landing')}}/assets/js/owl-carousel.js"></script>
 <script src="{{ asset('assets_landing')}}/assets/js/lightbox.js"></script>
@@ -82,19 +93,6 @@
 <script src="{{ asset('assets_landing')}}/assets/js/video.js"></script>
 <script src="{{ asset('assets_landing')}}/assets/js/slick-slider.js"></script>
 <script src="{{ asset('assets_landing')}}/assets/js/custom.js"></script>
-
-
-<!-- ICETy Scripts -->
-<script src="{{ asset('assets_new') }}/vendors/bootstrap/popper.min.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/bootstrap/bootstrap.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/counterup/waypoint.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/counterup/jquery.counterup.min.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/owl/owl.carousel.min.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/isotope/jquery.isotope.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/isotope/imagelaoded.min.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/animated-headline/animated-headline.js"></script>
-<script src="{{ asset('assets_new')}}/vendors/magnific-popup/jquery.magnific-popup.min.js"></script>
-<script src="{{ asset('assets_new')}}/js/script.js"></script>
 
 <script>
     function addCart(bodyParam) {

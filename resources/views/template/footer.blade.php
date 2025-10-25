@@ -86,7 +86,7 @@ use Illuminate\Support\Facades\Request;
                     <div class="footer-widget mb-5 mb-xl-0 pe-0 pe-xl-7" style="width: fit-content;float: inline-end;padding-right: 50px;">
                         <h5 class="widget-title">{{ __('footer.txt_explore') }}</h5>
                         <ul class="list-unstyled footer-links footer-links-1">
-                            <li><a href="<?= url('') ?>">{{ __('footer.txt_home') }}</a></li>
+                            <li><a href="<?= url('/home') ?>">{{ __('footer.txt_home') }}</a></li>
                             <li><a href="<?= url('/store#course-section') ?>">{{ __('footer.txt_course') }}</a></li>
                             <li><a href="<?= url('/store#course-section') ?>">{{ __('footer.txt_event') }}</a></li>
                             <li><a href="<?= url('/about') ?>">{{ __('footer.txt_about') }}</a></li>

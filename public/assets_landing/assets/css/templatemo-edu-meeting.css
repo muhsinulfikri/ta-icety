@@ -671,6 +671,7 @@ header
 
 @media (min-width: 767px) {
   .header-area .main-nav .nav {
+    background-color: #AD0A0B;
     display: flex !important;
   }
 }
@@ -773,11 +774,12 @@ services
 */
 
 .services {
-  margin-top: -135px;
-  position: absolute;
+  position: relative;
+  margin-top: -50px; /* sedikit naik */
+  margin-bottom: 10px; /* jarak bawah diperkecil */
+  z-index: 2;
   width: 100%;
 }
-
 .services .item {
   background-image: url(../images/service-item-bg.jpg);
   background-repeat: no-repeat;
@@ -888,13 +890,12 @@ upcoming meetings
 */
 
 section.upcoming-meetings {
-  /* background-image: url(../images/benner_2.jpg); */
   background-position: center center;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  padding-top: 230px;
-  padding-bottom: 110px;
+  padding-top: 80px; /* lebih rapat dari sebelumnya */
+  padding-bottom: 100px;
 }
 
 section.upcoming-meetings .section-heading {
@@ -1073,54 +1074,7 @@ section.apply-now .item p {
   margin-bottom: 20px;
 }
 
-.accordions {
-  border-radius: 20px;
-  padding: 40px;
-  background-color: #fff;
-  margin-left: 45px;
-}
-.accordions .accordion {
-  border-bottom: 1px solid #eee;
-}
-.accordions .last-accordion {
-  border-bottom: none;
-}
-.accordion-head {
-  padding: 20px;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1f272b;
-  cursor: pointer;
-  transition: color 200ms ease-in-out;
-  border-bottom: 1px solid #fff;
-}
-@media screen and (min-width: 768px) {
-  .accordion-head {
-    padding: 1rem;
-    font-size: 1.2rem;
-  }
-}
-.accordion-head .icon {
-  float: right;
-  transition: transform 200ms ease-in-out;
-}
-.accordion-head.is-open {
-  color: #f5a425;
-  border-bottom: none;
-}
-.accordion-head.is-open .icon {
-  transform: rotate(45deg);
-}
-.accordion-body {
-  overflow: hidden;
-  height: 0;
-  transition: height 300ms ease-in-out;
-  border-bottom: 1px solid #fff;
-}
-.accordion-body > .content {
-  padding: 20px;
-  padding-top: 0;
-}
+
 
 
 /*
@@ -1527,7 +1481,7 @@ upcoming meetings page
 */
 
 section.meetings-page {
-  background-image: url(../images/benner_2.jpg);
+  /* background-image: url(../images/benner_2.jpg); */
   background-position: center center;
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -1815,11 +1769,13 @@ responsive
   }
 
   .services {
-    margin-top: 60px;
+    margin-top: -20px; /* sedikit lebih naik di HP */
+    margin-bottom: 5px;
   }
 
   section.upcoming-meetings {
-    padding-top: 400px;
+    padding-top: 30px; /* sebelumnya 60px → lebih rapat */
+    padding-bottom: 70px; /* sedikit dikurangi juga */
   }
 
   section.upcoming-meetings .categories {

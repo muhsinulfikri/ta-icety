@@ -15,5 +15,6 @@ return[
     'txt_umum' => 'Umum',
     'txt_pemerintah' => 'Institusi Pemerintah',
     'txt_pendidikan' => 'Institusi Pendidikan',
-    'txt_nirlaba' => 'Organisasi Nirlaba'
+    'txt_nirlaba' => 'Organisasi Nirlaba',
+    'txt_captcha_reg' => 'Harap selesaikan verifikasi keamanan sebelum Register!'
 ];

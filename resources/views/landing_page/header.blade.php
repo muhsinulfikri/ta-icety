@@ -19,6 +19,7 @@
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" href="{{ asset('assets_landing') }}/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="{{ asset('assets_landing') }}/assets/css/fix.css">
     <link rel="stylesheet" href="{{ asset('assets_landing') }}/assets/css/templatemo-edu-meeting.css">
     <link rel="stylesheet" href="{{ asset('assets_landing') }}/assets/css/owl.css">
     <link rel="stylesheet" href="{{ asset('assets_landing') }}/assets/css/lightbox.css">
@@ -29,18 +30,6 @@ TemplateMo 569 Edu Meeting
 https://templatemo.com/tm-569-edu-meeting
 
 -->
-    {{-- template lama
-    <!-- bootstrap.min css -->
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/bootstrap.css">
-    <!-- animate.css -->
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/animate-css/animate.css">
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/animated-headline/animated-headline.css">
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/owl/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/vendors/owl/assets/owl.theme.default.min.css">
-
-    <!-- Main Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/woocomerce.css">
-    <link rel="stylesheet" href="{{ asset('assets_new') }}/css/style.css"> --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
 
@@ -88,7 +77,8 @@ https://templatemo.com/tm-569-edu-meeting
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
                             <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
-                            <li><a href="/about">About</a></li>
+                            <li><a href="/about-icety">About</a></li>
+                            <li><a href="/store">Courses</a></li>
                             <li class="has-sub">
                                 <a href="javascript:void(0)">Partnership</a>
                                 <ul class="sub-menu">
@@ -97,6 +87,7 @@ https://templatemo.com/tm-569-edu-meeting
                                 </ul>
                             </li>
                             <li class="scroll-to-section"><a href="">Blog</a></li>
+                            <li class="scroll-to-section"><a href="/login">Login</a></li>
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
