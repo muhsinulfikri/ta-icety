@@ -371,12 +371,23 @@ var captcha = sliderCaptcha({
     // }, 500);
       setTimeout(function () {
         //   alert('Your captcha is successfully verified.');
-          document.getElementById('card-captcha').style.display = 'none';
-            document.getElementById('btn-login').disabled = false;
-            document.getElementById('checkmark').style.display = 'block';
-          captcha.reset();
-       }, 1000);
-    },
+        const cardCaptcha = document.getElementById('card-captcha');
+        const btnLogin = document.getElementById('btn-login');
+        const btnRegister = document.getElementById('btn-register');
+        const checkmark = document.getElementById('checkmark');
+
+        // Sembunyikan captcha card
+        if (cardCaptcha) cardCaptcha.style.display = 'none';
+
+        // Aktifkan tombol yang tersedia
+        if (btnLogin) btnLogin.disabled = false;
+        if (btnRegister) btnRegister.disabled = false;
+
+    // Tampilkan tanda centang
+        if (checkmark) checkmark.style.display = 'block';
+            captcha.reset();
+        }, 1000);
+        },
   setSrc: function () {
        //return 'https://picsum.photos/' + Math.round(Math.random() * 136) + '.jpg';
   },

@@ -325,9 +325,6 @@
             border-radius: calc(0.375rem - 1px) !important;
             margin-bottom: 1rem;
         }
-        .accordion-collapse {
-    overflow: visible !important;
-}
 
         .accordion-button {
             border-radius: calc(0.375rem - 1px) !important;
@@ -383,73 +380,70 @@
     </style>
 
     <section class="py-7 d-flex align-items-center" style="min-height: 100vh">
-    <div class="container">
-        <div class="text-center fs-2 fw-semibold text-black mb-5">{{ __('home.txt_faq') }}</div>
-
-        <div>
-            <div class="accordion" id="faqAccordion">
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="one">
-                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colOne" aria-expanded="false" aria-controls="colOne">
-                            {{ __('home.txt_faq_1') }}
-                        </button>
-                    </h2>
-                    <div id="colOne" class="accordion-collapse collapse" aria-labelledby="one">
-                        <div class="accordion-body">
-                            {{ __('home.txt_answer_1') }}
+        <div class="container">
+            <div class="text-center fs-2 fw-semibold text-black mb-5">{{ __('home.txt_faq') }}</div>
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="one">
+                            <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colOne" aria-expanded="false" aria-controls="colOne">
+                                {{ __('home.txt_faq_1') }}
+                            </button>
+                        </h2>
+                        <div id="colOne" class="accordion-collapse collapse" aria-labelledby="one" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ __('home.txt_answer_1') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="two">
+                            <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
+                                {{ __('home.txt_faq_2') }}
+                            </button>
+                        </h2>
+                        <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ __('home.txt_answer_2') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="three">
+                            <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colThree" aria-expanded="false" aria-controls="colThree">
+                                {{ __('home.txt_faq_3') }}
+                            </button>
+                        </h2>
+                        <div id="colThree" class="accordion-collapse collapse" aria-labelledby="three" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ __('home.txt_answer_3') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="four">
+                            <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFour" aria-expanded="false" aria-controls="colFour">
+                                {{ __('home.txt_faq_4') }}
+                            </button>
+                        </h2>
+                        <div id="colFour" class="accordion-collapse collapse" aria-labelledby="four" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ __('home.txt_answer_4') }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="five">
+                            <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFive" aria-expanded="false" aria-controls="colFive">
+                                {{ __('home.txt_faq_5') }}
+                            </button>
+                        </h2>
+                        <div id="colFive" class="accordion-collapse collapse" aria-labelledby="five" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                {{ __('home.txt_answer_5') }}
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="two">
-                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colTwo" aria-expanded="false" aria-controls="colTwo">
-                            {{ __('home.txt_faq_2') }}
-                        </button>
-                    </h2>
-                    <div id="colTwo" class="accordion-collapse collapse" aria-labelledby="two">
-                        <div class="accordion-body">
-                            {{ __('home.txt_answer_2') }}
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="three">
-                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colThree" aria-expanded="false" aria-controls="colThree">
-                            {{ __('home.txt_faq_3') }}
-                        </button>
-                    </h2>
-                    <div id="colThree" class="accordion-collapse collapse" aria-labelledby="three">
-                        <div class="accordion-body">
-                            {{ __('home.txt_answer_3') }}
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="four">
-                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFour" aria-expanded="false" aria-controls="colFour">
-                            {{ __('home.txt_faq_4') }}
-                        </button>
-                    </h2>
-                    <div id="colFour" class="accordion-collapse collapse" aria-labelledby="four">
-                        <div class="accordion-body">
-                            {{ __('home.txt_answer_4') }}
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="five">
-                        <button class="accordion-button collapsed fw-bold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#colFive" aria-expanded="false" aria-controls="colFive">
-                            {{ __('home.txt_faq_5') }}
-                        </button>
-                    </h2>
-                    <div id="colFive" class="accordion-collapse collapse" aria-labelledby="five">
-                        <div class="accordion-body">
-                            {{ __('home.txt_answer_5') }}
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
-    </div>
-</section>
+    </section>

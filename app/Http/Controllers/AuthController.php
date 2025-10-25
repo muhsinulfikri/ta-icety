@@ -36,9 +36,9 @@ class AuthController extends Controller
         if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 1) {
             return redirect('dashboard');
         } else if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 2) {
-            return redirect('/');
+            return redirect('/home');
         } else if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 3) {
-            return redirect('/');
+            return redirect('/home');
         }
 
         return
@@ -97,7 +97,7 @@ class AuthController extends Controller
                 ]);
 
                 Session::push('user', $user_data);
-                return redirect('/');
+                return redirect('/home');
             } elseif ($auth->ID_ROLE == 3) {
 
                 $user_data = collect([
@@ -110,7 +110,7 @@ class AuthController extends Controller
                 ]);
 
                 Session::push('user', $user_data);
-                return redirect('/');
+                return redirect('/home');
             }
         } else {
             return redirect('login')->with('resp_msg', "Your Session Expired");

@@ -1,5 +1,5 @@
 <!-- Register -->
-<div class="mb-5">
+{{-- <div class="mb-5">
     <div class="container d-grid d-md-flex p-0 p-lg-4 position-relative">
         <div class="w-100">
             <div class="d-none d-lg-block">
@@ -59,6 +59,22 @@
                                     style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i
                                         class="far fa-eye fs-4"></i></span>
                             </div>
+                            <div class="mt-4 my-3">
+                                <div class="slidercaptcha card" id="card-captcha">
+                                    <div class="card-header">
+                                        <span>{{ __('register.txt_captcha_reg') }}</span>
+                                    </div>
+                                    <div class="card-body" id="body-captcha">
+                                        <div id="captcha"></div>
+                                    </div>
+                                </div>
+                                <div id="checkmark" class="checkmark" style="display: none">
+                                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                        <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                                        <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                    </svg>
+                                </div>
+                            </div>
                             <div class="col-md-12 mr-2 px-md-1 mt-1">
                                 <button type="submit"
                                     class="btn btn-primary btn-main-2 w-100 rounded-3 fw-semibold py-2 text-black border-0"
@@ -74,8 +90,167 @@
             </div>
         </div>
     </div>
+</div> --}}
+<div class="mb-5">
+  <div class="container p-0 p-lg-4 position-relative">
+    <div class="row align-items-center">
+
+      <!-- Kolom Form (KIRI) -->
+      <div class="col-12 col-lg-6 bg-white rounded-5 p-4" id="formLogin">
+        <div class="d-flex flex-column justify-content-center h-100">
+          <h4 class="fw-semibold mt-3">{{ __('register.txt_rau') }}</h4>
+
+          <form action="{{ url('register/store') }}" method="POST" class="fw-normal">
+            @csrf
+            <div id="form-1">
+
+              <div class="my-3">
+                <input type="text" class="form-control" name="name" placeholder="{{ __('register.txt_name') }}" required>
+              </div>
+
+              <div class="my-3">
+                <input type="email" class="form-control" name="email" placeholder="{{ __('register.txt_email') }}" required>
+              </div>
+
+              <div class="my-3">
+                <select name="category_user" id="category_user" class="form-control form-select pe-5" style="color: #999999" required>
+                                    <option value="" disabled selected>{{ __('register.txt_category') }}</option>
+                                    <option value="2">{{ __('register.txt_company') }}</option>
+                                    <option value="3">{{ __('register.txt_umum') }}</option>
+                                    <option value="4">{{ __('register.txt_pemerintah') }}</option>
+                                    <option value="5">{{ __('register.txt_pendidikan') }}</option>
+                                    <option value="6">{{ __('register.txt_nirlaba') }}</option>
+                                </select>
+              </div>
+
+              <div class="my-3" id="col_agency">
+                <input type="text" class="form-control input-text woocommerce-Input woocommerce-Input--text" id="exampleInputAgency" placeholder="{{ __('register.txt_institution') }}" name="agency" aria-describedby="" required>
+              </div>
+
+              <div class="my-3">
+                <input type="number" class="form-control" name="telp" placeholder="{{ __('register.txt_number') }}" required>
+              </div>
+
+              <div class="input-group my-3 pb-lg-3">
+                <input type="password" class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3" id="registerPassword1" name="password" placeholder="{{ __('register.txt_password') }}" required>
+                <span class="align-self-center fw-semibold" id="togglePassword1" style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i class="far fa-eye fs-4"></i></span>
+              </div>
+
+              <div class="input-group my-3 pb-lg-3">
+                <input type="password" class="form-control input-text woocommerce-Input woocommerce-Input--text rounded-3" id="registerPassword2" placeholder="{{ __('register.txt_confirm') }}" required>
+                <span class="align-self-center fw-semibold" id="togglePassword2" style="cursor: pointer;margin-left: -46px;z-index: 5;padding: 10px;"><i class="far fa-eye fs-4"></i></span>
+              </div>
+
+              <div class="mt-4 my-3">
+                            <div class="slidercaptcha card" id="card-captcha">
+                                <div class="card-header">
+                                    <span>{{ __('login.txt_captcha') }}</span>
+                                </div>
+                                <div class="card-body" id="body-captcha">
+                                    <div id="captcha"></div>
+                                </div>
+                            </div>
+                            <div id="checkmark" class="checkmark" style="display: none">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+                                    <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1" cy="65.1" r="62.1"/>
+                                    <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round" stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
+                                </svg>
+                            </div>
+                        </div>
+
+              <button id="btn-register" type="submit" class="btn btn-primary w-100 fw-semibold py-2" disabled>{{ __('register.txt_register') }}</button>
+
+              <div class="my-3 text-center">
+                <span>{{ __('register.txt_have') }}
+                  <a href="{{ url('login') }}" class="fw-bold text-black text-decoration-none">{{ __('register.txt_login') }}</a>
+                </span>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Kolom Gambar (KANAN) -->
+      <div class="col-lg-6 d-none d-lg-block">
+        <img src="{{ asset('assets/images/login-1.png') }}"
+             class="img-fluid rounded-5 h-auto w-100 object-fit-cover"
+             alt="Gambar login">
+      </div>
+
+    </div>
+  </div>
 </div>
+<style>
+    svg {
+    width: 60px;
+    display: block;
+    margin: 40px auto 0;
+    }
+    .path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 0;
+    &.circle {
+        -webkit-animation: dash .9s ease-in-out;
+        animation: dash .9s ease-in-out;
+    }
+    &.line {
+        stroke-dashoffset: 1000;
+        -webkit-animation: dash .9s .35s ease-in-out forwards;
+        animation: dash .9s .35s ease-in-out forwards;
+    }
+    &.check {
+        stroke-dashoffset: -100;
+        -webkit-animation: dash-check .9s .35s ease-in-out forwards;
+        animation: dash-check .9s .35s ease-in-out forwards;
+    }
+    }
+    p {
+    text-align: center;
+    margin: 20px 0 60px;
+    font-size: 1.25em;
+    &.success {
+        color: #73AF55;
+    }
+    &.error {
+        color: #D06079;
+    }
+    }
+    @-webkit-keyframes dash {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+    }
+    @keyframes dash {
+    0% {
+        stroke-dashoffset: 1000;
+    }
+    100% {
+        stroke-dashoffset: 0;
+    }
+    }
+    @-webkit-keyframes dash-check {
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
+    }
+    @keyframes dash-check {
+    0% {
+        stroke-dashoffset: -100;
+    }
+    100% {
+        stroke-dashoffset: 900;
+    }
+}
+</style>
 <!-- End Register -->
+<script src="{{ asset('js/sliderPuzzle.js') }}"></script>
 <script>
     var x = document.getElementById("form-1");
     var y = document.getElementById("form-2");
@@ -167,7 +342,7 @@
     $(document).ready(function () {
         $("#category_user").change(function () {
             let agencyInput = $("#exampleInputAgency");
-            let agencyField = agencyInput.closest(".float-label-control");
+            let agencyField = agencyInput.closest("#col_agency");
 
             if ($(this).val() === "3") { // Jika "Umum" dipilih
                 agencyField.hide();

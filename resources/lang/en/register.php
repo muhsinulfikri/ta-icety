@@ -15,5 +15,6 @@ return[
     'txt_umum' => 'General',
     'txt_pemerintah' => 'Government Institutions',
     'txt_pendidikan' => 'Educational Institutions',
-    'txt_nirlaba' => 'Non-Profit Organizations'
+    'txt_nirlaba' => 'Non-Profit Organizations',
+    'txt_captcha_reg' => 'Please complete security verification before Register!'
 ];
