@@ -775,7 +775,7 @@ services
 
 .services {
   position: relative;
-  margin-top: -50px; /* sedikit naik */
+  margin-top: -150px; /* sedikit naik */
   margin-bottom: 10px; /* jarak bawah diperkecil */
   z-index: 2;
   width: 100%;
