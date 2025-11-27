@@ -34,8 +34,10 @@ class PaymentCertificate extends Controller
 	// Access payment gateway
 	public function get_pay_sertif_id(Request $request)
 	{
-		$PRICE = (int)$_POST['TotPrice'];
-        $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($_POST['id_sertif_pay']);
+		// $PRICE = (int)$_POST['TotPrice'];
+        // $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($_POST['id_sertif_pay']);
+        $PRICE = (int) $request->input['TotPrice'];
+        $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($request->input['id_sertif_pay']);
 
 		$data_trans = DB::selectOne("
 			SELECT
@@ -58,7 +60,6 @@ class PaymentCertificate extends Controller
             AND
                 ps.IS_PAY = 1
         ");
-        dd($id_sertif_pay, $data_trans, $checking_trans);
 		$ID_PAY = $this->GenerateUniqIDPay('ICETY-XENDIT-checkout-' . date('Y-m-d H:i:s'));
 		if (empty($checking_trans)) {
             $url_success = url('check_payment_sertif/payment?id_pay=' . $ID_PAY);
@@ -105,7 +106,6 @@ class PaymentCertificate extends Controller
                     ->where('ID_PAYMENT_SERTIF', $id_sertif_pay->ID_PAYMENT_SERTIF)
                     ->update(["ID_PAY" => $ID_PAY]);
             }
-            dd($url_success, $url_failed, $invoice, $data_payment, $data_payment_method);
 			return response()->json([
                 'status_code' => 200,
                 'invoice'     => $invoice,
