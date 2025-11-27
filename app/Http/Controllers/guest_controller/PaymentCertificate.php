@@ -36,7 +36,6 @@ class PaymentCertificate extends Controller
 	{
 		// $PRICE = (int)$_POST['TotPrice'];
         // $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($_POST['id_sertif_pay']);
-        dd($request);
         $PRICE = (int) $request->input['TotPrice'];
         $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($request->input['id_sertif_pay']);
 
