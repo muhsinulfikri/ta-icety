@@ -837,7 +837,7 @@
                 },
                 error: function(xhr, status, error) {
                     displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
-                    console.error(error);
+                    console.log(error);
                     Swal.close();
                 }
             });
