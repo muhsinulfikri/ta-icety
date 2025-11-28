@@ -98,7 +98,6 @@ class PaymentCertificate extends Controller
                     "ID_PAY"            => $ID_PAY,
                     "IS_PAY"            => 0,
                 ]);
-            dd($ID_PAY);
             } else {
                 // Kalau sudah ada → update ID_PAY saja
                 DB::table('payment_sertif')
