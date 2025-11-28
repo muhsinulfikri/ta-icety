@@ -34,12 +34,8 @@ class PaymentCertificate extends Controller
 	// Access payment gateway
 	public function get_pay_sertif_id(Request $request)
 	{
-        $idSertifPayInput = $request->input['id_sertif_pay'];
 		$PRICE = (int)$_POST['TotPrice'];
-        $id_sertif_pay = null;
-        if (!empty($idSertifPayInput)) {
-            $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($idSertifPayInput);
-        }
+        $id_sertif_pay = $this->sertifPayModel->getSertifIsPaid($_POST['id_sertif_pay']);
 
 		$data_trans = DB::selectOne("
 			SELECT
@@ -94,15 +90,15 @@ class PaymentCertificate extends Controller
 			DB::table('payment_method')->insert($data_payment_method);
 
             if (empty($id_sertif_pay)) {
-                $newIDPaymentSertif = $ID_PAY . 'sertif';
                 DB::table('payment_sertif')->insert([
-                    "ID_PAYMENT_SERTIF" => $newIDPaymentSertif,
+                    "ID_PAYMENT_SERTIF" => $ID_PAY . 'sertif',
                     "ID_USER"           => session('user')[0]->get('ID_USER'),
                     "ID_ACTIVITY"       => $request->idActivity,
                     "TITLE_ACTIVITY"    => $request->titleActivity,
                     "ID_PAY"            => $ID_PAY,
                     "IS_PAY"            => 0,
                 ]);
+            dd($ID_PAY);
             } else {
                 // Kalau sudah ada → update ID_PAY saja
                 DB::table('payment_sertif')
