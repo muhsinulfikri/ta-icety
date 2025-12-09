@@ -1,0 +1,15 @@
+.accordion-button {
+  pointer-events: auto !important;
+}
+
+.collapse {
+  display: none !important;
+}
+
+.collapse.show {
+  display: block !important;
+}
+
+.accordion-button::after {
+  display: block !important;
+}

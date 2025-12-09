@@ -20,6 +20,30 @@ class GuestController extends Controller
 	// 	// error_reporting(0);
 	// }
 
+    public function landing(){
+        $data['students'] = DB::select("
+            SELECT COUNT(ID_ROLE) AS STUDENTS FROM user WHERE ID_ROLE = 3
+        ");
+        $data['graduate'] = DB::select("
+            SELECT
+                ROUND((SUM(CASE WHEN COURSE_COMPLETED = 1 THEN 1 ELSE 0 END) / COUNT(*)) * 100, 0) AS GRADUATE
+            FROM `order`;
+        ");
+        $data['modules'] = DB::select("
+            SELECT COUNT(TYPE_ACTIVITY) AS MODULES FROM activity WHERE TYPE_ACTIVITY = 1
+        ");
+        $data['certificates'] = DB::select("
+            SELECT COUNT(JENIS_SERTIFIKAT) AS CERTIFICATES FROM sertifikat_activity WHERE JENIS_SERTIFIKAT = 1
+        ");
+        return view('landing_page.header').
+            view('landing_page.landing_page', $data).
+            view('landing_page.footer');
+    }
+    public function about_landing(){
+        return view('landing_page.header').
+            view('landing_page.about').
+            view('landing_page.footer');
+    }
 	public function index()
 	{
 		$data['title'] = 'ICETy';

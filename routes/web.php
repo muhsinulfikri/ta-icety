@@ -27,7 +27,9 @@ Route::get('lang/{locale}', function ($locale) {
     return redirect()->back();
 })->name('lang.switch');
 
-Route::get('/', 'GuestController@index');
+Route::get('/', 'GuestController@landing');
+Route::get('/about-icety', 'GuestController@about_landing');
+Route::get('/home', 'GuestController@index');
 Route::post('guest/category', 'GuestController@courseCategories');
 
 // Route::get('/store', 'GuestController@store');
