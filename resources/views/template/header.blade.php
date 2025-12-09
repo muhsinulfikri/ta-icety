@@ -256,7 +256,7 @@
             <div class="container">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="site-logo">
-                        <a href="{{ url('home') }}" class="d-flex mt-2">
+                        <a href="{{ url('/') }}" class="d-flex mt-2">
                             <img class=""
                                 src="<?= asset('icety_assets/logo.svg') ?>"
                                 alt="">
@@ -271,7 +271,7 @@
                     <nav class="site-navbar ms-auto">
                         <ul class="primary-menu">
                             <li class="current">
-                                <a href="{{ url('home') }}" class="fw-normal a-header">{{ __('header.txt_home') }}</a>
+                                <a href="{{ url('/') }}" class="fw-normal a-header">{{ __('header.txt_home') }}</a>
                             </li>
                             <li class="current">
                                 <a href="{{ url('about') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>

@@ -83,11 +83,15 @@ https://templatemo.com/tm-569-edu-meeting
                                 <a href="javascript:void(0)">Partnership</a>
                                 <ul class="sub-menu">
                                     <li><a href="https://pjgs.icety.org" target="_blank">PJ Global</a></li>
-                                    <li><a href="">Archipelago</a></li>
+                                    {{-- <li><a href="">Archipelago</a></li> --}}
                                 </ul>
                             </li>
-                            <li class="scroll-to-section"><a href="">Blog</a></li>
-                            <li class="scroll-to-section"><a href="/login">Login</a></li>
+                            <li class="scroll-to-section"><a href="/blog">Blog</a></li>
+                            @if (!empty(session('user')[0]))
+                                <li class="scroll-to-section"><a href="{{ url('profile') }}">{{ __('header.txt_profile') }}</a></li>
+                            @else
+                                <li class="scroll-to-section"><a href="/login">Login</a></li>
+                            @endif
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
