@@ -276,14 +276,14 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="count-area-content percentage">
-                                        <div class="count-digit">94</div>
-                                        <div class="count-title">Succesed Students</div>
+                                        <div class="count-digit">{{ $graduate[0]->GRADUATE }}</div>
+                                        <div class="count-title">Graduate Students</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="count-area-content">
-                                        <div class="count-digit">126</div>
-                                        <div class="count-title">Current Teachers</div>
+                                        <div class="count-digit">{{ $modules[0]->MODULES }}</div>
+                                        <div class="count-title">Total Modules</div>
                                     </div>
                                 </div>
                             </div>
@@ -292,14 +292,14 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="count-area-content new-students">
-                                        <div class="count-digit">100</div>
-                                        <div class="count-title">New Students</div>
+                                        <div class="count-digit">{{ $students[0]->STUDENTS }}</div>
+                                        <div class="count-title">Total Students</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="count-area-content">
-                                        <div class="count-digit">32</div>
-                                        <div class="count-title">Awards</div>
+                                        <div class="count-digit">{{ $certificates[0]->CERTIFICATES }}</div>
+                                        <div class="count-title">Published Certificate</div>
                                     </div>
                                 </div>
                             </div>
