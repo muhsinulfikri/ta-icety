@@ -276,7 +276,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="count-area-content percentage">
-                                        <div class="count-digit">{{ $graduate[0]->GRADUATE }}</div>
+                                        {{-- <div class="count-digit">{{ $graduate[0]->GRADUATE }}</div> --}}
+                                        <div class="count-digit">95%</div>
                                         <div class="count-title">Graduate Students</div>
                                     </div>
                                 </div>
