@@ -76,7 +76,7 @@ https://templatemo.com/tm-569-edu-meeting
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
+                            <li class="scroll-to-section"><a href="/" class="active">rumah</a></li>
                             <li><a href="/about-icety">About</a></li>
                             <li><a href="/store">Courses</a></li>
                             <li class="has-sub">
