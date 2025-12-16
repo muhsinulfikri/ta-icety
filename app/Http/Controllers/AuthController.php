@@ -19,12 +19,12 @@ class AuthController extends Controller
     {
         $smtpConfig = [
             'transport' => 'smtp',
-            'host' => 'smtp-relay.brevo.com',
-            'port' => 587,
-            'from' => ['address' => 'dbi.icety.server@gmail.com', 'name' => 'Icety Official'],
-            'encryption' => 'tls',
-            'username' => '865459002@smtp-brevo.com',
-            'password' => 'r0OkS7nUhCETvafs',
+            'host' => 'tagame.id',
+            'port' => 465,
+            'from' => ['address' => 'icety-noreply@tagame.id', 'name' => 'Icety Official'],
+            'encryption' => 'ssl',
+            'username' => 'icety-noreply@tagame.id',
+            'password' => 'GC}5DCWIc)MjebX0',
         ];
         config(['mail.mailers.smtp' => $smtpConfig]);
     }
