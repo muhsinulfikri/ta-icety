@@ -17,5 +17,6 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.DIR_DEV }}
+          git config --global --add safe.directory ${{ secrets.DIR_DEV }}
           git pull origin dev-testing && composer install && composer update && php artisan optimize
           php artisan config:clear
