@@ -274,7 +274,7 @@
                                 <a href="{{ url('/') }}" class="fw-normal a-header">{{ __('header.txt_home') }}</a>
                             </li>
                             <li class="current">
-                                <a href="{{ url('about') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>
+                                <a href="{{ url('about-icety') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>
                             </li>
                             <li class="">
                                 <a href="{{ url('store') }}" class="fw-normal a-header">{{ __('header.txt_store') }}</a>

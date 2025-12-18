@@ -126,6 +126,16 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Date Download Sertif <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <div class="d-flex align-items-center">
+                                <input type="date" class="form-control" name="date_download_sertif"
+                                    placeholder="Date Download Sertif" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Durasi per Months<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-10">
@@ -380,6 +390,7 @@
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
+    $('input[name="date_download_sertif"]').val(data.DATE_DOWNLOAD_SERTIF);
     $('input[name="duration_months"]').val(data.DURATION);
     $('input[name="duration_hours"]').val(data.HOURS);
     if (price_sertif == 0) {
