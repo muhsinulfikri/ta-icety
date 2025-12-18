@@ -133,6 +133,16 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Date Download Sertif <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <div class="d-flex align-items-center">
+                                <input type="date" class="form-control" name="date_download_sertif"
+                                    placeholder="Date Download Sertif" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Duration in Month<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
