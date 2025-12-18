@@ -181,6 +181,7 @@ class CourseController extends Controller
                 'TITLE_CERTIFICATE'     => $req->input('title_certificate'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
+                'DATE_DOWNLOAD_SERTIF'  => $req->input('date_download_sertif'),
                 'IS_PUBLIC'             => $req->input('is_public'),
                 'LOG_TIME'              => date('Y-m-d H:i:s'),
                 'SERTIF_IMAGE'          => $req->hasFile('sertif_image') ? FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now())) : null
@@ -413,6 +414,7 @@ class CourseController extends Controller
                 a.PRICE_ACTIVITY ,
                 a.DATE_START ,
                 a.DATE_END ,
+                a.DATE_DOWNLOAD_SERTIF ,
                 a.STATUS ,
                 a.IS_PUBLIC ,
                 a.TITLE_CERTIFICATE,
@@ -580,6 +582,7 @@ class CourseController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
+                'DATE_DOWNLOAD_SERTIF'  => $req->input('date_download_sertif'),
                 'IS_PUBLIC'             => $req->input('is_public'),
                 'LOG_TIME'              => date('Y-m-d H:i:s')
             ];
