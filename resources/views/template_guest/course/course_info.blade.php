@@ -94,11 +94,19 @@
 
                 <div>
                     <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                        @if (!empty($cek_course_user))
-                            <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                See Course
-                            </button>
+                        {{-- @if (!empty($cek_course_user)) --}}
+                        @if (!empty(session('user')[0]['ID_USER']))
+                            @if (!empty($cek_course_user) && $cek_course_user[0]->DATE_PAY != null)
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                         @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
                             <button
                                 class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
@@ -111,11 +119,19 @@
                             </button>
                         @endif
                     <?php } else if (empty($course->REQUIREMENT)) { ?>
-                        @if (!empty($cek_course_user))
-                            <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                See Course
-                            </button>
+                        {{-- @if (!empty($cek_course_user)) --}}
+                        @if (!empty(session('user')[0]['ID_USER']))
+                            @if (!empty($cek_course_user) && $cek_course_user[0]->DATE_PAY != null)
+                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    See Course
+                                </button>
+                            @else
+                                <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                    Join Now
+                                </button>
+                            @endif
                         @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
                             <button
                                 class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
@@ -221,11 +237,19 @@
                     @endif
                     <div>
                         <?php if (!empty($course->REQUIREMENT) && $course->REQ == 1) { ?>
-                            @if (!empty($cek_course_user))
-                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    See Course
-                                </button>
+                            {{-- @if (!empty($cek_course_user)) --}}
+                            @if (!empty(session('user')[0]['ID_USER']))
+                                @if (!empty($cek_course_user) && $cek_course_user[0]->DATE_PAY != null)
+                                    <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                        class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                        See Course
+                                    </button>
+                                @else
+                                    <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                        class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                        Join Now
+                                    </button>
+                                @endif
                             @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
                                 <button
                                     class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
@@ -238,11 +262,19 @@
                                 </button>
                             @endif
                         <?php } else if (empty($course->REQUIREMENT)) { ?>
-                            @if (!empty($cek_course_user))
-                                <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
-                                    class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
-                                    See Course
-                                </button>
+                            {{-- @if (!empty($cek_course_user)) --}}
+                            @if (!empty(session('user')[0]['ID_USER']))
+                                @if (!empty($cek_course_user) && $cek_course_user[0]->DATE_PAY != null)
+                                    <button onclick="window.location = '<?= url('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY) ?>'"
+                                        class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                        See Course
+                                    </button>
+                                @else
+                                    <button data-id-activity="<?= $course->ID_ACTIVITY ?>" onclick="AddToCart(this)"
+                                        class="mt-2 button button-enroll-course btn btn-secondary btn-sm rounded">
+                                        Join Now
+                                    </button>
+                                @endif
                             @elseif (strtotime($course->DATE_END) < strtotime(date('Y-m-d H:i:s')))
                                 <button
                                     class="mt-2 button button-enroll-course btn btn-danger btn-sm rounded">
