@@ -61,9 +61,9 @@ class CourseGuest extends Controller
 		");
         // dd($data);
 		return
-			view('template.header', $data) .
+			view('landing_page.header', $data) .
 			view('template_guest.course.course', $data) .
-			view('template.footer', $data);
+			view('landing_page.footer', $data);
 	}
 	public function detailCourse()
     {

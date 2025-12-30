@@ -274,10 +274,18 @@
                                 <a href="{{ url('/') }}" class="fw-normal a-header">{{ __('header.txt_home') }}</a>
                             </li>
                             <li class="current">
-                                <a href="{{ url('about') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>
+                                <a href="{{ url('about-icety') }}" class="fw-normal a-header">{{ __('header.txt_about') }}</a>
                             </li>
                             <li class="">
                                 <a href="{{ url('store') }}" class="fw-normal a-header">{{ __('header.txt_store') }}</a>
+                            </li>
+                            <li class="menu-item-has-children">
+                                <a href="#" class="a-header fw-normal">
+                                        Partnership
+                                    </a>
+                                    <ul class="submenu rounded mt-2">
+                                        <li><a class="dropdown-item" href="https://pjgs.icety.org" target="_blank">PJ Global</a></li>
+                                    </ul>
                             </li>
                             <li class="me-0">
                                 <a href="{{ url('blog') }}" class="fw-normal a-header">{{ __('header.txt_blog') }}</a>
