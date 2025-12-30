@@ -21,6 +21,7 @@ class GuestController extends Controller
 	// }
 
     public function landing(){
+        $data['title'] = "ICETy";
         $data['students'] = DB::select("
             SELECT COUNT(ID_ROLE) AS STUDENTS FROM user WHERE ID_ROLE = 3
         ");
@@ -35,12 +36,16 @@ class GuestController extends Controller
         $data['certificates'] = DB::select("
             SELECT COUNT(JENIS_SERTIFIKAT) AS CERTIFICATES FROM sertifikat_activity WHERE JENIS_SERTIFIKAT = 1
         ");
-        return view('landing_page.header').
+        $data_user =  (session('user') == null) ? null : Session::get('user')[0]->get('ID_USER');
+		$checkoutModel = new Checkout();
+		$data['checkout'] = $checkoutModel->get_all_order($data_user);
+        return view('landing_page.header', $data).
             view('landing_page.landing_page', $data).
             view('landing_page.footer');
     }
     public function about_landing(){
-        return view('landing_page.header').
+        $data['title'] = 'About | ICETy';
+        return view('landing_page.header', $data).
             view('landing_page.about').
             view('landing_page.footer');
     }
@@ -100,9 +105,9 @@ class GuestController extends Controller
 				blog
 		");
 		return
-			view('template.header', $data) .
+			view('landing_page.header', $data) .
 			view('template_guest.blog', $data) .
-			view('template.footer', $data);
+			view('landing_page.footer', $data);
 	}
 
 	public function store()

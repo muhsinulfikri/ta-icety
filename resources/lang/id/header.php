@@ -2,7 +2,7 @@
 return [
     'txt_home' => 'Beranda',
     'txt_about' => 'Tentang ICETy',
-    'txt_store' => 'Toko',
+    'txt_store' => 'Kursus',
     'txt_blog' => 'Blog',
     'txt_login' => 'Masuk',
     'txt_register' => 'Daftar',

@@ -1,8 +1,8 @@
 <?php
 return [
     'txt_home' => 'Home',
-    'txt_about' => 'About ICETy',
-    'txt_store' => 'Store',
+    'txt_about' => 'About',
+    'txt_store' => 'Courses',
     'txt_blog' => 'Blog',
     'txt_login' => 'Login',
     'txt_register' => 'Register',
