@@ -916,12 +916,14 @@ class CourseGuest extends Controller
 		");
 
 		$data['checkout'] = $this->checkoutModel->get_all_order($data_user);
+        $data['prepare_career'] = DB::select("
+            SELECT CAREER, POINT, SALARY, JOB_OPENING FROM prepare_career WHERE ID_ACTIVITY = '".$id_activity."'
+        ");
 
 		$courseModel = new Course();
 		$data['courses'] = $courseModel->get_courses(["activity.ID_ACTIVITY != '" . $id_activity . "'"]);
 		$ebookModel = new Ebook();
 		$data['ebooks'] = $ebookModel->get_all_book_home();
-        // dd($data['course']);
 		return
 			view('template.header', $data) .
 			view('template_guest.course.course_info', $data) .

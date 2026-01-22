@@ -24,6 +24,16 @@
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
+    .career-card {
+        border: 2px solid #0d6efd;
+        background: #f8fbff;
+    }
+
+    .career-card .border-end {
+        border-color: #e5e5e5 !important;
+    }
+
+
     @media (max-width: 1200px) {
         .course-grid-template {
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -70,6 +80,49 @@
                 </div>
                 <h2 class="font mt-2">What You Will Learn</h2>
                 <div class="font "><?= $course->DESKRIPSI_COURSE_ITEM ?></div>
+                <!-- Career Highlight Section -->
+                @if (!empty($prepare_career))
+                <div class="row align-items-center bg-white rounded-4 p-4 shadow-sm">
+                    <!-- LEFT CONTENT -->
+                    <div class="col-12 col-md-7">
+                        <h4 class="fw-bold mb-3"> Prepare for a career as a <?= $prepare_career[0]->CAREER ?> </h4>
+                        <ul class="ps-3">
+                            @foreach (explode('</p>', $prepare_career[0]->POINT) as $item)
+                                @php
+                                $text = trim(strip_tags($item));
+                                @endphp
+                                @if ($text !== '')
+                                    <li class="mb-2">• {{ $text }}</li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                <!-- RIGHT CONTENT -->
+                <div class="col-12 col-md-5 mt-4 mt-md-0 border-primary">
+                    <div class="row align-items-center text-start">
+
+                        <div class="col-6 pe-3 border-end">
+                            <div class="fw-bold fs-6 text-dark">
+                                Rp. <?= number_format($prepare_career[0]->SALARY, 0, ',', '.') ?>
+                            </div>
+                            <div class="text-muted" style="font-size: 0.8rem;">
+                                median entry-level salary <?= $prepare_career[0]->CAREER ?>
+                            </div>
+                        </div>
+
+                        <div class="col-6 ps-3">
+                            <div class="fw-bold fs-6 text-dark">
+                                <?= $prepare_career[0]->JOB_OPENING ?>
+                            </div>
+                            <div class="text-muted" style="font-size: 0.8rem;">
+                                job openings for <?= $prepare_career[0]->CAREER ?> in Indonesia
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+                @endif
                 <h3 class="font ">Course Outcomes</h3>
                 <div class="my-2" style="border: 2px solid black;"></div>
                 <?php
