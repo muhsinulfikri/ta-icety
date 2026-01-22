@@ -216,9 +216,17 @@ class CourseController extends Controller
             if ($req->input('final_exam')) {
                 $course['FINAL_EXAM']  = $req->input('final_exam');
             }
-            // dd($activity, $course);
+            $prepare_career = [
+                'ID_ACTIVITY'   => $activity['ID_ACTIVITY'],
+                'CAREER'        => $req->input('prospek'),
+                'POINT'         => $req->input('point_career'),
+                'SALARY'        => $req->input('salary'),
+                'JOB_OPENING'   => $req->input('job_opening')
+            ];
+            // dd($activity, $course, $prepare_career);
             DB::table('activity')->insert($activity);
             DB::table('course')->insert($course);
+            DB::table('prepare_career')->insert($prepare_career);
 
             $data['ID_COURSE'] = $course['ID_COURSE'];
             $this->item_materi($data, $req);
