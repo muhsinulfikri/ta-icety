@@ -253,6 +253,47 @@
                         </div>
                     </div>
                     @endif
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title d-flex align-items-center row">
+                                <a data-toggle="collapse" href="#collapse" class="col-md-12" style="text-decoration: none;">
+                                    <span class="col-md-11">Prepare for Career</span>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapse" class="collapse show" data-parent="#accordion-default">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Prospek Pekerjaan</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="prospek" placeholder="Prospek Pekerjaan"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Point - Point</label>
+                                    <div class="col-md-5">
+                                        <textarea class="form-desc-learn" name="point_career" id="point_career" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+                                        <div id="point_career_editor"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Salary</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="salary" placeholder="Salary"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Job Opening</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="job_opening" placeholder="Job Opening"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group text-right mt-5">
                         <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
                     </div>
@@ -403,6 +444,10 @@
     $('select[name="is_public"]').val(data.IS_PUBLIC);
     $('select[name="category"]').val(data.ID_KATEGORI);
     $('input[name="status"]').prop('checked', data.STATUS);
+    $('input[name="prospek"]').val(data.CAREER);
+    $('input[name="salary"]').val(data.SALARY);
+    $('input[name="job_opening"]').val(data.JOB_OPENING);
+    $('#point_career').summernote('code', data.POINT);
 
     $.ajax({
         url: 'get/' + id_act,
@@ -556,6 +601,35 @@
 
     $(document).ready(function() {
         var $editor = $('#announcement');
+        $editor.summernote({
+            height: 200,
+            callbacks: {
+                onImageUpload: function(files) {
+                    $summernote.summernote('insertNode', imgNode);
+                }
+            },
+            toolbar: [
+                ['style', ['bold', 'italic', 'underline']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['height', ['height']],
+                ['operation', ['undo', 'redo']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['object', ['link']]
+            ]
+        });
+
+        $('#insert-btn').click(() => {
+            $editor.summernote('insertParagraph');
+        });
+
+        $('#bold-btn').click(() => {
+            $editor.summernote('bold');
+        });
+    });
+
+    $(document).ready(function() {
+        var $editor = $('#point_career');
         $editor.summernote({
             height: 200,
             callbacks: {

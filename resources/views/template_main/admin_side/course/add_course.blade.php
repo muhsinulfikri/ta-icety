@@ -302,14 +302,14 @@
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label control-label">Salary</label>
                                     <div class="col-md-5">
-                                        <input type="text" class="form-control" name="salary" placeholder="Salary"
+                                        <input type="number" class="form-control" name="salary" placeholder="Salary"
                                             required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label control-label">Job Opening</label>
                                     <div class="col-md-5">
-                                        <input type="text" class="form-control" name="job_opening" placeholder="Job Opening"
+                                        <input type="number" class="form-control" name="job_opening" placeholder="Job Opening"
                                             required>
                                     </div>
                                 </div>
