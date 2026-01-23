@@ -70,44 +70,42 @@
         </div>
     </section>
 
-    <section class="upcoming-meetings" id="meetings">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-heading">
-                        <h2>Our Expertise</h2>
-                    </div>
-                </div>
-                <div style="margin:auto;max-width: 1200px;max-height: 300px;">
-                    <div class="splide-carousel splide img-header mt-3" style="overflow:hidden;border-radius:1rem;max-width: 1200px;max-height: 300px;">
-                        <div class="splide__track" style="aspect-ratio:4/1;">
-                            <ul class="splide__list">
-                                <li class="splide__slide">
-                                    <section class="bg-fixed division  py-6  px-7"
-                                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-1.svg');width:100%; height: 100%;">
+    <section class="about-us py-5" id="about-us">
+    <div class="container">
+        <div class="row align-items-center">
 
-                                    </section>
-
-                                </li>
-                                <li class="splide__slide">
-                                    <section class="bg-fixed division  py-6  px-7"
-                                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-2.svg');width:100%; height: 100%;">
-
-                                    </section>
-                                </li>
-                                <li class="splide__slide">
-                                    <section class="bg-fixed division  py-6  px-7"
-                                        style="background-size:contain;aspect-ratio:4/1;background-image: url('<?= asset('icety_assets') ?>/slide-3.svg');width:100%; height: 100%;">
-
-                                    </section>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+            <!-- KIRI: GAMBAR -->
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <div class="about-image">
+                    <img src="<?= asset('assets_landing') ?>/assets/images/img_about.jpeg"
+                        alt="About ICETY"
+                        class="img-fluid rounded-4 shadow-sm" style="border-radius: 5px">
                 </div>
             </div>
+
+            <!-- KANAN: TEXT -->
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">About Us</h2>
+
+                <p class="text-muted" style="text-align: justify;">
+                    ICETY adalah pusat pembelajaran dan sertifikasi yang menjadi
+                    jembatan antara potensi individu dan kebutuhan dunia global.
+                    Kami menyediakan beragam program pelatihan dan kursus lintas
+                    disiplin yang dirancang untuk membangun skill, kredibilitas,
+                    dan kesiapan karier di berbagai sektor.
+                </p>
+
+                <p class="text-muted" style="text-align: justify;">
+                    Dengan standar internasional dan sistem pembelajaran yang
+                    adaptif, ICETY mendukung siapa pun untuk terus berkembang,
+                    berdaya saing, dan relevan di masa depan.
+                </p>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
 
     <script>
         new Splide('.splide-carousel', {
