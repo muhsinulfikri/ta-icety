@@ -133,6 +133,16 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Date Download Sertif <span
+                                class="text-danger">*</span></label>
+                        <div class="col-md-5">
+                            <div class="d-flex align-items-center">
+                                <input type="date" class="form-control" name="date_download_sertif"
+                                    placeholder="Date Download Sertif" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Duration in Month<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
@@ -265,6 +275,47 @@
                             </div>
                         </div>
                     @endif
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title d-flex align-items-center row">
+                                <a data-toggle="collapse" href="#collapse" class="col-md-12" style="text-decoration: none;">
+                                    <span class="col-md-11">Prepare for Career</span>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="collapse" class="collapse show" data-parent="#accordion-default">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Prospek Pekerjaan</label>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control" name="prospek" placeholder="Prospek Pekerjaan"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Point - Point</label>
+                                    <div class="col-md-5">
+                                        <textarea class="form-desc-learn" name="point_career" id="point_career" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+                                        <div id="point_career_editor"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Salary</label>
+                                    <div class="col-md-5">
+                                        <input type="number" class="form-control" name="salary" placeholder="Salary"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label control-label">Job Opening</label>
+                                    <div class="col-md-5">
+                                        <input type="number" class="form-control" name="job_opening" placeholder="Job Opening"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
@@ -381,6 +432,7 @@
         initializeSummernote('#desc_learn_editor', '#desc_what_to_learn', '#form-user');
         initializeSummernote('#modules_certificate_editor', '#modules_certificate', '#form-user');
         initializeSummernote('#summary_certificate_editor', '#summary_certificate', '#form-user');
+        initializeSummernote('#point_career_editor', '#point_career', '#form-user');
     });
 
     $('#setFree').change(function() {

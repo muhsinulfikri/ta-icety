@@ -317,25 +317,26 @@
                                     $grade = !empty($nilai->NILAI) ? $nilai->NILAI : 0;
                                     if ($tot_proggress == 100) { ?>
                                         @if($course->IS_SERTIF_PAID == 1)
-
-                                                <button type="button"
-                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                        onclick="BuyCertificateCode(this)"
-                                                        data-type="5">
-                                                    Certificate
-                                                </button>
-                                            @if ($is_paid == 1 && $course->FINAL_EXAM != null)
-                                                <button
+                                            <button type="button"
                                                     class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                    onclick="ShowFinalExam(this)" data-type="6">
-                                                    Final Exam
-                                                </button>
-                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                    onclick="BuyCertificateCode(this)"
+                                                    data-type="5">
+                                                Certificate
+                                            </button>
+                                            @if ($is_paid == 1 && $course->FINAL_EXAM != null )
+                                                @if ($course->DATE_DOWNLOAD_SERTIF != null && strtotime($course->DATE_DOWNLOAD_SERTIF) <= strtotime(date('Y-m-d')))
                                                     <button
                                                         class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                        onclick="ShowCertificateFinal(this)" data-type="5">
-                                                        Show Certificate Final Exam
+                                                        onclick="ShowFinalExam(this)" data-type="6">
+                                                        Final Exam
                                                     </button>
+                                                    @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                        <button
+                                                            class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                            onclick="ShowCertificateFinal(this)" data-type="5">
+                                                            Show Certificate Final Exam
+                                                        </button>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @else
@@ -344,18 +345,20 @@
                                                 onclick="ShowCertificateCode(this)" data-type="5">
                                                 Show Certificate Course
                                             </button>
-                                            @if ($course->FINAL_EXAM != null)
-                                                <button
-                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                    onclick="ShowFinalExam(this)" data-type="6">
-                                                    Final Exam
-                                                </button>
-                                                @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
-                                                <button
-                                                    class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
-                                                    onclick="ShowCertificateFinal(this)" data-type="5">
-                                                    Show Certificate Final Exam
-                                                </button>
+                                            @if ($course->DATE_DOWNLOAD_SERTIF != null && strtotime($course->DATE_DOWNLOAD_SERTIF) <= strtotime(date('Y-m-d')))
+                                                @if ($course->FINAL_EXAM != null)
+                                                    <button
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="ShowFinalExam(this)" data-type="6">
+                                                        Final Exam
+                                                    </button>
+                                                    @if($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI || $nilai_final_exam->NILAI == 100 )
+                                                    <button
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
+                                                        onclick="ShowCertificateFinal(this)" data-type="5">
+                                                        Show Certificate Final Exam
+                                                    </button>
+                                                    @endif
                                                 @endif
                                             @endif
                                         @endif
@@ -670,13 +673,17 @@
         );
         $("#detail-item").html(`<div class="d-flex justify-content-center align-items-center h-100">
                                     <div class="d-flex justify-content-center">
-                                        <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
-                                            <div class="mx-4 py-3 bg-white">
-                                                <label>Download Sertificate Course</label>
-                                                    <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                        onclick="DownloadPdf(this)">Download PDF</button>
+                                        @if (\Carbon\Carbon::parse($course->DATE_DOWNLOAD_SERTIF)->isFuture())
+                                                <p>sertifikat bisa didownload pada tanggal {{ $course->DATE_DOWNLOAD_SERTIF }}</p>
+                                        @else
+                                            <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
+                                                <div class="mx-4 py-3 bg-white">
+                                                    <label>Download Sertificate Course</label>
+                                                        <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                            onclick="DownloadPdf(this)">Download PDF</button>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 </div>`);
     }
@@ -774,35 +781,39 @@
                                         <div class="shadow mx-5 mt-3 rounded-4 box-input d-flex align-items-center">
                                             <div class="mx-4 py-3 bg-white">
                                                 @if($course->IS_SERTIF_PAID == 1 && $tot_proggress == 100)
-                                                    @if (!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 0)
-                                                        <label>Buy Sertificate Course</label>
-                                                        </br>
-                                                        <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
-                                                            <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                                            <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
-                                                            <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
-                                                        </form>
-                                                        @if (!empty($id_sertif))
-                                                            <button type="button" class="btn btn-primary col-md-12 mb-3" onclick="checkPayment('<?= $id_payment_sertif ?>')">Check Payment</button>
-                                                        @endif
-                                                    @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
-                                                        <label>Download Sertificate Course</label>
-                                                        <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                            onclick="DownloadPdf(this)">Download PDF</button>
+                                                    @if (\Carbon\Carbon::parse($course->DATE_DOWNLOAD_SERTIF)->isFuture())
+                                                        <p>sertifikat bisa didownload pada tanggal {{ $course->DATE_DOWNLOAD_SERTIF }}</p>
                                                     @else
-                                                        <label>Buy Sertificate Course</label>
-                                                        </br>
-                                                        <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
-                                                        <form action="{{ url('/buy-certificate') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
-                                                            <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
-                                                            <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
-                                                            <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
-                                                        </form>
+                                                        @if (!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 0)
+                                                            <label>Buy Sertificate Course</label>
+                                                            </br>
+                                                            <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
+                                                            <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
+                                                                <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                                <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
+                                                                <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                            </form>
+                                                            @if (!empty($id_sertif))
+                                                                <button type="button" class="btn btn-primary col-md-12 mb-3" onclick="checkPayment('<?= $id_payment_sertif ?>')">Check Payment</button>
+                                                            @endif
+                                                        @elseif(!empty($id_sertif_is_paid) && $id_sertif_is_paid->IS_PAY == 1)
+                                                            <label>Download Sertificate Course</label>
+                                                            <button type="button" class="btn btn-primary col-md-12 my-3"
+                                                                onclick="DownloadPdf(this)">Download PDF</button>
+                                                        @else
+                                                            <label>Buy Sertificate Course</label>
+                                                            </br>
+                                                            <label>Price : Rp {{ number_format($course->PRICE_SERTIF, '0', '', '.') }}</label>
+                                                            <form action="{{ url('/buy-certificate') }}" method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="id_sertif_pay" value="<?= $id_payment_sertif ?>">
+                                                                <input type="hidden" name="id_activity" value="{{ $course->ID_ACTIVITY }}">
+                                                                <input type="hidden" name="title_activity" value="{{ $course->TITLE_ACTIVITY }}">
+                                                                <button type="submit" class="btn btn-primary col-md-12 my-3" id="buy">Buy</button>
+                                                            </form>
+                                                        @endif
                                                     @endif
                                                 @endif
                                             </div>

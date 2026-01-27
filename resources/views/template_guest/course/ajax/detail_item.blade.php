@@ -1,96 +1,108 @@
 <?php if ($type == 1) { ?>
+    @php
+        $file = $detail_item_course->FILE;
+        $link = $detail_item_course->LINK_MATERI;
+
+        $pptx = preg_match('/\.pptx$/', $file ?? '');
+        $fliphtml = preg_match('/fliphtml5\.com/', $link ?? '');
+        $gdriveMatch = [];
+        $gdrive = preg_match('/^https?:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/', $link ?? '', $gdriveMatch);
+
+        $gdriveId = $gdrive ? $gdriveMatch[1] : null;
+    @endphp
     <div class="mx-4 my-4">
-        <h5 class="py-2 fw-semibold"><?= $detail_item_course->TITLE ?></h5>
-        @if ($detail_item_course->LINK_MATERI != null || $detail_item_course->FILE != null)
-        <hr>
-        <section id="doc-course">
-            <div class="d-flex justify-content-center align-items-center" id="document-frame">
-                <div class="d-flex align-items-center justify-content-center" style="width:600px; height:300px;">
-                    @if ($detail_item_course->LINK_MATERI === '-')
-                        <p>Materi tidak tersedia untuk chapter ini</p>
-                    @else
-                    <button class="btn bg-white px-3 py-2 rounded-3 shadow fw-semibold" onclick="ShowDocument(this)">
-                        <i class="bi bi-file-text me-2" style="font-size: 1.1rem;-webkit-text-stroke: 0.2px;"></i>
-                        Show Document
-                    </button>
-                    @endif
-                </div>
+    <section id="desc-course">
+        <h6 class="fw-semibold">Chapter Description :</h6>
+        <p class="text-muted">
+            <?= $detail_item_course->DESKRIPSI ?>
+        </p>
+    </section>
+
+    <h5 class="py-2 fw-semibold"><?= $detail_item_course->TITLE ?></h5>
+
+    @php
+        $file = $detail_item_course->FILE;
+        $link = $detail_item_course->LINK_MATERI;
+
+        $pptx = preg_match('/\.pptx$/', $file ?? '');
+        $fliphtml = preg_match('/fliphtml5\.com/', $link ?? '');
+        $gdriveMatch = [];
+        $gdrive = preg_match('/^https?:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/', $link ?? '', $gdriveMatch);
+        $gdriveId = $gdrive ? $gdriveMatch[1] : null;
+    @endphp
+
+    @if ($link !== '-' || $file !== null)
+    <hr>
+
+    <section id="doc-course">
+        <div class="d-flex justify-content-center">
+            <div class="w-100" style="max-width: 900px;">
+                @if (($file === '-' || !$file) && ($link === '-' || !$link))
+                    <p>Materi tidak tersedia untuk chapter ini</p>
+
+                @elseif($pptx)
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://view.officeapps.live.com/op/embed.aspx?src={{ $file }}" allowfullscreen></iframe>
+                    </div>
+
+                @elseif($fliphtml)
+                    <div class="ratio ratio-16x9">
+                        <iframe src="{{ $link }}" allowfullscreen></iframe>
+                    </div>
+
+                @elseif($gdrive)
+                    <p>Google Drive tidak dapat ditampilkan.</p>
+                    <a href="https://drive.google.com/file/d/{{ $gdriveId }}/view"
+                    target="_blank" class="btn btn-primary">Buka Materi</a>
+
+                @else
+                    <div class="ratio ratio-16x9">
+                        <iframe src="{{ $file ?: $link }}" allowfullscreen></iframe>
+                    </div>
+                @endif
             </div>
-            <script>
-                function ShowDocument(e) {
-                    $(e).hide();
-                    const file = '<?= $detail_item_course->FILE ?>';
-                    const materiLink = '<?= $detail_item_course->LINK_MATERI ?>'
-                    var pptxRegex = /^https?:\/\/[\w.-]+\/[\w\/.-]+\.pptx(\?.*)?$/;
-                    const fliphtmlRegex = /fliphtml5\.com/;
-                    const googleDriveRegex = /^https?:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/;
+        </div>
+    </section>
+    @endif
 
-                    if (!file && !materiLink) {
-                        $('#document-frame').html('<p>Dokumen Tidak ditemukan hubungi Instruktur</p>');
-                    } else if (pptxRegex.test(file)) {
-                        $('#document-frame').html(
-                            `<iframe src="https://view.officeapps.live.com/op/embed.aspx?src=${file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0"></iframe>`
-                        );
-                    } else if (fliphtmlRegex.test(materiLink)) {
-                        console.log("FlipHTML5 detected:", materiLink);
-                        // Embed untuk FlipHTML
-                        $('#document-frame').html(
-                            `<div style="position:relative;padding-top:max(60%,324px);width:100%;height:0;">
-                                <iframe style="position:absolute;border:none;width:100%;height:100%;left:0;top:0;"
-                                src="${materiLink}"  seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" >
-                                </iframe>
-                            </div>`
-                        );
-                    } else if (googleDriveRegex.test(materiLink)) {
-                        // Embed Google Drive PDF link
-                        const fileId = materiLink.match(googleDriveRegex)[1];
-                        const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-                        $('#document-frame').html(
-                            `<iframe src="${embedUrl}" style="width:600px; height:500px;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"></iframe>`
-                        );
-                    }else {
-                        const link_file = file ? file : materiLink;
-                        $('#document-frame').html(
-                            `<iframe src="${link_file}#toolbar=0&navpanes=0" style="width:600px; height:500px;" frameborder="0" allowfullscreen="true"></iframe>`
-                        );
-                    }
-                }
-            </script>
-        </section>
-        @endif
+    @if ($detail_item_course->LINK_YT != "-")
+    <hr id="video-course-line">
 
-        @if ($detail_item_course->LINK_YT != "-")
-        <hr id="video-course-line">
-        <section id="video-course">
-            <?php
+    <section id="video-course">
+        @php
             $youtubePattern = '/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i';
             $googleDrivePattern = '/drive\.google\.com\/file\/d\/([^\/]+)\//i';
             $url = $detail_item_course->LINK_YT;
-            ?>
+        @endphp
 
-            <div class="d-flex justify-content-center align-items-center mt-4 mb-4" id="video-frame">
+        <div class="d-flex justify-content-center">
+            <div class="w-100" style="max-width: 900px;">
                 @if (preg_match($googleDrivePattern, $url, $matches))
-                    <?php $fileId = $matches[1]; ?>
-                    <iframe src="https://drive.google.com/file/d/{{ $fileId }}/preview" class="w-100" style="height: 512px;" frameborder="0" allowfullscreen></iframe>
+                    @php $fileId = $matches[1]; @endphp
+
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://drive.google.com/file/d/{{ $fileId }}/preview"
+                                allowfullscreen></iframe>
+                    </div>
+
                 @elseif(preg_match($youtubePattern, $url, $matches))
-                    <?php $videoId = $matches[1]; ?>
-                    <iframe src="https://www.youtube.com/embed/{{ $videoId }}" frameborder="0" allowfullscreen style="width:700px; height:400px;"></iframe>
-                @elseif($url == "-")
+                    @php $videoId = $matches[1]; @endphp
+
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/{{ $videoId }}"
+                                allowfullscreen></iframe>
+                    </div>
+
                 @else
-                    <h6>Video cannot be opened. Contact the instructor for more information.</h6>
+                    <h6>Video cannot be opened. Contact the instructor.</h6>
                 @endif
             </div>
-        </section>
-        @endif
-        <hr id="desc-course">
-        <section id="desc-course">
-            <h6 class="fw-semibold">Chapter Description :</h6>
-            <p class="text-muted">
-                <?= $detail_item_course->DESKRIPSI ?>
-            </p>
-        </section>
-    </div>
+        </div>
+    </section>
+    @endif
+
+</div>
+
 
     <?php if ($type == 1 && !empty($data_all_mapping) && $last_item[0]->ID_ITEM == $id_item) { ?>
         <div class="mx-4 my-4">

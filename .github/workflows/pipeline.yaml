@@ -11,11 +11,11 @@ jobs:
     - name: deploy tbh-icety - pulling
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USER }}
+        host: ${{ secrets.HOST_PROD }}
+        username: ${{ secrets.USER_DEV }}
         key: ${{ secrets.MY_KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ${{ secrets.DIR }}
+          cd ${{ secrets.DIR_DEV }}
           git pull origin dev-testing && composer install && composer update && php artisan optimize
           php artisan config:clear

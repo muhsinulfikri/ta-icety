@@ -181,6 +181,7 @@ class CourseController extends Controller
                 'TITLE_CERTIFICATE'     => $req->input('title_certificate'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
+                'DATE_DOWNLOAD_SERTIF'  => $req->input('date_download_sertif'),
                 'IS_PUBLIC'             => $req->input('is_public'),
                 'LOG_TIME'              => date('Y-m-d H:i:s'),
                 'SERTIF_IMAGE'          => $req->hasFile('sertif_image') ? FileUpload::S3($req->file('sertif_image'), 'SERTIF_IMAGE', 'Template-Certifiace-' . strtotime(now())) : null
@@ -215,9 +216,17 @@ class CourseController extends Controller
             if ($req->input('final_exam')) {
                 $course['FINAL_EXAM']  = $req->input('final_exam');
             }
-            // dd($activity, $course);
+            $prepare_career = [
+                'ID_ACTIVITY'   => $activity['ID_ACTIVITY'],
+                'CAREER'        => $req->input('prospek'),
+                'POINT'         => $req->input('point_career'),
+                'SALARY'        => $req->input('salary'),
+                'JOB_OPENING'   => $req->input('job_opening')
+            ];
+            // dd($activity, $course, $prepare_career);
             DB::table('activity')->insert($activity);
             DB::table('course')->insert($course);
+            DB::table('prepare_career')->insert($prepare_career);
 
             $data['ID_COURSE'] = $course['ID_COURSE'];
             $this->item_materi($data, $req);
@@ -413,6 +422,7 @@ class CourseController extends Controller
                 a.PRICE_ACTIVITY ,
                 a.DATE_START ,
                 a.DATE_END ,
+                a.DATE_DOWNLOAD_SERTIF ,
                 a.STATUS ,
                 a.IS_PUBLIC ,
                 a.TITLE_CERTIFICATE,
@@ -430,11 +440,17 @@ class CourseController extends Controller
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
                 c.FINAL_EXAM ,
-                k.ID_KATEGORI
+                k.ID_KATEGORI,
+                pc.CAREER,
+                pc.POINT,
+                pc.SALARY,
+                pc.JOB_OPENING
             FROM
                 activity a
             LEFT JOIN course c ON
                 c.ID_ACTIVITY = a.ID_ACTIVITY
+            LEFT JOIN prepare_career pc ON
+                pc.ID_ACTIVITY = a.ID_ACTIVITY
             LEFT JOIN kategori k ON
                 k.ID_KATEGORI = c.KATEGORI
             WHERE
@@ -580,6 +596,7 @@ class CourseController extends Controller
                 'PRICE_ACTIVITY'        => $req->input('price'),
                 'DATE_START'            => $req->input('date_start'),
                 'DATE_END'              => $req->input('date_end'),
+                'DATE_DOWNLOAD_SERTIF'  => $req->input('date_download_sertif'),
                 'IS_PUBLIC'             => $req->input('is_public'),
                 'LOG_TIME'              => date('Y-m-d H:i:s')
             ];
@@ -609,6 +626,14 @@ class CourseController extends Controller
                 'HOURS'                 => $req->input('duration_hours')
             ];
 
+            $prepare_career = [
+                'ID_ACTIVITY'   => $req->input('ID_ACTIVITY'),
+                'CAREER'        => $req->input('prospek'),
+                'POINT'         => $req->input('point_career'),
+                'SALARY'        => $req->input('salary'),
+                'JOB_OPENING'   => $req->input('job_opening')
+            ];
+
             if ($req->input('req')) {
                 $course['REQUIREMENT']  = $req->input('req');
             }
@@ -618,6 +643,7 @@ class CourseController extends Controller
 
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
+            DB::table('prepare_career')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($prepare_career);
 
             // $this->update_item_materi($req);
             DB::commit();
