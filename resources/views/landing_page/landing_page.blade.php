@@ -15,9 +15,9 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="caption">
-                            <h6>Learn Easier</h6>
-                            <h2>at ICETy.org!</h2>
-                            <p>Improve your skills in various fields for a better future.</p>
+                            <h6>{{ __('home.txt_subtit_1') }}</h6>
+                            <h2>{{ __('home.txt_subtit_2') }}</h2>
+                            <p>{{ __('home.txt_subtit_3') }}</p>
                             <div class="main-button-red">
                                 <div class="scroll-to-section"><a href="#contact">Join Us Now!</a></div>
                             </div>
@@ -85,20 +85,14 @@
 
             <!-- KANAN: TEXT -->
             <div class="col-lg-6">
-                <h2 class="fw-bold mb-3">About Us</h2>
+                <h2 class="fw-bold mb-3">{{ __('about.txt_heading') }}</h2>
 
                 <p class="text-muted" style="text-align: justify;">
-                    ICETY adalah pusat pembelajaran dan sertifikasi yang menjadi
-                    jembatan antara potensi individu dan kebutuhan dunia global.
-                    Kami menyediakan beragam program pelatihan dan kursus lintas
-                    disiplin yang dirancang untuk membangun skill, kredibilitas,
-                    dan kesiapan karier di berbagai sektor.
+                    {{ __('about.txt_about_landing_1') }}
                 </p>
 
                 <p class="text-muted" style="text-align: justify;">
-                    Dengan standar internasional dan sistem pembelajaran yang
-                    adaptif, ICETY mendukung siapa pun untuk terus berkembang,
-                    berdaya saing, dan relevan di masa depan.
+                    {{ __('about.txt_about_landing_2') }}
                 </p>
             </div>
 
@@ -219,7 +213,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section-heading text-center" >
-                        <h2>Thanks For Our Supporter</h2>
+                        <h2>{{ __('home.txt_support_1') }} {{ __('home.txt_support_2') }}</h2>
                     </div>
                 </div>
                 <div class="col-lg-12">
@@ -268,7 +262,7 @@
                 <div class="col-lg-6">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h2>A Few Facts About Our Company</h2>
+                            <h2>{{ __('home.txt_facts') }}</h2>
                         </div>
                         <div class="col-lg-6">
                             <div class="row">
@@ -276,13 +270,13 @@
                                     <div class="count-area-content percentage">
                                         {{-- <div class="count-digit">{{ $graduate[0]->GRADUATE }}</div> --}}
                                         <div class="count-digit">95%</div>
-                                        <div class="count-title">Graduate Students</div>
+                                        <div class="count-title">{{ __('home.txt_graduate') }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="count-area-content">
                                         <div class="count-digit">{{ $modules[0]->MODULES }}</div>
-                                        <div class="count-title">Total Modules</div>
+                                        <div class="count-title">{{ __('home.txt_modules') }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -292,13 +286,13 @@
                                 <div class="col-12">
                                     <div class="count-area-content new-students">
                                         <div class="count-digit">{{ $students[0]->STUDENTS }}</div>
-                                        <div class="count-title">Total Students</div>
+                                        <div class="count-title">{{ __('home.txt_student') }}</div>
                                     </div>
                                 </div>
                                 <div class="col-12">
                                     <div class="count-area-content">
                                         <div class="count-digit">{{ $certificates[0]->CERTIFICATES }}</div>
-                                        <div class="count-title">Published Certificate</div>
+                                        <div class="count-title">{{ __('home.txt_certif') }}</div>
                                     </div>
                                 </div>
                             </div>

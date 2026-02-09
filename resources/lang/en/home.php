@@ -37,5 +37,10 @@ return [
     'txt_faq_4' => 'How long does it take to complete the ICETy.org course?',
     'txt_answer_4' => 'The average completion time for each course is 1-2 hours. There is no time limit for ICETy.org courses.',
     'txt_faq_5' => 'Can I still access the course materials even after completing the course?',
-    'txt_answer_5' => 'Once you have completed the course or received the certificate, you will still be able to access the materials in the course you have taken for 1 year.'
+    'txt_answer_5' => 'Once you have completed the course or received the certificate, you will still be able to access the materials in the course you have taken for 1 year.',
+    'txt_facts' => 'A Few Facts About Our Company',
+    'txt_graduate' => 'Graduate Students',
+    'txt_modules' => 'Total Modules',
+    'txt_student' => 'Total Students',
+    'txt_certif' => 'Published Certificate'
 ];

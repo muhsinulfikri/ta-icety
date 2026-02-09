@@ -76,11 +76,11 @@ https://templatemo.com/tm-569-edu-meeting
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
-                            <li class="scroll-to-section"><a href="/" class="active">Home</a></li>
-                            <li><a href="/about-icety">About</a></li>
-                            <li><a href="/store">Courses</a></li>
+                            <li class="scroll-to-section"><a href="/" class="active">{{ __('header.txt_home') }}</a></li>
+                            <li><a href="/about-icety">{{ __('header.txt_about') }}</a></li>
+                            <li><a href="/store">{{ __('header.txt_store') }}</a></li>
                             <li class="has-sub">
-                                <a href="javascript:void(0)">Partnership</a>
+                                <a href="javascript:void(0)">{{ __('header.txt_partnership') }}</a>
                                 <ul class="sub-menu">
                                     <li><a href="https://pjgs.icety.org" target="_blank">PJ Global</a></li>
                                     {{-- <li><a href="">Archipelago</a></li> --}}
@@ -90,7 +90,7 @@ https://templatemo.com/tm-569-edu-meeting
                             @if (!empty(session('user')[0]))
                                 <li class="scroll-to-section"><a href="{{ url('profile') }}">{{ __('header.txt_profile') }}</a></li>
                             @else
-                                <li class="scroll-to-section"><a href="/login">Login</a></li>
+                                <li class="scroll-to-section"><a href="/login">{{ __('header.txt_login') }}</a></li>
                             @endif
                         </ul>
                         <a class='menu-trigger'>
