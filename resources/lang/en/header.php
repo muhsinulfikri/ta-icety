@@ -2,7 +2,7 @@
 return [
     'txt_home' => 'Home',
     'txt_about' => 'About ICETy',
-    'txt_store' => 'Store',
+    'txt_store' => 'Course',
     'txt_blog' => 'Blog',
     'txt_login' => 'Login',
     'txt_register' => 'Register',
@@ -14,5 +14,6 @@ return [
     'txt_profile' => 'Profile',
     'txt_certificate' => 'My Certificate',
     'txt_logout' => 'Logout',
-    'txt_course' => 'My Courses'
+    'txt_course' => 'My Courses',
+    'txt_partnership' => 'Partnership'
 ];

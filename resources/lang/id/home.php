@@ -37,5 +37,10 @@ return [
     'txt_faq_4' => 'Berapa lama waktu yang diperlukan untuk menyelesaikan kursus ICETy.org?',
     'txt_answer_4' => 'Pada masing-masing kursus, rata-rata waktu penyelesaiannya adalah 1-2 jam. Pada kursus ICETy.org tidak ada batasan waktu dalam penyelesaian kursus.',
     'txt_faq_5' => 'Apakah saya tetap dapat mengakses materi kursus sekalipun sudah menyelesaikan kursus?',
-    'txt_answer_5' => 'Setelah Anda selesai mengerjakan atau sudah mendapat sertifikat, Anda tetap akan dapat mengakses materi dalam kursus yang telah diambil selama 1 tahun.'
+    'txt_answer_5' => 'Setelah Anda selesai mengerjakan atau sudah mendapat sertifikat, Anda tetap akan dapat mengakses materi dalam kursus yang telah diambil selama 1 tahun.',
+    'txt_facts' => 'Beberapa Fakta Perusahaan Kami',
+    'txt_graduate' => 'Peserta Lulus',
+    'txt_modules' => 'Total Materi',
+    'txt_student' => 'Total Peserta',
+    'txt_certif' => 'Sertifikat Terbit'
 ];

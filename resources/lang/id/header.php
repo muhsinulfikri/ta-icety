@@ -2,7 +2,7 @@
 return [
     'txt_home' => 'Beranda',
     'txt_about' => 'Tentang ICETy',
-    'txt_store' => 'Toko',
+    'txt_store' => 'Kursus',
     'txt_blog' => 'Blog',
     'txt_login' => 'Masuk',
     'txt_register' => 'Daftar',
@@ -14,5 +14,6 @@ return [
     'txt_profile' => 'Profil',
     'txt_certificate' => 'Sertifikat saya',
     'txt_logout' => 'Keluar',
-    'txt_course' => 'Kursus saya'
+    'txt_course' => 'Kursus saya',
+    'txt_partnership' => 'Kerja Sama'
 ];
