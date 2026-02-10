@@ -631,6 +631,10 @@
                     Swal.close();
                     if ((data.status === "exists" || data.status === "generated") && data.file) {
                         window.open(data.file, '_blank');
+                        $.post('/update-sertif', {
+                            _token: csrfToken,
+                            id_activity: idActivity
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -706,6 +710,10 @@
                     Swal.close();
                     if ((data.status === "exists" || data.status === "generated") && data.file) {
                         window.open(data.file, '_blank');
+                        $.post('/update-sertif', {
+                            _token: csrfToken,
+                            id_activity: idActivity
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
