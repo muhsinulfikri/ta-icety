@@ -668,7 +668,11 @@ class CourseGuest extends Controller
             "ID_USER" => session('user')[0]->get('ID_USER')
         ])->orderBy('LOG_TIME', 'DESC')->first();
 
-        if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s'))) {
+        $not_yet_pay = DB::select("
+            SELECT ID_PAY, DATE_PAY FROM payment WHERE ID_PAY = '".$orderData->ID_PAY."'
+        ");
+        // dd($orderData->ID_PAY, $not_yet_pay[0]->DATE_PAY);
+        if (strtotime($orderData->EXPIRED_DATE) < strtotime(date('Y-m-d H:i:s')) || $not_yet_pay[0]->DATE_PAY == NULL) {
             return view('template.header', $data) .
                 view('template_guest.course.course_detail_expired', $data) .
                 view('template.footer', $data);
