@@ -129,12 +129,19 @@
 
                 use Illuminate\Support\Facades\Request;
 
-                if (!empty($item_course)) { ?>
-                    <?php foreach ($item_course as $item) :  ?>
-                        <ul class="ps-4 ul">
-                            <li class="font"><?= $item->TITLE ?></li>
-                        </ul>
-                    <?php endforeach; ?>
+                if (!empty($course->MODULE_CERTIFICATE)) { ?>
+                @php
+                    preg_match_all('/<p>(.*?)<\/p>/', $course->MODULE_CERTIFICATE, $matches);
+                    $items = $matches[1];
+                    array_shift($items);
+                @endphp
+                    <ul class="ps-4 ol">
+                        <?php foreach ($items as $item) :  ?>
+                            @if(trim($item) != '')
+                                <li class="mb-2" style="color: #6c757d;">{!! $item !!}</li>
+                            @endif
+                        <?php endforeach; ?>
+                    </ul>
                 <?php } else { ?>
                     <div class="d-flex flex-column align-items-center">
                         <img src="{{ asset('assets_new') }}/images/empty.svg"
