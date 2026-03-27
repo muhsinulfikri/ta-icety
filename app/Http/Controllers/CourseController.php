@@ -625,11 +625,11 @@ class CourseController extends Controller
                 'DURATION'              => $req->input('duration_months'),
                 'HOURS'                 => $req->input('duration_hours')
             ];
-
+            $point = strip_tags(html_entity_decode($req->input('point_career')));
             $prepare_career = [
                 'ID_ACTIVITY'   => $req->input('ID_ACTIVITY'),
                 'CAREER'        => $req->input('prospek'),
-                'POINT'         => $req->input('point_career'),
+                'POINT'         => $point,
                 'SALARY'        => $req->input('salary'),
                 'JOB_OPENING'   => $req->input('job_opening')
             ];
