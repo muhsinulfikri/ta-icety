@@ -19,12 +19,12 @@ class AuthController extends Controller
     {
         $smtpConfig = [
             'transport' => 'smtp',
-            'host' => 'smtp-relay.brevo.com',
-            'port' => 587,
-            'from' => ['address' => 'dbi.icety.server@gmail.com', 'name' => 'Icety Official'],
-            'encryption' => 'tls',
-            'username' => '865459002@smtp-brevo.com',
-            'password' => 'r0OkS7nUhCETvafs',
+            'host' => 'tagame.id',
+            'port' => 465,
+            'from' => ['address' => 'icety-noreply@tagame.id', 'name' => 'Icety Official'],
+            'encryption' => 'ssl',
+            'username' => 'icety-noreply@tagame.id',
+            'password' => 'GC}5DCWIc)MjebX0',
         ];
         config(['mail.mailers.smtp' => $smtpConfig]);
     }
@@ -36,9 +36,9 @@ class AuthController extends Controller
         if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 1) {
             return redirect('dashboard');
         } else if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 2) {
-            return redirect('/home');
+            return redirect('/');
         } else if (!empty(session('user')[0]['ID_ROLE']) && session('user')[0]['ID_ROLE'] == 3) {
-            return redirect('/home');
+            return redirect('/');
         }
 
         return
@@ -97,7 +97,7 @@ class AuthController extends Controller
                 ]);
 
                 Session::push('user', $user_data);
-                return redirect('/home');
+                return redirect('/');
             } elseif ($auth->ID_ROLE == 3) {
 
                 $user_data = collect([
@@ -110,7 +110,7 @@ class AuthController extends Controller
                 ]);
 
                 Session::push('user', $user_data);
-                return redirect('/home');
+                return redirect('/');
             }
         } else {
             return redirect('login')->with('resp_msg', "Your Session Expired");

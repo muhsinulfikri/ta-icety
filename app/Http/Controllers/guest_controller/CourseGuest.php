@@ -61,9 +61,9 @@ class CourseGuest extends Controller
 		");
         // dd($data);
 		return
-			view('template.header', $data) .
+			view('landing_page.header', $data) .
 			view('template_guest.course.course', $data) .
-			view('template.footer', $data);
+			view('landing_page.footer', $data);
 	}
 	public function detailCourse()
     {
@@ -878,18 +878,23 @@ class CourseGuest extends Controller
 		);
         $data['cek_course_user'] = DB::select("
             SELECT
-                ID_USER,
-                ID_PRODUCT,
-                ID_PAY
+                o.ID_USER,
+                o.ID_PRODUCT,
+                o.ID_PAY,
+                p.DATE_PAY
             FROM
-                `order`
+                `order` o
+            LEFT JOIN payment p ON o.ID_PAY = p.ID_PAY
             WHERE
-                ID_USER = '".$data_user."'
+                o.ID_USER = '".$data_user."'
             AND
-                ID_PRODUCT = '".$id_activity."'
+                o.ID_PRODUCT = '".$id_activity."'
             AND
-                ID_PAY IS NOT NULL
+                o.ID_PAY IS NOT NULL
+            AND
+                p.ID_PAY IS NOT NULL
         ");
+        // dd($data['cek_course_user'], $data['course']);
 		foreach ($data_itemCourse as $item) {
 			if ($item->TYPE == 1) {
 				array_push(

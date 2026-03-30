@@ -33,17 +33,17 @@
 
             <!-- Column 2: Explore -->
             <div class="col-lg-3 col-md-6 text-center text-lg-start" >
-                <h6 class="fw-bold mb-3">Explore</h6>
+                <h6 class="fw-bold mb-3" style="color: #fff">Explore</h6>
                 <ul class="list-unstyled mb-0">
                     <li><a href="/" class="text-white text-decoration-none d-block mb-2">Home</a></li>
-                    <li><a href="/about_landing" class="text-white text-decoration-none d-block">About</a></li>
-                    <li><a href="/" class="text-white text-decoration-none d-block mb-2">Blog</a></li>
+                    <li><a href="/about-icety" class="text-white text-decoration-none d-block">About</a></li>
+                    <li><a href="/blog" class="text-white text-decoration-none d-block mb-2">Blog</a></li>
                 </ul>
             </div>
 
             <!-- Column 3: The Platform -->
             <div class="col-lg-3 col-md-6 text-center text-lg-start">
-                <h6 class="fw-bold mb-3">The Platform</h6>
+                <h6 class="fw-bold mb-3" style="color: #fff">The Platform</h6>
                 <ul class="list-unstyled mb-0">
                     <li><a href="#" class="text-white text-decoration-none d-block mb-2">Term of Service</a></li>
                     <li><a href="#" class="text-white text-decoration-none d-block">Privacy Policy</a></li>
@@ -52,7 +52,7 @@
 
             <!-- Column 4: Information -->
             <div class="col-lg-3 col-md-6 text-center text-lg-start">
-                <h6 class="fw-bold mb-3">Information</h6>
+                <h6 class="fw-bold mb-3" style="color: #fff">Information</h6>
                 <ul class="list-unstyled mb-0">
                     <li class="mb-3">
                         <strong>Phone</strong><br>
@@ -163,6 +163,25 @@
             }
         });
     }
+    let lastScroll = 0;
+    const subHeader = document.querySelector('.sub-header');
+    const header = document.querySelector('.header-area');
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > lastScroll && currentScroll > 50) {
+            // SCROLL KE BAWAH
+            subHeader.classList.add('hide');
+            header.classList.add('top'); // header naik ke atas
+        } else {
+            // SCROLL KE ATAS
+            subHeader.classList.remove('hide');
+            header.classList.remove('top'); // header turun ke bawah sub-header
+        }
+
+        lastScroll = currentScroll;
+    });
 </script>
 </body>
 </html>

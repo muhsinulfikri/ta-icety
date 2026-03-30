@@ -40,7 +40,7 @@
                                 <img src="{{ asset('assets_landing') }}/assets/images/icon-solusi.svg"" alt="">
                             </div>
                             <div class="down-content">
-                                <h4>{{ __('home.txt_card_1') }}</h4>
+                                <h4 style="color: white">{{ __('home.txt_card_1') }}</h4>
                                 <p>{{ __('home.txt_card_2') }}</p>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                 <img src="{{ asset('assets_landing') }}/assets/images/icon-kursus.svg"" alt="">
                             </div>
                             <div class="down-content">
-                                <h4>{{ __('home.txt_card_3') }}</h4>
+                                <h4 style="color: white">{{ __('home.txt_card_3') }}</h4>
                                 <p>{{ __('home.txt_card_4') }}</p>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                 <img src="{{ asset('assets_landing') }}/assets/images/icon-citra.svg"" alt="">
                             </div>
                             <div class="down-content">
-                                <h4>{{ __('home.txt_card_5') }}</h4>
+                                <h4 style="color: white">{{ __('home.txt_card_5') }}</h4>
                                 <p>{{ __('home.txt_card_6') }}</p>
                             </div>
                         </div>
