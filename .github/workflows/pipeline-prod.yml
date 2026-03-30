@@ -13,7 +13,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER_PROD }}
-        key: ${{ secrets.KEY }}
+        key: ${{ secrets.KEY_PROD }}
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.DIR_PROD }}
