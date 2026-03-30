@@ -13,9 +13,9 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USER }}
-        key: ${{ secrets.MY_KEY }}
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
-          cd ${{ secrets.DIR }}
+          cd ${{ secrets.DIR_DEV }}
           git pull origin dev-testing && composer install && composer update && php artisan optimize
           php artisan config:clear
