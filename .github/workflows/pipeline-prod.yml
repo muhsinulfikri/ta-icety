@@ -11,9 +11,9 @@ jobs:
     - name: deploy tbh-icety - pulling
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.HOST_PROD }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.MY_KEY }}
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER_PROD }}
+        key: ${{ secrets.KEY }}
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.DIR_PROD }}
