@@ -216,10 +216,12 @@ class CourseController extends Controller
             if ($req->input('final_exam')) {
                 $course['FINAL_EXAM']  = $req->input('final_exam');
             }
+            $point = strip_tags(html_entity_decode($req->input('point_career')),
+    '<p><br><ul><ol><li><b><i><strong><em>');
             $prepare_career = [
                 'ID_ACTIVITY'   => $activity['ID_ACTIVITY'],
                 'CAREER'        => $req->input('prospek'),
-                'POINT'         => $req->input('point_career'),
+                'POINT'         => $point,
                 'SALARY'        => $req->input('salary'),
                 'JOB_OPENING'   => $req->input('job_opening')
             ];
@@ -625,7 +627,8 @@ class CourseController extends Controller
                 'DURATION'              => $req->input('duration_months'),
                 'HOURS'                 => $req->input('duration_hours')
             ];
-            $point = strip_tags(html_entity_decode($req->input('point_career')));
+            $point = strip_tags(html_entity_decode($req->input('point_career')),
+    '<p><br><ul><ol><li><b><i><strong><em>');
             $prepare_career = [
                 'ID_ACTIVITY'   => $req->input('ID_ACTIVITY'),
                 'CAREER'        => $req->input('prospek'),
@@ -643,7 +646,19 @@ class CourseController extends Controller
 
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
-            DB::table('prepare_career')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($prepare_career);
+            // DB::table('prepare_career')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($prepare_career);
+            $exists = DB::table('prepare_career')
+                ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
+                ->exists();
+
+            if ($exists) {
+                DB::table('prepare_career')
+                    ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
+                    ->update($prepare_career);
+            } else {
+                DB::table('prepare_career')
+                    ->insert($prepare_career);
+            }
 
             // $this->update_item_materi($req);
             DB::commit();

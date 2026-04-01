@@ -274,7 +274,7 @@
                                     <label class="col-sm-2 col-form-label control-label">Point - Point</label>
                                     <div class="col-md-5">
                                         <textarea class="form-desc-learn" name="point_career" id="point_career" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;"></textarea>
-                                        <div id="point_career_editor"></div>
+
                                     </div>
                                 </div>
                                 <div class="form-group row">
