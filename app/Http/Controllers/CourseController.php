@@ -589,7 +589,7 @@ class CourseController extends Controller
             DB::beginTransaction();
             $activity = [
                 'TITLE_ACTIVITY'        => $req->input('title_activity'),
-                'ID_USER'               => session('user')[0]['ID_USER'],
+                // 'ID_USER'               => session('user')[0]['ID_USER'],
                 'TITLE_CERTIFICATE'     => $req->input('title_certificate'),
                 'INSTRUCTOR_NAME'       => $req->input('instructor_activity'),
                 'DESC_INSTRUCTOR'       => $req->input('desc_instructor'),
