@@ -103,7 +103,7 @@
 
                         <div class="col-6 pe-3 border-end">
                             <div class="fw-bold fs-6 text-dark">
-                                Rp. <?= number_format($prepare_career[0]->SALARY, 0, ',', '.') ?>
+                                Rp. <?= $prepare_career[0]->SALARY ?>
                             </div>
                             <div class="text-muted" style="font-size: 0.8rem;">
                                 median entry-level salary <?= $prepare_career[0]->CAREER ?>
