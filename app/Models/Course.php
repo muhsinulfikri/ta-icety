@@ -63,6 +63,7 @@ class Course extends Model
                 LEFT JOIN kategori ON kategori.ID_KATEGORI = course.KATEGORI
             WHERE
                 activity.TYPE_ACTIVITY = 1 AND
+                activity.IS_DELETED IS NULL AND
                 " . implode(' AND ', $condition) . "
             AND
                 activity.STATUS = 1
