@@ -6,10 +6,16 @@
 
     <hr>
 
-    <button class="btn btn-success w-100"
-        onclick="processPaymentJMKP('{{ $course->ID_COURSE }}')">
-        Pay Now
-    </button>
+    @if($payment && $payment->status == 'paid')
+        <button class="btn btn-primary w-100">
+            Cek Final Exam
+        </button>
+    @else
+        <button class="btn btn-success w-100"
+            onclick="processPaymentJMKP('{{ $course->ID_COURSE }}')">
+            Pay Now
+        </button>
+    @endif
 </div>
 <script>
     function processPaymentJMKP(courseId) {
