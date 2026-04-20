@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers\guest_controller;
 
+use App\Http\Controllers\Controller;
+use App\Models\Certificate;
+use App\Models\Checkout;
+use App\Models\Course;
 use App\Models\Ebook;
 use App\Models\Event;
 use App\Models\FinalExam;
 use App\Models\Promo;
-use App\Models\Course;
-use App\Models\Checkout;
-use App\Models\Certificate;
+use App\Services\XenditService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use Exception;
-use Illuminate\Support\Facades\Session;
-use App\Services\XenditService;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
+use Xendit\Invoice;
+use Xendit\Invoice\CreateInvoiceRequest;
+use Xendit\Invoice\Invoice as XenditInvoice;
+use Xendit\Invoice\InvoiceApi;
+use Xendit\Xendit;
 
 class CheckoutGuest extends Controller
 {
@@ -763,6 +768,163 @@ class CheckoutGuest extends Controller
 			}
 		}
 	}
+    //payment final-jmkp
+    public function createInvoice($courseId){
+        DB::beginTransaction();
+        try {
+            $user = session('user')[0];
+            // $course = $this->courseModel->get_course($courseId);
+            $course = DB::select("
+                SELECT
+                    activity.ID_ACTIVITY,
+                    activity.TITLE_ACTIVITY,
+                    course.ID_COURSE,
+                    course.ID_ACTIVITY,
+                    course.FINAL_JMKP,
+                    course.PRICE_JMKP
+                FROM
+                    activity
+                LEFT JOIN
+                    course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                WHERE
+                    course.ID_COURSE = '". $courseId ."'
+            ")[0] ?? null;
+
+            if (!$course) {
+                return response()->json([
+                    'message' => 'Course tidak ditemukan'
+                ], 404);
+            }
+
+            $existing = DB::table('payment_final_jmkp')
+                ->where('ID_USER', $user['ID_USER'])
+                ->where('ID_USER', $courseId)
+                ->where('type', 'jmkp')
+                ->whereIn('status', ['pending', 'paid'])
+                ->first();
+
+            if ($existing) {
+                return response()->json([
+                    'message' => 'Transaksi sudah ada'
+                ], 400);
+            }
+
+            $externalId = 'jmkp-' . $user['ID_USER'] . '-' . time();
+            $apiInstance = new InvoiceApi();
+            $createInvoiceRequest = new CreateInvoiceRequest([
+                'external_id' => $externalId,
+                'amount' => (int) $course->PRICE_JMKP,
+                'payer_email' => $user['EMAIL'],
+                'description' => 'Payment Final Exam JMKP - ' . $course->TITLE_ACTIVITY
+            ]);
+
+            $invoice = $apiInstance->createInvoice($createInvoiceRequest);
+
+            DB::table('payment_final_jmkp')->insert([
+                'ID_USER' => $user['ID_USER'],
+                'ID_COURSE' => $courseId,
+                'external_id' => $externalId,
+                'invoice_id' => $invoice['id'],
+                'type' => 'jmkp',
+                'amount' => $course->PRICE_JMKP,
+                'status' => 'pending',
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'invoice_url' => $invoice['invoice_url']
+            ]);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Gagal membuat invoice',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function handleWebhook(Request $request){
+        DB::beginTransaction();
+        try {
+            $callbackToken = $request->header('x-callback-token');
+            if ($callbackToken !== env('XENDIT_CALLBACK_TOKEN')) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            $externalId = $request->external_id;
+
+            $transaction = DB::table('payment_final_jmkp')
+                ->where('external_id', $externalId)
+                ->first();
+
+            if (!$transaction) {
+                return response()->json(['message' => 'Transaction not found'], 404);
+            }
+
+            if ($transaction->status === 'paid') {
+                return response()->json(['message' => 'Already processed']);
+            }
+
+            if ($request->status === 'PAID') {
+
+                // update transaksi
+                DB::table('payment_final_jmkp')
+                    ->where('id', $transaction->id)
+                    ->update([
+                        'status' => 'paid',
+                        'paid_at' => now(),
+                        'payment_method' => $request->payment_method,
+                        'updated_at' => now()
+                    ]);
+
+                // unlock JMKP
+                // DB::table('course_user')->updateOrInsert(
+                //     [
+                //         'user_id' => $transaction->user_id,
+                //         'course_id' => $transaction->course_id,
+                //     ],
+                //     [
+                //         'is_jmkp_unlocked' => 1,
+                //         'updated_at' => now()
+                //     ]
+                // );
+
+            } elseif ($request->status === 'EXPIRED') {
+
+                DB::table('payment_final_jmkp')
+                    ->where('id', $transaction->id)
+                    ->update([
+                        'status' => 'expired',
+                        'updated_at' => now()
+                    ]);
+
+            } elseif ($request->status === 'FAILED') {
+
+                DB::table('payment_final_jmkp')
+                    ->where('id', $transaction->id)
+                    ->update([
+                        'status' => 'failed',
+                        'updated_at' => now()
+                    ]);
+            }
+
+            DB::commit();
+
+            return response()->json(['status' => 'success']);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => 'Webhook error',
+                'error' => $e->getMessage() // hapus di production
+            ], 500);
+        }
+    }
 
 	public function GenerateUniqID_Order($var)
 	{

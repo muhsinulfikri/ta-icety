@@ -359,6 +359,12 @@
                                                         Show Certificate Final Exam
                                                     </button>
                                                     @endif
+                                                @elseif($course->FINAL_JMKP == 1)
+                                                    <button
+                                                        class="button btn-warning px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
+                                                        onclick="showPaymentJMKP('{{ $course->ID_COURSE }}')">
+                                                        Unlock Final Exam JMKP (Rp {{ number_format($course->PRICE_JMKP) }})
+                                                    </button>
                                                 @endif
                                             @endif
                                         @endif
@@ -1260,6 +1266,19 @@
                         });
                     }
                 });
+            }
+        });
+    }
+    //get payment final jmkp
+    function showPaymentJMKP(courseId) {
+        $.ajax({
+            url: `/course/${courseId}/payment_jmkp`,
+            method: "GET",
+            success: function(res) {
+                $('#detail-item').html(res);
+            },
+            error: function() {
+                alert('Gagal load payment');
             }
         });
     }

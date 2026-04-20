@@ -1432,6 +1432,27 @@ class CourseGuest extends Controller
 		return redirect()->back();
     }
 
+    function payment_jmkp($id){
+        // $data['course'] = $this->courseModel->get_course($id);
+        $data['course'] = DB::select("
+            SELECT
+                activity.ID_ACTIVITY,
+                activity.TITLE_ACTIVITY,
+                course.ID_COURSE,
+                course.ID_ACTIVITY,
+                course.FINAL_JMKP,
+                course.PRICE_JMKP
+            FROM
+                activity
+            LEFT JOIN
+                course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+            WHERE
+                course.ID_COURSE = '". $id ."'
+        ")[0] ?? null;
+        // dd($data['course'], $id);
+        return view('template_guest.course.ajax.payment_jmkp', $data);
+    }
+
 	public function GenerateCodeExam($var)
 	{
 		$string = preg_replace('/[^a-z]/i', '', $var);
