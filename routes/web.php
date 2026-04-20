@@ -234,6 +234,8 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::get('/course/{id}/payment_jmkp',  'guest_controller\CourseGuest@payment_jmkp');
     Route::post('/xendit/webhook',  'guest_controlller\CheckoutGuest@handleWebhook');
     Route::get('/course/{id}/create-invoice', 'guest_controller\CheckoutGuest@createInvoice');
+    Route::get('/payment-success', 'guest_controller\CheckoutGuest@paymentSuccess');
+    Route::get('/payment-failed', 'guest_controller\CheckoutGuest@paymentFailed');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {
