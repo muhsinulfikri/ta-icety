@@ -815,7 +815,9 @@ class CheckoutGuest extends Controller
                 'external_id' => $externalId,
                 'amount' => (int) $course->PRICE_JMKP,
                 'payer_email' => $user['EMAIL'],
-                'description' => 'Payment Final Exam JMKP - ' . $course->TITLE_ACTIVITY
+                'description' => 'Payment Final Exam JMKP - ' . $course->TITLE_ACTIVITY,
+                'success_redirect_url' => url(''),
+                'failed_redirect_url' => url('')
             ]);
 
             $invoice = $apiInstance->createInvoice($createInvoiceRequest);
@@ -924,6 +926,64 @@ class CheckoutGuest extends Controller
                 'error' => $e->getMessage() // hapus di production
             ], 500);
         }
+    }
+
+    public function paymentSuccess(Request $request)
+    {
+        $courseId = $request->course_id;
+        $course = DB::select("
+                SELECT
+                    activity.ID_ACTIVITY,
+                    activity.TITLE_ACTIVITY,
+                    course.ID_COURSE,
+                    course.ID_ACTIVITY,
+                    course.FINAL_JMKP,
+                    course.PRICE_JMKP
+                FROM
+                    activity
+                LEFT JOIN
+                    course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                WHERE
+                    course.ID_COURSE = '". $courseId ."'
+            ")[0] ?? null;
+
+        // 🔥 optional: cek status di DB (biar aman)
+        $payment = DB::table('payment_final_jmkp')
+            ->where('ID_USER', session('user')[0]['ID_USER'])
+            ->where('ID_COURSE', $courseId)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        if ($payment && $payment->status === 'paid') {
+            // langsung ke halaman course / exam
+            return redirect('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY)
+                ->with('success', 'Pembayaran berhasil');
+        }
+
+        // kalau belum ke-update webhook
+        return redirect('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY)
+            ->with('info', 'Menunggu konfirmasi pembayaran...');
+    }
+    public function paymentFailed(Request $request)
+    {
+        $courseId = $request->course_id;
+        $course = DB::select("
+                SELECT
+                    activity.ID_ACTIVITY,
+                    activity.TITLE_ACTIVITY,
+                    course.ID_COURSE,
+                    course.ID_ACTIVITY,
+                    course.FINAL_JMKP,
+                    course.PRICE_JMKP
+                FROM
+                    activity
+                LEFT JOIN
+                    course ON course.ID_ACTIVITY = activity.ID_ACTIVITY
+                WHERE
+                    course.ID_COURSE = '". $courseId ."'
+            ")[0] ?? null;
+        return redirect('course/detail/' . preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $course->TITLE_ACTIVITY)) . '?id_activity=' . $course->ID_ACTIVITY)
+            ->with('error', 'Pembayaran gagal atau dibatalkan');
     }
 
 	public function GenerateUniqID_Order($var)
