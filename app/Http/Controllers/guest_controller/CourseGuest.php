@@ -1449,6 +1449,14 @@ class CourseGuest extends Controller
             WHERE
                 course.ID_COURSE = '". $id ."'
         ")[0] ?? null;
+        $payment = DB::table('payment_final_jmkp')
+            ->where('ID_USER', session('user')[0]['ID_USER'])
+            ->where('ID_COURSE', $id)
+            ->where('type', 'jmkp')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $data['payment'] = $payment;
         // dd($data['course'], $id);
         return view('template_guest.course.ajax.payment_jmkp', $data);
     }
