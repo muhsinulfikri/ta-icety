@@ -111,7 +111,19 @@
                             Need Final Exam
                         </div>
                     </div>
+                    <div class="form-group row">
+                            <label class="col-sm-2 col-form-label control-label"></label>
+                            <div class="d-flex align-items-center mt-2">
+                            No Final Exam JMKP
+                            <div class="switch m-r-10" style="margin-left: 7px;">
+                                <input type="checkbox" id="final-jmkp" name="final_jmkp">
+                                <label for="final-jmkp"></label>
+                            </div>
+                            Need Final Exam JMKP
+                        </div>
+                    </div>
                     <div id="final-exam-container"></div>
+                    <div id="final-jmkp-container"></div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Date Course<span
                                 class="text-danger">*</span></label>
@@ -354,6 +366,8 @@
     var id_act = data.ID_ACTIVITY;
     var req = data.REQUIREMENT;
     var final_exam = data.FINAL_EXAM;
+    var final_jmkp = data.FINAL_JMKP;
+    var price_jmkp = data.PRICE_JMKP;
 
     var item = <?= $data['item'] ?>;
     var last_id = <?= $data['last_id'] ?>;
@@ -428,6 +442,21 @@
                     </div>
                 `);
         $('select[name="final_exam"]').val(final_exam);
+    }
+    if(final_jmkp == 0){
+        $('#final-jmkp').prop('checked', false)
+    } else {
+        $('#final-jmkp').prop('checked', true)
+        $('#final-jmkp-container').html(`
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Price Exam JMKP</label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="price_jmkp"
+                                placeholder="0" required>
+                        </div>
+                    </div>
+                `);
+        $('input[name="price_jmkp"]').val(price_jmkp);
     }
     $('input[name="date_start"]').val(data.DATE_START);
     $('input[name="date_end"]').val(data.DATE_END);
@@ -753,6 +782,7 @@
                 $('#final-exam-container').empty();
             }
         });
+        
     });
 
     $(document).ready(function() {

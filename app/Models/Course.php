@@ -187,6 +187,8 @@ class Course extends Model
         course.DURATION,
         course.HOURS,
         course.FINAL_EXAM,
+        course.FINAL_JMKP,
+        course.PRICE_JMKP,
         user.NAME,
         user.FOTO_PROFILE,
         kategori.KATEGORI,

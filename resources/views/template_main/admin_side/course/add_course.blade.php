@@ -118,7 +118,19 @@
                             Need Final Exam
                         </div>
                     </div>
+                    <div class="form-group row">
+                            <label class="col-sm-2 col-form-label control-label"></label>
+                            <div class="d-flex align-items-center mt-2">
+                            No Final Exam JMKP
+                            <div class="switch m-r-10" style="margin-left: 7px;">
+                                <input type="checkbox" id="final-jmkp" name="final_jmkp">
+                                <label for="final-jmkp"></label>
+                            </div>
+                            Need Final Exam JMKP
+                        </div>
+                    </div>
                     <div id="final-exam-container"></div>
+                    <div id="final-jmkp-container"></div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Date <span
                                 class="text-danger">*</span></label>
@@ -555,6 +567,21 @@
                 });
             } else {
                 $('#final-exam-container').empty();
+            }
+        });
+        $('#final-jmkp').change(function() {
+            if ($(this).is(':checked')) {
+                $('#final-jmkp-container').html(`
+                    <div class="form-group row">
+                        <label class="col-sm-2 col-form-label control-label">Price Exam JMKP</label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" name="price_jmkp"
+                                placeholder="0" required>
+                        </div>
+                    </div>
+                `);
+            } else {
+                $('#final-jmkp-container').empty();
             }
         });
     });

@@ -216,6 +216,10 @@ class CourseController extends Controller
             if ($req->input('final_exam')) {
                 $course['FINAL_EXAM']  = $req->input('final_exam');
             }
+            if ($req->input('final_jmkp') == 'on') {
+                $course['FINAL_JMKP']  = 1;
+                $course['PRICE_JMKP']  = $req->input('price_jmkp');
+            }
             $point = strip_tags(html_entity_decode($req->input('point_career')),
     '<p><br><ul><ol><li><b><i><strong><em>');
             $prepare_career = [
@@ -442,6 +446,8 @@ class CourseController extends Controller
                 c.DESKRIPSI_COURSE ,
                 c.DESKRIPSI_COURSE_ITEM ,
                 c.FINAL_EXAM ,
+                c.FINAL_JMKP,
+                c.PRICE_JMKP,
                 k.ID_KATEGORI,
                 pc.CAREER,
                 pc.POINT,
