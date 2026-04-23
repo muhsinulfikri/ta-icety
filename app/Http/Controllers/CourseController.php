@@ -631,8 +631,15 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
                 'KATEGORI'              => $req->input('category'),
                 'DURATION'              => $req->input('duration_months'),
-                'HOURS'                 => $req->input('duration_hours')
+                'HOURS'                 => $req->input('duration_hours'),
+                'PRICE_JMKP'            => $req->input('final_jmkp')
             ];
+            if ($req->input('final_jmkp') == 'on') {
+                $course['FINAL_JMKP'] = 1;
+            } else {
+                $course['FINAL_JMKP'] = 0;
+            }
+
             $point = strip_tags(html_entity_decode($req->input('point_career')),
     '<p><br><ul><ol><li><b><i><strong><em>');
             $prepare_career = [

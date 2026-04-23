@@ -84,6 +84,8 @@ Route::get('verifikasi/{id}', 'guest_controller\SertificateGuest@verifSertif');
 //VERIFICATION PAYMENT
 Route::get('check_payment_ajax/{id}', 'guest_controller\PaymentCertificate@check_payment_status_ajax');
 
+Route::post('/xendit/webhook',  'guest_controller\CheckoutGuest@handleWebhook');
+
 // 1 Admin
 Route::middleware(['usersession:1'])->group(function () {
 
@@ -232,10 +234,8 @@ Route::middleware(['usersession:3,2,1'])->group(function () {
     Route::post('/generate-sertif-exam','guest_controller\CourseGuest@handleFinalExamCertificate');
     //final jmkp
     Route::get('/course/{id}/payment_jmkp',  'guest_controller\CourseGuest@payment_jmkp');
-    Route::post('/xendit/webhook',  'guest_controlller\CheckoutGuest@handleWebhook');
+
     Route::get('/course/{id}/create-invoice', 'guest_controller\CheckoutGuest@createInvoice');
-    Route::get('/payment-success', 'guest_controller\CheckoutGuest@paymentSuccess');
-    Route::get('/payment-failed', 'guest_controller\CheckoutGuest@paymentFailed');
 });
 
 Route::middleware(['usersession:2,1'])->group(function () {

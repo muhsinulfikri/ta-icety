@@ -361,9 +361,9 @@
                                                     @endif
                                                 @elseif($course->FINAL_JMKP == 1)
                                                     <button
-                                                        class="button btn-warning px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100"
+                                                        class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                         onclick="showPaymentJMKP('{{ $course->ID_COURSE }}')">
-                                                        Unlock Final Exam JMKP (Rp {{ number_format($course->PRICE_JMKP) }})
+                                                        Final Exam JMKP
                                                     </button>
                                                 @endif
                                             @endif
