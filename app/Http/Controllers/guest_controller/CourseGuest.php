@@ -1457,7 +1457,6 @@ class CourseGuest extends Controller
             ->first();
 
         $data['payment'] = $payment;
-        // dd($data['course'], $id);
         return view('template_guest.course.ajax.payment_jmkp', $data);
     }
 

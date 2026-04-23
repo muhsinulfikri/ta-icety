@@ -1,27 +1,14 @@
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
-
-@if(session('info'))
-    <div class="alert alert-warning">{{ session('info') }}</div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger">{{ session('error') }}</div>
-@endif
 <div class="p-3">
-    <h5 class="fw-bold mb-3">Payment Final Exam JMKP</h5>
-
-    <p>Course: <strong>{{ $course->TITLE_ACTIVITY }}</strong></p>
-    <p>Price: <strong>Rp {{ number_format($course->PRICE_JMKP) }}</strong></p>
-
-    <hr>
-
     @if($payment && $payment->status == 'paid')
-        <button class="btn btn-primary w-100">
-            Cek Final Exam
-        </button>
+        <h5 class="fw-bold mb-3">Final Exam JMKP</h5>
+        <p>1. Pendaftaran berkas peserta APL 01 dapat dilakukan maksimal H-3 hari kerja pada link <a href="https://bit.ly/Pendaftaran_Sertifikasi_JMKP_2026" target="_blank">https://bit.ly/Pendaftaran_Sertifikasi_JMKP_2026</a> dan APL 02 disubmit maksimal di H-1 hari kerja ..</p>
+        <p>2. APL 02 akan masuk ke email masing2 peserta saat APL 01 sudah d terima oleh tim kami</p>
     @else
+        <h5 class="fw-bold mb-3">Payment Final Exam JMKP</h5>
+
+        <p>Course: <strong>{{ $course->TITLE_ACTIVITY }}</strong></p>
+        <p>Price: <strong>Rp {{ number_format($course->PRICE_JMKP) }}</strong></p>
+        <hr>
         <button class="btn btn-success w-100"
             onclick="processPaymentJMKP('{{ $course->ID_COURSE }}')">
             Pay Now
@@ -33,5 +20,23 @@
         $.get(`/course/${courseId}/create-invoice`, function(res) {
             window.location.href = res.invoice_url;
         });
+    }
+
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('payment') === 'success') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Pembayaran Berhasil',
+            text: 'Final Exam sudah terbuka 🎉'
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if(params.get('payment') === 'failed') {
+        Swal.fire({
+            icon: 'failed',
+            title: 'Pembayaran Gagal',
+            text: 'Ulangi Pembayaran!'
+        });
+        window.history.replaceState({}, document.title, window.location.pathname);
     }
 </script>
