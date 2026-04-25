@@ -631,11 +631,11 @@ class CourseController extends Controller
                 'DESKRIPSI_COURSE_ITEM' => $req->input('desc_item'),
                 'KATEGORI'              => $req->input('category'),
                 'DURATION'              => $req->input('duration_months'),
-                'HOURS'                 => $req->input('duration_hours'),
-                'PRICE_JMKP'            => $req->input('final_jmkp')
+                'HOURS'                 => $req->input('duration_hours')
             ];
             if ($req->input('final_jmkp') == 'on') {
                 $course['FINAL_JMKP'] = 1;
+                $course['PRICE_JMKP'] = $req->input('price_jmkp');
             } else {
                 $course['FINAL_JMKP'] = 0;
             }

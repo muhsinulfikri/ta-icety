@@ -876,20 +876,41 @@ class CourseGuest extends Controller
 			'materi' => 0,
 			'quiz' => 0
 		);
-        $data['cek_course_user'] = DB::select("
-            SELECT
-                ID_USER,
-                ID_PRODUCT,
-                ID_PAY
-            FROM
-                `order`
-            WHERE
-                ID_USER = '".$data_user."'
-            AND
-                ID_PRODUCT = '".$id_activity."'
-            AND
-                ID_PAY IS NOT NULL
-        ");
+        if($data['course']->PRICE_ACTIVITY != 0){
+            $data['cek_course_user'] = DB::select("
+                SELECT
+                    o.ID_USER,
+                    o.ID_PRODUCT,
+                    o.ID_PAY
+                FROM
+                    `order` o
+                LEFT JOIN payment_method pm
+                ON o.ID_PAY = pm.ID_PAY
+                WHERE
+                    o.ID_USER = '".$data_user."'
+                AND
+                    o.ID_PRODUCT = '".$id_activity."'
+                AND
+                    o.ID_PAY IS NOT NULL
+                AND
+                    pm.STATUS = 'SETTLED'
+                ");
+        } else{
+            $data['cek_course_user'] = DB::select("
+                SELECT
+                    ID_USER,
+                    ID_PRODUCT,
+                    ID_PAY
+                FROM
+                    `order`
+                WHERE
+                    ID_USER = '".$data_user."'
+                AND
+                    ID_PRODUCT = '".$id_activity."'
+                AND
+                    ID_PAY IS NOT NULL
+            ");
+        }
 		foreach ($data_itemCourse as $item) {
 			if ($item->TYPE == 1) {
 				array_push(
