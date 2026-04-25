@@ -1,6 +1,114 @@
+{{-- <style>
+    #page-content {
+        padding-top: 40px;
+        background: #f8f9fa; /* Background abu-abu muda seperti di gambar */
+        min-height: 100vh;
+    }
+
+    /* Search Bar Wrapper */
+    .search-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+    }
+
+    .topbar-search {
+        position: relative;
+        width: 300px;
+    }
+
+    .topbar-search input {
+        border-radius: 25px;
+        padding-right: 40px;
+        border: 1px solid #ddd;
+    }
+
+    .topbar-search i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #888;
+    }
+
+    /* Filter Nav Styling */
+    .filter-wrap {
+        margin-bottom: 30px;
+    }
+
+    .course-filter {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+    }
+
+    .course-filter li a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 600;
+        font-size: 16px;
+        padding-bottom: 5px;
+        transition: 0.3s;
+    }
+
+    .course-filter li.active a {
+        color: #AD0A0B;
+        border-bottom: 3px solid #AD0A0B; /* Garis bawah merah */
+    }
+
+    /* Banner Store Merah */
+    .store-banner {
+        background-color: #AD0A0B;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 5px;
+        margin-bottom: 30px;
+    }
+
+    .store-banner h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 1px;
+    }
+
+    /* Card Content */
+    .content-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 60px 20px;
+        text-align: center;
+    }
+</style> --}}
+{{-- <style>
+.course-grid {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+.course-header img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+.course-price {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 6px 12px;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 13px;
+}
+</style> --}}
+
+<main id="page-content">
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<section class="py-5 py-md-7" style="background-color: #B90C0B;">
+<section class="py-5 py-md-7" style="background-color: #AD0A0B;">
     <div class="container">
         <h1 class="font text-center" style="color: white !important">COURSES</h1>
         <!-- <div class="justify-content-center mt-3 d-flex">
@@ -10,7 +118,7 @@
         </div> -->
     </div>
 </section>
-<section class="section-padding page">
+<section class="section-padding course-page">
     <div class="course-top-wrap mb-50">
         <div class="container">
             <div class="row align-items-center">
@@ -56,7 +164,9 @@
     </div>
     <!--course-->
 </section>
-
+</main>
+<script src="{{ asset('assets_landing')}}/vendor/jquery/jquery.min.js"></script>
+<script src="{{ asset('assets_landing')}}/vendor/bootstrap/js/bootstrap.min.js"></script>
 <script>
     $(document).on('click', function(event) {
         var clickedElement = $(event.target);

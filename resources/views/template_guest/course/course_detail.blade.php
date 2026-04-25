@@ -637,6 +637,10 @@
                     Swal.close();
                     if ((data.status === "exists" || data.status === "generated") && data.file) {
                         window.open(data.file, '_blank');
+                        $.post('/update-sertif', {
+                            _token: csrfToken,
+                            id_activity: idActivity
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -712,6 +716,10 @@
                     Swal.close();
                     if ((data.status === "exists" || data.status === "generated") && data.file) {
                         window.open(data.file, '_blank');
+                        $.post('/update-sertif', {
+                            _token: csrfToken,
+                            id_activity: idActivity
+                        });
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -854,7 +862,7 @@
                 },
                 error: function(xhr, status, error) {
                     displayError('Payment Error', xhr.responseJSON?.message || 'An error occurred while getting the order ID.');
-                    console.error(error);
+                    console.log(error);
                     Swal.close();
                 }
             });
@@ -1285,15 +1293,20 @@
 
     // Helper function to display error messages
     function displayError(title, message) {
-        const alertContainer = document.getElementById('alert_div');
-        alertContainer.innerHTML = `
-            <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
-                <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                    style="transition: none; background-color: transparent; color: inherit;">
-                </button>
-            </div>
-        `;
+        // const alertContainer = document.getElementById('alert_div');
+        // alertContainer.innerHTML = `
+        //     <div class="alert alert-danger alert-dismissible alert-label-icon label-arrow fade show" role="alert">
+        //         <i class="mdi mdi-block-helper label-icon"></i><strong>${title}</strong> - ${message}
+        //         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+        //             style="transition: none; background-color: transparent; color: inherit;">
+        //         </button>
+        //     </div>
+        // `;
+        Swal.fire({
+            icon: 'error',
+            title: title,
+            text: message
+        });
     }
 
 </script>

@@ -104,7 +104,6 @@ class PaymentCertificate extends Controller
                     ->where('ID_PAYMENT_SERTIF', $id_sertif_pay->ID_PAYMENT_SERTIF)
                     ->update(["ID_PAY" => $ID_PAY]);
             }
-
 			return response()->json([
                 'status_code' => 200,
                 'invoice'     => $invoice,

@@ -10,7 +10,7 @@
         color: black !important;
     }
 </style>
-
+<main id="page-content">
 <section class="container d-flex flex-column gap-6 my-5">
     @foreach($blog as $item)
     <div class="d-flex flex-column">
@@ -49,6 +49,7 @@
     @endforeach
 
 </section>
+</main>
 <script>
     //format date indonesia
     document.addEventListener('DOMContentLoaded', () => {
