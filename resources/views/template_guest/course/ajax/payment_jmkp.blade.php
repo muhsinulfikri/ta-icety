@@ -29,14 +29,23 @@
             icon: 'success',
             title: 'Pembayaran Berhasil',
             text: 'Final Exam sudah terbuka 🎉'
+        }).then(() => {
+            params.delete('payment');
+
+            const newUrl = window.location.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
         });
-        window.history.replaceState({}, document.title, window.location.pathname);
-    } else if(params.get('payment') === 'failed') {
+
+    } else if (params.get('payment') === 'failed') {
         Swal.fire({
-            icon: 'failed',
+            icon: 'error',
             title: 'Pembayaran Gagal',
             text: 'Ulangi Pembayaran!'
+        }).then(() => {
+            params.delete('payment');
+
+            const newUrl = window.location.pathname + '?' + params.toString();
+            window.history.replaceState({}, document.title, newUrl);
         });
-        window.history.replaceState({}, document.title, window.location.pathname);
     }
 </script>
