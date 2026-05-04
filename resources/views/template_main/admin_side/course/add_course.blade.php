@@ -1,3 +1,8 @@
+<style>
+    .note-placeholder {
+        white-space: pre-line !important;
+    }
+</style>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="main-content">
@@ -220,9 +225,9 @@
                         <label class="col-sm-2 col-form-label control-label">Modules for Certificate<span
                                 class="text-danger">*</span></label>
                         <div class="col-md-5">
-                            <textarea class="form-modules" name="modules_certificate" id="modules_certificate" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;"></textarea>
+                            <textarea class="form-modules" name="modules_certificate" id="modules_certificate" rows=11 cols=50 maxlength=250  style="opacity: 0; position: absolute; z-index: -1;" placeholder="2, ...."></textarea>
                             <div id="modules_certificate_editor"></div>
-                            <small class="text-danger">* Modules Certificate for display in Certificate</small>
+                            <small class="text-danger">* Modules Certificate for display in Certificate and Course Outcomes in detail course.</small>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -383,7 +388,7 @@
     var limit = 0;
 
     $(document).ready(function() {
-        function initializeSummernote(editorSelector, textareaSelector, formSelector) {
+        function initializeSummernote(editorSelector, textareaSelector, formSelector, placeholder = '') {
             var $editor = $(editorSelector);
             var $textarea = $(textareaSelector);
             var $form = $(formSelector);
@@ -392,6 +397,7 @@
 
             $editor.summernote({
                 height: 200,
+                placeholder: placeholder,
                 callbacks: {
                     onPaste: function(e) {
                         console.log('Called event paste', e);
@@ -442,7 +448,7 @@
         initializeSummernote('#desc_course_editor', '#desc_course', '#form-user');
         initializeSummernote('#desc_instructor_editor', '#desc_instructor', '#form-user');
         initializeSummernote('#desc_learn_editor', '#desc_what_to_learn', '#form-user');
-        initializeSummernote('#modules_certificate_editor', '#modules_certificate', '#form-user');
+        initializeSummernote('#modules_certificate_editor', '#modules_certificate', '#form-user', 'Example input:\n2,\n1. Food Safety\n2. Hygine & Sanitation');
         initializeSummernote('#summary_certificate_editor', '#summary_certificate', '#form-user');
         initializeSummernote('#point_career_editor', '#point_career', '#form-user');
     });
