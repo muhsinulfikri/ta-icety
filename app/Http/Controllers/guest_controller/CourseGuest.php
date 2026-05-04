@@ -463,10 +463,12 @@ class CourseGuest extends Controller
 
     public function handleFinalExamCertificate(Request $request){
         $id_activity = $request->input('id_activity');
+        $id_act = $request->input('id_act');
         $userId = session('user')[0]->get('ID_USER');
 
         $data = [
             'id_activity' => $id_activity,
+            'id_act'      => $id_act,
             'final_exam' => $this->finalExamModel->get_final_exam($id_activity),
         ];
 
@@ -505,6 +507,7 @@ class CourseGuest extends Controller
             SELECT ID_ACTIVITY
             FROM course
             WHERE FINAL_EXAM = '".$data['id_activity']."'
+            AND ID_ACTIVITY = '".$data['id_act']."'
         ");
         $completed_course = $this->courseModel->get_completed_course(session('user')[0]->get('ID_USER'), $id_course_completed->ID_ACTIVITY);
         $summary_sertif = $this->activityModel->get_summary_sert_activity($id_course_completed->ID_ACTIVITY);

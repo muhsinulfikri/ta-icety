@@ -359,7 +359,8 @@
                                                         Show Certificate Final Exam
                                                     </button>
                                                     @endif
-                                                @elseif($course->FINAL_JMKP == 1)
+                                                @endif
+                                                @if ($course->FINAL_JMKP == 1)
                                                     <button
                                                         class="button btn-main-outline px-4 py-3 mb-3 rounded-3 shadow fw-semibold w-100 btn-code"
                                                         onclick="showPaymentJMKP('{{ $course->ID_COURSE }}')">
@@ -696,7 +697,7 @@
 
     <?php if ($nilai_final_exam->NILAI >= $final_min_nilai->MIN_NILAI) { ?>
 
-        function DownloadPdfExam(id_activity) {
+        function DownloadPdfExam(id_activity, id_act) {
             Swal.fire({
                 title: 'Loading Sertifikat!',
                 html: 'Please wait ...',
@@ -710,6 +711,7 @@
                 type: "POST",
                 data: {
                     id_activity: id_activity,
+                    id_act: id_act,
                     _token: "<?= csrf_token() ?>"
                 },
                 success: function(data) {
@@ -764,7 +766,7 @@
                                                 <label>Download Sertificate Final Exam</label>
                                                 @if (!(empty($get_data_final_exam)))
                                                 <button type="button" class="btn btn-primary col-md-12 my-3"
-                                                    onclick="DownloadPdfExam('{{ $get_data_final_exam->ID_ACTIVITY }}')">Download PDF</button>
+                                                    onclick="DownloadPdfExam('{{ $get_data_final_exam->ID_ACTIVITY }}', '{{ $course->ID_ACTIVITY }}')">Download PDF</button>
                                                 @endif
                                             </div>
                                         </div>
