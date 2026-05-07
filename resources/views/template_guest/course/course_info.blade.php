@@ -82,45 +82,67 @@
                 <div class="font "><?= $course->DESKRIPSI_COURSE_ITEM ?></div>
                 <!-- Career Highlight Section -->
                 @if (!empty($prepare_career))
-                <div class="row align-items-center bg-white rounded-4 p-4 shadow-sm">
+                <div class="row align-items-center bg-white rounded-4 shadow-lg overflow-hidden border border-danger-subtle">
                     <!-- LEFT CONTENT -->
-                    <div class="col-12 col-md-7">
-                        <h4 class="fw-bold mb-3"> Prepare for a career as a <?= $prepare_career[0]->CAREER ?> </h4>
-                        <ul class="ps-3">
+                    <div class="col-12 col-md-7 p-4 p-md-5 position-relative">
+                        <!-- Accent -->
+                        <div class="position-absolute top-0 start-0 w-100" style="height: 6px; background: linear-gradient(90deg, #AD0A0B, #ff6b6b);"></div>
+                        <span class="badge bg-danger-subtle text-danger fw-semibold px-4 py-2 mb-3 rounded-pill fs-3">
+                            Career Preparation
+                        </span>
+                        <h3 class="fw-bold text-dark mb-4 lh-sm">
+                            Prepare for a career as a
+                            <span class="text-danger">
+                                <?= $prepare_career[0]->CAREER ?>
+                            </span>
+                        </h3>
+                        <ul class="list-unstyled mb-0">
                             @foreach (explode('</p>', $prepare_career[0]->POINT) as $item)
                                 @php
-                                $text = trim(strip_tags($item));
+                                    $text = trim(strip_tags($item));
                                 @endphp
                                 @if ($text !== '')
-                                    <li class="mb-2">• {{ $text }}</li>
+                                    <li class="d-flex align-items-start mb-3">
+                                        <div
+                                            class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0"
+                                            style="width: 28px; height: 28px; font-size: 13px;">
+                                            ✓
+                                        </div>
+                                        <span class="fw-medium">
+                                            {{ $text }}
+                                        </span>
+                                    </li>
                                 @endif
                             @endforeach
                         </ul>
                     </div>
-                <!-- RIGHT CONTENT -->
-                <div class="col-12 col-md-5 mt-4 mt-md-0 border-primary">
-                    <div class="row align-items-center text-start">
-
-                        <div class="col-6 pe-3 border-end">
-                            <div class="fw-bold fs-6 text-dark">
+                    <!-- RIGHT CONTENT -->
+                    <div class="col-12 col-md-5 text-white p-4 p-md-5" style="background: #AD0A0B">
+                        <div class="mb-4">
+                            <small class="text-light text-uppercase fw-semibold letter-spacing-1">
+                                Estimated Salary
+                            </small>
+                            <h2 class="fw-bold mb-1 text-light">
                                 Rp. <?= $prepare_career[0]->SALARY ?>
-                            </div>
-                            <div class="text-muted" style="font-size: 0.8rem;">
-                                median entry-level salary <?= $prepare_career[0]->CAREER ?>
-                            </div>
+                            </h2>
+                            <p class="mb-0 text-light opacity-75">
+                                Median entry-level salary for
+                                <?= $prepare_career[0]->CAREER ?>
+                            </p>
                         </div>
-
-                        <div class="col-6 ps-3">
-                            <div class="fw-bold fs-6 text-dark">
+                        <hr class="border-light opacity-25">
+                        <div class="mt-4">
+                            <small class="text-light text-uppercase fw-semibold">
+                                Job Opportunities
+                            </small>
+                            <h2 class="fw-bold mb-1 text-light">
                                 <?= $prepare_career[0]->JOB_OPENING ?>
-                            </div>
-                            <div class="text-muted" style="font-size: 0.8rem;">
-                                job openings for <?= $prepare_career[0]->CAREER ?> in Indonesia
-                            </div>
+                            </h2>
+                            <p class="mb-0 text-light opacity-75">
+                                Job openings available in Indonesia
+                            </p>
                         </div>
-
                     </div>
-                </div>
                 </div>
                 @endif
                 <h3 class="font ">Course Outcomes</h3>
