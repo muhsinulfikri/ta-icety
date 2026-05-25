@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\guest_controller;
 
 use App\Http\Controllers\Controller;
+use App\Mail\JMKPPaymentNotification;
 use App\Models\Certificate;
 use App\Models\Checkout;
 use App\Models\Course;
@@ -15,6 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Xendit\Invoice;
@@ -882,6 +884,28 @@ class CheckoutGuest extends Controller
                         'payment_method' => $request->payment_method,
                         'updated_at' => now()
                     ]);
+
+                $user = DB::table('user')
+                    ->where('ID_USER', $transaction->ID_USER)
+                    ->first();
+
+                $course = DB::table('course')
+                    ->join('activity', 'activity.ID_ACTIVITY', '=', 'course.ID_ACTIVITY')
+                    ->where('course.ID_COURSE', $transaction->ID_COURSE)
+                    ->select(
+                        'course.*',
+                        'activity.TITLE_ACTIVITY'
+                    )
+                    ->first();
+
+                //notif email
+                Mail::to('info@icety.org')->send(
+                    new JMKPPaymentNotification(
+                        $user,
+                        $course,
+                        $transaction->paid_at
+                    )
+                );
 
                 // unlock JMKP
                 // DB::table('course_user')->updateOrInsert(
