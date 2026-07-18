@@ -17,12 +17,12 @@ class DashboardController extends Controller
     {
         $data['title'] = 'Dashboard';
         if (session('user')[0]->get('ID_ROLE') == 1) {
-            $data['total_revenue'] = DB::select("
-                SELECT
-                    SUM(t.TOT_BAYAR) AS TOTAL
-                FROM
-                    transaction t
-            ");
+            // $data['total_revenue'] = DB::select("
+            //     SELECT
+            //         SUM(t.TOT_BAYAR) AS TOTAL
+            //     FROM
+            //         transaction t
+            // ");
 
             $data['total_course'] = DB::select("
                 SELECT
@@ -54,7 +54,7 @@ class DashboardController extends Controller
                     transaction t
                 WHERE
                     t.ID_USER = '".session('user')[0]->get('ID_USER')."'
-                
+
             ");
 
             $data['total_course'] = DB::select("
@@ -76,7 +76,7 @@ class DashboardController extends Controller
                     a.ID_USER = '".session('user')[0]->get('ID_USER')."'
             ");
         }
-        
+
 
         return
             view('template_main.admin_side.etc.header', $data).

@@ -1,4 +1,4 @@
-<div class="card" id="materi_item_{{ $no }}">
+<div class="card new-materi" id="materi_item_{{ $no }}">
     <div class="card-header">
         <h5 class="card-title d-flex align-items-center row">
             <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12">
@@ -84,9 +84,99 @@
             </div>
         </div>
     </div>
+    <div class="form-group text-right mt-5">
+        <button
+            type="button"
+            class="btn btn-success btn-save-new-materi">
+            Simpan Materi Baru
+        </button>
+    </div>
+</div>
 </div>
 
 <script>
+    $(document).on('click', '.btn-save-new-materi', function() {
+
+        let card = $(this).closest('.card');
+
+        let formData = new FormData();
+
+        formData.append(
+            'ID_COURSE',
+            $('#id_course').val()
+        );
+
+        formData.append(
+            'TITLE',
+            card.find('input[name="materi_title[]"]').val()
+        );
+
+        formData.append(
+            'LINK_YT',
+            card.find('input[name="materi_link_yt[]"]').val()
+        );
+
+        formData.append(
+            'LINK_MATERI',
+            card.find('input[name="materi_link[]"]').val()
+        );
+
+        formData.append(
+            'DESKRIPSI',
+            card.find('textarea[name="desc_materi[]"]').val()
+        );
+
+        formData.append(
+            'ORDER_LIST',
+            card.find('input[name="order_list[]"]').val()
+        );
+
+        let fileInput = card.find('input[name="materi_file[]"]')[0];
+
+        if (fileInput && fileInput.files.length > 0) {
+            formData.append(
+                'materi_file',
+                fileInput.files[0]
+            );
+        }
+
+        $.ajax({
+            url: '/courses/item/store',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN':
+                $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+
+                console.log(response);
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: response.succ_msg
+                }).then(() => {
+
+                    location.reload();
+
+                });
+
+            },
+            error: function(xhr) {
+
+                console.log(xhr.responseText);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error'
+                });
+            }
+        });
+
+    });
     $(document).ready(function() {
         $('.custom-file-input').on('change', function() {
             var fileName = $(this).val().split('\\').pop();

@@ -292,7 +292,7 @@
                             </div>
                         </div>
                     @endif
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-header">
                             <h5 class="card-title d-flex align-items-center row">
                                 <a data-toggle="collapse" href="#collapse" class="col-md-12" style="text-decoration: none;">
@@ -332,7 +332,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>

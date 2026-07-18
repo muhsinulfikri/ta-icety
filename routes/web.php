@@ -257,6 +257,10 @@ Route::middleware(['usersession:2,1'])->group(function () {
     Route::post('courses/update/item_materi', 'CourseController@update_item_materi');
     Route::post('courses/update/item_quiz', 'CourseController@update_item_quiz');
 
+    Route::post('/courses/item/store', [CourseController::class, 'storeItemMateri']);
+    Route::post('/courses/store_quiz_item',[CourseController::class, 'store_quiz_item']);
+    Route::post('/courses/update-order-item',[CourseController::class, 'updateOrderItem']);
+
     Route::get('courses/get/{id}', 'CourseController@deskripsi_get'); // get desc
     Route::get('courses/get_course_item/{id}', 'CourseController@get_course_item'); // get materi / quiz
     Route::post('courses/get_quiz', 'CourseController@send_question'); //send to another page

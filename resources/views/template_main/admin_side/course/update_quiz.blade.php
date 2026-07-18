@@ -12,7 +12,7 @@
     }
 </style>
 
-<div class="card" id="quiz_item_{{ $id_quiz }}">
+<div class="card sortable-item" id="quiz_item_{{ $id_quiz }}" data-id-item="{{ $id_quiz }}">
     <div class="card-header">
         <h5 class="card-title d-flex align-items-center row">
             <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12 collapsed" aria-expanded="false">

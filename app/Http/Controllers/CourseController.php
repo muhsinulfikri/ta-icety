@@ -232,7 +232,7 @@ class CourseController extends Controller
             // dd($activity, $course, $prepare_career);
             DB::table('activity')->insert($activity);
             DB::table('course')->insert($course);
-            DB::table('prepare_career')->insert($prepare_career);
+            // DB::table('prepare_career')->insert($prepare_career);
 
             $data['ID_COURSE'] = $course['ID_COURSE'];
             $this->item_materi($data, $req);
@@ -660,20 +660,22 @@ class CourseController extends Controller
             DB::table('activity')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($activity);
             DB::table('course')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($course);
             // DB::table('prepare_career')->WHERE(['ID_ACTIVITY' => $req->input('ID_ACTIVITY')])->update($prepare_career);
-            $exists = DB::table('prepare_career')
-                ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
-                ->exists();
+            // $exists = DB::table('prepare_career')
+            //     ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
+            //     ->exists();
 
-            if ($exists) {
-                DB::table('prepare_career')
-                    ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
-                    ->update($prepare_career);
-            } else {
-                DB::table('prepare_career')
-                    ->insert($prepare_career);
-            }
+            // if ($exists) {
+            //     DB::table('prepare_career')
+            //         ->where('ID_ACTIVITY', $req->input('ID_ACTIVITY'))
+            //         ->update($prepare_career);
+            // } else {
+            //     DB::table('prepare_career')
+            //         ->insert($prepare_career);
+            // }
 
             // $this->update_item_materi($req);
+            dd($req->all());
+            $this->syncNewItems($req);
             DB::commit();
             return redirect('/courses/edit?id_activity=' . $req->input('ID_ACTIVITY'))->with(['succ_msg' => 'Berhasi Memperbarui Kursus', 'location' => 'courses']);
         } catch (ValidationException $e) {
@@ -1524,5 +1526,179 @@ class CourseController extends Controller
                 o.ID_PRODUCT
         ");
         return $data;
+    }
+    //sync item materi
+    private function syncNewItems(Request $req)
+    {
+        Log::info('SYNC ITEM JALAN');
+
+    dd(
+        $req->input('ID_ITEM'),
+        $req->input('materi_title'),
+        $req->input('type')
+    );
+        $idCourse = $req->input('ID_COURSE');
+
+        $idItems = $req->input('ID_ITEM', []);
+        $types = $req->input('type', []);
+        $titles = $req->input('materi_title', []);
+        $descs = $req->input('desc_materi', []);
+        $links = $req->input('materi_link', []);
+        $yts = $req->input('materi_link_yt', []);
+        $orders = $req->input('order_list', []);
+
+        foreach ($idItems as $i => $idItem) {
+
+            // hanya item baru
+            if (!empty($idItem)) {
+                continue;
+            }
+
+            if (($types[$i] ?? null) == 1) {
+
+                DB::table('item_course')->insert([
+                    'ID_COURSE' => $idCourse,
+                    'TITLE' => $titles[$i] ?? null,
+                    'DESKRIPSI' => $descs[$i] ?? null,
+                    'LINK_MATERI' => $links[$i] ?? null,
+                    'LINK_YT' => $yts[$i] ?? null,
+                    'ORDER_LIST' => $orders[$i] ?? 0,
+                    'TYPE' => 1
+                ]);
+            }
+        }
+    }
+
+    //tambah materi baru
+    public function storeItemMateri(Request $req)
+    {
+        try {
+
+            $data = [
+                'ID_COURSE'   => $req->ID_COURSE,
+                'TITLE'       => $req->TITLE,
+                'LINK_YT'     => $req->LINK_YT,
+                'LINK_MATERI' => $req->LINK_MATERI,
+                'DESKRIPSI'   => $req->DESKRIPSI,
+                'ORDER_LIST'  => $req->ORDER_LIST,
+                'TYPE'        => 1,
+            ];
+
+            if ($req->hasFile('materi_file')) {
+
+                $data['FILE'] = FileUpload::S3(
+                    $req->file('materi_file'),
+                    'MATERI_FILE',
+                    'Materi-' . strtotime(now())
+                );
+            }
+
+            $idItem = DB::table('item_course')
+                ->insertGetId($data);
+
+            return response()->json([
+                'status' => 'success',
+                'succ_msg' => 'Materi berhasil ditambahkan',
+                'ID_ITEM' => $idItem
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'err_msg' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function store_quiz_item(Request $req)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            $idItem = DB::table('item_course')->insertGetId([
+                'ID_COURSE'  => $req->ID_COURSE,
+                'TYPE'       => 2,
+                'MIN_NILAI'  => $req->MIN_NILAI,
+                'ORDER_LIST' => $req->ORDER_LIST
+            ]);
+
+            $questions = json_decode(
+                $req->questions,
+                true
+            );
+
+            foreach($questions as $question)
+            {
+                DB::table('detail_quiz')->insert([
+                    'ID_QUIZ' => $idItem,
+                    'ID_COURSE' => $req->ID_COURSE,
+
+                    'SOAL' => $question['soal'],
+
+                    'PIL_JWB' => json_encode(
+                        implode(';', [
+                            $question['pilihan']['a'],
+                            $question['pilihan']['b'],
+                            $question['pilihan']['c'],
+                            $question['pilihan']['d']
+                        ])
+                    ),
+
+                    'KUNCI' => $question['kunci'],
+
+                    'ORDER_LIST' => $question['order']
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'ID_ITEM' => $idItem
+            ]);
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function updateOrderItem(Request $req)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            foreach ($req->orders as $item) {
+
+                DB::table('item_course')
+                    ->where('ID_ITEM', $item['id_item'])
+                    ->update([
+                        'ORDER_LIST' => $item['order_list']
+                    ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success'
+            ]);
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

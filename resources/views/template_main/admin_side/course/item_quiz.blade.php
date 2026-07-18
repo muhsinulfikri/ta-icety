@@ -61,6 +61,16 @@
             </div>
         </div>
     </div>
+    <div class="form-group text-right mt-3">
+        <button
+            type="button"
+            class="btn btn-primary"
+            onclick="submitQuizItem(this)"
+            data-id="{{ $id_quiz }}"
+            data-no="{{ $no }}">
+            Simpan Quiz
+        </button>
+    </div>
 </div>
 
 <div class="modal fade" style="z-index: 1060;" id="insert_soal_{{ $no }}{{ $id_quiz }}" data-bs-backdrop="static"
@@ -241,4 +251,76 @@
     });
 
     $(".soal_form_{{ $no }}").disableSelection();
+
+    function submitQuizItem(button)
+    {
+        let idQuiz = $(button).data('id');
+        let no = $(button).data('no');
+        let questions = [];
+
+        let formData = new FormData();
+
+        formData.append(
+            'ID_COURSE',
+            $('#id_course').val()
+        );
+
+        formData.append(
+            'MIN_NILAI',
+            $('#min_nilai_' + no).val()
+        );
+
+        formData.append('ORDER_LIST', no);
+
+        $(".soal_form_" + no + " .question-item").each(function(i){
+
+            let index = $(this).data('index');
+
+            questions.push({
+                soal: $("input[name='question[" + no + "][" + index + "]']").val(),
+
+                pilihan: {
+                    a: $("#jawaban_a" + no + index).val(),
+                    b: $("#jawaban_b" + no + index).val(),
+                    c: $("#jawaban_c" + no + index).val(),
+                    d: $("#jawaban_d" + no + index).val()
+                },
+
+                kunci: $(
+                    "input[name='kunci_soal[" + no + "][" + index + "]']:checked"
+                ).val(),
+
+                order: i + 1
+            });
+        });
+
+        formData.append(
+            'questions',
+            JSON.stringify(questions)
+        );
+
+        $.ajax({
+            url: '/courses/store_quiz_item',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN':
+                $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response){
+
+                Swal.fire({
+                    icon:'success',
+                    title:'Berhasil',
+                    text:'Quiz berhasil disimpan'
+                }).then(() => {
+                    window.location.reload();
+                });
+
+                console.log(response);
+            }
+        });
+    }
 </script>

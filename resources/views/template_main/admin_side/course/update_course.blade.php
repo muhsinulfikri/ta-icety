@@ -1,3 +1,14 @@
+<style>
+    .ui-state-highlight {
+        height: 80px;
+        border: 2px dashed #4e73df;
+        background: #f8f9fc;
+        margin-bottom: 15px;
+    }
+    .sortable-item {
+        cursor: move;
+    }
+</style>
 <div class="col ms-0 ms-md-4 p-4 shadow rounded-3 overflow-hidden bg-white">
     <div class="">
         <div class="card-body">
@@ -30,10 +41,13 @@
                 </div>
             <?php } ?>
             <div class="mt-5">
+                <?php $course = json_decode($jsonData); ?>
                 <form id="form-user" action="update" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="ID_ACTIVITY">
                     <input type="hidden" name="ID_COURSE">
+                    <input type="hidden" id="id_course" name="ID_COURSE" value="{{ $course->ID_COURSE }}">
+                    <input type="hidden" id="id_activity" name="ID_ACTIVITY" value="{{ $course->ID_ACTIVITY }}">
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label control-label">Cover <span class="text-danger">*</span>
                         </label>
@@ -265,7 +279,7 @@
                         </div>
                     </div>
                     @endif
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-header">
                             <h5 class="card-title d-flex align-items-center row">
                                 <a data-toggle="collapse" href="#collapse" class="col-md-12" style="text-decoration: none;">
@@ -305,14 +319,14 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="form-group text-right mt-5">
                         <button type="submit" class="btn btn-primary btn-submit-form">Simpan</button>
                     </div>
                     <div class="accordion materi_form" id="accordion-default">
 
                     </div>
-                    {{-- <div class="form-group row">
+                    <div class="form-group row">
                         <div class="col-md-12">
                             <div data-toggle="modal" id="add_item" data-target="#exampleModalCenter"
                                 class="btn btn-primary m-r-5 col-md-12" style="cursor: pointer;">
@@ -320,7 +334,7 @@
                                 <span class="col-md-12">Add Materi / Quiz</span>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
 
                 </form>
             </div>
@@ -782,7 +796,7 @@
                 $('#final-exam-container').empty();
             }
         });
-        
+
     });
 
     $(document).ready(function() {
@@ -797,5 +811,55 @@
                 'fileSize': 'File Size Too Big (Max 1MB).'
             }
         });
+    });
+
+    //sortable materi & quiz
+    $(document).ready(function(){
+
+        $(".materi_form").sortable({
+
+            items: ".sortable-item",
+
+            cursor: "move",
+
+            placeholder: "ui-state-highlight",
+
+            update: function(event, ui){
+
+                let orders = [];
+
+                $(".materi_form .sortable-item").each(function(index){
+
+                    orders.push({
+                        id_item: $(this).data('id-item'),
+                        order_list: index + 1
+                    });
+
+                });
+
+                $.ajax({
+                    url: '/courses/update-order-item',
+                    method: 'POST',
+
+                    data: {
+                        orders: orders,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+
+                    success: function(res){
+
+                        console.log('Order updated');
+
+                    },
+
+                    error: function(err){
+
+                        console.log(err);
+
+                    }
+                });
+            }
+        });
+
     });
 </script>

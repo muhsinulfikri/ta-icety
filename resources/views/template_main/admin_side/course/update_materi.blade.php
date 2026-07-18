@@ -1,4 +1,4 @@
-<div class="card" id="materi_item_{{ $no }}">
+<div class="card sortable-item" id="materi_item_{{ $no }}" data-id-item="{{ $item['ID_ITEM'] }}">
     <div class="card-header">
         <h5 class="card-title d-flex row">
             <a data-toggle="collapse" href="#collapse{{ $no }}" class="col-md-12 collapsed" aria-expanded="false">
